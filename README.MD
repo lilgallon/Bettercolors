@@ -72,6 +72,8 @@ The recommanded values are the default one.
 
 `HOME` Toggle aim assist
 
+To desactivate click assist, just put CPSIncrement to 0
+
 ## Todo list
 
 - [x] Aim Assist
@@ -82,8 +84,8 @@ The recommanded values are the default one.
 - [ ] Teammate checker
 - [ ] Console warning system (invisible coming / someone close / aim activated / ...)
 
-To desactivate click assist, just put CPSIncrement to 0
-====
+
+
 **V1.0:**
 >• Personnalistion parametres
 

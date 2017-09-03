@@ -1,0 +1,16 @@
+[
+{
+  "modid": "Bettershadows",
+  "name": "N3RO's Bettershadows",
+  "description": "Better shadows in minecraft while using shaders or not.",
+  "version": "1.0.15",
+  "mcversion": "1.8.9",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["N3RO"],
+  "credits": "The Forge and FML guys",
+  "logoFile": "Bettershadows.png",
+  "screenshots": [],
+  "dependencies": []
+}
+]

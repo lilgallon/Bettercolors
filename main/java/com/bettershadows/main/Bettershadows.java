@@ -11,6 +11,7 @@ import java.util.Scanner;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
+import com.bettershadows.utils.TimeHelper;
 import com.google.common.collect.Lists;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -18,6 +19,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ContainerPlayer;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.client.C02PacketUseEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -60,17 +63,23 @@ public class Bettershadows {
 	private static int cpt_attacking = 0;
 	private static boolean attacked = false;
 	private float lastRegisteredYaw = -99999;
+	private boolean isAimActivated = true;
 
 	/**************************************/
-	/****		AIM SETTINGS		*******/
+	/****	AIM/CLICK SETTINGS		*******/
 	private float aim_range = 5;
 	private float aim_radius_X = 40;
 	private float aim_radius_Y = 30;
 	private float aim_step_X = 20;	
 	private float aim_step_Y = 20;
+	private long cps_increment = 2;
+	private int cps_chance = 80;
+	private float activation_time = 1.5F;
 
 	private double distance;
 	private EntityPlayer currentEntity;
+	private TimeHelper timeHelper = new TimeHelper();
+	private TimeHelper timer = new TimeHelper();
 
 	@EventHandler
 	public void Init(FMLInitializationEvent event)
@@ -90,10 +99,16 @@ public class Bettershadows {
 				if(Keyboard.isKeyDown(Keyboard.KEY_INSERT)){
 					getSettings();
 				}
+				if(Keyboard.isKeyDown(Keyboard.KEY_HOME)){
+					isAimActivated = !isAimActivated;
+				}
 				checkIfAttacked();
-				useAimbot();
+				if(isAimActivated){
+					useAimbot();
+				}
+				useClickAsssit();
 			}catch(Exception e){
-				e.printStackTrace();
+				//e.printStackTrace();
 			}
 		}
 	}
@@ -166,13 +181,86 @@ public class Bettershadows {
 		}catch(Exception e){
 			aim_radius_Y = 30;
 		}
+		try{
+			cps_increment = Long.parseLong(sb.toString().split(";")[5]);
+		}catch(Exception e){
+			cps_increment = 1;
+		}
+		try{
+			cps_chance = Integer.parseInt(sb.toString().split(";")[6]);
+		}catch(Exception e){
+			cps_chance = 80;
+		}
+		try{
+			activation_time = Float.parseFloat(sb.toString().split(";")[7]);
+		}catch(Exception e){
+			activation_time = 1.5F;
+		}
+		
+		
 	}
 
+	private boolean playerAttacks(){
+		boolean ingui = m_mc.thePlayer.isPlayerSleeping() || m_mc.thePlayer.isDead || !(m_mc.thePlayer.openContainer instanceof ContainerPlayer);
+		return m_mc.objectMouseOver.entityHit!=null && (Mouse.isButtonDown(0) || Mouse.isButtonDown(1) || m_mc.gameSettings.keyBindAttack.isPressed()) && !ingui;
+	}
+	
+	private void useClickAsssit(){
+
+		long delay;
+		if(cps_increment == 0){
+			delay = 0;
+		}else{
+			delay=1000/cps_increment;
+		}
+		
+		boolean timer_reached = timeHelper.isDelayComplete(delay);
+		if (timer_reached) {
+			
+			Entity entity = null;
+			if(m_mc.objectMouseOver.entityHit!=null){
+				try{
+					entity = m_mc.objectMouseOver.entityHit;
+				}catch(Exception e){
+					entity = null;
+				}
+			}
+			if(!(entity instanceof EntityPlayer)){
+				entity = null;
+			}
+			
+			int rand = random(1,100);
+			if(entity!=null && attacked && rand<=cps_chance){
+				if(m_mc.thePlayer.getDistanceToEntity(entity)<=m_mc.playerController.getBlockReachDistance()){
+					m_mc.thePlayer.sendQueue.addToSendQueue(new C02PacketUseEntity(entity, C02PacketUseEntity.Action.ATTACK));
+					m_mc.thePlayer.swingItem();
+				}
+			}
+			timeHelper.reset();
+		}
+	}
+	
+	private int random(int min, int max){
+        return new Random().nextInt((max - min) + 1) + min;
+    }
 
 	private void checkIfAttacked(){
+		if(attacked){
+			if(timer.hasReached(1000*activation_time)){
+				attacked = false;
+				timer.reset();
+			}
+		}else if(playerAttacks()){
+			attacked = true;
+			timer.reset();
+		}else{
+			attacked = false;
+			timer.reset();
+		}
+		/*
 		if(cpt_attacking<75 && cpt_attacking!=0){
 			cpt_attacking ++;
-		}else if(m_mc.objectMouseOver.entityHit!=null && (Mouse.isButtonDown(0) || Mouse.isButtonDown(1) || m_mc.gameSettings.keyBindAttack.isPressed())){
+		}else if(playerAttacks()){
 			attacked = true;
 			cpt_attacking = 1;
 			lastRegisteredYaw = m_mc.thePlayer.attackedAtYaw;
@@ -180,6 +268,7 @@ public class Bettershadows {
 			attacked = false;
 			cpt_attacking = 0;
 		}
+		*/
 	}
 
 	private void useAimbot()
@@ -190,7 +279,7 @@ public class Bettershadows {
 			return;
 		}
 
-		boolean mousePressed = (Mouse.isButtonDown(0) || Mouse.isButtonDown(1)) || m_mc.gameSettings.keyBindAttack.isPressed();
+		boolean mousePressed = (Mouse.isButtonDown(0) || Mouse.isButtonDown(1) || m_mc.gameSettings.keyBindAttack.isPressed()) && !ingui;
 
 		if(mousePressed){
 			Random randx = new Random();

@@ -3,3 +3,4 @@ AimStepY:10
 AimRange:5
 AimRadiusX:60
 AimRadiusY:30
+CPSIncrement:1

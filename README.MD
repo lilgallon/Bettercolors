@@ -1,6 +1,9 @@
+![header](gitresources/header)
+
 # N3RO's silent hack
 
 A silent hack built within the forge API. Click assistance undetectable from any anticheat mod (i.e. CheatBreaker).
+
 
 ## Disclamer
 

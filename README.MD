@@ -1,4 +1,4 @@
-![header](gitresources/header)
+![header](gitresources/header.png)
 
 # N3RO's silent hack
 

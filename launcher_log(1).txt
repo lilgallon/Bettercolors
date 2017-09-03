@@ -1,6 +1,5 @@
-AimRefreshRate:30
-AimStepX:15
-AimStepY:15
+AimStepX:10
+AimStepY:10
 AimRange:5
-AimRadiusX:40
+AimRadiusX:60
 AimRadiusY:30

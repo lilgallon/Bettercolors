@@ -4,3 +4,5 @@ AimRange:5
 AimRadiusX:60
 AimRadiusY:30
 CPSIncrement:1
+CPSchance:80
+ActivationTime(sec):1.5

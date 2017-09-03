@@ -1,17 +1,17 @@
-#N3RO's silent hack
+# N3RO's silent hack
 
 A silent hack built within the forge API. Click assistance undetectable from any anticheat mod (i.e. CheatBreaker).
 
-##Disclamer
+## Disclamer
 
 Use it at your onw risk!
 
-##Instructions
+## Instructions
 
 Put launcher_log(1).txt in %appdata%/.minecraft.
 You can edit the values in this file.
 
-##Description
+## Description
 
 - The Aim force is defined by AimStepX and AimStepY,
 - The Activation time is the time in seconds while aim assistance and click assistance will work,
@@ -19,11 +19,11 @@ You can edit the values in this file.
 - CPS Chance is the chance in % of click assistance (sometimes it will not hit if %<100)
 - Aim radius X is the radius in degrees in which the aim assistance will work (same for aim radius Y)
 
-##Values
+## Values
 
 The recommanded values are the default one.
 
-###Default
+### Default
 AimStepX:10
 AimStepY:10
 AimRange:5
@@ -33,7 +33,7 @@ CPSIncrement:1
 CPSchance:80
 ActivationTime(sec):1.5
 
-###Maximums
+### Maximums
 AimStepX:80
 AimStepY:80
 AimRange:100
@@ -43,7 +43,7 @@ CPSIncrement:1000
 CPSchance:100
 ActivationTime(sec):unlimited
 
-###Minimums
+### Minimums
 AimStepX:1 (0=OFF)
 AimStepY:1 (0=OFF)
 AimRange:1 (0=OFF)
@@ -53,7 +53,7 @@ CPSIncrement:1 (0=OFF)
 CPSchance:1 (0=OFF)
 ActivationTime(sec):0.1 (0=OFF)
 
-###Types
+### Types
 AimStepX:float
 AimStepY:float
 AimRange:float
@@ -63,7 +63,7 @@ CPSIncrement:long
 CPSchance:int
 ActivationTime(sec):float
 
-##Commands
+## Commands
 
 ```
 **INSERT:** Refresh config

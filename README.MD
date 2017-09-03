@@ -66,6 +66,7 @@ The recommanded values are the default one.
 ## Commands
 
 `INSERT` Refresh config
+
 `HOME` Toggle aim assist
 
 ## Todo list
@@ -82,14 +83,19 @@ To desactivate click assist, just put CPSIncrement to 0
 ====
 **V1.0:**
 >• Personnalistion parametres
+
 >• AimAssist
 
 **V1.1:**
 >• Suppression du parametre refreshrate
+
 >• Aim plus fluide
+
 >• Commentaires retirés
 
 **V1.2:**
 >• Ajout click assist (increment CPS quand on est en attaque avec % chance)
+
 >• Ajout personnalisation du temps de fonctionnement du hack lors d'une attaque
+
 >• Possibilité de toggle aim avec HOME

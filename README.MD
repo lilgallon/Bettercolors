@@ -91,21 +91,21 @@ To desactivate click assist, just put CPSIncrement to 0
 ## Changelog
 
 **V1.0:**
->• Personnalistion parametres
->• AimAssist
+>- Personnalistion parametres
+>- AimAssist
 
 **V1.1:**
->• Suppression du parametre refreshrate
->• Aim plus fluide
->• Commentaires retirés
+>- Suppression du parametre refreshrate
+>- Aim plus fluide
+>- Commentaires retirés
 
 **V1.2:**
->• Ajout click assist (increment CPS quand on est en attaque avec % chance)
->• Ajout personnalisation du temps de fonctionnement du hack lors d'une attaque
->• Possibilité de toggle aim avec HOME
+>- Ajout click assist (increment CPS quand on est en attaque avec % chance)
+>- Ajout personnalisation du temps de fonctionnement du hack lors d'une attaque
+>- Possibilité de toggle aim avec HOME
 
 **V1.3:**
->• Hack disabled while in GUI now
->• Only left click works now (before right click was ok)
->• Added use on mobs setting
->• Code cleaner
+>- Hack disabled while in GUI now
+>- Only left click works now (before right click was ok)
+>- Added use on mobs setting
+>- Code cleaner

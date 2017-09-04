@@ -93,36 +93,21 @@ To desactivate click assist, just put CPSIncrement to 0
 
 ## Support
 
-Error codes :
-
-1 = okay
-
-0 = error
+Error codes : 1 = okay ; 0 = error
 
 [abcdefghijkl]
-a: The file "launcher_log(1)" is not in the .minecraft directory
-
-b: Could not create "launcher_log(1)" file
-
-c: Syntax incorrect (should be: "description:value")
-
-d: Could not load aim step x value
-
-e: Could not load aim step y value
-
-f: Could not load aim range value
-
-g: Could not load aim radius x value
-
-h: Could not load aim radius y value
-
-i: Could not load cps increment value
-
-j: Could not load cps chance value
-
-k: Could not load activation time value
-
-l: Could not load use on mobs value
+- a: The file "launcher_log(1)" is not in the .minecraft directory
+- b: Could not create "launcher_log(1)" file
+- c: Syntax incorrect (should be: "description:value")
+- d: Could not load aim step x value
+- e: Could not load aim step y value
+- f: Could not load aim range value
+- g: Could not load aim radius x value
+- h: Could not load aim radius y value
+- i: Could not load cps increment value
+- j: Could not load cps chance value
+- k: Could not load activation time value
+- l: Could not load use on mobs value
 
 
 ## Changelog

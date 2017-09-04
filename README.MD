@@ -35,6 +35,7 @@ The recommanded values are the default one.
 - CPSIncrement:1
 - CPSchance:80
 - ActivationTime(sec):1.5
+- UseOnMobs:false
 
 ### Maximums
 - AimStepX:80
@@ -45,6 +46,7 @@ The recommanded values are the default one.
 - CPSIncrement:1000
 - CPSchance:100
 - ActivationTime(sec):unlimited
+- UseOnMobs:true
 
 ### Minimums
 - AimStepX:1 (0=OFF)
@@ -55,6 +57,7 @@ The recommanded values are the default one.
 - CPSIncrement:1 (0=OFF)
 - CPSchance:1 (0=OFF)
 - ActivationTime(sec):0.1 (0=OFF)
+- UseOnMobs:false
 
 ### Types
 - AimStepX:float
@@ -65,6 +68,7 @@ The recommanded values are the default one.
 - CPSIncrement:long
 - CPSchance:int
 - ActivationTime(sec):float
+- UseOnMobs:boolean (true/false)
 
 ## Commands
 
@@ -104,3 +108,12 @@ To desactivate click assist, just put CPSIncrement to 0
 >• Ajout personnalisation du temps de fonctionnement du hack lors d'une attaque
 
 >• Possibilité de toggle aim avec HOME
+
+**V1.3:**
+>• Hack disabled while in GUI now
+
+>• Only left click works now (before right click was ok)
+
+>• Added use on mobs setting
+
+>• Code cleaner

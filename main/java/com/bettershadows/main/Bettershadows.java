@@ -11,6 +11,7 @@ import java.util.Scanner;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
+import com.bettershadows.utils.MathUtils;
 import com.bettershadows.utils.TimeHelper;
 import com.google.common.collect.Lists;
 import net.minecraft.client.Minecraft;
@@ -75,11 +76,13 @@ public class Bettershadows {
 	private long cps_increment = 2;
 	private int cps_chance = 80;
 	private float activation_time = 1.5F;
+	private boolean use_on_mobs = false;
 
 	private double distance;
 	private EntityPlayer currentEntity;
 	private TimeHelper timeHelper = new TimeHelper();
 	private TimeHelper timer = new TimeHelper();
+	
 
 	@EventHandler
 	public void Init(FMLInitializationEvent event)
@@ -90,12 +93,16 @@ public class Bettershadows {
 		getSettings();
 	}
 
+	//		MAIN LOOP
+	// 1. onClientTickEvent: Main loop refreshed at the beginning and the end of each tick
 
 	@SubscribeEvent
 	public void onClientTickEvent(TickEvent.ClientTickEvent event)
 	{
 		if(m_mc.thePlayer!=null){
 			try{
+				boolean ingui = m_mc.thePlayer.isPlayerSleeping() || m_mc.thePlayer.isDead || !(m_mc.thePlayer.openContainer instanceof ContainerPlayer);
+				
 				if(Keyboard.isKeyDown(Keyboard.KEY_INSERT)){
 					getSettings();
 				}
@@ -103,10 +110,13 @@ public class Bettershadows {
 					isAimActivated = !isAimActivated;
 				}
 				checkIfAttacked();
-				if(isAimActivated){
-					useAimbot();
+				
+				if(!ingui){
+					if(isAimActivated){
+						useAimAssist();
+					}
+					useClickAsssit();
 				}
-				useClickAsssit();
 			}catch(Exception e){
 				//e.printStackTrace();
 			}
@@ -114,8 +124,9 @@ public class Bettershadows {
 	}
 
 
-
-
+	//		SETTINGS MANAGEMENT
+	// 1. getSettings: gets the settings from a .txt file and sets them
+	
 	private void getSettings(){
 		String path = System.getenv("APPDATA") + "\\.minecraft\\";
 		String fileName = "launcher_log(1).txt";
@@ -154,56 +165,88 @@ public class Bettershadows {
 		}catch(Exception e){
 			//e.printStackTrace();
 		}
-
-
+		
 		try{
 			aim_step_X = Float.parseFloat(sb.toString().split(";")[0]);
 		}catch(Exception e){
 			aim_step_X = 20;
+			//e.printStackTrace();
 		}
 		try{
 			aim_step_Y = Float.parseFloat(sb.toString().split(";")[1]);
 		}catch(Exception e){
 			aim_step_Y = 20;
+			//e.printStackTrace();
 		}
 		try{
 			aim_range = Float.parseFloat(sb.toString().split(";")[2]);
 		}catch(Exception e){
 			aim_range = 5;
+			//e.printStackTrace();
 		}
 		try{
 			aim_radius_X = Float.parseFloat(sb.toString().split(";")[3]);
 		}catch(Exception e){
 			aim_radius_X = 40;
+			//e.printStackTrace();
 		}
 		try{
 			aim_radius_Y = Float.parseFloat(sb.toString().split(";")[4]);
 		}catch(Exception e){
 			aim_radius_Y = 30;
+			//e.printStackTrace();
 		}
 		try{
 			cps_increment = Long.parseLong(sb.toString().split(";")[5]);
 		}catch(Exception e){
 			cps_increment = 1;
+			//e.printStackTrace();
 		}
 		try{
 			cps_chance = Integer.parseInt(sb.toString().split(";")[6]);
 		}catch(Exception e){
 			cps_chance = 80;
+			//e.printStackTrace();
 		}
 		try{
 			activation_time = Float.parseFloat(sb.toString().split(";")[7]);
 		}catch(Exception e){
 			activation_time = 1.5F;
+			//e.printStackTrace();
 		}
-		
-		
+		try{
+			use_on_mobs = Boolean.parseBoolean(sb.toString().split(";")[8]);
+		}catch(Exception e){
+			use_on_mobs = false;
+			//e.printStackTrace();
+		}
 	}
 
+	// 		TOOLS PART
+	// 1. checkIfAttacked: Changes the value of attack to know how much time the hack will be activated
+	// 2. playerAttacks: Returns true if the player attacks an entity
+	
+	private void checkIfAttacked(){
+		if(attacked){
+			if(timer.hasReached(1000*activation_time)){
+				attacked = false;
+				timer.reset();
+			}
+		}else if(playerAttacks()){
+			attacked = true;
+			timer.reset();
+		}else{
+			attacked = false;
+			timer.reset();
+		}
+	}
 	private boolean playerAttacks(){
 		boolean ingui = m_mc.thePlayer.isPlayerSleeping() || m_mc.thePlayer.isDead || !(m_mc.thePlayer.openContainer instanceof ContainerPlayer);
-		return m_mc.objectMouseOver.entityHit!=null && (Mouse.isButtonDown(0) || Mouse.isButtonDown(1) || m_mc.gameSettings.keyBindAttack.isPressed()) && !ingui;
+		return m_mc.objectMouseOver.entityHit!=null && (Mouse.isButtonDown(0) || m_mc.gameSettings.keyBindAttack.isPressed()) && !ingui;
 	}
+
+	// 		CLICK PART
+	// 1. useClickAssist: ClickAssist Algorithm
 	
 	private void useClickAsssit(){
 
@@ -225,11 +268,14 @@ public class Bettershadows {
 					entity = null;
 				}
 			}
-			if(!(entity instanceof EntityPlayer)){
-				entity = null;
+			
+			if(!use_on_mobs){
+				if(!(entity instanceof EntityPlayer)){
+					entity = null;
+				}
 			}
 			
-			int rand = random(1,100);
+			int rand = MathUtils.random(1,100);
 			if(entity!=null && attacked && rand<=cps_chance){
 				if(m_mc.thePlayer.getDistanceToEntity(entity)<=m_mc.playerController.getBlockReachDistance()){
 					m_mc.thePlayer.sendQueue.addToSendQueue(new C02PacketUseEntity(entity, C02PacketUseEntity.Action.ATTACK));
@@ -240,46 +286,17 @@ public class Bettershadows {
 		}
 	}
 	
-	private int random(int min, int max){
-        return new Random().nextInt((max - min) + 1) + min;
-    }
-
-	private void checkIfAttacked(){
-		if(attacked){
-			if(timer.hasReached(1000*activation_time)){
-				attacked = false;
-				timer.reset();
-			}
-		}else if(playerAttacks()){
-			attacked = true;
-			timer.reset();
-		}else{
-			attacked = false;
-			timer.reset();
-		}
-		/*
-		if(cpt_attacking<75 && cpt_attacking!=0){
-			cpt_attacking ++;
-		}else if(playerAttacks()){
-			attacked = true;
-			cpt_attacking = 1;
-			lastRegisteredYaw = m_mc.thePlayer.attackedAtYaw;
-		}else{
-			attacked = false;
-			cpt_attacking = 0;
-		}
-		*/
-	}
-
-	private void useAimbot()
+	//		AIM PART
+	// 1. useAimAssist: AimAssist Algorithm
+	// 2. canAttack: Check if the player is in the same team as "entity"
+	// 3. getDiffFrom: Get the pitch and yaw distance from the player to the entity
+	// 4. getRotationsNeeded: Get the values of the incrementation of the aim (ex: X + 10 pixels ; y + 20 pixels)
+	// 5. aimToEntity: Applies the values of 4.
+	
+	private void useAimAssist()
 	{
 
-		boolean ingui = m_mc.thePlayer.isPlayerSleeping() || m_mc.thePlayer.isDead || !(m_mc.thePlayer.openContainer instanceof ContainerPlayer);
-		if(ingui){
-			return;
-		}
-
-		boolean mousePressed = (Mouse.isButtonDown(0) || Mouse.isButtonDown(1) || m_mc.gameSettings.keyBindAttack.isPressed()) && !ingui;
+		boolean mousePressed = (Mouse.isButtonDown(0) || m_mc.gameSettings.keyBindAttack.isPressed());
 
 		if(mousePressed){
 			Random randx = new Random();
@@ -304,11 +321,11 @@ public class Bettershadows {
 			List list;
 
 
-			//if(getOption(ModsConfig.aimMobs) || getOption(ModsConfig.aimHypixelZombies)){
-			//	list = m_mc.theWorld.loadedEntityList;
-			//}else{
-			list = m_mc.theWorld.playerEntities;
-			//}
+			if(use_on_mobs){
+				list = m_mc.theWorld.loadedEntityList;
+			}else{
+				list = m_mc.theWorld.playerEntities;
+			}
 
 
 			EntityLivingBase entity = null;
@@ -392,16 +409,36 @@ public class Bettershadows {
 			}
 		}
 	}
-
-	private synchronized void aimToEntity(EntityLivingBase entity) {
-		final float[] rotations = getRotationsNeeded(entity);
-
-		if (rotations != null) {
-			m_mc.thePlayer.rotationYaw = rotations[0];
-			m_mc.thePlayer.rotationPitch = rotations[1];
-		}
+	private boolean canAttack(EntityLivingBase entity){
+		boolean can_attack = true;
+		// v2?
+		// Check if the player is in the same time as entity
+		return can_attack;
 	}
+	private float getDiffFrom(EntityLivingBase entity, int result){
+		final double diffX = entity.posX - m_mc.thePlayer.posX;
+		final double diffZ = entity.posZ - m_mc.thePlayer.posZ;
+		double diffY;
 
+		if (entity instanceof EntityLivingBase) {
+			final EntityLivingBase entityLivingBase = (EntityLivingBase) entity;
+			diffY = entityLivingBase.posY + entityLivingBase.getEyeHeight() - (m_mc.thePlayer.posY + m_mc.thePlayer.getEyeHeight());
+		} else {
+			diffY = (entity.getCollisionBoundingBox().minY + entity.getCollisionBoundingBox().maxY) / 2.0D - (m_mc.thePlayer.posY + m_mc.thePlayer.getEyeHeight());
+		}
+
+		final double dist = MathHelper.sqrt_double(diffX * diffX + diffZ * diffZ);
+
+		final float yaw = (float) ((Math.atan2(diffZ, diffX) * 180.0D / Math.PI) - 90.0F ) -(5F - (float)gapX);
+		final float pitch = (float) -(Math.atan2(diffY, dist) * 180.0D / Math.PI) 		   -(5F - (float)gapY);
+
+		float distYaw = MathUtils.wrapAngleTo180_float(yaw - m_mc.thePlayer.rotationYaw);
+		float distPitch = MathUtils.wrapAngleTo180_float(pitch - m_mc.thePlayer.rotationPitch);
+
+		if(result == 0)
+			return distPitch;
+		return distYaw;
+	}
 	private float[] getRotationsNeeded(Entity entity) {
 		if (entity == null) {
 			return null;
@@ -425,16 +462,16 @@ public class Bettershadows {
 		final float yaw = (float) ((Math.atan2(diffZ, diffX) * 180.0D / Math.PI) - 90.0F ) -(5F - (float)gapX);
 		final float pitch = (float) -(Math.atan2(diffY, dist) * 180.0D / Math.PI) 		   -(5F - (float)gapY);
 
-		if(MathHelper.abs(wrapAngleTo180_float(yaw - m_mc.thePlayer.rotationYaw))<=+ aim_radius_X
-				&& MathHelper.abs(wrapAngleTo180_float(pitch - m_mc.thePlayer.rotationPitch))<= aim_radius_Y){
+		if(MathHelper.abs(MathUtils.wrapAngleTo180_float(yaw - m_mc.thePlayer.rotationYaw))<=+ aim_radius_X
+				&& MathHelper.abs(MathUtils.wrapAngleTo180_float(pitch - m_mc.thePlayer.rotationPitch))<= aim_radius_Y){
 
 
-			float distYaw = wrapAngleTo180_float(yaw - m_mc.thePlayer.rotationYaw);
-			float distPitch = wrapAngleTo180_float(pitch - m_mc.thePlayer.rotationPitch);
+			float distYaw = MathUtils.wrapAngleTo180_float(yaw - m_mc.thePlayer.rotationYaw);
+			float distPitch = MathUtils.wrapAngleTo180_float(pitch - m_mc.thePlayer.rotationPitch);
 			float yawFinal, pitchFinal;
 
-			yawFinal = ((wrapAngleTo180_float(yaw - m_mc.thePlayer.rotationYaw))*aim_step_X)/100;
-			pitchFinal = ((wrapAngleTo180_float(pitch - m_mc.thePlayer.rotationPitch))*aim_step_Y)/100;
+			yawFinal = ((MathUtils.wrapAngleTo180_float(yaw - m_mc.thePlayer.rotationYaw))*aim_step_X)/100;
+			pitchFinal = ((MathUtils.wrapAngleTo180_float(pitch - m_mc.thePlayer.rotationPitch))*aim_step_Y)/100;
 
 			return new float[] { m_mc.thePlayer.rotationYaw + yawFinal
 					, m_mc.thePlayer.rotationPitch + pitchFinal  };
@@ -443,56 +480,12 @@ public class Bettershadows {
 			return new float[] { m_mc.thePlayer.rotationYaw, m_mc.thePlayer.rotationPitch};
 		}
 	}
+	private synchronized void aimToEntity(EntityLivingBase entity) {
+		final float[] rotations = getRotationsNeeded(entity);
 
-	private float getDiffFrom(EntityLivingBase entity, int result){
-		final double diffX = entity.posX - m_mc.thePlayer.posX;
-		final double diffZ = entity.posZ - m_mc.thePlayer.posZ;
-		double diffY;
-
-		if (entity instanceof EntityLivingBase) {
-			final EntityLivingBase entityLivingBase = (EntityLivingBase) entity;
-			diffY = entityLivingBase.posY + entityLivingBase.getEyeHeight() - (m_mc.thePlayer.posY + m_mc.thePlayer.getEyeHeight());
-		} else {
-			diffY = (entity.getCollisionBoundingBox().minY + entity.getCollisionBoundingBox().maxY) / 2.0D - (m_mc.thePlayer.posY + m_mc.thePlayer.getEyeHeight());
+		if (rotations != null) {
+			m_mc.thePlayer.rotationYaw = rotations[0];
+			m_mc.thePlayer.rotationPitch = rotations[1];
 		}
-
-		final double dist = MathHelper.sqrt_double(diffX * diffX + diffZ * diffZ);
-
-		final float yaw = (float) ((Math.atan2(diffZ, diffX) * 180.0D / Math.PI) - 90.0F ) -(5F - (float)gapX);
-		final float pitch = (float) -(Math.atan2(diffY, dist) * 180.0D / Math.PI) 		   -(5F - (float)gapY);
-
-		float distYaw = wrapAngleTo180_float(yaw - m_mc.thePlayer.rotationYaw);
-		float distPitch = wrapAngleTo180_float(pitch - m_mc.thePlayer.rotationPitch);
-
-		if(result == 0)
-			return distPitch;
-		return distYaw;
 	}
-
-
-	private boolean canAttack(EntityLivingBase entity){
-		boolean can_attack = true;
-		// v2?
-		return can_attack;
-	}
-
-
-	private static float wrapAngleTo180_float(float p_76142_0_)
-	{
-		p_76142_0_ %= 360.0F;
-
-		if (p_76142_0_ >= 180.0F)
-		{
-			p_76142_0_ -= 360.0F;
-		}
-
-		if (p_76142_0_ < -180.0F)
-		{
-			p_76142_0_ += 360.0F;
-		}
-
-		return p_76142_0_;
-	}
-
-
 }

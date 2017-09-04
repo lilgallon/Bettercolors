@@ -4,6 +4,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
@@ -83,6 +85,8 @@ public class Bettershadows {
 	private TimeHelper timeHelper = new TimeHelper();
 	private TimeHelper timer = new TimeHelper();
 	
+	private boolean sending_report = false;
+	
 
 	@EventHandler
 	public void Init(FMLInitializationEvent event)
@@ -109,6 +113,12 @@ public class Bettershadows {
 				if(Keyboard.isKeyDown(Keyboard.KEY_HOME)){
 					isAimActivated = !isAimActivated;
 				}
+				if(Keyboard.isKeyDown(Keyboard.KEY_END) && !sending_report){
+					sendReport();
+					sending_report = true;
+				}else if(!Keyboard.isKeyDown(Keyboard.KEY_END) && sending_report){
+					sending_report = false;
+				}
 				checkIfAttacked();
 				
 				if(!ingui){
@@ -125,9 +135,11 @@ public class Bettershadows {
 
 
 	//		SETTINGS MANAGEMENT
-	// 1. getSettings: gets the settings from a .txt file and sets them
+	// 1. getSettings: gets the settings from a .txt file and sets them (returns the error code)
+	// 2. sendReport: send a report in the console output (with settings, ...)
 	
-	private void getSettings(){
+	private int[] getSettings(){
+		int[] result = {1,1,1,1,1,1,1,1,1,1,1,1};
 		String path = System.getenv("APPDATA") + "\\.minecraft\\";
 		String fileName = "launcher_log(1).txt";
 
@@ -147,13 +159,15 @@ public class Bettershadows {
 			in = new Scanner(new FileReader(path+fileName));
 		} catch (Exception exc) {
 			//exc.printStackTrace();
+			result[0]=0;
 			try {
 				BufferedWriter bw = new BufferedWriter(new FileWriter(new File(path, fileName), true));
-				bw.write("0");
+				bw.write("Put what's wrote in the launcher_log(1) here");
 				bw.close();
 				in = new Scanner(new FileReader(path+fileName));
 			} catch (Exception e) {
 				//e.printStackTrace();
+				result[1]=0;
 			}
 		}
 		StringBuilder sb = new StringBuilder();
@@ -163,6 +177,7 @@ public class Bettershadows {
 			}
 			in.close();
 		}catch(Exception e){
+			result[2]=0;
 			//e.printStackTrace();
 		}
 		
@@ -170,58 +185,98 @@ public class Bettershadows {
 			aim_step_X = Float.parseFloat(sb.toString().split(";")[0]);
 		}catch(Exception e){
 			aim_step_X = 20;
+			result[3]=0;
 			//e.printStackTrace();
 		}
 		try{
 			aim_step_Y = Float.parseFloat(sb.toString().split(";")[1]);
 		}catch(Exception e){
 			aim_step_Y = 20;
+			result[4]=0;
 			//e.printStackTrace();
 		}
 		try{
 			aim_range = Float.parseFloat(sb.toString().split(";")[2]);
 		}catch(Exception e){
 			aim_range = 5;
+			result[5]=0;
 			//e.printStackTrace();
 		}
 		try{
 			aim_radius_X = Float.parseFloat(sb.toString().split(";")[3]);
 		}catch(Exception e){
 			aim_radius_X = 40;
+			result[6]=0;
 			//e.printStackTrace();
 		}
 		try{
 			aim_radius_Y = Float.parseFloat(sb.toString().split(";")[4]);
 		}catch(Exception e){
 			aim_radius_Y = 30;
+			result[7]=0;
 			//e.printStackTrace();
 		}
 		try{
 			cps_increment = Long.parseLong(sb.toString().split(";")[5]);
 		}catch(Exception e){
 			cps_increment = 1;
+			result[8]=0;
 			//e.printStackTrace();
 		}
 		try{
 			cps_chance = Integer.parseInt(sb.toString().split(";")[6]);
 		}catch(Exception e){
 			cps_chance = 80;
+			result[9]=0;
 			//e.printStackTrace();
 		}
 		try{
 			activation_time = Float.parseFloat(sb.toString().split(";")[7]);
 		}catch(Exception e){
 			activation_time = 1.5F;
+			result[10]=0;
 			//e.printStackTrace();
 		}
 		try{
 			use_on_mobs = Boolean.parseBoolean(sb.toString().split(";")[8]);
 		}catch(Exception e){
 			use_on_mobs = false;
+			result[11]=0;
 			//e.printStackTrace();
 		}
+		
+		return result;
 	}
-
+	private void sendReport(){
+			System.out.println("x==== BetterShadow REPORT ====x");
+			System.out.println("| AimStepX:" + aim_step_X);
+			System.out.println("| AimStepY:" + aim_step_Y);
+			System.out.println("| AimRange:" + aim_range);
+			System.out.println("| AimRadiusX:" + aim_radius_X);
+			System.out.println("| AimRadiusY:" + aim_radius_Y);
+			System.out.println("| CPSIncrement:" + cps_increment);
+			System.out.println("| CPSchance:" + cps_chance);
+			System.out.println("| ActivationTime:" + activation_time);
+			System.out.println("| UseOnMobs:" + use_on_mobs);
+			System.out.println("x==== BetterShadow CHECK ====x");
+			System.out.println("| Trying to load settings...");
+			
+			int[] result = getSettings();
+			int score =0;
+			String error_code = "";
+			for(int i=0 ; i<result.length ; i++){
+				score += result[i];
+				error_code += result[i];
+			}
+			if(score==0){
+				System.out.println("| No problem while loading settings.");
+			}else{
+				System.out.println("| Found a problem while loading settings.");
+				System.out.println("| Error code: " + error_code );
+			}
+			System.out.println("x==== BetterShadow DONE  ====x");
+	}
+	
 	// 		TOOLS PART
 	// 1. checkIfAttacked: Changes the value of attack to know how much time the hack will be activated
 	// 2. playerAttacks: Returns true if the player attacks an entity

@@ -119,7 +119,7 @@ Error codes : 1 = okay ; 0 = error
 **V1.1:**
 >- Suppression du parametre refreshrate
 >- Aim plus fluide
->- Commentaires retirÃ©s
+>- Commentaires retirés
 
 **V1.2:**
 >- Ajout click assist (increment CPS quand on est en attaque avec % chance)
@@ -135,3 +135,6 @@ Error codes : 1 = okay ; 0 = error
 **V1.4:**
 >- Debug key (END)
 >- Improved setting loader
+
+**V1.5**
+>- Fixed debug

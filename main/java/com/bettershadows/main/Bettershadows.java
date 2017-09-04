@@ -268,7 +268,7 @@ public class Bettershadows {
 				score += result[i];
 				error_code += result[i];
 			}
-			if(score==0){
+			if(score==result.length){
 				System.out.println("| No problem while loading settings.");
 			}else{
 				System.out.println("| Found a problem while loading settings.");

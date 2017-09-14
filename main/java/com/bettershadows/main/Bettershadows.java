@@ -67,6 +67,7 @@ public class Bettershadows {
 	private static boolean attacked = false;
 	private float lastRegisteredYaw = -99999;
 	private boolean isAimActivated = true;
+	private boolean isAiming = false;
 
 	/**************************************/
 	/****	AIM/CLICK SETTINGS		*******/
@@ -292,12 +293,13 @@ public class Bettershadows {
 	
 	private void checkIfAttacked(){
 		if(attacked){
-			if(timer.hasReached(1000*activation_time)){
+			if(timer.hasReached(1000*activation_time) || !isAiming){
 				attacked = false;
 				timer.reset();
 			}
 		}else if(playerAttacks()){
 			attacked = true;
+			isAiming = true;
 			timer.reset();
 		}else{
 			attacked = false;
@@ -306,7 +308,24 @@ public class Bettershadows {
 	}
 	private boolean playerAttacks(){
 		boolean ingui = m_mc.thePlayer.isPlayerSleeping() || m_mc.thePlayer.isDead || !(m_mc.thePlayer.openContainer instanceof ContainerPlayer);
-		return m_mc.objectMouseOver.entityHit!=null && (Mouse.isButtonDown(0) || m_mc.gameSettings.keyBindAttack.isPressed()) && !ingui;
+		boolean attacks = m_mc.objectMouseOver.entityHit!=null && (Mouse.isButtonDown(0) || m_mc.gameSettings.keyBindAttack.isPressed()) && !ingui;
+		
+		if(!use_on_mobs && attacks){
+			try{
+				if(m_mc.objectMouseOver.entityHit instanceof EntityPlayer){
+					if(canAttack((EntityLivingBase) m_mc.objectMouseOver.entityHit)){
+						return true;
+					}else{
+						return false;
+					}
+				}else{
+					return true;
+				}
+			}catch(Exception e){
+				
+			}
+		}
+		return attacks;
 	}
 
 	// 		CLICK PART
@@ -416,6 +435,7 @@ public class Bettershadows {
 					}
 
 					if(!found){
+						
 					}else{
 
 						int entityid = j;
@@ -475,13 +495,13 @@ public class Bettershadows {
 	}
 	private boolean canAttack(EntityLivingBase entity){
 		boolean can_attack = true;
-		
+		String target_tag ="";
 		try {
 			// Check friends / teammate
 			if (entity instanceof EntityPlayer) {
 
 				if (team_filter) {
-					String target_tag = exportTag((EntityPlayer) entity);
+					target_tag = exportTag((EntityPlayer) entity);
 
 					if (exportTag(m_mc.thePlayer).equalsIgnoreCase(target_tag)) {
 						can_attack = false;
@@ -499,7 +519,7 @@ public class Bettershadows {
 	private String exportTag(EntityPlayer e){
 		String tag = "";
 		try{
-			tag = e.getDisplayName().getUnformattedTextForChat().split(e.getName())[0].replace(" ","");
+			tag = e.getDisplayName().getUnformattedText().split(e.getName())[0].replace(" ","");
 			tag = tag.replace("§","");
 		}catch(Exception exc){
 			tag = "";
@@ -557,7 +577,7 @@ public class Bettershadows {
 		if(MathHelper.abs(MathUtils.wrapAngleTo180_float(yaw - m_mc.thePlayer.rotationYaw))<=+ aim_radius_X
 				&& MathHelper.abs(MathUtils.wrapAngleTo180_float(pitch - m_mc.thePlayer.rotationPitch))<= aim_radius_Y){
 
-
+			isAiming = true;
 			float distYaw = MathUtils.wrapAngleTo180_float(yaw - m_mc.thePlayer.rotationYaw);
 			float distPitch = MathUtils.wrapAngleTo180_float(pitch - m_mc.thePlayer.rotationPitch);
 			float yawFinal, pitchFinal;
@@ -569,6 +589,7 @@ public class Bettershadows {
 					, m_mc.thePlayer.rotationPitch + pitchFinal  };
 
 		}else{
+			isAiming = false;
 			return new float[] { m_mc.thePlayer.rotationYaw, m_mc.thePlayer.rotationPitch};
 		}
 	}

@@ -116,6 +116,7 @@ Error codes : 1 = okay ; 0 = error
 
 
 ## Changelog
+`Last stable version: 1.7`
 
 **V1.0:**
 >- Personnalistion parametres
@@ -146,3 +147,8 @@ Error codes : 1 = okay ; 0 = error
 
 **V1.6**
 >- Added team tag filter on aim assist and click assist
+
+**V1.7**
+>- Fixed hack (was not working anymore with team filter turned on)
+>- The hack stops automatically when no target is found after the beginning of the timer
+>- Optimized team filter (It does not call useAimAssist & useClickAssist when the target is a teammate) 

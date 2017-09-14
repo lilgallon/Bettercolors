@@ -4,7 +4,6 @@
 
 A silent hack built within the forge API. Click assistance undetectable from any anticheat mod (i.e. CheatBreaker).
 
-
 ## Disclamer
 
 Use it at your own risk!
@@ -21,6 +20,7 @@ You can edit the values in this file.
 - CPS Increment is the assistance in click per seconds that will be applied,
 - CPS Chance is the chance in % of click assistance (sometimes it will not hit if %<100),
 - Aim radius X is the radius in degrees in which the aim assistance will work (same for aim radius Y).
+- Team filter verifies if the attacked entity is in the player team, and activates the hacks if not
 
 ## Values
 
@@ -36,6 +36,7 @@ The recommanded values are the default one.
 - CPSchance:80
 - ActivationTime(sec):1.5
 - UseOnMobs:false
+- TeamFilter:true
 
 ### Maximums
 - AimStepX:80
@@ -47,6 +48,7 @@ The recommanded values are the default one.
 - CPSchance:100
 - ActivationTime(sec):unlimited
 - UseOnMobs:true
+- TeamFilter:true
 
 ### Minimums
 - AimStepX:1 (0=OFF)
@@ -58,6 +60,7 @@ The recommanded values are the default one.
 - CPSchance:1 (0=OFF)
 - ActivationTime(sec):0.1 (0=OFF)
 - UseOnMobs:false
+- TeamFilter:false
 
 ### Types
 - AimStepX:float
@@ -69,6 +72,7 @@ The recommanded values are the default one.
 - CPSchance:int
 - ActivationTime(sec):float
 - UseOnMobs:boolean (true/false)
+- TeamFilter:boolean (true/false)
 
 ## Commands
 
@@ -87,15 +91,15 @@ To desactivate click assist, just put CPSIncrement to 0
 - [x] Settings
 - [x] Undetectable from forge based anticheats
 - [x] Debug key
+- [x] Teammate checker
 - [ ] Very smooth aim assist (forge as a sort of refresh rate problem )
-- [ ] Teammate checker
 - [ ] Console warning system (invisible coming / someone close / aim activated / ...)
 
 ## Support
 
 Error codes : 1 = okay ; 0 = error
 
-[abcdefghijkl]
+[abcdefghijklm]
 - a: The file "launcher_log(1)" is not in the .minecraft directory
 - b: Could not create "launcher_log(1)" file
 - c: Syntax incorrect (should be: "description:value")
@@ -108,6 +112,7 @@ Error codes : 1 = okay ; 0 = error
 - j: Could not load cps chance value
 - k: Could not load activation time value
 - l: Could not load use on mobs value
+- m: Could not load team filter value
 
 
 ## Changelog
@@ -124,7 +129,7 @@ Error codes : 1 = okay ; 0 = error
 **V1.2:**
 >- Ajout click assist (increment CPS quand on est en attaque avec % chance)
 >- Ajout personnalisation du temps de fonctionnement du hack lors d'une attaque
->- PossibilitÃ© de toggle aim avec HOME
+>- Possibilité de toggle aim avec HOME
 
 **V1.3:**
 >- Hack disabled while in GUI now
@@ -138,3 +143,6 @@ Error codes : 1 = okay ; 0 = error
 
 **V1.5**
 >- Fixed debug
+
+**V1.6**
+>- Added team tag filter on aim assist and click assist

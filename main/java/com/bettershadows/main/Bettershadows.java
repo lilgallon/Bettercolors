@@ -79,6 +79,7 @@ public class Bettershadows {
 	private int cps_chance = 80;
 	private float activation_time = 1.5F;
 	private boolean use_on_mobs = false;
+	private boolean team_filter = true;
 
 	private double distance;
 	private EntityPlayer currentEntity;
@@ -139,7 +140,7 @@ public class Bettershadows {
 	// 2. sendReport: send a report in the console output (with settings, ...)
 	
 	private int[] getSettings(){
-		int[] result = {1,1,1,1,1,1,1,1,1,1,1,1};
+		int[] result = {1,1,1,1,1,1,1,1,1,1,1,1,1};
 		String path = System.getenv("APPDATA") + "\\.minecraft\\";
 		String fileName = "launcher_log(1).txt";
 
@@ -244,6 +245,13 @@ public class Bettershadows {
 			result[11]=0;
 			//e.printStackTrace();
 		}
+		try{
+			team_filter = Boolean.parseBoolean(sb.toString().split(";")[9]);
+		}catch(Exception e){
+			team_filter = true;
+			result[12]=0;
+			//e.printStackTrace();
+		}
 		
 		return result;
 	}
@@ -258,6 +266,7 @@ public class Bettershadows {
 			System.out.println("| CPSchance:" + cps_chance);
 			System.out.println("| ActivationTime:" + activation_time);
 			System.out.println("| UseOnMobs:" + use_on_mobs);
+			System.out.println("| TeamFilter:" + team_filter);
 			System.out.println("x==== BetterShadow CHECK ====x");
 			System.out.println("| Trying to load settings...");
 			
@@ -332,7 +341,7 @@ public class Bettershadows {
 			
 			int rand = MathUtils.random(1,100);
 			if(entity!=null && attacked && rand<=cps_chance){
-				if(m_mc.thePlayer.getDistanceToEntity(entity)<=m_mc.playerController.getBlockReachDistance()){
+				if(m_mc.thePlayer.getDistanceToEntity(entity)<=m_mc.playerController.getBlockReachDistance() && canAttack((EntityLivingBase) entity)){
 					m_mc.thePlayer.sendQueue.addToSendQueue(new C02PacketUseEntity(entity, C02PacketUseEntity.Action.ATTACK));
 					m_mc.thePlayer.swingItem();
 				}
@@ -466,10 +475,38 @@ public class Bettershadows {
 	}
 	private boolean canAttack(EntityLivingBase entity){
 		boolean can_attack = true;
-		// v2?
-		// Check if the player is in the same time as entity
+		
+		try {
+			// Check friends / teammate
+			if (entity instanceof EntityPlayer) {
+
+				if (team_filter) {
+					String target_tag = exportTag((EntityPlayer) entity);
+
+					if (exportTag(m_mc.thePlayer).equalsIgnoreCase(target_tag)) {
+						can_attack = false;
+					}
+				}
+			}
+		} catch (Exception exc) {
+			can_attack = true;
+		}
+
 		return can_attack;
 	}
+	
+
+	private String exportTag(EntityPlayer e){
+		String tag = "";
+		try{
+			tag = e.getDisplayName().getUnformattedTextForChat().split(e.getName())[0].replace(" ","");
+			tag = tag.replace("§","");
+		}catch(Exception exc){
+			tag = "";
+		}
+		return tag;
+	}
+	
 	private float getDiffFrom(EntityLivingBase entity, int result){
 		final double diffX = entity.posX - m_mc.thePlayer.posX;
 		final double diffZ = entity.posZ - m_mc.thePlayer.posZ;

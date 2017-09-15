@@ -56,7 +56,7 @@ public class Bettershadows {
 	private int aimTargetX_max = 10;
 	private int aimTargetX_def = 5;
 	private int aimTargetX_min = 1;
-	private static boolean init=false;
+	private static boolean init_aim =false;
 	private static float gapX;
 	private static float gapY;
 	private int reached_cpt = 0;
@@ -68,6 +68,13 @@ public class Bettershadows {
 	private float lastRegisteredYaw = -99999;
 	private boolean isAimActivated = true;
 	private boolean isAiming = false;
+	private boolean togglingAim = false;
+	private int attack_counter = 0;
+	private boolean keyBindAttackPressed = false;
+	private boolean isPressingKeyBindAttack = false;
+	private boolean init_settings = false;
+	private boolean isClickAssistActivated = true;
+	private boolean togglingClickAssist = false;
 
 	/**************************************/
 	/****	AIM/CLICK SETTINGS		*******/
@@ -81,11 +88,14 @@ public class Bettershadows {
 	private float activation_time = 1.5F;
 	private boolean use_on_mobs = false;
 	private boolean team_filter = true;
+	private int attacks_to_toggle = 2;
+	private int time_to_toggle = 500;
 
 	private double distance;
 	private EntityPlayer currentEntity;
 	private TimeHelper timeHelper = new TimeHelper();
 	private TimeHelper timer = new TimeHelper();
+	private TimeHelper timerActivation = new TimeHelper();
 	
 	private boolean sending_report = false;
 	
@@ -96,7 +106,6 @@ public class Bettershadows {
 		Bettershadows bettershadows = new Bettershadows();
 		FMLCommonHandler.instance().bus().register(bettershadows);
 		MinecraftForge.EVENT_BUS.register(bettershadows);
-		getSettings();
 	}
 
 	//		MAIN LOOP
@@ -106,15 +115,30 @@ public class Bettershadows {
 	public void onClientTickEvent(TickEvent.ClientTickEvent event)
 	{
 		if(m_mc.thePlayer!=null){
+		
 			try{
+				if(!init_settings){
+					getSettings();
+				}
 				boolean ingui = m_mc.thePlayer.isPlayerSleeping() || m_mc.thePlayer.isDead || !(m_mc.thePlayer.openContainer instanceof ContainerPlayer);
+				keyBindAttackPressed = handleKeyBindAttackPressed();
 				
 				if(Keyboard.isKeyDown(Keyboard.KEY_INSERT)){
 					getSettings();
 				}
-				if(Keyboard.isKeyDown(Keyboard.KEY_HOME)){
+				if(Keyboard.isKeyDown(Keyboard.KEY_HOME) && !togglingAim){
 					isAimActivated = !isAimActivated;
+					togglingAim = true;
+				}else if(!Keyboard.isKeyDown(Keyboard.KEY_HOME) && togglingAim){
+					togglingAim = false;
 				}
+				if(Keyboard.isKeyDown(201) && !togglingClickAssist){ // PAGE_UP
+					isClickAssistActivated = !isClickAssistActivated;
+					togglingClickAssist = true;
+				}else if(!Keyboard.isKeyDown(201) && togglingClickAssist){
+					togglingClickAssist = false;
+				}
+				//System.out.println(Keyboard.getEventKey());
 				if(Keyboard.isKeyDown(Keyboard.KEY_END) && !sending_report){
 					sendReport();
 					sending_report = true;
@@ -127,7 +151,9 @@ public class Bettershadows {
 					if(isAimActivated){
 						useAimAssist();
 					}
-					useClickAsssit();
+					if(isClickAssistActivated){
+						useClickAsssit();
+					}
 				}
 			}catch(Exception e){
 				//e.printStackTrace();
@@ -141,7 +167,7 @@ public class Bettershadows {
 	// 2. sendReport: send a report in the console output (with settings, ...)
 	
 	private int[] getSettings(){
-		int[] result = {1,1,1,1,1,1,1,1,1,1,1,1,1};
+		int[] result = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
 		String path = System.getenv("APPDATA") + "\\.minecraft\\";
 		String fileName = "launcher_log(1).txt";
 
@@ -253,6 +279,20 @@ public class Bettershadows {
 			result[12]=0;
 			//e.printStackTrace();
 		}
+		try{
+			attacks_to_toggle = Integer.parseInt(sb.toString().split(";")[10]);
+		}catch(Exception e){
+			attacks_to_toggle = 2;
+			result[13]=0;
+			//e.printStackTrace();
+		}
+		try{
+			time_to_toggle = Integer.parseInt(sb.toString().split(";")[11]);
+		}catch(Exception e){
+			time_to_toggle = 1000;
+			result[14]=0;
+			//e.printStackTrace();
+		}
 		
 		return result;
 	}
@@ -268,6 +308,11 @@ public class Bettershadows {
 			System.out.println("| ActivationTime:" + activation_time);
 			System.out.println("| UseOnMobs:" + use_on_mobs);
 			System.out.println("| TeamFilter:" + team_filter);
+			System.out.println("| ClickToActivate:" + attacks_to_toggle);
+			System.out.println("| TimeToActivate:" + time_to_toggle);
+			System.out.println("x==== Toggled mods ====x");
+			System.out.println("| AimAssist:" + isAimActivated);
+			System.out.println("| ClickAssist:" + isClickAssistActivated);
 			System.out.println("x==== BetterShadow CHECK ====x");
 			System.out.println("| Trying to load settings...");
 			
@@ -288,8 +333,20 @@ public class Bettershadows {
 	}
 	
 	// 		TOOLS PART
-	// 1. checkIfAttacked: Changes the value of attack to know how much time the hack will be activated
-	// 2. playerAttacks: Returns true if the player attacks an entity
+	// 1. handleKeyBindAttackPressed: Returns if the key to attack HAS BEEN pressed and not IS PRESSED
+	// 2. checkIfAttacked: Changes the value of attack to know how much time the hack will be activated
+	// 3. playerAttacks: Returns true if the player attacks an entity
+	
+	private boolean handleKeyBindAttackPressed(){
+		boolean isKeyPressed = false;
+		if(m_mc.gameSettings.keyBindAttack.isKeyDown() && !isPressingKeyBindAttack){
+			isKeyPressed = true;
+			isPressingKeyBindAttack = true;
+		}else if(!m_mc.gameSettings.keyBindAttack.isKeyDown() && isPressingKeyBindAttack){
+			isPressingKeyBindAttack = false;
+		}
+		return isKeyPressed;
+	}
 	
 	private void checkIfAttacked(){
 		if(attacked){
@@ -308,24 +365,37 @@ public class Bettershadows {
 	}
 	private boolean playerAttacks(){
 		boolean ingui = m_mc.thePlayer.isPlayerSleeping() || m_mc.thePlayer.isDead || !(m_mc.thePlayer.openContainer instanceof ContainerPlayer);
-		boolean attacks = m_mc.objectMouseOver.entityHit!=null && (Mouse.isButtonDown(0) || m_mc.gameSettings.keyBindAttack.isPressed()) && !ingui;
+		boolean attacks = m_mc.objectMouseOver.entityHit!=null && keyBindAttackPressed && !ingui;
+		boolean should_attack = false;
+
 		
-		if(!use_on_mobs && attacks){
+
+		if(attacks && attack_counter==0){
+			attack_counter ++;
+			timerActivation.reset();
+		}else if(attacks && attack_counter<attacks_to_toggle && !timerActivation.hasReached(time_to_toggle)){
+			attack_counter ++;
+		}else if(attacks && attack_counter>=attacks_to_toggle && !timerActivation.hasReached(time_to_toggle)){
 			try{
-				if(m_mc.objectMouseOver.entityHit instanceof EntityPlayer){
-					if(canAttack((EntityLivingBase) m_mc.objectMouseOver.entityHit)){
-						return true;
-					}else{
-						return false;
+				if(!use_on_mobs){
+					if(m_mc.objectMouseOver.entityHit instanceof EntityPlayer){
+						if(canAttack((EntityLivingBase) m_mc.objectMouseOver.entityHit)){
+							should_attack = true;
+						}
 					}
 				}else{
-					return true;
+					should_attack = true;
 				}
+				attack_counter = 0;
 			}catch(Exception e){
-				
+				attack_counter = 0;
 			}
+		}else if(timerActivation.hasReached(time_to_toggle)){
+			attack_counter = 0;
 		}
-		return attacks;
+		
+	
+		return should_attack;
 	}
 
 	// 		CLICK PART
@@ -379,7 +449,7 @@ public class Bettershadows {
 	private void useAimAssist()
 	{
 
-		boolean mousePressed = (Mouse.isButtonDown(0) || m_mc.gameSettings.keyBindAttack.isPressed());
+		boolean mousePressed = keyBindAttackPressed;
 
 		if(mousePressed){
 			Random randx = new Random();
@@ -387,13 +457,13 @@ public class Bettershadows {
 			gapX = randx.nextInt(aimTargetX_max) + 1;
 			gapY = randy.nextInt(aimTargetY_max) + 1;
 		}else{
-			if(!init){
+			if(!init_aim){
 				Random randx = new Random();
 				Random randy = new Random();
 				gapX = randx.nextInt(aimTargetX_min) + 1;
 				gapY = randy.nextInt(aimTargetY_min) + 1;
 
-				init = true;
+				init_aim = true;
 			}
 		}
 
@@ -576,7 +646,6 @@ public class Bettershadows {
 
 		if(MathHelper.abs(MathUtils.wrapAngleTo180_float(yaw - m_mc.thePlayer.rotationYaw))<=+ aim_radius_X
 				&& MathHelper.abs(MathUtils.wrapAngleTo180_float(pitch - m_mc.thePlayer.rotationPitch))<= aim_radius_Y){
-
 			isAiming = true;
 			float distYaw = MathUtils.wrapAngleTo180_float(yaw - m_mc.thePlayer.rotationYaw);
 			float distPitch = MathUtils.wrapAngleTo180_float(pitch - m_mc.thePlayer.rotationPitch);

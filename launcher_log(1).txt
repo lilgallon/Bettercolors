@@ -3,8 +3,10 @@ AimStepY:20
 AimRange:6
 AimRadiusX:60
 AimRadiusY:30
-CPSIncrement:1
+CPSIncrement:2
 CPSchance:80
 ActivationTime(sec):1.5
-UseOnMobs:false
+UseOnMobs:true
 TeamFilter:true
+ClicksToActivate:3
+TimeToActivate(ms):1000

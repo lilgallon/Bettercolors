@@ -1,4 +1,4 @@
-package com.bettershadows.utils;
+package com.bettercolors.utils;
 
 public class TimeHelper {
 	private long lastMS = 0L;

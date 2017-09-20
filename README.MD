@@ -1,7 +1,7 @@
 ![header](gitresources/header.png)
 
 # N3RO's silent hack
-`Last stable version: 2.0`
+`Last stable version: 2.1`
 
 A silent hack built within the forge API. Click assistance undetectable from any anticheat mod (i.e. CheatBreaker).
 
@@ -173,3 +173,6 @@ Error codes : 1 = okay ; 0 = error
 >- Fixed settings not loaded while starting (before you had to reload to use your settings)
 >- Added "PAGE_UP" key to toggle click assist
 >- Added aim assist and click assist activated status in report
+
+**V2.1**
+>- Changed mod from "better shadows" to "better colors"

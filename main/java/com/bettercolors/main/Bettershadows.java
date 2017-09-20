@@ -1,4 +1,4 @@
-package com.bettershadows.main;
+package com.bettercolors.main;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -13,8 +13,8 @@ import java.util.Scanner;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
-import com.bettershadows.utils.MathUtils;
-import com.bettershadows.utils.TimeHelper;
+import com.bettercolors.utils.MathUtils;
+import com.bettercolors.utils.TimeHelper;
 import com.google.common.collect.Lists;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;

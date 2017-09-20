@@ -1,15 +1,15 @@
 [
 {
-  "modid": "Bettershadows",
-  "name": "N3RO's Bettershadows",
-  "description": "More accurate shadows in minecraft.",
-  "version": "2.0",
+  "modid": "Bettercolors",
+  "name": "N3RO's Bettercolors",
+  "description": "True colors in minecraft (improved for specific monitors).",
+  "version": "2.1",
   "mcversion": "1.8.9",
   "url": "",
   "updateUrl": "",
   "authorList": ["N3RO"],
-  "credits": "The sun and the light",
-  "logoFile": "Bettershadows.png",
+  "credits": "The colors of this world",
+  "logoFile": "Bettercolors.png",
   "screenshots": [],
   "dependencies": []
 }

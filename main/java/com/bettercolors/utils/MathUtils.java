@@ -1,4 +1,4 @@
-package com.bettershadows.utils;
+package com.bettercolors.utils;
 
 import java.util.Random;
 

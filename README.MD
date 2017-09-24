@@ -3,6 +3,11 @@
 # N3RO's silent hack
 `Last stable version: 2.1`
 
+`Forge dev version: 1.8.9-11.15.1.1722`
+
+`Forge client-side compatibility: 1.8.9-xxxx`
+
+
 A silent hack built within the forge API. Click assistance undetectable from any anticheat mod (i.e. CheatBreaker).
 
 ## Disclamer

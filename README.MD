@@ -122,6 +122,7 @@ To desactivate click assist, just put CPSIncrement to 0 (V1.8 and less)
 - [x] Smooth aim
 - [x] Aim refresh rate
 - [ ] Auto save settings (clickassist & aimassist toggled or not)
+- [ ] CheatSmasher bypass
 - [ ] Console warning system (invisible coming / someone close / aim activated / ...)
 
 ## Support

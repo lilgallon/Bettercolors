@@ -1,5 +1,7 @@
 package com.bettercolors.main;
 
+import java.awt.AWTException;
+import java.awt.Robot;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
@@ -36,6 +38,7 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 
 @Mod(   modid = Reference.MOD_ID,
 name = Reference.NAME,
@@ -90,12 +93,15 @@ public class Bettershadows {
 	private boolean team_filter = true;
 	private int attacks_to_toggle = 2;
 	private int time_to_toggle = 500;
+	private int aim_refreshrate = 10;
+	private boolean cps_bypass = false;
 
 	private double distance;
 	private EntityPlayer currentEntity;
 	private TimeHelper timeHelper = new TimeHelper();
 	private TimeHelper timer = new TimeHelper();
 	private TimeHelper timerActivation = new TimeHelper();
+	private TimeHelper timerAim = new TimeHelper();
 	
 	private boolean sending_report = false;
 	
@@ -103,22 +109,21 @@ public class Bettershadows {
 	@EventHandler
 	public void Init(FMLInitializationEvent event)
 	{
-		Bettershadows bettershadows = new Bettershadows();
-		FMLCommonHandler.instance().bus().register(bettershadows);
-		MinecraftForge.EVENT_BUS.register(bettershadows);
+		MinecraftForge.EVENT_BUS.register((Object)this);
+		FMLCommonHandler.instance().bus().register((Object)this);
 	}
 
 	//		MAIN LOOP
 	// 1. onClientTickEvent: Main loop refreshed at the beginning and the end of each tick
 
 	@SubscribeEvent
-	public void onClientTickEvent(TickEvent.ClientTickEvent event)
-	{
+	public void clientTick(final TickEvent event){
 		if(m_mc.thePlayer!=null){
-		
+			
 			try{
 				if(!init_settings){
 					getSettings();
+					init_settings = true;
 				}
 				boolean ingui = m_mc.thePlayer.isPlayerSleeping() || m_mc.thePlayer.isDead || !(m_mc.thePlayer.openContainer instanceof ContainerPlayer);
 				keyBindAttackPressed = handleKeyBindAttackPressed();
@@ -149,7 +154,12 @@ public class Bettershadows {
 				
 				if(!ingui){
 					if(isAimActivated){
-						useAimAssist();
+						if(aim_refreshrate>0){
+							if(timerAim.isDelayComplete(1000/aim_refreshrate)){
+								useAimAssist();
+								timerAim.reset();
+							}
+						}
 					}
 					if(isClickAssistActivated){
 						useClickAsssit();
@@ -161,13 +171,13 @@ public class Bettershadows {
 		}
 	}
 
-
 	//		SETTINGS MANAGEMENT
 	// 1. getSettings: gets the settings from a .txt file and sets them (returns the error code)
 	// 2. sendReport: send a report in the console output (with settings, ...)
 	
 	private int[] getSettings(){
-		int[] result = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
+		
+		int[] result = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
 		String path = System.getenv("APPDATA") + "\\.minecraft\\";
 		String fileName = "launcher_log(1).txt";
 
@@ -210,84 +220,99 @@ public class Bettershadows {
 		}
 		
 		try{
-			aim_step_X = Float.parseFloat(sb.toString().split(";")[0]);
+			aim_refreshrate = Integer.parseInt(sb.toString().split(";")[0]);
+		}catch(Exception e){
+			aim_refreshrate = 20;
+			result[15]=0;
+			//e.printStackTrace();
+		}
+		
+		try{
+			aim_step_X = Float.parseFloat(sb.toString().split(";")[1]);
 		}catch(Exception e){
 			aim_step_X = 20;
 			result[3]=0;
 			//e.printStackTrace();
 		}
 		try{
-			aim_step_Y = Float.parseFloat(sb.toString().split(";")[1]);
+			aim_step_Y = Float.parseFloat(sb.toString().split(";")[2]);
 		}catch(Exception e){
 			aim_step_Y = 20;
 			result[4]=0;
 			//e.printStackTrace();
 		}
 		try{
-			aim_range = Float.parseFloat(sb.toString().split(";")[2]);
+			aim_range = Float.parseFloat(sb.toString().split(";")[3]);
 		}catch(Exception e){
 			aim_range = 5;
 			result[5]=0;
 			//e.printStackTrace();
 		}
 		try{
-			aim_radius_X = Float.parseFloat(sb.toString().split(";")[3]);
+			aim_radius_X = Float.parseFloat(sb.toString().split(";")[4]);
 		}catch(Exception e){
 			aim_radius_X = 40;
 			result[6]=0;
 			//e.printStackTrace();
 		}
 		try{
-			aim_radius_Y = Float.parseFloat(sb.toString().split(";")[4]);
+			aim_radius_Y = Float.parseFloat(sb.toString().split(";")[5]);
 		}catch(Exception e){
 			aim_radius_Y = 30;
 			result[7]=0;
 			//e.printStackTrace();
 		}
 		try{
-			cps_increment = Long.parseLong(sb.toString().split(";")[5]);
+			cps_increment = Long.parseLong(sb.toString().split(";")[6]);
 		}catch(Exception e){
 			cps_increment = 1;
 			result[8]=0;
 			//e.printStackTrace();
 		}
 		try{
-			cps_chance = Integer.parseInt(sb.toString().split(";")[6]);
+			cps_chance = Integer.parseInt(sb.toString().split(";")[7]);
 		}catch(Exception e){
 			cps_chance = 80;
 			result[9]=0;
 			//e.printStackTrace();
 		}
 		try{
-			activation_time = Float.parseFloat(sb.toString().split(";")[7]);
+			cps_bypass = Boolean.parseBoolean(sb.toString().split(";")[8]);
+		}catch(Exception e){
+			cps_bypass = false;
+			result[16]=0;
+			//e.printStackTrace();
+		}
+		try{
+			activation_time = Float.parseFloat(sb.toString().split(";")[9]);
 		}catch(Exception e){
 			activation_time = 1.5F;
 			result[10]=0;
 			//e.printStackTrace();
 		}
 		try{
-			use_on_mobs = Boolean.parseBoolean(sb.toString().split(";")[8]);
+			use_on_mobs = Boolean.parseBoolean(sb.toString().split(";")[10]);
 		}catch(Exception e){
 			use_on_mobs = false;
 			result[11]=0;
 			//e.printStackTrace();
 		}
 		try{
-			team_filter = Boolean.parseBoolean(sb.toString().split(";")[9]);
+			team_filter = Boolean.parseBoolean(sb.toString().split(";")[11]);
 		}catch(Exception e){
 			team_filter = true;
 			result[12]=0;
 			//e.printStackTrace();
 		}
 		try{
-			attacks_to_toggle = Integer.parseInt(sb.toString().split(";")[10]);
+			attacks_to_toggle = Integer.parseInt(sb.toString().split(";")[12]);
 		}catch(Exception e){
 			attacks_to_toggle = 2;
 			result[13]=0;
 			//e.printStackTrace();
 		}
 		try{
-			time_to_toggle = Integer.parseInt(sb.toString().split(";")[11]);
+			time_to_toggle = Integer.parseInt(sb.toString().split(";")[13]);
 		}catch(Exception e){
 			time_to_toggle = 1000;
 			result[14]=0;
@@ -298,6 +323,7 @@ public class Bettershadows {
 	}
 	private void sendReport(){
 			System.out.println("x==== BetterShadow REPORT ====x");
+			System.out.println("| AimRefreshRate:" + aim_refreshrate);
 			System.out.println("| AimStepX:" + aim_step_X);
 			System.out.println("| AimStepY:" + aim_step_Y);
 			System.out.println("| AimRange:" + aim_range);
@@ -305,6 +331,7 @@ public class Bettershadows {
 			System.out.println("| AimRadiusY:" + aim_radius_Y);
 			System.out.println("| CPSIncrement:" + cps_increment);
 			System.out.println("| CPSchance:" + cps_chance);
+			System.out.println("| CPSBypass:" + cps_bypass);
 			System.out.println("| ActivationTime:" + activation_time);
 			System.out.println("| UseOnMobs:" + use_on_mobs);
 			System.out.println("| TeamFilter:" + team_filter);
@@ -431,8 +458,20 @@ public class Bettershadows {
 			int rand = MathUtils.random(1,100);
 			if(entity!=null && attacked && rand<=cps_chance){
 				if(m_mc.thePlayer.getDistanceToEntity(entity)<=m_mc.playerController.getBlockReachDistance() && canAttack((EntityLivingBase) entity)){
-					m_mc.thePlayer.sendQueue.addToSendQueue(new C02PacketUseEntity(entity, C02PacketUseEntity.Action.ATTACK));
-					m_mc.thePlayer.swingItem();
+					if(cps_bypass){
+						m_mc.thePlayer.sendQueue.addToSendQueue(new C02PacketUseEntity(entity, C02PacketUseEntity.Action.ATTACK));
+						m_mc.thePlayer.swingItem();
+					}else{
+						Robot bot;
+						try {
+							bot = new Robot();
+							bot.mouseRelease(16);
+					        bot.mousePress(16);
+						} catch (AWTException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
 				}
 			}
 			timeHelper.reset();

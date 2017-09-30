@@ -1,7 +1,7 @@
 ![header](gitresources/header.png)
 
 # N3RO's silent hack
-`Last stable version: 2.1`
+`Last stable version: 3.0`
 
 `Forge dev version: 1.8.9-11.15.1.1722`
 
@@ -34,13 +34,15 @@ You can edit the values in this file.
 The recommanded values are the default one.
 
 ### Default
-- AimStepX:10
-- AimStepY:10
+- AimRefreshRate(x/sec):200
+- AimStepX:10 (V3.0+: 4)
+- AimStepY:10 (V3.0+: 4)
 - AimRange:5
 - AimRadiusX:60
 - AimRadiusY:30
 - CPSIncrement:1
 - CPSchance:80
+- CPSBypass(Artificial/Human):false
 - ActivationTime(sec):1.5
 - UseOnMobs:false
 - TeamFilter:true
@@ -48,6 +50,7 @@ The recommanded values are the default one.
 - TimeToActivate(ms):1000
 
 ### Maximums
+- AimRefreshRate:1000
 - AimStepX:80
 - AimStepY:80
 - AimRange:100
@@ -55,6 +58,7 @@ The recommanded values are the default one.
 - AimRadiusY:90
 - CPSIncrement:1000
 - CPSchance:100
+- CPSBypass(Artificial/Human):true
 - ActivationTime(sec):unlimited
 - UseOnMobs:true
 - TeamFilter:true
@@ -62,6 +66,7 @@ The recommanded values are the default one.
 - TimeToActivate(ms):unlimited
 
 ### Minimums
+- AimRefreshRate:1 (0=OFF)
 - AimStepX:1 (0=OFF)
 - AimStepY:1 (0=OFF)
 - AimRange:1 (0=OFF)
@@ -69,6 +74,7 @@ The recommanded values are the default one.
 - AimRadiusY:1 (0=OFF)
 - CPSIncrement:1 (0=OFF)
 - CPSchance:1 (0=OFF)
+- CPSBypass(Artificial/Human):false
 - ActivationTime(sec):0.1 (0=OFF)
 - UseOnMobs:false
 - TeamFilter:false
@@ -76,6 +82,7 @@ The recommanded values are the default one.
 - TimeToActivate(ms):1000
 
 ### Types
+- AimRefreshRate:int
 - AimStepX:float
 - AimStepY:float
 - AimRange:float
@@ -83,6 +90,7 @@ The recommanded values are the default one.
 - AimRadiusY:float
 - CPSIncrement:long
 - CPSchance:int
+- CPSBypass(Artificial/Human):boolean
 - ActivationTime(sec):float
 - UseOnMobs:boolean (true/false)
 - TeamFilter:boolean (true/false)
@@ -110,13 +118,17 @@ To desactivate click assist, just put CPSIncrement to 0 (V1.8 and less)
 - [x] Debug key
 - [x] Teammate checker
 - [x] Activation settings
+- [x] Human clickassist
+- [x] Smooth aim
+- [x] Aim refresh rate
+- [ ] Auto save settings (clickassist & aimassist toggled or not)
 - [ ] Console warning system (invisible coming / someone close / aim activated / ...)
 
 ## Support
 
 Error codes : 1 = okay ; 0 = error
 
-[abcdefghijklmno]
+[abcdefghijklmnopq]
 - a: The file "launcher_log(1)" is not in the .minecraft directory
 - b: Could not create "launcher_log(1)" file
 - c: Syntax incorrect (should be: "description:value")
@@ -132,7 +144,8 @@ Error codes : 1 = okay ; 0 = error
 - m: Could not load team filter value
 - n: Could not load click to activate value
 - o: Could not load time to activate value
-
+- p: Could not load aim refresh rate value
+- q: Could not load cps bypass value
 
 ## Changelog
 
@@ -181,3 +194,9 @@ Error codes : 1 = okay ; 0 = error
 
 **V2.1**
 >- Changed mod from "better shadows" to "better colors"
+
+**V3.0**
+>- Very smooth aim
+>- Aim refresh parameter
+>- Human / Artificial click assist parameter (artificial bypasses CPS counter)
+>- Fixed possible freeze

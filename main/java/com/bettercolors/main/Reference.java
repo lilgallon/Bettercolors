@@ -10,6 +10,6 @@ public class Reference {
 	
 	public static final String MOD_ID = "Bettercolors";
 	public static final String NAME = "N3RO's Bettercolors";
-	public static final String VERSION = "2.1";
+	public static final String VERSION = "3.0";
 	public static final String ACCEPTED_VERSIONS = "[1.8.9]";
 }

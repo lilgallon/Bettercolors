@@ -1,10 +1,12 @@
-AimStepX:20
-AimStepY:20
-AimRange:6
+AimRefreshRate(x/sec):10
+AimStepX:2
+AimStepY:2
+AimRange:5
 AimRadiusX:60
 AimRadiusY:30
-CPSIncrement:2
+CPSIncrement:1
 CPSchance:80
+CPSBypass:false
 ActivationTime(sec):1.5
 UseOnMobs:true
 TeamFilter:true

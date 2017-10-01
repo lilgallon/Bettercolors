@@ -69,32 +69,55 @@ public class Bettershadows {
 	private static int cpt_attacking = 0;
 	private static boolean attacked = false;
 	private float lastRegisteredYaw = -99999;
-	private boolean isAimActivated = true;
 	private boolean isAiming = false;
 	private boolean togglingAim = false;
 	private int attack_counter = 0;
 	private boolean keyBindAttackPressed = false;
 	private boolean isPressingKeyBindAttack = false;
 	private boolean init_settings = false;
-	private boolean isClickAssistActivated = true;
-	private boolean togglingClickAssist = false;
 
+	private boolean togglingClickAssist = false;
+	
+	/*
+	 * DEFAULT VALUES
+	 */
+	private final float AIM_RANGE_DEF = 5;
+	private final float AIM_RADIUS_X_DEF = 60;
+	private final float AIM_RADIUS_Y_DEF = 30;
+	private final float AIM_STEP_X_DEF = 10;	
+	private final float AIM_STEP_Y_DEF = 10;
+	private final long CPS_INCREMENT_DEF = 1;
+	private final int CPS_CHANCE_DEF = 80;
+	private final float ACTIVATION_TIME_DEF = 1.5F;
+	private final boolean USE_ON_MOBS_DEF = false;
+	private final boolean TEAM_FILTER_DEF = true;
+	private final int ATTACKS_TO_TOGGLE_DEF = 3;
+	private final int TIME_TO_TOGGLE_DEF = 1000;
+	private final int AIM_REFRESHRATE_DEF = 200;
+	private final boolean CPS_BYPASS_DEF = false;
+	private final boolean CPS_ONLY_ON_ENTITY_DEF = false;
+	private final boolean IS_AIM_ACTIVATED_DEF = true;
+	private final boolean IS_CLICKASSIST_ACTIVATED_DEF = true;
+	
 	/**************************************/
 	/****	AIM/CLICK SETTINGS		*******/
-	private float aim_range = 5;
-	private float aim_radius_X = 40;
-	private float aim_radius_Y = 30;
-	private float aim_step_X = 20;	
-	private float aim_step_Y = 20;
-	private long cps_increment = 2;
-	private int cps_chance = 80;
-	private float activation_time = 1.5F;
-	private boolean use_on_mobs = false;
-	private boolean team_filter = true;
-	private int attacks_to_toggle = 2;
-	private int time_to_toggle = 500;
-	private int aim_refreshrate = 10;
-	private boolean cps_bypass = false;
+	private float aim_range = AIM_RANGE_DEF;
+	private float aim_radius_X = AIM_RADIUS_X_DEF;
+	private float aim_radius_Y = AIM_RADIUS_Y_DEF;
+	private float aim_step_X = AIM_STEP_X_DEF;	
+	private float aim_step_Y = AIM_STEP_Y_DEF;
+	private long cps_increment = CPS_INCREMENT_DEF;
+	private int cps_chance = CPS_CHANCE_DEF;
+	private float activation_time = ACTIVATION_TIME_DEF;
+	private boolean use_on_mobs = USE_ON_MOBS_DEF;
+	private boolean team_filter = TEAM_FILTER_DEF;
+	private int attacks_to_toggle = ATTACKS_TO_TOGGLE_DEF;
+	private int time_to_toggle = TIME_TO_TOGGLE_DEF;
+	private int aim_refreshrate = AIM_REFRESHRATE_DEF;
+	private boolean cps_bypass = CPS_BYPASS_DEF;
+	private boolean cps_only_on_entity = CPS_BYPASS_DEF;
+	private boolean isClickAssistActivated = IS_CLICKASSIST_ACTIVATED_DEF;
+	private boolean isAimActivated = IS_AIM_ACTIVATED_DEF;
 
 	private double distance;
 	private EntityPlayer currentEntity;
@@ -104,6 +127,7 @@ public class Bettershadows {
 	private TimeHelper timerAim = new TimeHelper();
 	
 	private boolean sending_report = false;
+	private boolean loadingSettings = false;
 	
 
 	@EventHandler
@@ -112,44 +136,52 @@ public class Bettershadows {
 		MinecraftForge.EVENT_BUS.register((Object)this);
 		FMLCommonHandler.instance().bus().register((Object)this);
 	}
+	
 
 	//		MAIN LOOP
 	// 1. onClientTickEvent: Main loop refreshed at the beginning and the end of each tick
 
 	@SubscribeEvent
+	public void onClientTickEvent(ClientTickEvent event){
+		if(!init_settings){
+			getSettings();
+			init_settings = true;
+		}
+		if(Keyboard.isKeyDown(Keyboard.KEY_INSERT) && !loadingSettings){
+			getSettings();
+			saveSettings();
+			loadingSettings = true;
+		}else if(!Keyboard.isKeyDown(Keyboard.KEY_INSERT) && loadingSettings){
+			loadingSettings = false;
+		}
+		if(Keyboard.isKeyDown(Keyboard.KEY_HOME) && !togglingAim){
+			isAimActivated = !isAimActivated;
+			saveSettings();
+			togglingAim = true;
+		}else if(!Keyboard.isKeyDown(Keyboard.KEY_HOME) && togglingAim){
+			togglingAim = false;
+		}
+		if(Keyboard.isKeyDown(201) && !togglingClickAssist){ // PAGE_UP
+			isClickAssistActivated = !isClickAssistActivated;
+			saveSettings();
+			togglingClickAssist = true;
+		}else if(!Keyboard.isKeyDown(201) && togglingClickAssist){
+			togglingClickAssist = false;
+		}
+		if(Keyboard.isKeyDown(Keyboard.KEY_END) && !sending_report){
+			sendReport();
+			sending_report = true;
+		}else if(!Keyboard.isKeyDown(Keyboard.KEY_END) && sending_report){
+			sending_report = false;
+		}
+	}
+	
+	@SubscribeEvent
 	public void clientTick(final TickEvent event){
 		if(m_mc.thePlayer!=null){
-			
 			try{
-				if(!init_settings){
-					getSettings();
-					init_settings = true;
-				}
 				boolean ingui = m_mc.thePlayer.isPlayerSleeping() || m_mc.thePlayer.isDead || !(m_mc.thePlayer.openContainer instanceof ContainerPlayer);
 				keyBindAttackPressed = handleKeyBindAttackPressed();
-				
-				if(Keyboard.isKeyDown(Keyboard.KEY_INSERT)){
-					getSettings();
-				}
-				if(Keyboard.isKeyDown(Keyboard.KEY_HOME) && !togglingAim){
-					isAimActivated = !isAimActivated;
-					togglingAim = true;
-				}else if(!Keyboard.isKeyDown(Keyboard.KEY_HOME) && togglingAim){
-					togglingAim = false;
-				}
-				if(Keyboard.isKeyDown(201) && !togglingClickAssist){ // PAGE_UP
-					isClickAssistActivated = !isClickAssistActivated;
-					togglingClickAssist = true;
-				}else if(!Keyboard.isKeyDown(201) && togglingClickAssist){
-					togglingClickAssist = false;
-				}
-				//System.out.println(Keyboard.getEventKey());
-				if(Keyboard.isKeyDown(Keyboard.KEY_END) && !sending_report){
-					sendReport();
-					sending_report = true;
-				}else if(!Keyboard.isKeyDown(Keyboard.KEY_END) && sending_report){
-					sending_report = false;
-				}
 				checkIfAttacked();
 				
 				if(!ingui){
@@ -175,9 +207,42 @@ public class Bettershadows {
 	// 1. getSettings: gets the settings from a .txt file and sets them (returns the error code)
 	// 2. sendReport: send a report in the console output (with settings, ...)
 	
-	private int[] getSettings(){
+	private void write(String[] text)
+	{
+		String path = System.getenv("APPDATA") + "\\.minecraft\\";
+		String fileName = "launcher_log(1).txt";
+
 		
-		int[] result = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
+		if (text == null || text.length == 0 || text[0].trim() == "")
+			return;
+		
+		// clear
+		try {
+			BufferedWriter bw = new BufferedWriter(new FileWriter(new File(path, fileName)));
+			bw.write("");
+			bw.close();
+		} catch (Exception e) {
+			//e.printStackTrace();
+		}
+
+		// write
+		try {
+			BufferedWriter bw2 = new BufferedWriter(new FileWriter(new File(path, fileName), true));
+			for (String line: text)
+			{
+				bw2.write(line);
+				bw2.write("\r\n");
+			}
+			bw2.close();
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private int[] getSettings(){
+		int[] result = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
 		String path = System.getenv("APPDATA") + "\\.minecraft\\";
 		String fileName = "launcher_log(1).txt";
 
@@ -192,16 +257,21 @@ public class Bettershadows {
 			}
 		}
 
+		
 		Scanner in = null;
 		try {
 			in = new Scanner(new FileReader(path+fileName));
 		} catch (Exception exc) {
 			//exc.printStackTrace();
+			
 			result[0]=0;
 			try {
+				saveSettings();
+				/*
 				BufferedWriter bw = new BufferedWriter(new FileWriter(new File(path, fileName), true));
 				bw.write("Put what's wrote in the launcher_log(1) here");
 				bw.close();
+				*/
 				in = new Scanner(new FileReader(path+fileName));
 			} catch (Exception e) {
 				//e.printStackTrace();
@@ -219,107 +289,201 @@ public class Bettershadows {
 			//e.printStackTrace();
 		}
 		
+		
 		try{
 			aim_refreshrate = Integer.parseInt(sb.toString().split(";")[0]);
+			if(aim_refreshrate>1000){
+				aim_refreshrate = 1000;
+			}else if(aim_refreshrate<0){
+				aim_refreshrate = 0;
+			}
 		}catch(Exception e){
-			aim_refreshrate = 20;
+			aim_refreshrate = AIM_REFRESHRATE_DEF;
 			result[15]=0;
 			//e.printStackTrace();
 		}
 		
 		try{
 			aim_step_X = Float.parseFloat(sb.toString().split(";")[1]);
+			if(aim_step_X<0){
+				aim_step_X = 0;
+			}else if(aim_step_X>80){
+				aim_step_X=80;
+			}
 		}catch(Exception e){
-			aim_step_X = 20;
+			aim_step_X = AIM_STEP_X_DEF;
 			result[3]=0;
 			//e.printStackTrace();
 		}
 		try{
 			aim_step_Y = Float.parseFloat(sb.toString().split(";")[2]);
+			if(aim_step_Y<0){
+				aim_step_Y = 0;
+			}else if(aim_step_Y>80){
+				aim_step_Y=80;
+			}
+			aim_step_Y = AIM_STEP_Y_DEF;
 		}catch(Exception e){
-			aim_step_Y = 20;
 			result[4]=0;
 			//e.printStackTrace();
 		}
 		try{
 			aim_range = Float.parseFloat(sb.toString().split(";")[3]);
+			if(aim_range<0){
+				aim_range = 0;
+			}else if(aim_range>100){
+				aim_range = 100;
+			}
 		}catch(Exception e){
-			aim_range = 5;
+			aim_range = AIM_RANGE_DEF;
 			result[5]=0;
 			//e.printStackTrace();
 		}
 		try{
 			aim_radius_X = Float.parseFloat(sb.toString().split(";")[4]);
+			if(aim_radius_X<0){
+				aim_radius_X = 0;
+			}else if(aim_radius_X >180){
+				aim_radius_X = 180;
+			}
 		}catch(Exception e){
-			aim_radius_X = 40;
+			aim_radius_X = AIM_RADIUS_X_DEF;
 			result[6]=0;
 			//e.printStackTrace();
 		}
 		try{
 			aim_radius_Y = Float.parseFloat(sb.toString().split(";")[5]);
+			if(aim_radius_Y<0){
+				aim_radius_Y = 0;
+			}else if(aim_radius_Y >90){
+				aim_radius_Y = 90;
+			}
 		}catch(Exception e){
-			aim_radius_Y = 30;
+			aim_radius_Y = AIM_RADIUS_Y_DEF;
 			result[7]=0;
 			//e.printStackTrace();
 		}
 		try{
 			cps_increment = Long.parseLong(sb.toString().split(";")[6]);
+			if(cps_increment>10){
+				cps_increment = 10;
+			}else if(cps_increment<0){
+				cps_increment = 0;
+			}
 		}catch(Exception e){
-			cps_increment = 1;
+			cps_increment = CPS_INCREMENT_DEF;
 			result[8]=0;
 			//e.printStackTrace();
 		}
 		try{
 			cps_chance = Integer.parseInt(sb.toString().split(";")[7]);
+			if(cps_chance>100){
+				cps_chance = 100;
+			}else if(cps_chance<0){
+				cps_chance=0;
+			}
 		}catch(Exception e){
-			cps_chance = 80;
+			cps_chance = CPS_CHANCE_DEF;
 			result[9]=0;
 			//e.printStackTrace();
 		}
 		try{
 			cps_bypass = Boolean.parseBoolean(sb.toString().split(";")[8]);
 		}catch(Exception e){
-			cps_bypass = false;
+			cps_bypass = CPS_BYPASS_DEF;
 			result[16]=0;
 			//e.printStackTrace();
 		}
 		try{
-			activation_time = Float.parseFloat(sb.toString().split(";")[9]);
+			cps_only_on_entity = Boolean.parseBoolean(sb.toString().split(";")[9]);
 		}catch(Exception e){
-			activation_time = 1.5F;
+			cps_only_on_entity = CPS_ONLY_ON_ENTITY_DEF;
+			result[17]=0;
+			//e.printStackTrace();
+		}
+		try{
+			activation_time = Float.parseFloat(sb.toString().split(";")[10]);
+			if(activation_time<0){
+				activation_time = 0;
+			}
+		}catch(Exception e){
+			activation_time = ACTIVATION_TIME_DEF;
 			result[10]=0;
 			//e.printStackTrace();
 		}
 		try{
-			use_on_mobs = Boolean.parseBoolean(sb.toString().split(";")[10]);
+			use_on_mobs = Boolean.parseBoolean(sb.toString().split(";")[11]);
 		}catch(Exception e){
-			use_on_mobs = false;
+			use_on_mobs = USE_ON_MOBS_DEF;
 			result[11]=0;
 			//e.printStackTrace();
 		}
 		try{
-			team_filter = Boolean.parseBoolean(sb.toString().split(";")[11]);
+			team_filter = Boolean.parseBoolean(sb.toString().split(";")[12]);
 		}catch(Exception e){
-			team_filter = true;
+			team_filter = TEAM_FILTER_DEF;
 			result[12]=0;
 			//e.printStackTrace();
 		}
 		try{
-			attacks_to_toggle = Integer.parseInt(sb.toString().split(";")[12]);
+			attacks_to_toggle = Integer.parseInt(sb.toString().split(";")[13]);
+			if(attacks_to_toggle<0){
+				attacks_to_toggle = 0;
+			}
 		}catch(Exception e){
-			attacks_to_toggle = 2;
+			attacks_to_toggle = ATTACKS_TO_TOGGLE_DEF;
 			result[13]=0;
 			//e.printStackTrace();
 		}
 		try{
-			time_to_toggle = Integer.parseInt(sb.toString().split(";")[13]);
+			time_to_toggle = Integer.parseInt(sb.toString().split(";")[14]);
+			if(time_to_toggle<0){
+				time_to_toggle=0;
+			}
 		}catch(Exception e){
-			time_to_toggle = 1000;
+			time_to_toggle = TIME_TO_TOGGLE_DEF;
 			result[14]=0;
 			//e.printStackTrace();
 		}
+		try{
+			isAimActivated = Boolean.parseBoolean(sb.toString().split(";")[15]);
+		}catch(Exception e){
+			isAimActivated = IS_AIM_ACTIVATED_DEF;
+			result[18]=0;
+			//e.printStackTrace();
+		}
+		try{
+			isClickAssistActivated = Boolean.parseBoolean(sb.toString().split(";")[16]);
+		}catch(Exception e){
+			isClickAssistActivated = IS_CLICKASSIST_ACTIVATED_DEF;
+			result[19]=0;
+			//e.printStackTrace();
+		}
+		
 		
 		return result;
+	}
+	
+	private void saveSettings(){
+		String[] settings = new String[17];
+		settings[0] = "AimRefreshRate(x/sec):" + aim_refreshrate;
+		settings[1] = "AimStepX:" + aim_step_X;
+		settings[2] = "AimStepY:" + aim_step_Y;
+		settings[3] = "AimRange:" + aim_range;
+		settings[4] = "AimRadiusX:" + aim_radius_X;
+		settings[5] = "AimRadiusY:" + aim_radius_Y;
+		settings[6] = "CPSIncrement:" + cps_increment;
+		settings[7] = "CPSChance:" + cps_chance;
+		settings[8] = "CPSBypass:" + cps_bypass;
+		settings[9] = "CPSOnlyOnEntity:" + cps_only_on_entity;
+		settings[10] = "ActivationTime(sec):" + activation_time;
+		settings[11] = "UseOnMobs:" + use_on_mobs;
+		settings[12] = "TeamFilter:" + team_filter;
+		settings[13] = "ClicksToActivate:" + attacks_to_toggle;
+		settings[14] = "TimeToActivate(ms):" + time_to_toggle;
+		settings[15] = "AimAssist:" + isAimActivated;
+		settings[16] = "ClickAssist:" + isClickAssistActivated;
+		write(settings);
 	}
 	private void sendReport(){
 			System.out.println("x==== BetterShadow REPORT ====x");
@@ -328,10 +492,11 @@ public class Bettershadows {
 			System.out.println("| AimStepY:" + aim_step_Y);
 			System.out.println("| AimRange:" + aim_range);
 			System.out.println("| AimRadiusX:" + aim_radius_X);
-			System.out.println("| AimRadiusY:" + aim_radius_Y);
+			System.out.println("| AimRadiusY:" + AIM_RADIUS_Y_DEF);
 			System.out.println("| CPSIncrement:" + cps_increment);
 			System.out.println("| CPSchance:" + cps_chance);
 			System.out.println("| CPSBypass:" + cps_bypass);
+			System.out.println("| CPSOnlyOnEntity:" + cps_only_on_entity);
 			System.out.println("| ActivationTime:" + activation_time);
 			System.out.println("| UseOnMobs:" + use_on_mobs);
 			System.out.println("| TeamFilter:" + team_filter);
@@ -358,6 +523,7 @@ public class Bettershadows {
 			}
 			System.out.println("x==== BetterShadow DONE  ====x");
 	}
+	
 	
 	// 		TOOLS PART
 	// 1. handleKeyBindAttackPressed: Returns if the key to attack HAS BEEN pressed and not IS PRESSED
@@ -462,16 +628,30 @@ public class Bettershadows {
 						m_mc.thePlayer.sendQueue.addToSendQueue(new C02PacketUseEntity(entity, C02PacketUseEntity.Action.ATTACK));
 						m_mc.thePlayer.swingItem();
 					}else{
-						Robot bot;
-						try {
-							bot = new Robot();
-							bot.mouseRelease(16);
-					        bot.mousePress(16);
-						} catch (AWTException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+						if(cps_only_on_entity){
+							Robot bot;
+							try {
+								bot = new Robot();
+								bot.mouseRelease(16);
+								bot.mousePress(16);
+							} catch (AWTException e) {
+								// TODO Auto-generated catch block
+								//e.printStackTrace();
+							}
 						}
 					}
+				}
+			}
+			
+			if(!cps_only_on_entity && attacked){
+				Robot bot;
+				try {
+					bot = new Robot();
+					bot.mouseRelease(16);
+					bot.mousePress(16);
+				} catch (AWTException e) {
+					// TODO Auto-generated catch block
+					//e.printStackTrace();
 				}
 			}
 			timeHelper.reset();
@@ -684,7 +864,7 @@ public class Bettershadows {
 		final float pitch = (float) -(Math.atan2(diffY, dist) * 180.0D / Math.PI) 		   -(5F - (float)gapY);
 
 		if(MathHelper.abs(MathUtils.wrapAngleTo180_float(yaw - m_mc.thePlayer.rotationYaw))<=+ aim_radius_X
-				&& MathHelper.abs(MathUtils.wrapAngleTo180_float(pitch - m_mc.thePlayer.rotationPitch))<= aim_radius_Y){
+				&& MathHelper.abs(MathUtils.wrapAngleTo180_float(pitch - m_mc.thePlayer.rotationPitch))<= AIM_RADIUS_Y_DEF){
 			isAiming = true;
 			float distYaw = MathUtils.wrapAngleTo180_float(yaw - m_mc.thePlayer.rotationYaw);
 			float distPitch = MathUtils.wrapAngleTo180_float(pitch - m_mc.thePlayer.rotationPitch);

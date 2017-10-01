@@ -25,7 +25,11 @@ public class TimeHelper {
 	}
 	
 	public boolean isDelayComplete(long delay) {
-		if(System.nanoTime() / 1000000L - lastMS >= delay) {
+		if(1000000L - lastMS !=0){
+			if(System.nanoTime() / 1000000L - lastMS >= delay) {
+				return true;
+			}
+		}else if(0>=delay){
 			return true;
 		}
 		

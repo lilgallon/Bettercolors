@@ -1,7 +1,7 @@
 ![header](gitresources/header.png)
 
 # N3RO's silent hack
-`Last stable version: 3.0`
+`Last stable version: 4.0`
 
 `Forge dev version: 1.8.9-11.15.1.1722`
 
@@ -43,11 +43,14 @@ The recommanded values are the default one.
 - CPSIncrement:1
 - CPSchance:80
 - CPSBypass(Artificial/Human):false
+- CPSOnlyOnEntity:false
 - ActivationTime(sec):1.5
 - UseOnMobs:false
 - TeamFilter:true
 - ClicksToActivate:3
 - TimeToActivate(ms):1000
+- AimAssist:true
+- ClickAssist:true
 
 ### Maximums
 - AimRefreshRate:1000
@@ -56,14 +59,17 @@ The recommanded values are the default one.
 - AimRange:100
 - AimRadiusX:180
 - AimRadiusY:90
-- CPSIncrement:1000
+- CPSIncrement:10
 - CPSchance:100
 - CPSBypass(Artificial/Human):true
+- CPSOnlyOnEntity:true
 - ActivationTime(sec):unlimited
 - UseOnMobs:true
 - TeamFilter:true
 - ClicksToActivate:unlimited
 - TimeToActivate(ms):unlimited
+- AimAssist:true
+- ClickAssist:true
 
 ### Minimums
 - AimRefreshRate:1 (0=OFF)
@@ -75,11 +81,14 @@ The recommanded values are the default one.
 - CPSIncrement:1 (0=OFF)
 - CPSchance:1 (0=OFF)
 - CPSBypass(Artificial/Human):false
+- CPSOnlyOnEntity:false
 - ActivationTime(sec):0.1 (0=OFF)
 - UseOnMobs:false
 - TeamFilter:false
 - ClicksToActivate:2
 - TimeToActivate(ms):1000
+- AimAssist:false
+- ClickAssist:false
 
 ### Types
 - AimRefreshRate:int
@@ -91,11 +100,14 @@ The recommanded values are the default one.
 - CPSIncrement:long
 - CPSchance:int
 - CPSBypass(Artificial/Human):boolean
+- CPSOnlyOnEntity:boolean
 - ActivationTime(sec):float
 - UseOnMobs:boolean (true/false)
 - TeamFilter:boolean (true/false)
 - ClicksToActivate:int
 - TimeToActivate(ms):int
+- AimAssist:boolean
+- ClickAssist:boolean
 
 ## Commands
 
@@ -121,7 +133,8 @@ To desactivate click assist, just put CPSIncrement to 0 (V1.8 and less)
 - [x] Human clickassist
 - [x] Smooth aim
 - [x] Aim refresh rate
-- [ ] Auto save settings (clickassist & aimassist toggled or not)
+- [x] CPS Assist only on entity or not setting
+- [x] Auto save settings (clickassist & aimassist toggled or not)
 - [ ] CheatSmasher bypass
 - [ ] Console warning system (invisible coming / someone close / aim activated / ...)
 
@@ -147,6 +160,9 @@ Error codes : 1 = okay ; 0 = error
 - o: Could not load time to activate value
 - p: Could not load aim refresh rate value
 - q: Could not load cps bypass value
+- r: Could not load cps only on entity value
+- t: Could not load aimassist value
+- u: Could not load clickassist value
 
 ## Changelog
 
@@ -201,3 +217,8 @@ Error codes : 1 = okay ; 0 = error
 >- Aim refresh parameter
 >- Human / Artificial click assist parameter (artificial bypasses CPS counter)
 >- Fixed possible freeze
+
+**V4.0**
+>- Added CPS use only on entity setting (before it was always true V3.0-)
+>- Fixed a very rare crash
+>- Auto save settings

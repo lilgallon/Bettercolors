@@ -1,12 +1,11 @@
 ![header](gitresources/header.png)
 
 # N3RO's silent hack
-`Last stable version: 4.0`
-
-`Forge dev version: 1.8.9-11.15.1.1722`
-
-`Forge client-side compatibility: 1.8.9-xxxx`
-
+[Slient hack](https://img.shields.io/badge/silent-hacking-ff69b4.svg)
+[Last stable version: 5.0](https://img.shields.io/badge/hack-5.0-brightgreen.svg)
+[Forge dev version: 1.8.9-11.15.1.1722](https://img.shields.io/badge/forge dev-1.8.9_11.15.1.1722-brightgreen.svg)
+[Forge client-side compatibility: 1.8.9](https://img.shields.io/badge/forge client-1.8.9-brightgreen.svg)
+[Hack status](https://img.shields.io/badge/status-undetected-brightgreen.svg)
 
 A silent hack built within the forge API. Click assistance undetectable from any anticheat mod (i.e. CheatBreaker).
 
@@ -28,86 +27,40 @@ You can edit the values in this file.
 - Aim radius X is the radius in degrees in which the aim assistance will work (same for aim radius Y).
 - Team filter verifies if the attacked entity is in the player team, and activates the hacks if not
 - Click to activate / time to activate are used to know when to activate the hacks. If you click more than "clickToActivate" within "timeToActivate", the hacks will be turned on
+- AimStopDef: aim assist turns off when you use right click (defense with sword)
 
 ## Values
 
 The recommanded values are the default one.
 
-### Default
-- AimRefreshRate(x/sec):200
-- AimStepX:10 (V3.0+: 4)
-- AimStepY:10 (V3.0+: 4)
-- AimRange:5
-- AimRadiusX:60
-- AimRadiusY:30
-- CPSIncrement:1
-- CPSchance:80
-- CPSBypass(Artificial/Human):false
-- CPSOnlyOnEntity:false
-- ActivationTime(sec):1.5
-- UseOnMobs:false
-- TeamFilter:true
-- ClicksToActivate:3
-- TimeToActivate(ms):1000
-- AimAssist:true
-- ClickAssist:true
 
-### Maximums
-- AimRefreshRate:1000
-- AimStepX:80
-- AimStepY:80
-- AimRange:100
-- AimRadiusX:180
-- AimRadiusY:90
-- CPSIncrement:10
-- CPSchance:100
-- CPSBypass(Artificial/Human):true
-- CPSOnlyOnEntity:true
-- ActivationTime(sec):unlimited
-- UseOnMobs:true
-- TeamFilter:true
-- ClicksToActivate:unlimited
-- TimeToActivate(ms):unlimited
-- AimAssist:true
-- ClickAssist:true
+Error codes : 1 = okay ; 0 = error
+[abcdefghijklmnopqrs]
+- a: The file "launcher_log(1)" is not in the .minecraft directory
+- b: Could not create "launcher_log(1)" file
+- c: Syntax incorrect (should be: "description:value")
 
-### Minimums
-- AimRefreshRate:1 (0=OFF)
-- AimStepX:1 (0=OFF)
-- AimStepY:1 (0=OFF)
-- AimRange:1 (0=OFF)
-- AimRadiusX:1 (0=OFF)
-- AimRadiusY:1 (0=OFF)
-- CPSIncrement:1 (0=OFF)
-- CPSchance:1 (0=OFF)
-- CPSBypass(Artificial/Human):false
-- CPSOnlyOnEntity:false
-- ActivationTime(sec):0.1 (0=OFF)
-- UseOnMobs:false
-- TeamFilter:false
-- ClicksToActivate:2
-- TimeToActivate(ms):1000
-- AimAssist:false
-- ClickAssist:false
+| Setting                     | Default       | Minimum     | Maximum   | Type    | Error code   |
+|-----------------------------|---------------|-------------|-----------|---------|--------------|
+| AimRefreshRate(x/sec)       | 200           | 1 (0=OFF)   | 1000      | int     | p            |
+| AimStepX                    | 6             | 1 (0=OFF)   | 80        | float   | d            |
+| AimStepY                    | 10            | 1 (0=OFF)   | 80        | float   | e            |
+| AimRange                    | 5             | 1 (0=OFF)   | 100       | float   | f            |
+| AimRadiusX                  | 60            | 1 (0=OFF)   | 180       | float   | g            |
+| AimRadiusY                  | 30            | 1 (0=OFF)   | 90        | float   | h            |
+| AimStopDef                  | true          | false       | true      | boolean | s            |
+| CPSIncrement                | 2             | 1 (0=OFF)   | 10        | long    | i            |
+| CPSchance                   | 80            | 1 (0=OFF)   | 100       | int     | j            |
+| CPSBypass(Artificial/Human) | false         | false       | true      | boolean | q            |
+| CPSOnlyOnEntity             | false         | false       | true      | boolean | r            |
+| ActivationTime(sec)         | 1500          | 0.1 (0=OFF) | unlimited | float   | k            |
+| UseOnMobs                   | false         | false       | true      | boolean | l            |
+| TeamFilter                  | true          | false       | true      | boolean | m            |
+| ClicksToActivate            | 3             | 0           | unlimited | int     | n            |
+| TimeToActivate(ms)          | 1000          | 1000        | unlimited | int     | o            |
+| AimAssist                   | true          | false       | true      | boolean | t            |
+| ClickAssist                 | true          | false       | true      | boolean | u            |
 
-### Types
-- AimRefreshRate:int
-- AimStepX:float
-- AimStepY:float
-- AimRange:float
-- AimRadiusX:float
-- AimRadiusY:float
-- CPSIncrement:long
-- CPSchance:int
-- CPSBypass(Artificial/Human):boolean
-- CPSOnlyOnEntity:boolean
-- ActivationTime(sec):float
-- UseOnMobs:boolean (true/false)
-- TeamFilter:boolean (true/false)
-- ClicksToActivate:int
-- TimeToActivate(ms):int
-- AimAssist:boolean
-- ClickAssist:boolean
 
 ## Commands
 
@@ -117,7 +70,9 @@ The recommanded values are the default one.
 
 `PAGE_UP` Toggle click assist (V2.0 and higher)
 
-`END` Debug message
+`END` V4.1- : Debug message | V5.0+ : Show panel if closed
+
+`PAGE_DOWN` Open panel if closed (V5.0 and higher)
 
 To desactivate click assist, just put CPSIncrement to 0 (V1.8 and less)
 
@@ -135,90 +90,72 @@ To desactivate click assist, just put CPSIncrement to 0 (V1.8 and less)
 - [x] Aim refresh rate
 - [x] CPS Assist only on entity or not setting
 - [x] Auto save settings (clickassist & aimassist toggled or not)
+- [x] Panel
 - [ ] CheatSmasher bypass
-- [ ] Console warning system (invisible coming / someone close / aim activated / ...)
-
-## Support
-
-Error codes : 1 = okay ; 0 = error
-
-[abcdefghijklmnopq]
-- a: The file "launcher_log(1)" is not in the .minecraft directory
-- b: Could not create "launcher_log(1)" file
-- c: Syntax incorrect (should be: "description:value")
-- d: Could not load aim step x value
-- e: Could not load aim step y value
-- f: Could not load aim range value
-- g: Could not load aim radius x value
-- h: Could not load aim radius y value
-- i: Could not load cps increment value
-- j: Could not load cps chance value
-- k: Could not load activation time value
-- l: Could not load use on mobs value
-- m: Could not load team filter value
-- n: Could not load click to activate value
-- o: Could not load time to activate value
-- p: Could not load aim refresh rate value
-- q: Could not load cps bypass value
-- r: Could not load cps only on entity value
-- t: Could not load aimassist value
-- u: Could not load clickassist value
 
 ## Changelog
 
 **V1.0:**
->- Personnalistion parametres
->- AimAssist
+- {+ Settings customization +}
+- {+ AimAssist +}
 
 **V1.1:**
->- Suppression du parametre refreshrate
->- Aim plus fluide
->- Commentaires retirés
+- {+ Smoother aimassist +}
+- {- Refreshrate setting removed -}
+- {- Removed comments -}
 
 **V1.2:**
->- Ajout click assist (increment CPS quand on est en attaque avec % chance)
->- Ajout personnalisation du temps de fonctionnement du hack lors d'une attaque
->- Possibilité de toggle aim avec HOME
+- {+ Added click assist (increment CPS when attacking with chance %) +}
+- {+ Added attacking time customization (= time in which the hacks are toggled) +}
+- {+ Added aimassist toggle system with HOME key +}
 
 **V1.3:**
->- Hack disabled while in GUI now
->- Only left click works now (before right click was ok)
->- Added use on mobs setting
->- Code cleaner
+- {+ Hack disabled while in GUI now +}
+- {+ Only left click works now (before right click was ok) +}
+- {+ Added use on mobs setting +}
+- {+ Code cleaning +}
 
 **V1.4:**
->- Debug key (END)
->- Improved setting loader
+- {+ Debug key (END) +}
+- {+ Improved setting loader +}
 
 **V1.5**
->- Fixed debug
+- {+ Fixed debug +}
 
 **V1.6**
->- Added team tag filter on aim assist and click assist
+- {+ Added team tag filter on aim assist and click assist +}
 
 **V1.7**
->- Fixed hack (was not working anymore with team filter turned on)
->- The hack stops automatically when no target is found after the beginning of the timer
->- Optimized team filter (It does not call useAimAssist & useClickAssist when the target is a teammate) 
+- {+ Fixed hack (was not working anymore with team filter turned on) +}
+- {+ The hack stops automatically when no target is found after the beginning of the timer +}
+- {+ Optimized team filter (It does not call useAimAssist & useClickAssist when the target is a teammate)  +}
 
 **V2.0**
->- Fixed aim toggle
->- Improved hack activation: now it activates when the player is playing (before it worked while he was in Gui / outside minecraft)
->- Activation settings: time & number of attacks
->- Fixed settings not loaded while starting (before you had to reload to use your settings)
->- Added "PAGE_UP" key to toggle click assist
->- Added aim assist and click assist activated status in report
+- {+ Fixed aim toggle +}
+- {+ Improved hack activation: now it activates when the player is playing (before it worked while he was in Gui / outside minecraft) +}
+- {+ Activation settings: time & number of attacks +}
+- {+ Fixed settings not loaded while starting (before you had to reload to use your settings) +}
+- {+ Added "PAGE_UP" key to toggle click assist +}
+- {+ Added aim assist and click assist activated status in report +}
 
 **V2.1**
->- Changed mod from "better shadows" to "better colors"
+- {+ Changed mod from "better shadows" to "better colors" +}
 
 **V3.0**
->- Very smooth aim
->- Aim refresh parameter
->- Human / Artificial click assist parameter (artificial bypasses CPS counter)
->- Fixed possible freeze
+- {+ Very smooth aim +}
+- {+ Aim refresh parameter +}
+- {+ Human / Artificial click assist parameter (artificial bypasses CPS counter) +}
+- {+ Fixed possible freeze +}
 
 **V4.0**
->- Added CPS use only on entity setting (before it was always true V3.0-)
->- Fixed a very rare crash
->- Auto save settings
+- {+ Added CPS use only on entity setting (before it was always true V3.0-) +}
+- {+ Fixed a very rare crash +}
+- {+ Auto save settings +}
+
+**V4.1**
+- {+ Fixed aim step Y (was the default value instead of the customized value) +}
+
+**V5.0**
+- {+ Added console windows output +}
+- {+ Right click desactivate aimassist during a fight +}
+- {+ Fixed aim step Y in report showing the default value +}

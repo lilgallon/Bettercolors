@@ -107,17 +107,6 @@ public class InformationWindow extends Window{
 		super.update();
 	}
 	
-	/*
-	private void updateButtonName(JButton button, String name, boolean isSet){
-		String suffix = "";
-		if(isSet){
-			suffix = "(ON)";
-		}else{
-			suffix = "(OFF)";
-		}
-		button.setText(name + " " + suffix);
-	}*/
-	
 	private void setupSettingsComponents(){
 		
 		// Panel which will contain components
@@ -539,7 +528,7 @@ public class InformationWindow extends Window{
 	public void updateComponents(){
 		for(Map.Entry<JLabel, JSlider> entry : sliders.entrySet()){
 			
-			// On fire un event de changement qui va update les sliders (on set un slider à sa valeur actuelle)
+			// On fire un event de changement qui va update les sliders (on set un slider ï¿½ sa valeur actuelle)
 			//entry.getValue().setValue(entry.getValue().getValue());
 			
 			 ChangeEvent ce = new ChangeEvent(entry.getValue());

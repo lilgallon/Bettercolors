@@ -7,7 +7,7 @@
 ![Forge client-side compatibility: 1.8.9](https://img.shields.io/badge/forge_client-1.8.9-brightgreen.svg)
 ![Hack status](https://img.shields.io/badge/status-undetected-brightgreen.svg)
 
-A silent hack built within the forge API. Click assistance undetectable from any anticheat mod (i.e. CheatBreaker).
+A silent hack built within the forge API. Click assistance undetectable from any anticheat mod (i.e. CheatBreaker). 
 
 ## Disclamer
 

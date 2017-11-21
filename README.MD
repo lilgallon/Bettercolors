@@ -157,3 +157,6 @@ To desactivate click assist, just put CPSIncrement to 0 (V1.8 and less)
 - Added console windows output
 - Right click desactivate aimassist during a fight
 - Fixed aim step Y in report showing the default value
+
+**V5.1**
+- Added HWID verification

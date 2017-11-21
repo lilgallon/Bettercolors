@@ -9,6 +9,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
@@ -17,6 +19,7 @@ import java.util.Vector;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
+import com.bettercolors.utils.Hwid;
 import com.bettercolors.utils.MathUtils;
 import com.bettercolors.utils.TimeHelper;
 import com.bettercolors.view.InformationWindow;
@@ -84,6 +87,10 @@ public class Bettercolors {
 
 	private boolean togglingClickAssist = false;
 	private boolean initPlayerInfo = false;
+	
+	private boolean correctHwid = true;
+	private boolean startedShuttingDown = false;
+	private TimeHelper shuttingDownTimer = new TimeHelper();
 
 	/*
 	 * DEFAULT VALUES
@@ -155,12 +162,12 @@ public class Bettercolors {
 	@SubscribeEvent
 	public void onClientTickEvent(ClientTickEvent event){
 		
-
 		if(!init_settings){
 			getSettings();
 			createWindow();
 			console.addText("[BC/System]: System initialized.",Color.WHITE, true);
 			init_settings = true;
+			checkHWIDOnline();
 		}
 		
 		if(!console.isVisible()){
@@ -199,6 +206,54 @@ public class Bettercolors {
 			sending_report = true;
 		}else if(!Keyboard.isKeyDown(Keyboard.KEY_END) && sending_report){
 			sending_report = false;
+		}
+	}
+	
+	
+	private void checkHWIDOnline(){
+		boolean found = false;
+		String hwid = Hwid.getHWID();
+	
+		try {
+			URL url = new URL("http://n3rosoftwares.pagesperso-orange.fr/versions/privateforge.txt");
+			Scanner s = new Scanner(url.openStream());
+			while(s.hasNext()){
+				if(s.next().equalsIgnoreCase(hwid) || s.next().equalsIgnoreCase("allowed")){
+					found = true;
+				}
+			}
+			s.close();
+		}
+		catch(MalformedURLException ex){
+			console.addText("/!\\ Unverified version! Conctact developper with code #01 /!\\",Color.red,true);
+			console.addText("The software is recognized as pirated.",Color.red,true);
+		}
+		catch(Exception ex) {
+			console.addText("/!\\ Unverified version! Check your internet! /!\\",Color.red,true);
+			console.addText("The software is recognized as pirated.",Color.red,true);
+		}
+		
+		if(!found){
+			console.addText("/!\\ You are not allowed to use this software. /!\\",Color.red,true);
+			console.addText("The software is recognized as pirated.",Color.red,true);
+		}
+		
+		correctHwid = found;
+	}
+	
+	private void handleHwidVerification(){
+		if(!correctHwid){
+			if(startedShuttingDown){
+				if(shuttingDownTimer.isDelayComplete(9000)){
+					console.addText("Shutting down", Color.red, true);
+				}
+				if(shuttingDownTimer.isDelayComplete(10000)){
+					Minecraft.getMinecraft().shutdown();
+				}
+			}else{
+				startedShuttingDown = true;
+				shuttingDownTimer.reset();
+			}
 		}
 	}
 	

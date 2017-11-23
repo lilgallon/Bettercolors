@@ -18,7 +18,7 @@ public abstract class Window extends JFrame{
     	super(title);
     	setBounds((int)Toolkit.getDefaultToolkit().getScreenSize().getWidth()/2-width/2,(int)Toolkit.getDefaultToolkit().getScreenSize().getHeight()/2-height/2,width,height);
     	setResizable(false);
-    	setVisible(true);
+    	setVisible(false);
     }
     
     public void update(){

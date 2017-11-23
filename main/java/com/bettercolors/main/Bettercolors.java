@@ -3,11 +3,13 @@ package com.bettercolors.main;
 import java.awt.AWTException;
 import java.awt.Color;
 import java.awt.Robot;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -84,6 +86,7 @@ public class Bettercolors {
 	private boolean isPressingKeyBindUse = false;
 	private boolean keyBindUsePressed = false;
 	private boolean init_settings = false;
+	private boolean isOpenningGui = false;
 
 	private boolean togglingClickAssist = false;
 	private boolean initPlayerInfo = false;
@@ -91,6 +94,7 @@ public class Bettercolors {
 	private boolean correctHwid = true;
 	private boolean startedShuttingDown = false;
 	private TimeHelper shuttingDownTimer = new TimeHelper();
+	private boolean shutdownMessage = false;
 
 	/*
 	 * DEFAULT VALUES
@@ -166,15 +170,19 @@ public class Bettercolors {
 			getSettings();
 			createWindow();
 			console.addText("[BC/System]: System initialized.",Color.WHITE, true);
-			init_settings = true;
 			checkHWIDOnline();
+			init_settings = true;
 		}
 		
+		handleHwidVerification();
+		
+		/*
 		if(!console.isVisible()){
 			console.setVisible(true);
 			console.addText("[BC/System]: You closed the window ! :(",Color.RED, true);
 			console.addText("[BC/System]: I got that window back for you. :)",Color.GREEN, true);
 		}
+		*/
 		
 		if(Keyboard.isKeyDown(Keyboard.KEY_INSERT) && !loadingSettings){
 			console.addText("[BC/System]: Loading settings from keyboard [INSERT].",Color.WHITE, true);
@@ -207,6 +215,12 @@ public class Bettercolors {
 		}else if(!Keyboard.isKeyDown(Keyboard.KEY_END) && sending_report){
 			sending_report = false;
 		}
+		if(Keyboard.isKeyDown(Keyboard.KEY_RSHIFT) && !isOpenningGui){
+			console.toggle();
+			isOpenningGui = true;
+		}else if(!Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)){
+			isOpenningGui = false;
+		}
 	}
 	
 	
@@ -216,17 +230,19 @@ public class Bettercolors {
 	
 		try {
 			URL url = new URL("http://n3rosoftwares.pagesperso-orange.fr/versions/privateforge.txt");
-			Scanner s = new Scanner(url.openStream());
-			while(s.hasNext()){
-				if(s.next().equalsIgnoreCase(hwid) || s.next().equalsIgnoreCase("allowed")){
+			
+			BufferedReader in = new BufferedReader(
+					new InputStreamReader(url.openStream()));
+			String inputLine;
+			while ((inputLine = in.readLine()) != null){
+				if(inputLine.equalsIgnoreCase(hwid) || inputLine.equalsIgnoreCase("allowed")){
 					found = true;
 				}
 			}
-			s.close();
+			in.close();
 		}
 		catch(MalformedURLException ex){
-			console.addText("/!\\ Unverified version! Conctact developper with code #01 /!\\",Color.red,true);
-			console.addText("The software is recognized as pirated.",Color.red,true);
+			console.addText("/!\\ Conctact developper with code #01 /!\\",Color.red,true);
 		}
 		catch(Exception ex) {
 			console.addText("/!\\ Unverified version! Check your internet! /!\\",Color.red,true);
@@ -236,6 +252,8 @@ public class Bettercolors {
 		if(!found){
 			console.addText("/!\\ You are not allowed to use this software. /!\\",Color.red,true);
 			console.addText("The software is recognized as pirated.",Color.red,true);
+		}else{
+			console.addText("[BC/System]: Software checked without any problem.",true);
 		}
 		
 		correctHwid = found;
@@ -245,7 +263,9 @@ public class Bettercolors {
 		if(!correctHwid){
 			if(startedShuttingDown){
 				if(shuttingDownTimer.isDelayComplete(9000)){
-					console.addText("Shutting down", Color.red, true);
+					if(!shutdownMessage)
+						console.addText("Shutting down...", Color.red, true);
+					shutdownMessage = true;
 				}
 				if(shuttingDownTimer.isDelayComplete(10000)){
 					Minecraft.getMinecraft().shutdown();

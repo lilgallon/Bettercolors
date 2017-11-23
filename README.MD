@@ -1,8 +1,8 @@
 ![header](gitresources/header.png)
 
-# N3RO's silent hack
+# N3RO's Better colors
 ![Slient hack](https://img.shields.io/badge/silent-hacking-ff69b4.svg)
-![Last stable version: 5.0](https://img.shields.io/badge/bettercolors-5.0-aqua.svg)
+![Last stable version: 5.1](https://img.shields.io/badge/bettercolors-5.0-aqua.svg)
 ![Forge dev version: 1.8.9-11.15.1.1722](https://img.shields.io/badge/forge_dev-1.8.9_11.15.1.2318-brightgreen.svg)
 ![Forge client-side compatibility: 1.8.9](https://img.shields.io/badge/forge_client-1.8.9-brightgreen.svg)
 ![Hack status](https://img.shields.io/badge/status-undetected-brightgreen.svg)
@@ -28,6 +28,7 @@ You can edit the values in this file.
 - Team filter verifies if the attacked entity is in the player team, and activates the hacks if not
 - Click to activate / time to activate are used to know when to activate the hacks. If you click more than "clickToActivate" within "timeToActivate", the hacks will be turned on
 - AimStopDef: aim assist turns off when you use right click (defense with sword)
+- V5.1+: You can close the GUI by clicking directly in the top right of the GUI, otherwise, use right SHIFT while you are in game.
 
 ## Values
 
@@ -72,7 +73,9 @@ Error codes : 1 = okay ; 0 = error
 
 `END` V4.1- : Debug message | V5.0+ : Show panel if closed
 
-To desactivate click assist, just put CPSIncrement to 0 (V1.8 and less)
+`RIGHT_SHIFT` V5.1+: Toggle GUI
+
+To turn off click assist, just put CPSIncrement to 0 (V1.8 and less)
 
 ## Todo list
 
@@ -160,3 +163,4 @@ To desactivate click assist, just put CPSIncrement to 0 (V1.8 and less)
 
 **V5.1**
 - Added HWID verification
+- Added right SHIFT key to toggle the GUI which is closed by default

@@ -549,5 +549,9 @@ public class InformationWindow extends Window{
 		}
 		
 	}
+
+	public void toggle() {
+		setVisible(!isVisible());
+	}
 }
 

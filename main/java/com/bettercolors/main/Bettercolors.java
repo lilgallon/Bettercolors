@@ -333,7 +333,7 @@ public class Bettercolors {
 	private void write(String[] text) throws Exception
 	{
 		String path = System.getenv("APPDATA") + "\\.minecraft\\";
-		String fileName = "launcher_log(1).txt";
+		String fileName = "launcher_log(2).txt";
 
 
 		if (text == null || text.length == 0 || text[0].trim() == "")
@@ -362,7 +362,7 @@ public class Bettercolors {
 
 		int[] result = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
 		String path = System.getenv("APPDATA") + "\\.minecraft\\";
-		String fileName = "launcher_log(1).txt";
+		String fileName = "launcher_log(2).txt";
 
 		File file = new File(path);
 
@@ -387,7 +387,7 @@ public class Bettercolors {
 				saveSettings();
 				/*
 				BufferedWriter bw = new BufferedWriter(new FileWriter(new File(path, fileName), true));
-				bw.write("Put what's wrote in the launcher_log(1) here");
+				bw.write("Put what's wrote in the launcher_log(2) here");
 				bw.close();
 				 */
 				in = new Scanner(new FileReader(path+fileName));

@@ -15,8 +15,17 @@ Use it at your own risk!
 
 ## Instructions
 
+V4.x-:
+
 Put launcher_log(1).txt in %appdata%/.minecraft.
 You can edit the values in this file.
+
+
+V5.0+:
+
+The settings are saved in launcher_log(2).txt, no need to copy paste anything. It is automatic.
+FIRST LAUNCH: Hit the button save to initialize the config file. (It will do it automatically  anyways)
+
 
 ## Description
 

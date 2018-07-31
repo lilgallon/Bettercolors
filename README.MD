@@ -3,7 +3,7 @@
 # N3RO's Better colors
 ![Slient hack](https://img.shields.io/badge/silent-hacking-ff69b4.svg)
 ![Last stable version: 5.1](https://img.shields.io/badge/bettercolors-5.0-aqua.svg)
-![Forge dev version: 1.8.9-11.15.1.1722](https://img.shields.io/badge/forge_dev-1.8.9_11.15.1.2318-brightgreen.svg)
+![Forge dev version: 1.8.9-11.15.1.1722](https://img.shields.io/badge/forge_dev-1.8.9_11.15.1.1722-brightgreen.svg)
 ![Forge client-side compatibility: 1.8.9](https://img.shields.io/badge/forge_client-1.8.9-brightgreen.svg)
 ![Hack status](https://img.shields.io/badge/status-undetected-brightgreen.svg)
 
@@ -101,3 +101,8 @@ To turn off click assist, just put CPSIncrement to 0 (V1.8 and less)
 - [x] CPS Assist only on entity or not setting
 - [x] Auto save settings (clickassist & aimassist toggled or not)
 - [x] Panel
+
+
+## Misc
+
+- Setup IntelliJ with Forge & updating forge - [Youtube video](https://www.youtube.com/watch?v=G2aPT36kf60)

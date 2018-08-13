@@ -10,5 +10,6 @@ public class ToggleOption extends Option {
     }
 
     public boolean isActivated(){ return _activated; }
+    public void setActivated(boolean activated){ _activated = activated; }
     public void toggle(){ _activated = !_activated; }
 }

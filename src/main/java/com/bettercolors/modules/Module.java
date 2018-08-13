@@ -14,7 +14,7 @@ public abstract class Module {
 
     // Module details
     private final String _name;
-    private ArrayList<Option> _options;
+    ArrayList<Option> _options;
 
     // Module status
     private int _toggle_key;

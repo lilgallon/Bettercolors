@@ -56,7 +56,7 @@ Error codes : 1 = okay ; 0 = error
 | AimRange                    | 5             | 1 (0=OFF)   | 100       | float   | f            |
 | AimRadiusX                  | 60            | 1 (0=OFF)   | 180       | float   | g            |
 | AimRadiusY                  | 30            | 1 (0=OFF)   | 90        | float   | h            |
-| AimStopDef                  | true          | false       | true      | boolean | s            |
+| AimStopRightClick           | true          | false       | true      | boolean | s            |
 | CPSIncrement                | 2             | 1 (0=OFF)   | 10        | long    | i            |
 | CPSchance                   | 80            | 1 (0=OFF)   | 100       | int     | j            |
 | CPSBypass(Artificial/Human) | false         | false       | true      | boolean | q            |

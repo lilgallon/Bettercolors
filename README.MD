@@ -5,102 +5,82 @@
 ![Forge dev version: 1.8.9-11.15.1.1722](https://img.shields.io/badge/forge_dev-1.8.9_11.15.1.1722-green.svg)
 ![Hack status](https://img.shields.io/badge/status-undetected-brightgreen.svg)
 
-A silent hack built within the forge API. Click assistance undetectable from any anticheat mod (i.e. CheatBreaker). 
+A silent hack built within the forge API. It bypasses the best anticheats (forge mods and servers).
 
 ## Disclamer
 
 Use it at your own risk!
 
-## Instructions
+## Features description
 
-V4.x-:
+**Aim assistance :** A smooth and human-like aim assistance 100% undetectable by any anticheat. It is invisible since it looks absolutely human. You can record videos while using it without any problem.
 
-Put launcher_log(1).txt in %appdata%/.minecraft.
-You can edit the values in this file.
+**Click assistance :** A human-like click assistance that send REAL clicks, to help you clicking faster. It can bypass forge CPS counter mods by toggling packets.
 
+**External interface :** A clean external interface to configure the mod outside the minecraft client, so you can record without any problem !
 
-V5.0+:
+**Console :** Curious ? There is a console showing everything happening in the mod. 
 
-The settings are saved in launcher_log(2).txt, no need to copy paste anything. It is automatic.
-FIRST LAUNCH: Hit the button save to initialize the config file. (It will do it automatically  anyways)
+**Teammate detection :** The mod find your teammates from any server game mode, and prevent hacks to be activated on them.
 
+**Settings :** You can configure every mod and all is saved in real-time.
 
-## Description
+## Features help
 
-- The Aim force is defined by AimStepX and AimStepY,
-- The Activation time is the time in seconds while aim assistance and click assistance will work,
-- CPS Increment is the assistance in click per seconds that will be applied,
-- CPS Chance is the chance in % of click assistance (sometimes it will not hit if %<100),
-- Aim radius X is the radius in degrees in which the aim assistance will work (same for aim radius Y).
-- Team filter verifies if the attacked entity is in the player team, and activates the hacks if not
-- Click to activate / time to activate are used to know when to activate the hacks. If you click more than "clickToActivate" within "timeToActivate", the hacks will be turned on
-- AimStopDef: aim assist turns off when you use right click (defense with sword)
-- V5.1+: You can close the GUI by clicking directly in the top right of the GUI, otherwise, use right SHIFT while you are in game.
+- Aim assistance :
+    - "Stop on right click" : it stops the aim assistance if you right click
+    - The aim speed is defined by refresh rate,
+    - The aim force is defined by step X and step Y,
+    - The aim range sets the maximum distance to aim an entity,
+    - The aim radius is the FOV in which you will aim at an entity,
+
+- Click assistance :
+    - "Packets" : Send packets instead of REAL clicks (**bypass forge anticheat but more risky server-side**)
+    - "Only on entity" : It will click only if you are aiming entity,
+    - Additional clicks defines how many clicks will be sent in addition to yours,
+    - Chance is the chance of every artificial click to be sent,
+    - Duration corresponds to the activation time of the click assistance,
+    - Clicks / Time to activate defines the number of clicks per time that you need to do to activate the click assistance,
+    
+- Common :
+    - "Use on mobs" : Defines if the modules works on mobs
+    - "Team filter" : Defines if the modules works on teammates
 
 ## Values
 
-The recommanded values are the default one.
+The recommended values are the default one. This configuration bypasses ANY anticheat.
 
 
-Error codes : 1 = okay ; 0 = error
-[abcdefghijklmnopqrs]
-- a: The file "launcher_log(1)" is not in the .minecraft directory
-- b: Could not create "launcher_log(1)" file
-- c: Syntax incorrect (should be: "description:value")
-
-| Setting                     | Default       | Minimum     | Maximum   | Type    | Error code   |
-|-----------------------------|---------------|-------------|-----------|---------|--------------|
-| AimRefreshRate(x/sec)       | 200           | 1 (0=OFF)   | 1000      | int     | p            |
-| AimStepX                    | 6             | 1 (0=OFF)   | 80        | float   | d            |
-| AimStepY                    | 10            | 1 (0=OFF)   | 80        | float   | e            |
-| AimRange                    | 5             | 1 (0=OFF)   | 100       | float   | f            |
-| AimRadiusX                  | 60            | 1 (0=OFF)   | 180       | float   | g            |
-| AimRadiusY                  | 30            | 1 (0=OFF)   | 90        | float   | h            |
-| AimStopRightClick           | true          | false       | true      | boolean | s            |
-| CPSIncrement                | 2             | 1 (0=OFF)   | 10        | long    | i            |
-| CPSchance                   | 80            | 1 (0=OFF)   | 100       | int     | j            |
-| CPSBypass(Artificial/Human) | false         | false       | true      | boolean | q            |
-| CPSOnlyOnEntity             | false         | false       | true      | boolean | r            |
-| ActivationTime(sec)         | 1500          | 0.1 (0=OFF) | unlimited | float   | k            |
-| UseOnMobs                   | false         | false       | true      | boolean | l            |
-| TeamFilter                  | true          | false       | true      | boolean | m            |
-| ClicksToActivate            | 3             | 0           | unlimited | int     | n            |
-| TimeToActivate(ms)          | 1000          | 1000        | unlimited | int     | o            |
-| AimAssist                   | true          | false       | true      | boolean | t            |
-| ClickAssist                 | true          | false       | true      | boolean | u            |
+| Setting                     | Default       | Minimum     | Maximum   | Type    |
+|-----------------------------|---------------|-------------|-----------|---------|
+| AimAssist (AA)              | true          | false       | true      | boolean |
+| ClickAssist (CA)            | true          | false       | true      | boolean |
+| AA_RefreshRate(x/sec)       | 200           | 1 (0=OFF)   | 1000      | int     |
+| AA_StepX                    | 6             | 1 (0=OFF)   | 80        | float   |
+| AA_StepY                    | 10            | 1 (0=OFF)   | 80        | float   |
+| AA_Range                    | 5             | 1 (0=OFF)   | 100       | float   |
+| AA_RadiusX                  | 60            | 1 (0=OFF)   | 180       | float   |
+| AA_RadiusY                  | 30            | 1 (0=OFF)   | 90        | float   |
+| AA_StopRightClick           | true          | false       | true      | boolean |
+| CA_Addition                 | 2             | 1 (0=OFF)   | 10        | long    |
+| CA_CPSChance                | 80            | 1 (0=OFF)   | 100       | int     |
+| CA_Packets                  | false         | false       | true      | boolean |
+| CA_OnlyOnEntity             | false         | false       | true      | boolean |
+| CA_CPSActivationTime        | 1500          | 0.1 (0=OFF) | unlimited | float   |
+| CA_CPSClicksToActivate      | 3             | 0           | unlimited | int     |
+| CA_TimeToActivate(ms)       | 1000          | 1000        | unlimited | int     |
+| UseOnMobs                   | false         | false       | true      | boolean |
+| TeamFilter                  | true          | false       | true      | boolean |
 
 
 ## Commands
 
-`INSERT` Refresh config
-
-`HOME` Toggle aim assist
-
-`PAGE_UP` Toggle click assist (V2.0 and higher)
-
-`END` V4.1- : Debug message | V5.0+ : Show panel if closed
-
-`RIGHT_SHIFT` V5.1+: Toggle GUI
-
-To turn off click assist, just put CPSIncrement to 0 (V1.8 and less)
-
-## Features
-
-- [x] Aim Assist
-- [x] Click Assist
-- [x] Settings
-- [x] Undetectable from forge based anticheats
-- [x] Debug key
-- [x] Teammate checker
-- [x] Activation settings
-- [x] Human clickassist
-- [x] Smooth aim
-- [x] Aim refresh rate
-- [x] CPS Assist only on entity or not setting
-- [x] Auto save settings (clickassist & aimassist toggled or not)
-- [x] Panel
+- `HOME` : Toggle aim assist
+- `PAGE_UP` : Toggle click assist
+- `RIGHT_SHIFT` : Toggle GUI
 
 
 ## Misc
 
+- Changelog available [here](CHANGELOG.MD).
 - Setup IntelliJ with Forge & updating forge - [Youtube video](https://www.youtube.com/watch?v=G2aPT36kf60)

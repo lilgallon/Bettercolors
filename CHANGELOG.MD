@@ -66,3 +66,18 @@
 **V5.1**
 - Added HWID verification
 - Added right SHIFT key to toggle the GUI which is closed by default
+
+**V6.0 : MAJOR UPDATE**
+
+*Everything has been recoded from zero. Now adding new modules is extremely easy and everything is optimized.*
+- Interface :
+    - A new external interface made to contain a lot of modules,
+- Modules :
+    - Aim assistance :
+        - ...
+    - Click Assistance :
+        - ...
+    - More modules to come...
+- Misc :
+    - Overall optimisation,
+    - Settings file is now in the game directory,

@@ -52,7 +52,7 @@ public class AimAssistance extends Module {
 
     @Override
     public void onUpdate() {
-        System.out.println("aim");
+
     }
 
     @Override

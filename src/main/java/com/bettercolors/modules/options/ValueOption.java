@@ -1,5 +1,7 @@
 package com.bettercolors.modules.options;
 
+import com.bettercolors.io.SettingsUtils;
+
 public class ValueOption extends Option {
 
     private int _min;
@@ -32,6 +34,12 @@ public class ValueOption extends Option {
                     " is lower than its min : " + Integer.toString(_min));
         }else{
             _val = val;
+            saveOption();
         }
+    }
+
+    @Override
+    void saveOption() {
+        SettingsUtils.setOption(_name, Integer.toString(_val));
     }
 }

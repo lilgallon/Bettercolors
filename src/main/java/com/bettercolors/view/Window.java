@@ -1,28 +1,56 @@
 package com.bettercolors.view;
 
-import java.awt.Color;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import com.bettercolors.modules.Module;
+import com.bettercolors.modules.options.Option;
+import com.bettercolors.modules.options.ToggleOption;
+
 import javax.swing.*;
-import javax.swing.text.*;
+import javax.swing.border.EtchedBorder;
+import javax.swing.border.TitledBorder;
+import java.awt.*;
+import java.util.ArrayList;
 
-import javax.swing.event.*;
-import javax.swing.GroupLayout.*;
+public class Window extends AbstractWindow{
 
-public abstract class Window extends JFrame{
-    
-    public Window(String title, int width, int height) {
-    	super(title);
-    	setBounds((int)Toolkit.getDefaultToolkit().getScreenSize().getWidth()/2-width/2,(int)Toolkit.getDefaultToolkit().getScreenSize().getHeight()/2-height/2,width,height);
-    	setResizable(false);
-    	setVisible(false);
+    private ArrayList<Option> _activation_status;
+    private ArrayList<Module> _modules;
+
+    public Window(String title, ArrayList<Option> activation_status, ArrayList<Module> modules) {
+        super(title, 450, 600);
+        _activation_status = activation_status;
+        _modules = modules;
+
+        JPanel global_grid = new JPanel();
+        global_grid.setLayout(new GridLayout(3, 0));
+
+        setupModulesActivationStatus(global_grid);
+
+        getContentPane().add(global_grid);
+        pack();
+        super.update();
     }
-    
-    public void update(){
-    	repaint();
+
+    private void setupModulesActivationStatus(JPanel global_grid){
+        // Setup grid
+        JPanel activation_grid = new JPanel();
+        activation_grid.setLayout(new GridLayout(_activation_status.size() / 2, 2));
+        activation_grid.setBorder(new TitledBorder(new EtchedBorder(), "Modules"));
+
+        for(Option option : _activation_status){
+            // Setup checkboxes
+            ToggleOption toggleOption = (ToggleOption) option;
+            final JCheckBox checkBox = new JCheckBox(option.getName());
+            checkBox.setSelected(toggleOption.isActivated());
+            checkBox.addActionListener(e -> {
+                toggleOption.toggle();
+                checkBox.setSelected(toggleOption.isActivated());
+                repaint();
+            });
+            // Put checkboxes on grid
+            activation_grid.add(checkBox);
+        }
+        global_grid.add(activation_grid);
     }
+
 
 }

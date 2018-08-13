@@ -6,6 +6,7 @@ import com.bettercolors.modules.ClickAssistance;
 import com.bettercolors.modules.Module;
 import com.bettercolors.modules.options.Option;
 import com.bettercolors.modules.options.ToggleOption;
+import com.bettercolors.view.Window;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
@@ -39,8 +40,10 @@ public class Bettercolors {
 
     private static int KEY_PAGE_UP = 201;
     private ArrayList<Module> _mods;
-    
+
     private Map<String, Boolean> _key_down;
+
+    private Window window;
 
     @EventHandler
 	public void Init(FMLInitializationEvent event)
@@ -71,8 +74,8 @@ public class Bettercolors {
         _key_down.put(ClickAssistance.class.getSimpleName(), false);
 
 
-		// Window initialisation
-        // todo
+		// AbstractWindow initialisation
+        window = new Window("Bettercolors 6", _activation_status, _mods);
 
         // Version check
         // todo
@@ -80,7 +83,7 @@ public class Bettercolors {
 
 	@SubscribeEvent
 	public void onClientTickEvent(ClientTickEvent event){
-        // todo : Window updating acc. to mods
+        // todo : AbstractWindow updating acc. to mods
         for(Module mod : _mods){
             if(Keyboard.isKeyDown(mod.getToggleKey())){
                 _key_down.replace(mod.getClass().getSimpleName(), true);

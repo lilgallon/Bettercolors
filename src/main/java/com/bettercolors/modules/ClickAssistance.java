@@ -53,7 +53,7 @@ public class ClickAssistance extends Module {
 
     @Override
     public void onUpdate() {
-        System.out.println("click");
+
     }
 
     @Override

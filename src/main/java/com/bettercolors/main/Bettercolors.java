@@ -75,7 +75,7 @@ public class Bettercolors {
 
 
 		// AbstractWindow initialisation
-        window = new Window("Bettercolors 6", _activation_status, _mods);
+        window = new Window("Bettercolors 6", _mods);
 
         // Version check
         // todo
@@ -90,6 +90,7 @@ public class Bettercolors {
             }else if(_key_down.get(mod.getClass().getSimpleName())){
                 // KEY RELEASED !
                 mod.toggle();
+                window.synchronizeComponents();
                 SettingsUtils.setOption(mod.getClass().getSimpleName(), Boolean.toString(mod.isActivated()));
                 _key_down.replace(mod.getClass().getSimpleName(), false);
             }

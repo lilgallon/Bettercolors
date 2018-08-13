@@ -9,11 +9,12 @@ public abstract class AbstractWindow extends JFrame{
     	super(title);
     	setBounds((int)Toolkit.getDefaultToolkit().getScreenSize().getWidth()/2-width/2,(int)Toolkit.getDefaultToolkit().getScreenSize().getHeight()/2-height/2,width,height);
     	setResizable(true);
-    	setVisible(true);
+    	setVisible(false);
     }
     
     public void update(){
     	repaint();
     }
 
+    public void toggle(){ setVisible(!isVisible());}
 }

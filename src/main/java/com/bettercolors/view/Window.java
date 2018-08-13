@@ -1,6 +1,8 @@
 package com.bettercolors.view;
 
 import com.bettercolors.io.SettingsUtils;
+import com.bettercolors.main.Bettercolors;
+import com.bettercolors.main.Reference;
 import com.bettercolors.modules.Module;
 import com.bettercolors.modules.options.Option;
 import com.bettercolors.modules.options.ToggleOption;
@@ -9,8 +11,8 @@ import com.bettercolors.modules.options.ValueOption;
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.text.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +21,7 @@ public class Window extends AbstractWindow{
 
     private ArrayList<Module> _modules;
 
+    private JTextPane _console;
     private ArrayList<JCheckBox> _checkboxes_activation;
     private ArrayList<JCheckBox> _checkboxes_modules;
     private Map<JLabel, JSlider> _sliders_modules;
@@ -36,6 +39,7 @@ public class Window extends AbstractWindow{
 
         setupModulesActivationStatus(global_grid);
         setupModulesOptions(global_grid);
+        setupConsole(global_grid);
 
         getContentPane().add(global_grid);
         pack();
@@ -121,7 +125,80 @@ public class Window extends AbstractWindow{
             }
             tabbedPane.addTab(module.getName(), module_options_panel);
         }
-        global_grid.add(tabbedPane);
+        global_grid.add(tabbedPane, "Center");
+    }
+
+    private void setupConsole(JPanel global_grid){
+        JPanel panel = new JPanel ();
+        panel.setBorder ( new TitledBorder ( new EtchedBorder (), "Console" ) );
+        panel.setLayout(new GridLayout(1,1));
+
+        // TextArea & ScrollPane init
+        _console = new JTextPane();
+        JScrollPane scroll = new JScrollPane (_console);
+        scroll.setVerticalScrollBarPolicy( JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+
+        // TextArea custom
+        //info_box.setWrapStyleWord(true);
+        _console.setEditable(false);
+        _console.setFont(new Font("Lucida Console", Font.PLAIN, 14));
+        _console.setBackground(new Color(0,30,50));
+        _console.setForeground(Color.WHITE);
+        String welcome_message = "";
+        welcome_message += "x~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~x\n";
+        welcome_message += "|                                                |\n";
+        welcome_message += "|       .-``'.   BetterColors " + Reference.VERSION + "   .'''-.       |\n";
+        welcome_message += "|     .`   .`~     Made by N3RO     ~`.   '.     |\n";
+        welcome_message += "| _.-'     '._   github.com/N3ROO   _.'     '-._ |\n";
+        welcome_message += "|                                                |\n";
+        welcome_message += "x~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~x\n";
+        _console.setText(welcome_message);
+
+        // Put the panel on the window
+        panel.add(scroll);
+        getContentPane().add(panel,"South");
+    }
+
+    private void appendToPane(JTextPane tp, String msg, Color c, boolean new_line)
+    {
+        StyleContext sc = StyleContext.getDefaultStyleContext();
+        AttributeSet aset = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Foreground, c);
+
+        aset = sc.addAttribute(aset, StyleConstants.FontFamily, "Lucida Console");
+        aset = sc.addAttribute(aset, StyleConstants.Alignment, StyleConstants.ALIGN_JUSTIFIED);
+
+        int len = tp.getDocument().getLength();
+
+        try {
+            tp.getDocument().insertString(len, msg, aset);
+        } catch (BadLocationException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void addText(String text){
+        addText(text, Color.WHITE,false);
+    }
+
+    public void addText(String text, boolean new_line){
+        addText(text, Color.WHITE, new_line);
+    }
+
+    public void addText(String text, Color color, boolean new_line){
+
+        if(new_line){
+            appendToPane(_console, "\n"+text, color, new_line);
+        }else{
+            appendToPane(_console, text, color, new_line);
+        }
+
+        super.update();
+    }
+
+    public void resetText(){
+        _console.setText("");
+        super.update();
     }
 
 
@@ -170,6 +247,4 @@ public class Window extends AbstractWindow{
 
         repaint();
     }
-
-
 }

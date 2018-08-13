@@ -40,10 +40,9 @@ public class Bettercolors {
 
     private static int KEY_PAGE_UP = 201;
     private ArrayList<Module> _mods;
-
     private Map<String, Boolean> _key_down;
-
-    private Window window;
+    private final String WINDOW = "windowGUI";
+    private Window _window;
 
     @EventHandler
 	public void Init(FMLInitializationEvent event)
@@ -72,10 +71,10 @@ public class Bettercolors {
         _key_down = new HashMap<>();
         _key_down.put(AimAssistance.class.getSimpleName(), false);
         _key_down.put(ClickAssistance.class.getSimpleName(), false);
-
+        _key_down.put(WINDOW, false);
 
 		// AbstractWindow initialisation
-        window = new Window("Bettercolors 6", _mods);
+        _window = new Window("Bettercolors " + Reference.VERSION, _mods);
 
         // Version check
         // todo
@@ -83,17 +82,23 @@ public class Bettercolors {
 
 	@SubscribeEvent
 	public void onClientTickEvent(ClientTickEvent event){
-        // todo : AbstractWindow updating acc. to mods
         for(Module mod : _mods){
             if(Keyboard.isKeyDown(mod.getToggleKey())){
                 _key_down.replace(mod.getClass().getSimpleName(), true);
             }else if(_key_down.get(mod.getClass().getSimpleName())){
                 // KEY RELEASED !
                 mod.toggle();
-                window.synchronizeComponents();
+                _window.synchronizeComponents();
                 SettingsUtils.setOption(mod.getClass().getSimpleName(), Boolean.toString(mod.isActivated()));
                 _key_down.replace(mod.getClass().getSimpleName(), false);
             }
+        }
+
+        if(Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)){
+            _key_down.replace(WINDOW, true);
+        }else if(_key_down.get(WINDOW)){
+            _key_down.replace(WINDOW, false);
+            _window.toggle();
         }
 	}
 

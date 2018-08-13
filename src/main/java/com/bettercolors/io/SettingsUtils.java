@@ -16,7 +16,7 @@ public class SettingsUtils {
     private static String SETTINGS_FILENAME = "settings";
 
 
-    public static void resetToDefault(ArrayList<ArrayList<Option>> modules_options){
+    public static void setOptions(ArrayList<ArrayList<Option>> modules_options, boolean only_absents){
         Map<String, String> options = new HashMap<>();
         for(ArrayList<Option> module_options : modules_options) {
             for (Option option : module_options) {
@@ -29,7 +29,7 @@ public class SettingsUtils {
         }
 
         Filer settings = new Filer(SETTINGS_FILENAME);
-        settings.write(options);
+        settings.write(options, only_absents);
     }
 
     public static Map<String, String> getOptions(){
@@ -47,6 +47,6 @@ public class SettingsUtils {
         options.put(option, value);
 
         Filer settings = new Filer(SETTINGS_FILENAME);
-        settings.write(options);
+        settings.write(options, false);
     }
 }

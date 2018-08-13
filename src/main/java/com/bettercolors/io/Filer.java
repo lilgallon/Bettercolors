@@ -16,10 +16,16 @@ public class Filer {
         _filename = filename;
     }
 
-    public void write(Map<String, String> options_to_write){
+    public void write(Map<String, String> options_to_write, boolean only_absents){
         Map<String, String> options = readAll();
         if(options != null) {
-            options.putAll(options_to_write);
+            if(only_absents){
+                for(Map.Entry<String, String> option : options_to_write.entrySet()){
+                    options.putIfAbsent(option.getKey(), option.getValue());
+                }
+            }else {
+                options.putAll(options_to_write);
+            }
         }else {
             options = options_to_write;
         }

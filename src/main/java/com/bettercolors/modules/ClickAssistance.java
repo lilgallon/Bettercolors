@@ -5,41 +5,50 @@ import com.bettercolors.modules.options.ToggleOption;
 import com.bettercolors.modules.options.ValueOption;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class ClickAssistance extends Module {
+
+    private static final String PACKETS = "Packets";
+    private static final String ONLY_ON_ENTITY = "Only_on_entity";
+    private static final String USE_ON_MOBS = "Use_on_mobs";
+    private static final String TEAM_FILTER = "Team_filter";
+    private static final String ADDITIONAL_CLICKS = "Additional_clicks";
+    private static final String CHANCE = "Chance";
+    private static final String DURATION = "Duration_(ms)";
+    private static final String CLICKS_TO_ACTIVATE = "Clicks_to_activate";
+    private static final String TIME_TO_ACTIVATE = "Time_to_activate";
 
     private static final ArrayList<Option> DEFAULT_OPTIONS;
     static{
         DEFAULT_OPTIONS = new ArrayList<>();
 
-        DEFAULT_OPTIONS.add(new ToggleOption("Packets", false));
-        DEFAULT_OPTIONS.add(new ToggleOption("Only_on_entity", false));
-        DEFAULT_OPTIONS.add(new ToggleOption("Use_on_mobs", false));
-        DEFAULT_OPTIONS.add(new ToggleOption("Team_filter", true));
+        DEFAULT_OPTIONS.add(new ToggleOption(PACKETS, false));
+        DEFAULT_OPTIONS.add(new ToggleOption(ONLY_ON_ENTITY, false));
+        DEFAULT_OPTIONS.add(new ToggleOption(USE_ON_MOBS, false));
+        DEFAULT_OPTIONS.add(new ToggleOption(TEAM_FILTER, true));
 
-        DEFAULT_OPTIONS.add(new ValueOption("Additional_clicks", 2, 0, 5, 0, 1));
-        DEFAULT_OPTIONS.add(new ValueOption("Chance", 80, 0, 100, 5, 20));
-        DEFAULT_OPTIONS.add(new ValueOption("Duration_(ms)", 1500, 0, 10000, 250, 1000));
-        DEFAULT_OPTIONS.add(new ValueOption("Clicks_to_activate", 3, 0, 20, 2, 5));
-        DEFAULT_OPTIONS.add(new ValueOption("Time_to_activate", 1000, 0, 10000, 250, 1000));
+        DEFAULT_OPTIONS.add(new ValueOption(ADDITIONAL_CLICKS, 2, 0, 5, 0, 1));
+        DEFAULT_OPTIONS.add(new ValueOption(CHANCE, 80, 0, 100, 5, 20));
+        DEFAULT_OPTIONS.add(new ValueOption(DURATION, 1500, 0, 10000, 250, 1000));
+        DEFAULT_OPTIONS.add(new ValueOption(CLICKS_TO_ACTIVATE, 3, 0, 20, 2, 5));
+        DEFAULT_OPTIONS.add(new ValueOption(TIME_TO_ACTIVATE, 1000, 0, 10000, 250, 1000));
     }
 
-    public ClickAssistance(String name, int toggle_key, boolean is_activated,
-                           boolean use_packets, boolean only_on_entity, boolean use_on_mobs, boolean team_filter,
-                           int additional_clicks, int chance, int duration, int clicks_to_activate, int time_to_activate) {
+    public ClickAssistance(String name, int toggle_key, boolean is_activated, Map<String, String> options) {
 
         super(name, toggle_key, is_activated);
 
         _options = DEFAULT_OPTIONS;
-        ((ToggleOption) _options.get(0)).setActivated(use_packets);
-        ((ToggleOption) _options.get(1)).setActivated(only_on_entity);
-        ((ToggleOption) _options.get(2)).setActivated(use_on_mobs);
-        ((ToggleOption) _options.get(3)).setActivated(team_filter);
-        ((ValueOption) _options.get(4)).setVal(additional_clicks);
-        ((ValueOption) _options.get(5)).setVal(chance);
-        ((ValueOption) _options.get(6)).setVal(duration);
-        ((ValueOption) _options.get(7)).setVal(clicks_to_activate);
-        ((ValueOption) _options.get(8)).setVal(time_to_activate);
+        ((ToggleOption) _options.get(0)).setActivated(Boolean.parseBoolean(options.get(PACKETS)));
+        ((ToggleOption) _options.get(1)).setActivated(Boolean.parseBoolean(options.get(ONLY_ON_ENTITY)));
+        ((ToggleOption) _options.get(2)).setActivated(Boolean.parseBoolean(options.get(USE_ON_MOBS)));
+        ((ToggleOption) _options.get(3)).setActivated(Boolean.parseBoolean(options.get(TEAM_FILTER)));
+        ((ValueOption) _options.get(4)).setVal(Integer.parseInt(options.get(ADDITIONAL_CLICKS)));
+        ((ValueOption) _options.get(5)).setVal(Integer.parseInt(options.get(CHANCE)));
+        ((ValueOption) _options.get(6)).setVal(Integer.parseInt(options.get(DURATION)));
+        ((ValueOption) _options.get(7)).setVal(Integer.parseInt(options.get(CLICKS_TO_ACTIVATE)));
+        ((ValueOption) _options.get(8)).setVal(Integer.parseInt(options.get(TIME_TO_ACTIVATE)));
     }
 
     @Override

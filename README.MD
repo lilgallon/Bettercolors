@@ -1,10 +1,8 @@
 ![header](gitresources/header.png)
 
 # N3RO's Better colors
-![Slient hack](https://img.shields.io/badge/silent-hacking-ff69b4.svg)
-![Last stable version: 6.0](https://img.shields.io/badge/bettercolors-5.0-aqua.svg)
-![Forge dev version: 1.8.9-11.15.1.1722](https://img.shields.io/badge/forge_dev-1.8.9_11.15.1.1722-brightgreen.svg)
-![Forge client-side compatibility: 1.8.9](https://img.shields.io/badge/forge_client-1.8.9-brightgreen.svg)
+![Last stable version](https://img.shields.io/badge/bettercolors-6.0-gold.svg)
+![Forge dev version: 1.8.9-11.15.1.1722](https://img.shields.io/badge/forge_dev-1.8.9_11.15.1.1722-green.svg)
 ![Hack status](https://img.shields.io/badge/status-undetected-brightgreen.svg)
 
 A silent hack built within the forge API. Click assistance undetectable from any anticheat mod (i.e. CheatBreaker). 

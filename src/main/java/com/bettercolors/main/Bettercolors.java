@@ -1,5 +1,7 @@
 package com.bettercolors.main;
 
+import com.bettercolors.modules.AimAssistance;
+import com.bettercolors.modules.ClickAssistance;
 import com.bettercolors.modules.Module;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -20,6 +22,7 @@ import java.util.ArrayList;
 
 public class Bettercolors {
 
+    private static int KEY_PAGE_UP = 201;
 	private ArrayList<Module> _mods;
 
 	@EventHandler
@@ -28,8 +31,13 @@ public class Bettercolors {
 		MinecraftForge.EVENT_BUS.register(this);
 		FMLCommonHandler.instance().bus().register(this);
 
+		// Settings management
+        // todo
+
 		// Mods initialisation
 		_mods = new ArrayList<>();
+		_mods.add(new AimAssistance("Aim assistance", Keyboard.KEY_HOME, true));
+		_mods.add(new ClickAssistance("Click assistance", KEY_PAGE_UP, true));
 
 		// Window initialisation
         // todo

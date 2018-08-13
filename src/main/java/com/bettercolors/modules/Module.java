@@ -1,7 +1,10 @@
 package com.bettercolors.modules;
 
+import com.bettercolors.modules.options.Option;
 import net.minecraft.client.Minecraft;
 import org.lwjgl.input.Keyboard;
+
+import java.util.ArrayList;
 
 public abstract class Module {
 
@@ -11,6 +14,7 @@ public abstract class Module {
 
     // Module details
     private final String _name;
+    private ArrayList<Option> _options;
 
     // Module status
     private int _toggle_key;
@@ -20,6 +24,7 @@ public abstract class Module {
         _name = name;
         _is_activated = is_activated;
         _toggle_key = toggle_key;
+        _options = new ArrayList<>();
     }
 
     public void toggle(){
@@ -43,5 +48,7 @@ public abstract class Module {
     public boolean isActivated() {
         return _is_activated;
     }
-
+    public ArrayList<Option> getOptions() {
+        return _options;
+    }
 }

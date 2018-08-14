@@ -37,20 +37,20 @@ public class Window extends AbstractWindow{
         _checkboxes_modules = new ArrayList<>();
         _sliders_modules = new HashMap<>();
 
-        JPanel global_grid = new JPanel();
-        //global_grid.setLayout(new GridLayout(modules.size() + 2, 0)); // +2 -> + Module activation & + console
-        global_grid.setLayout(new BorderLayout());
+        JPanel global_layout = new JPanel();
+        //global_layout.setLayout(new GridLayout(modules.size() + 2, 0)); // +2 -> + Module activation & + console
+        global_layout.setLayout(new BorderLayout());
 
-        setupModulesActivationStatus(global_grid);
-        setupModulesOptions(global_grid);
-        setupConsole(global_grid);
+        setupModulesActivationStatus(global_layout);
+        setupModulesOptions(global_layout);
+        setupConsole(global_layout);
 
-        getContentPane().add(global_grid);
+        getContentPane().add(global_layout);
         pack();
         super.update();
     }
 
-    private void setupModulesActivationStatus(JPanel global_grid){
+    private void setupModulesActivationStatus(JPanel global_layout){
         // Setup grid
         JPanel activation_grid = new JPanel();
         activation_grid.setLayout(new GridLayout((int)Math.ceil((double)_modules.size() / 2d), 2));
@@ -70,10 +70,10 @@ public class Window extends AbstractWindow{
             // Put checkboxes on grid
             activation_grid.add(checkBox);
         }
-        global_grid.add(activation_grid, "North");
+        global_layout.add(activation_grid, "North");
     }
 
-    private void setupModulesOptions(JPanel global_grid){
+    private void setupModulesOptions(JPanel global_layout){
         JTabbedPane tabbedPane = new JTabbedPane();
 
         for(Module module : _modules){
@@ -127,12 +127,13 @@ public class Window extends AbstractWindow{
 
                 module_options_panel.add(sliders_grid, "Center");
             }
-            tabbedPane.addTab(module.getName(), module_options_panel);
+            ImageIcon icon = new ImageIcon(this.getClass().getResource("/images/" + module.getSymbol()));
+            tabbedPane.addTab(module.getName(), icon, module_options_panel);
         }
-        global_grid.add(tabbedPane, "Center");
+        global_layout.add(tabbedPane, "Center");
     }
 
-    private void setupConsole(JPanel global_grid){
+    private void setupConsole(JPanel global_layout){
         JPanel panel = new JPanel ();
         panel.setBorder ( new TitledBorder ( new EtchedBorder (), "Console" ) );
         panel.setLayout(new GridLayout(1,1));
@@ -162,7 +163,7 @@ public class Window extends AbstractWindow{
 
         // Put the panel on the window
         panel.add(_scroll);
-        getContentPane().add(panel,"South");
+        global_layout.add(panel,"South");
     }
 
     private void appendToPane(JTextPane tp, String msg, Color c, boolean new_line)

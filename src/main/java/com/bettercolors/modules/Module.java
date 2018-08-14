@@ -19,16 +19,18 @@ public abstract class Module {
     // Module details
     private final String _name;
     ArrayList<Option> _options;
+    private final String _symbol;
 
     // Module status
     private int _toggle_key;
     private boolean _is_activated;
 
-    public Module(String name, int toggle_key, boolean is_activated){
+    public Module(String name, int toggle_key, boolean is_activated, String symbol){
         _last_log_msg = "";
         _name = name;
         _is_activated = is_activated;
         _toggle_key = toggle_key;
+        _symbol = symbol;
         _options = new ArrayList<>();
     }
 
@@ -86,14 +88,9 @@ public abstract class Module {
     abstract void onDisable();
 
     // Getters
-    public String getName() {
-        return _name;
-    }
+    public String getName() { return _name; }
     public int getToggleKey(){ return _toggle_key; }
-    public boolean isActivated() {
-        return _is_activated;
-    }
-    public ArrayList<Option> getOptions() {
-        return _options;
-    }
+    public boolean isActivated() { return _is_activated; }
+    public ArrayList<Option> getOptions() { return _options; }
+    public String getSymbol(){ return _symbol; }
 }

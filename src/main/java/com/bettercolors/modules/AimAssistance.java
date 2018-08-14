@@ -84,9 +84,9 @@ public class AimAssistance extends Module {
     private final int shift_y_max = 20;
     private final int shift_y_min = -20;
 
-    public AimAssistance(String name, int toggle_key, boolean is_activated, Map<String, String> options) {
+    public AimAssistance(String name, int toggle_key, boolean is_activated, Map<String, String> options, String symbol) {
 
-        super(name, toggle_key, is_activated);
+        super(name, toggle_key, is_activated, symbol);
 
         _options = DEFAULT_OPTIONS;
         ((ToggleOption) _options.get(I_STOP_ON_RIGHT_CLICK)).setActivated(Boolean.parseBoolean(options.get(STOP_ON_RIGHT_CLICK)));
@@ -158,7 +158,7 @@ public class AimAssistance extends Module {
                     _post_activation_timer.stop();
                     _activation_timer.start();
                     _refreshrate_timer.start();
-                    log(LOG_PREFIX + "Aim assistance started. " + Integer.toString(_post_activation_click_counter));
+                    log(LOG_PREFIX + "Aim assistance started.");
                 }else if(_post_activation_timer.isDelayComplete(post_activation_duration)
                             && _post_activation_click_counter < post_activation_clicks){
                     _post_activation_timer.stop();

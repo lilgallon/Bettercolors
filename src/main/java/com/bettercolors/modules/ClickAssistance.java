@@ -35,9 +35,9 @@ public class ClickAssistance extends Module {
         DEFAULT_OPTIONS.add(new ValueOption(TIME_TO_ACTIVATE, 1000, 0, 10000, 200, 1000));
     }
 
-    public ClickAssistance(String name, int toggle_key, boolean is_activated, Map<String, String> options) {
+    public ClickAssistance(String name, int toggle_key, boolean is_activated, Map<String, String> options, String symbol) {
 
-        super(name, toggle_key, is_activated);
+        super(name, toggle_key, is_activated, symbol);
 
         _options = DEFAULT_OPTIONS;
         ((ToggleOption) _options.get(0)).setActivated(Boolean.parseBoolean(options.get(PACKETS)));

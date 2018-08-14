@@ -33,6 +33,7 @@ Use it at your own risk!
     - The aim force is defined by step X and step Y,
     - The aim range sets the maximum distance to aim an entity,
     - The aim radius is the FOV in which you will aim at an entity,
+    - "Stop when reached" : it means that when you aim at an entity, the aimassist stops
 
 - Click assistance :
     - "Packets" : Send packets instead of REAL clicks (**bypass forge anticheat but more risky server-side**)

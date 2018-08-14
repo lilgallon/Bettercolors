@@ -24,15 +24,17 @@ public class TimeHelper {
 		return stopped;
 	}
 
+	/**
+	 * @param delay (ms)
+	 * @return
+	 */
 	public boolean isDelayComplete(long delay) {
-		if(1000000L - lastMS !=0){
-			if(System.nanoTime() / 1000000L - lastMS >= delay) {
-				return true;
-			}
-		}else if(0>=delay){
+	    if(stopped) return false;
+		if(System.nanoTime() / 1000000L - lastMS >= delay) {
+			return true;
+		}else if(delay <= 0){
 			return true;
 		}
-
 		return false;
 	}
 
@@ -40,32 +42,8 @@ public class TimeHelper {
 		return System.nanoTime() / 1000000L;
 	}
 
-	public void setLastMS(long lastMS) {
-		this.lastMS = lastMS;
-	}
-
-	public void setLastMS() {
-		this.lastMS = System.nanoTime() / 1000000L;
-	}
-
-	public int convertToMS(int d) {
-		return 1000 /d;
-	}
-
-	public boolean hasReached(float f){
-		return (float) (getCurrentMS() - this.lastMS) >= f;
-	}
-
 	public void reset(){
 		this.lastMS = getCurrentMS();
-	}
-
-	public boolean delay(float milliSec){
-		return (float)(getTime() - this.prevMS) >= milliSec;
-	}
-
-	private long getTime(){
-		return System.nanoTime() / 1000000L;
 	}
 	
 }

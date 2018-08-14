@@ -40,11 +40,11 @@ Use it at your own risk!
     - Additional clicks defines how many clicks will be sent in addition to yours,
     - Chance is the chance of every artificial click to be sent,
     - Duration corresponds to the activation time of the click assistance,
-    - Clicks / Time to activate defines the number of clicks per time that you need to do to activate the click assistance,
     
 - Common :
-    - "Use on mobs" : Defines if the modules works on mobs
-    - "Team filter" : Defines if the modules works on teammates
+    - "Use on mobs" : Defines if the modules works on mobs,
+    - "Team filter" : Defines if the modules works on teammates,
+    - Clicks / Time to activate defines the number of clicks per time that you need to do in order to activate the modules.
 
 ## Values
 
@@ -55,20 +55,23 @@ The recommended values are the default one. This configuration bypasses ANY anti
 |-----------------------------|---------------|-------------|-----------|---------|
 | AimAssist (AA)              | true          | false       | true      | boolean |
 | ClickAssist (CA)            | true          | false       | true      | boolean |
-| AA_RefreshRate(x/sec)       | 200           | 1 (0=OFF)   | 1000      | int     |
-| AA_StepX                    | 6             | 1 (0=OFF)   | 80        | float   |
-| AA_StepY                    | 10            | 1 (0=OFF)   | 80        | float   |
+| AA_RefreshRate (ms)         | 2             | 0           | 10        | int     |
+| AA_StepX                    | 5             | 1 (0=OFF)   | 80        | float   |
+| AA_StepY                    | 5             | 1 (0=OFF)   | 80        | float   |
 | AA_Range                    | 5             | 1 (0=OFF)   | 100       | float   |
 | AA_RadiusX                  | 60            | 1 (0=OFF)   | 180       | float   |
 | AA_RadiusY                  | 30            | 1 (0=OFF)   | 90        | float   |
 | AA_StopRightClick           | true          | false       | true      | boolean |
+| AA_StopWhenReached          | true          | false       | true      | boolean |
+| AA_ClicksToActivate         | 2             | 0           | 20        | int     |
+| AA_TimeToActivate(ms)       | 1500          | 0           | 100000    | int     |
 | CA_Addition                 | 2             | 1 (0=OFF)   | 10        | long    |
 | CA_CPSChance                | 80            | 1 (0=OFF)   | 100       | int     |
 | CA_Packets                  | false         | false       | true      | boolean |
 | CA_OnlyOnEntity             | false         | false       | true      | boolean |
 | CA_CPSActivationTime        | 1500          | 0.1 (0=OFF) | unlimited | float   |
 | CA_CPSClicksToActivate      | 3             | 0           | unlimited | int     |
-| CA_TimeToActivate(ms)       | 1000          | 1000        | unlimited | int     |
+| CA_TimeToActivate(ms)       | 1500          | 0           | 10000     | int     |
 | UseOnMobs                   | false         | false       | true      | boolean |
 | TeamFilter                  | true          | false       | true      | boolean |
 

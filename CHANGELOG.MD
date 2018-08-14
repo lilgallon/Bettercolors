@@ -71,10 +71,11 @@
 
 *Everything has been recoded from zero. Now adding new modules is extremely easy and everything is optimized.*
 - Interface :
-    - A new external interface made to contain a lot of modules,
+    - New external interface made to contain a lot of modules,
+    - Dynamic components : you can resize it the way you want,
 - Modules :
     - Aim assistance :
-        - ...
+        - Added "Stop when reached" option
     - Click Assistance :
         - ...
     - More modules to come...

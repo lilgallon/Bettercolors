@@ -15,9 +15,9 @@ public class ClickAssistance extends Module {
     private static final String TEAM_FILTER = "Team_filter";
     private static final String ADDITIONAL_CLICKS = "Additional_clicks";
     private static final String CHANCE = "Chance";
-    private static final String DURATION = "Duration_(ms)";
-    private static final String CLICKS_TO_ACTIVATE = "Clicks_to_activate";
-    private static final String TIME_TO_ACTIVATE = "Time_to_activate";
+    private static final String DURATION = "Duration";
+    private static final String CLICKS_TO_ACTIVATE = "CA_Clicks_to_activate";
+    private static final String TIME_TO_ACTIVATE = "CA_Time_to_activate";
 
     private static final ArrayList<Option> DEFAULT_OPTIONS;
     static{
@@ -29,10 +29,10 @@ public class ClickAssistance extends Module {
         DEFAULT_OPTIONS.add(new ToggleOption(TEAM_FILTER, true));
 
         DEFAULT_OPTIONS.add(new ValueOption(ADDITIONAL_CLICKS, 2, 0, 5, 0, 1));
-        DEFAULT_OPTIONS.add(new ValueOption(CHANCE, 80, 0, 100, 5, 20));
-        DEFAULT_OPTIONS.add(new ValueOption(DURATION, 1500, 0, 10000, 250, 1000));
-        DEFAULT_OPTIONS.add(new ValueOption(CLICKS_TO_ACTIVATE, 3, 0, 20, 2, 5));
-        DEFAULT_OPTIONS.add(new ValueOption(TIME_TO_ACTIVATE, 1000, 0, 10000, 250, 1000));
+        DEFAULT_OPTIONS.add(new ValueOption(CHANCE, 80, 0, 100, 5, 25));
+        DEFAULT_OPTIONS.add(new ValueOption(DURATION, 1500, 0, 10000, 200, 1000));
+        DEFAULT_OPTIONS.add(new ValueOption(CLICKS_TO_ACTIVATE, 3, 0, 20, 1, 5));
+        DEFAULT_OPTIONS.add(new ValueOption(TIME_TO_ACTIVATE, 1000, 0, 10000, 200, 1000));
     }
 
     public ClickAssistance(String name, int toggle_key, boolean is_activated, Map<String, String> options) {

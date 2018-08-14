@@ -19,15 +19,19 @@ import java.util.Map;
 
 public class Window extends AbstractWindow{
 
-    private ArrayList<Module> _modules;
+    public static Window instance;
 
+    private ArrayList<Module> _modules;
+    
     private JTextPane _console;
+    private JScrollPane _scroll;
     private ArrayList<JCheckBox> _checkboxes_activation;
     private ArrayList<JCheckBox> _checkboxes_modules;
     private Map<JLabel, JSlider> _sliders_modules;
 
     public Window(String title, ArrayList<Module> modules) {
         super(title, 450, 600);
+        instance = this;
         _modules = modules;
         _checkboxes_activation = new ArrayList<>();
         _checkboxes_modules = new ArrayList<>();
@@ -135,9 +139,10 @@ public class Window extends AbstractWindow{
 
         // TextArea & ScrollPane init
         _console = new JTextPane();
-        JScrollPane scroll = new JScrollPane (_console);
-        scroll.setVerticalScrollBarPolicy( JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        _scroll = new JScrollPane (_console);
+        _scroll.setVerticalScrollBarPolicy( JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        _scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        _scroll.setPreferredSize(new Dimension(425,100));
 
         // TextArea custom
         //info_box.setWrapStyleWord(true);
@@ -156,7 +161,7 @@ public class Window extends AbstractWindow{
         _console.setText(welcome_message);
 
         // Put the panel on the window
-        panel.add(scroll);
+        panel.add(_scroll);
         getContentPane().add(panel,"South");
     }
 
@@ -193,6 +198,9 @@ public class Window extends AbstractWindow{
             appendToPane(_console, text, color, new_line);
         }
 
+        // auto _scroll
+        _console.validate();
+        _scroll.getVerticalScrollBar().setValue(_scroll.getVerticalScrollBar().getMaximum());
         super.update();
     }
 

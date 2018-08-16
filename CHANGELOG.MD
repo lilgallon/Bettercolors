@@ -82,3 +82,4 @@
 - Misc :
     - Overall optimisation,
     - Settings file is now in the game directory,
+    - Version checker.

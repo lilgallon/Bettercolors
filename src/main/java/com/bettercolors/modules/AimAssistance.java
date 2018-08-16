@@ -166,7 +166,7 @@ public class AimAssistance extends Module {
             }
 
             if(!_activation_timer.isStopped() &&
-                    ( use_pressed || _activation_timer.isDelayComplete(((ValueOption) _options.get(I_DURATION)).getVal()))){
+                    ( use_pressed || _activation_timer.isDelayComplete(((ValueOption) _options.get(I_DURATION)).getVal()) || in_gui)){
                 _activation_timer.stop();
                 _refreshrate_timer.stop();
                 log(LOG_PREFIX + "Aim assistance stopped.");

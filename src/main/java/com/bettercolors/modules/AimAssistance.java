@@ -117,7 +117,6 @@ public class AimAssistance extends Module {
     public void onUpdate() {
 
         if(_mc.thePlayer != null){
-            boolean in_gui = _mc.thePlayer.isPlayerSleeping() || _mc.thePlayer.isDead || _mc.thePlayer.openContainer  instanceof ContainerPlayer;
             boolean attack_pressed = false;
             boolean use_pressed = false;
 
@@ -143,12 +142,12 @@ public class AimAssistance extends Module {
 
             if(_activation_timer.isStopped()) {
                 // If the aim assist is not activated, we check if the user made the actions to activate it
-                if (attack_pressed && _post_activation_timer.isStopped()) {
+                if (attack_pressed && !_post_activation_timer.isStopped()) {
+                    _post_activation_click_counter++;
+                } else if (attack_pressed && _post_activation_timer.isStopped()) {
                     // Attack pressed just pressed and timer stopped
                     _post_activation_timer.start();
                     _post_activation_click_counter = 1;
-                } else if (attack_pressed && !_post_activation_timer.isStopped()) {
-                    _post_activation_click_counter++;
                 }
 
                 int post_activation_duration = ((ValueOption) _options.get(I_TIME_TO_ACTIVATE)).getVal();
@@ -158,7 +157,7 @@ public class AimAssistance extends Module {
                     _post_activation_timer.stop();
                     _activation_timer.start();
                     _refreshrate_timer.start();
-                    log(LOG_PREFIX + "Aim assistance started.");
+                    log_info(LOG_PREFIX + "Aim assistance started.");
                 }else if(_post_activation_timer.isDelayComplete(post_activation_duration)
                             && _post_activation_click_counter < post_activation_clicks){
                     _post_activation_timer.stop();
@@ -166,10 +165,10 @@ public class AimAssistance extends Module {
             }
 
             if(!_activation_timer.isStopped() &&
-                    ( use_pressed || _activation_timer.isDelayComplete(((ValueOption) _options.get(I_DURATION)).getVal()) || in_gui)){
+                    ( use_pressed || _activation_timer.isDelayComplete(((ValueOption) _options.get(I_DURATION)).getVal()) || isInGui())){
                 _activation_timer.stop();
                 _refreshrate_timer.stop();
-                log(LOG_PREFIX + "Aim assistance stopped.");
+                log_info(LOG_PREFIX + "Aim assistance stopped.");
             }
 
             if(!_activation_timer.isStopped()){
@@ -296,7 +295,7 @@ public class AimAssistance extends Module {
             _mc.thePlayer.rotationPitch = rotations[1];
         }
 
-        log(LOG_PREFIX + "Aiming at entity " + entity.getName());
+        log_info(LOG_PREFIX + "Aiming at entity " + entity.getName());
     }
 
     private float[] getRotationsNeeded(EntityLivingBase entity) {

@@ -3,8 +3,10 @@ package com.bettercolors.modules;
 import com.bettercolors.modules.options.Option;
 import com.bettercolors.view.Window;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.ContainerPlayer;
 import org.lwjgl.input.Keyboard;
 
 import java.awt.*;
@@ -43,31 +45,34 @@ public abstract class Module {
         }
     }
 
-    void log(String msg, Color color, boolean new_line){
-        if(!msg.equalsIgnoreCase(_last_log_msg)) {
-            _last_log_msg = msg;
-            Window.instance.addText(msg, color, new_line);
-        }
-    }
-
-    void log(String msg){
+    void log_info(String msg){
         if(!msg.equalsIgnoreCase(_last_log_msg)) {
             _last_log_msg = msg;
             Window.instance.addText(msg, true);
         }
     }
 
-    boolean isInSameTeam(EntityLivingBase entity){
+    void log_error(String msg){
+        if(!msg.equalsIgnoreCase(_last_log_msg)) {
+            _last_log_msg = msg;
+            Window.instance.addText(msg, Color.RED, true);
+        }
+    }
+
+    boolean isInSameTeam(Entity entity){
+        if(!(entity instanceof EntityPlayer))
+            return false;
+        EntityPlayer player = (EntityPlayer) entity;
+
         boolean same_team = false;
         String target_tag;
         try {
             // Check friends / teammate
-            if (entity instanceof EntityPlayer) {
-                target_tag = exportTag((EntityPlayer) entity);
-                if (exportTag(_mc.thePlayer).equalsIgnoreCase(target_tag)) {
-                    same_team = true;
-                }
+            target_tag = exportTag((EntityPlayer) entity);
+            if (exportTag(_mc.thePlayer).equalsIgnoreCase(target_tag)) {
+                same_team = true;
             }
+
         } catch (Exception ignored) { }
         return same_team;
     }
@@ -81,6 +86,11 @@ public abstract class Module {
             tag = "";
         }
         return tag;
+    }
+
+    boolean isInGui(){
+        if(_mc.thePlayer == null) return true;
+        return _mc.thePlayer.isPlayerSleeping() || _mc.thePlayer.isDead || !(_mc.thePlayer.openContainer instanceof ContainerPlayer);
     }
 
     public abstract void onUpdate();

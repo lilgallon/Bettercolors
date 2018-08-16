@@ -1,8 +1,5 @@
 package com.bettercolors.io;
 
-import com.bettercolors.modules.AimAssistance;
-import com.bettercolors.modules.ClickAssistance;
-import com.bettercolors.modules.Module;
 import com.bettercolors.modules.options.Option;
 import com.bettercolors.modules.options.ToggleOption;
 import com.bettercolors.modules.options.ValueOption;

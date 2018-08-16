@@ -6,9 +6,6 @@ import com.bettercolors.modules.options.ValueOption;
 import com.bettercolors.utils.MathUtils;
 import com.bettercolors.utils.TimeHelper;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.ContainerPlayer;
 import net.minecraft.network.play.client.C02PacketUseEntity;
 
 import java.awt.*;

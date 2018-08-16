@@ -17,6 +17,11 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import org.lwjgl.input.Keyboard;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,6 +32,10 @@ import java.util.Map;
 	 acceptedMinecraftVersions = Reference.ACCEPTED_VERSIONS)
 
 public class Bettercolors {
+
+    public static String URL_PROBLEM = "Url problem (please contact developer).";
+    public static String INTERNET_PROBLEM = "No internet connection. :(";
+    public static String DOWNLOAD_URL = "https://github.com/N3ROO/Bettercolors/releases/";
 
     private final static ArrayList<Option> DEFAULT_ACTIVATION_STATUS;
     static{
@@ -73,10 +82,7 @@ public class Bettercolors {
         _key_down.put(WINDOW, false);
 
 		// AbstractWindow initialisation
-        _window = new Window("Bettercolors " + Reference.VERSION, _mods);
-
-        // Version check
-        // todo
+        _window = new Window("Bettercolors " + Reference.VERSION, _mods, getLastVersion());
 	}
 
 	@SubscribeEvent
@@ -109,4 +115,22 @@ public class Bettercolors {
             }
         }
 	}
+
+	private String getLastVersion(){
+
+        String last_version;
+
+        try{
+            URL url = new URL("https://n3roo.github.io/files/bettercolors-version.txt");
+            BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+            last_version = in.readLine();
+            in.close();
+        } catch (MalformedURLException e){
+            return URL_PROBLEM;
+        } catch (IOException e){
+            return INTERNET_PROBLEM;
+        }
+
+        return last_version;
+    }
 }

@@ -13,6 +13,12 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.text.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.font.TextAttribute;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,7 +35,7 @@ public class Window extends AbstractWindow{
     private ArrayList<JCheckBox> _checkboxes_modules;
     private Map<JLabel, JSlider> _sliders_modules;
 
-    public Window(String title, ArrayList<Module> modules) {
+    public Window(String title, ArrayList<Module> modules, String last_version) {
         super(title, 450, 600);
         instance = this;
         _modules = modules;
@@ -37,20 +43,76 @@ public class Window extends AbstractWindow{
         _checkboxes_modules = new ArrayList<>();
         _sliders_modules = new HashMap<>();
 
-        JPanel global_layout = new JPanel();
-        //global_layout.setLayout(new GridLayout(modules.size() + 2, 0)); // +2 -> + Module activation & + console
-        global_layout.setLayout(new BorderLayout());
+        // Header
+        JPanel header_layout = new JPanel();
+        header_layout.setLayout(new BorderLayout());
+        setupHeader(header_layout);
 
-        setupModulesActivationStatus(global_layout);
-        setupModulesOptions(global_layout);
-        setupConsole(global_layout);
+        // Modules
+        JPanel modules_related_layout = new JPanel();
+        modules_related_layout.setLayout(new BorderLayout());
+        setupModulesActivationStatus(modules_related_layout);
+        setupModulesOptions(modules_related_layout);
+        setupConsole(modules_related_layout);
 
-        getContentPane().add(global_layout);
+        // Footer
+        JPanel footer_layout = new JPanel();
+        footer_layout.setLayout(new BorderLayout());
+        setupFooter(footer_layout, last_version);
+
+        getContentPane().add(header_layout, "North");
+        getContentPane().add(modules_related_layout, "Center");
+        getContentPane().add(footer_layout, "South");
         pack();
         super.update();
     }
 
-    private void setupModulesActivationStatus(JPanel global_layout){
+    private void setupHeader(JPanel header_layout){
+
+    }
+
+    private void setupFooter(JPanel footer_layout, String last_version){
+        JLabel credits = new JLabel(" Bettercolors " + Reference.VERSION + " for MC " + Reference.ACCEPTED_VERSIONS.replace("[", "").replace("]", "") + " by N3RO. ");
+
+        JLabel update = new JLabel();
+        if(last_version.equalsIgnoreCase(Reference.VERSION)){
+            update.setForeground(new Color(0, 100, 0 ));
+            update.setText("Mod up-to-date ! :)");
+        }else if(last_version.equalsIgnoreCase(Bettercolors.INTERNET_PROBLEM)){
+            update.setForeground(new Color(200, 100, 0));
+            update.setText(Bettercolors.INTERNET_PROBLEM);
+        }else if(last_version.equalsIgnoreCase(Bettercolors.URL_PROBLEM)){
+            update.setForeground(new Color(100, 0, 0));
+            update.setText(Bettercolors.URL_PROBLEM);
+        }else{
+            update.setForeground(new Color(0, 70, 100));
+            update.setText("Update available ! Version " + last_version + ".");
+            Font font = update.getFont();
+            Map attributes = font.getAttributes();
+            attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+            update.setFont(font.deriveFont(attributes));
+            update.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            update.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    super.mouseClicked(e);
+                    try {
+                        Desktop.getDesktop().browse(new URI(Bettercolors.DOWNLOAD_URL));
+                    } catch (URISyntaxException | IOException ex) {
+                        addText("Error while trying to go to the download page.", Color.RED, true);
+                        addText("Here is the download page : " + Bettercolors.DOWNLOAD_URL, Color.RED, true);
+                    }
+                }
+            });
+        }
+
+
+        footer_layout.add(credits, "West");
+        footer_layout.add(update, "Center");
+    }
+
+
+    private void setupModulesActivationStatus(JPanel modules_related_layout){
         // Setup grid
         JPanel activation_grid = new JPanel();
         activation_grid.setLayout(new GridLayout((int)Math.ceil((double)_modules.size() / 2d), 2));
@@ -70,10 +132,10 @@ public class Window extends AbstractWindow{
             // Put checkboxes on grid
             activation_grid.add(checkBox);
         }
-        global_layout.add(activation_grid, "North");
+        modules_related_layout.add(activation_grid, "North");
     }
 
-    private void setupModulesOptions(JPanel global_layout){
+    private void setupModulesOptions(JPanel modules_related_layout){
         JTabbedPane tabbedPane = new JTabbedPane();
 
         for(Module module : _modules){
@@ -130,10 +192,10 @@ public class Window extends AbstractWindow{
             ImageIcon icon = new ImageIcon(this.getClass().getResource("/images/" + module.getSymbol()));
             tabbedPane.addTab(module.getName(), icon, module_options_panel);
         }
-        global_layout.add(tabbedPane, "Center");
+        modules_related_layout.add(tabbedPane, "Center");
     }
 
-    private void setupConsole(JPanel global_layout){
+    private void setupConsole(JPanel modules_related_layout){
         JPanel panel = new JPanel ();
         panel.setBorder ( new TitledBorder ( new EtchedBorder (), "Console" ) );
         panel.setLayout(new GridLayout(1,1));
@@ -154,7 +216,7 @@ public class Window extends AbstractWindow{
         String welcome_message = "";
         welcome_message += "x~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~x\n";
         welcome_message += "|                                                |\n";
-        welcome_message += "|       .-``'.   BetterColors " + Reference.VERSION + "   .'''-.       |\n";
+        welcome_message += "|       .-``'.    Bettercolors 6    .'''-.       |\n";
         welcome_message += "|     .`   .`~     Made by N3RO     ~`.   '.     |\n";
         welcome_message += "| _.-'     '._   github.com/N3ROO   _.'     '-._ |\n";
         welcome_message += "|                                                |\n";
@@ -163,7 +225,7 @@ public class Window extends AbstractWindow{
 
         // Put the panel on the window
         panel.add(_scroll);
-        global_layout.add(panel,"South");
+        modules_related_layout.add(panel,"South");
     }
 
     private void appendToPane(JTextPane tp, String msg, Color c, boolean new_line)

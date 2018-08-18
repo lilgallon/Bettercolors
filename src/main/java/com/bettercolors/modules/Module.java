@@ -16,9 +16,8 @@ public abstract class Module {
 
 
     // Utility
+    private String _last_log_msg;
     static Minecraft _mc = Minecraft.getMinecraft();
-    String _last_log_msg;
-
     // Keys utility
     private Map<KEY, KEY_STATE> _key_handler;
     enum KEY{ ATTACK, USE }
@@ -33,7 +32,7 @@ public abstract class Module {
     private int _toggle_key;
     private boolean _is_activated;
 
-    public Module(String name, int toggle_key, boolean is_activated, String symbol){
+    Module(String name, int toggle_key, boolean is_activated, String symbol){
         _last_log_msg = "";
         _name = name;
         _is_activated = is_activated;
@@ -72,7 +71,6 @@ public abstract class Module {
     boolean isInSameTeam(Entity entity){
         if(!(entity instanceof EntityPlayer))
             return false;
-        EntityPlayer player = (EntityPlayer) entity;
 
         boolean same_team = false;
         String target_tag;
@@ -112,7 +110,9 @@ public abstract class Module {
             _key_handler.replace(KEY.ATTACK, KEY_STATE.JUST_PRESSED);
         }else if(_mc.gameSettings.keyBindAttack.isKeyDown() && _key_handler.get(KEY.ATTACK) == KEY_STATE.JUST_PRESSED) {
             _key_handler.replace(KEY.ATTACK, KEY_STATE.BEING_PRESSED);
-        }else if(!_mc.gameSettings.keyBindAttack.isKeyDown() && _key_handler.get(KEY.ATTACK) != KEY_STATE.IDLE){
+        }else if(!_mc.gameSettings.keyBindUseItem.isKeyDown() && (_key_handler.get(KEY.ATTACK) == KEY_STATE.JUST_PRESSED || _key_handler.get(KEY.ATTACK) == KEY_STATE.BEING_PRESSED)){
+            _key_handler.replace(KEY.ATTACK, KEY_STATE.JUST_RELEASED);
+        } else if(!_mc.gameSettings.keyBindAttack.isKeyDown() && _key_handler.get(KEY.ATTACK) == KEY_STATE.JUST_RELEASED){
             _key_handler.replace(KEY.ATTACK, KEY_STATE.IDLE);
         }
 
@@ -120,7 +120,9 @@ public abstract class Module {
             _key_handler.replace(KEY.USE, KEY_STATE.JUST_PRESSED);
         }else if(_mc.gameSettings.keyBindUseItem.isKeyDown() && _key_handler.get(KEY.USE) == KEY_STATE.JUST_PRESSED) {
             _key_handler.replace(KEY.USE, KEY_STATE.BEING_PRESSED);
-        }else if(!_mc.gameSettings.keyBindUseItem.isKeyDown() && _key_handler.get(KEY.USE) != KEY_STATE.IDLE){
+        }else if(!_mc.gameSettings.keyBindUseItem.isKeyDown() && (_key_handler.get(KEY.USE) == KEY_STATE.JUST_PRESSED || _key_handler.get(KEY.USE) == KEY_STATE.BEING_PRESSED)){
+            _key_handler.replace(KEY.USE, KEY_STATE.JUST_RELEASED);
+        }else if(!_mc.gameSettings.keyBindUseItem.isKeyDown() && _key_handler.get(KEY.USE) == KEY_STATE.JUST_RELEASED){
             _key_handler.replace(KEY.USE, KEY_STATE.IDLE);
         }
 

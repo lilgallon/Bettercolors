@@ -4,34 +4,34 @@ import com.bettercolors.io.SettingsUtils;
 
 public class ValueOption extends Option {
 
-    private int _min;
-    private int _max;
+    private final int MIN;
+    private final int MAX;
+    private final int MINOR_TICK_SPC;
+    private final int MAJOR_TICK_SPC;
     private int _val;
-    private int _minor_tick_spc;
-    private int _major_tick_spc;
 
     public ValueOption(String name, int val, int min, int max, int minor_tick_spc, int major_tick_spc) {
         super(name);
         _val = val;
-        _min = min;
-        _max = max;
-        _minor_tick_spc = minor_tick_spc;
-        _major_tick_spc = major_tick_spc;
+        MIN = min;
+        MAX = max;
+        MINOR_TICK_SPC = minor_tick_spc;
+        MAJOR_TICK_SPC = major_tick_spc;
     }
 
-    public int getMin() { return _min; }
-    public int getMax() { return _max; }
+    public int getMin() { return MIN; }
+    public int getMax() { return MAX; }
     public int getVal() { return _val; }
-    public int getMajortTickSpacing(){ return _major_tick_spc; }
-    public int getMinortTickSpacing(){ return _minor_tick_spc; }
+    public int getMajorTickSpacing(){ return MAJOR_TICK_SPC; }
+    public int getMinorTickSpacing(){ return MINOR_TICK_SPC; }
 
     public void setVal(int val){
-        if(val > _max) {
+        if(val > MAX) {
             throw new IllegalArgumentException("The value " + Integer.toString(val) +
-                    " is bigger than its max : " + Integer.toString(_max));
-        }else if(val < _min){
+                    " is bigger than its max : " + Integer.toString(MAX));
+        }else if(val < MIN){
             throw new IllegalArgumentException("The value " + Integer.toString(val) +
-                    " is lower than its min : " + Integer.toString(_min));
+                    " is lower than its min : " + Integer.toString(MIN));
         }else{
             _val = val;
             saveOption();
@@ -40,6 +40,6 @@ public class ValueOption extends Option {
 
     @Override
     void saveOption() {
-        SettingsUtils.setOption(_name, Integer.toString(_val));
+        SettingsUtils.setOption(NAME, Integer.toString(_val));
     }
 }

@@ -4,13 +4,13 @@ import java.util.ArrayList;
 
 public abstract class Option {
 
-    String _name;
+    final String NAME;
 
-    public Option(String name){
-        _name = name;
+    Option(String name){
+        NAME = name;
     }
 
-    public String getName(){ return _name; }
+    public String getName(){ return NAME; }
 
     abstract void saveOption();
 

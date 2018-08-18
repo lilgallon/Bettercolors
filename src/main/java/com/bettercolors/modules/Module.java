@@ -14,13 +14,12 @@ import java.util.Map;
 
 public abstract class Module {
 
-
     // Utility
     private final String LOG_PREFIX;
     private String _last_log_msg;
-    static Minecraft _mc = Minecraft.getMinecraft();
+    final static Minecraft MC = Minecraft.getMinecraft();
     // Keys utility
-    private Map<KEY, KEY_STATE> _key_handler;
+    private final Map<KEY, KEY_STATE> KEY_HANDLER;
     enum KEY{ ATTACK, USE }
     enum KEY_STATE{ JUST_PRESSED, BEING_PRESSED, JUST_RELEASED, IDLE}
 
@@ -30,30 +29,25 @@ public abstract class Module {
     private final String _symbol;
 
     // Module status
-    private int _toggle_key;
+    private final int TOGGLE_KEY;
     private boolean _is_activated;
 
     Module(String name, int toggle_key, boolean is_activated, String symbol, String log_prefix){
         _last_log_msg = "";
         _name = name;
         _is_activated = is_activated;
-        _toggle_key = toggle_key;
+        TOGGLE_KEY = toggle_key;
         _symbol = symbol;
         LOG_PREFIX = log_prefix;
         _options = new ArrayList<>();
 
-        _key_handler = new HashMap<>();
-        _key_handler.put(KEY.ATTACK, KEY_STATE.IDLE);
-        _key_handler.put(KEY.USE, KEY_STATE.IDLE);
+        KEY_HANDLER = new HashMap<>();
+        KEY_HANDLER.put(KEY.ATTACK, KEY_STATE.IDLE);
+        KEY_HANDLER.put(KEY.USE, KEY_STATE.IDLE);
     }
 
     public void toggle(){
         _is_activated = !_is_activated;
-        if(_is_activated){
-            onEnable();
-        }else{
-            onDisable();
-        }
     }
 
     void log_info(String msg){
@@ -79,7 +73,7 @@ public abstract class Module {
         try {
             // Check friends / teammate
             target_tag = exportTag((EntityPlayer) entity);
-            if (exportTag(_mc.thePlayer).equalsIgnoreCase(target_tag)) {
+            if (exportTag(MC.thePlayer).equalsIgnoreCase(target_tag)) {
                 same_team = true;
             }
 
@@ -99,45 +93,43 @@ public abstract class Module {
     }
 
     boolean isInGui(){
-        if(_mc.thePlayer == null) return true;
-        return _mc.thePlayer.isPlayerSleeping() || _mc.thePlayer.isDead || !(_mc.thePlayer.openContainer instanceof ContainerPlayer);
+        if(MC.thePlayer == null) return true;
+        return MC.thePlayer.isPlayerSleeping() || MC.thePlayer.isDead || !(MC.thePlayer.openContainer instanceof ContainerPlayer);
     }
 
     boolean isKeyState(KEY key, KEY_STATE state){
-        return _key_handler.get(key) == state;
+        return KEY_HANDLER.get(key) == state;
     }
 
     public void update(){
-        if(_mc.gameSettings.keyBindAttack.isKeyDown() && _key_handler.get(KEY.ATTACK) == KEY_STATE.IDLE){
-            _key_handler.replace(KEY.ATTACK, KEY_STATE.JUST_PRESSED);
-        }else if(_mc.gameSettings.keyBindAttack.isKeyDown() && _key_handler.get(KEY.ATTACK) == KEY_STATE.JUST_PRESSED) {
-            _key_handler.replace(KEY.ATTACK, KEY_STATE.BEING_PRESSED);
-        }else if(!_mc.gameSettings.keyBindUseItem.isKeyDown() && (_key_handler.get(KEY.ATTACK) == KEY_STATE.JUST_PRESSED || _key_handler.get(KEY.ATTACK) == KEY_STATE.BEING_PRESSED)){
-            _key_handler.replace(KEY.ATTACK, KEY_STATE.JUST_RELEASED);
-        } else if(!_mc.gameSettings.keyBindAttack.isKeyDown() && _key_handler.get(KEY.ATTACK) == KEY_STATE.JUST_RELEASED){
-            _key_handler.replace(KEY.ATTACK, KEY_STATE.IDLE);
+        if(MC.gameSettings.keyBindAttack.isKeyDown() && KEY_HANDLER.get(KEY.ATTACK) == KEY_STATE.IDLE){
+            KEY_HANDLER.replace(KEY.ATTACK, KEY_STATE.JUST_PRESSED);
+        }else if(MC.gameSettings.keyBindAttack.isKeyDown() && KEY_HANDLER.get(KEY.ATTACK) == KEY_STATE.JUST_PRESSED) {
+            KEY_HANDLER.replace(KEY.ATTACK, KEY_STATE.BEING_PRESSED);
+        }else if(!MC.gameSettings.keyBindUseItem.isKeyDown() && (KEY_HANDLER.get(KEY.ATTACK) == KEY_STATE.JUST_PRESSED || KEY_HANDLER.get(KEY.ATTACK) == KEY_STATE.BEING_PRESSED)){
+            KEY_HANDLER.replace(KEY.ATTACK, KEY_STATE.JUST_RELEASED);
+        } else if(!MC.gameSettings.keyBindAttack.isKeyDown() && KEY_HANDLER.get(KEY.ATTACK) == KEY_STATE.JUST_RELEASED){
+            KEY_HANDLER.replace(KEY.ATTACK, KEY_STATE.IDLE);
         }
 
-        if(_mc.gameSettings.keyBindUseItem.isKeyDown() && _key_handler.get(KEY.USE) == KEY_STATE.IDLE){
-            _key_handler.replace(KEY.USE, KEY_STATE.JUST_PRESSED);
-        }else if(_mc.gameSettings.keyBindUseItem.isKeyDown() && _key_handler.get(KEY.USE) == KEY_STATE.JUST_PRESSED) {
-            _key_handler.replace(KEY.USE, KEY_STATE.BEING_PRESSED);
-        }else if(!_mc.gameSettings.keyBindUseItem.isKeyDown() && (_key_handler.get(KEY.USE) == KEY_STATE.JUST_PRESSED || _key_handler.get(KEY.USE) == KEY_STATE.BEING_PRESSED)){
-            _key_handler.replace(KEY.USE, KEY_STATE.JUST_RELEASED);
-        }else if(!_mc.gameSettings.keyBindUseItem.isKeyDown() && _key_handler.get(KEY.USE) == KEY_STATE.JUST_RELEASED){
-            _key_handler.replace(KEY.USE, KEY_STATE.IDLE);
+        if(MC.gameSettings.keyBindUseItem.isKeyDown() && KEY_HANDLER.get(KEY.USE) == KEY_STATE.IDLE){
+            KEY_HANDLER.replace(KEY.USE, KEY_STATE.JUST_PRESSED);
+        }else if(MC.gameSettings.keyBindUseItem.isKeyDown() && KEY_HANDLER.get(KEY.USE) == KEY_STATE.JUST_PRESSED) {
+            KEY_HANDLER.replace(KEY.USE, KEY_STATE.BEING_PRESSED);
+        }else if(!MC.gameSettings.keyBindUseItem.isKeyDown() && (KEY_HANDLER.get(KEY.USE) == KEY_STATE.JUST_PRESSED || KEY_HANDLER.get(KEY.USE) == KEY_STATE.BEING_PRESSED)){
+            KEY_HANDLER.replace(KEY.USE, KEY_STATE.JUST_RELEASED);
+        }else if(!MC.gameSettings.keyBindUseItem.isKeyDown() && KEY_HANDLER.get(KEY.USE) == KEY_STATE.JUST_RELEASED){
+            KEY_HANDLER.replace(KEY.USE, KEY_STATE.IDLE);
         }
 
         onUpdate();
     }
 
     abstract void onUpdate();
-    abstract void onEnable();
-    abstract void onDisable();
 
     // Getters
     public String getName() { return _name; }
-    public int getToggleKey(){ return _toggle_key; }
+    public int getToggleKey(){ return TOGGLE_KEY; }
     public boolean isActivated() { return _is_activated; }
     public ArrayList<Option> getOptions() { return _options; }
     public String getSymbol(){ return _symbol; }

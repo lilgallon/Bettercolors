@@ -8,21 +8,11 @@ public class AutoSprint extends Module{
 
     @Override
     public void onUpdate() {
-        if(_mc.thePlayer != null){
-            if(_mc.thePlayer.moveForward != 0){
+        if(MC.thePlayer != null){
+            if(MC.thePlayer.moveForward != 0){
                 log_info("forcing player to run.");
-                _mc.thePlayer.setSprinting(true);
+                MC.thePlayer.setSprinting(true);
             }
         }
-    }
-
-    @Override
-    void onEnable() {
-
-    }
-
-    @Override
-    void onDisable() {
-
     }
 }

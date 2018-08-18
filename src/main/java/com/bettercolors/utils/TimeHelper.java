@@ -2,11 +2,9 @@ package com.bettercolors.utils;
 
 public class TimeHelper {
 	private long lastMS = 0L;
-	private long prevMS;
 	private boolean stopped;
 
 	public TimeHelper(){
-		this.prevMS = 0L;
 		stopped = true;
 	}
 
@@ -26,19 +24,15 @@ public class TimeHelper {
 
 	/**
 	 * @param delay (ms)
-	 * @return
 	 */
 	public boolean isDelayComplete(long delay) {
 	    if(stopped) return false;
 		if(System.nanoTime() / 1000000L - lastMS >= delay) {
 			return true;
-		}else if(delay <= 0){
-			return true;
-		}
-		return false;
+		}else return delay <= 0;
 	}
 
-	public long getCurrentMS(){
+	private long getCurrentMS(){
 		return System.nanoTime() / 1000000L;
 	}
 

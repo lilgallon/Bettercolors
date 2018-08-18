@@ -31,9 +31,9 @@ import java.util.Map;
 
 public class Bettercolors {
 
-    public static String URL_PROBLEM = "Url problem (please contact developer).";
-    public static String INTERNET_PROBLEM = "No internet connection. :(";
-    public static String DOWNLOAD_URL = "https://github.com/N3ROO/Bettercolors/releases/latest";
+    public final static String URL_PROBLEM = "Url problem (please contact developer).";
+    public final static String INTERNET_PROBLEM = "No internet connection. :(";
+    public final static String DOWNLOAD_URL = "https://github.com/N3ROO/Bettercolors/releases/latest";
 
     private final static ArrayList<Option> DEFAULT_ACTIVATION_STATUS;
     static{
@@ -44,9 +44,6 @@ public class Bettercolors {
         DEFAULT_ACTIVATION_STATUS.add(new ToggleOption(AutoSword.class.getSimpleName(), true));
     }
 
-    private ArrayList<Option> _activation_status;
-
-    private static int KEY_PAGE_UP = 201;
     private ArrayList<Module> _modules;
     private Map<String, Boolean> _key_down;
     private final String WINDOW = "windowGUI";
@@ -55,25 +52,28 @@ public class Bettercolors {
     @EventHandler
 	public void Init(FMLInitializationEvent event)
 	{
+	    // Registers the rest
 		MinecraftForge.EVENT_BUS.register(this);
-		FMLCommonHandler.instance().bus().register(this);
+		// Registers tick event
+        FMLCommonHandler.instance().bus().register(this);
 
 		// Settings management
         Map<String, String> options = SettingsUtils.getOptions();
         ArrayList<ArrayList<Option>> modules_options = new ArrayList<>();
         modules_options.add(AimAssistance.getDefaultOptions());
         modules_options.add(ClickAssistance.getDefaultOptions());
-        _activation_status = DEFAULT_ACTIVATION_STATUS;
-        modules_options.add(_activation_status);
+        modules_options.add(DEFAULT_ACTIVATION_STATUS);
         // There is no settings file, we need to create it, otherwise we only add the settings that are not already
         // in the settings file (can happen after updating the mod to a newer version)
         SettingsUtils.setOptions(modules_options, options != null);
         options = SettingsUtils.getOptions();
 
 		// Mods initialisation
+        int KEY_HOME = Keyboard.KEY_HOME;
+        int KEY_PAGE_UP = 201;
 		_modules = new ArrayList<>();
-		_modules.add(new AimAssistance("Aim assistance", Keyboard.KEY_HOME, Boolean.parseBoolean(options.get(AimAssistance.class.getSimpleName())), options, "aim_symbol.png"));
-		_modules.add(new ClickAssistance("Click assistance", KEY_PAGE_UP, Boolean.parseBoolean(options.get(ClickAssistance.class.getSimpleName())), options, "click_symbol.png"));
+		_modules.add(new AimAssistance("Aim assistance", KEY_HOME, Boolean.parseBoolean(options.get(AimAssistance.class.getSimpleName())), options, "aim_symbol.png"));
+        _modules.add(new ClickAssistance("Click assistance", KEY_PAGE_UP, Boolean.parseBoolean(options.get(ClickAssistance.class.getSimpleName())), options, "click_symbol.png"));
 		_modules.add(new AutoSprint("Auto sprint", -1, Boolean.parseBoolean(options.get(AutoSprint.class.getSimpleName())), "sprint_symbol.png"));
 		_modules.add(new AutoSword("Auto sword", -1, Boolean.parseBoolean(options.get(AutoSword.class.getSimpleName())), "sword_symbol.png"));
 

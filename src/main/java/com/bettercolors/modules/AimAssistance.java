@@ -100,7 +100,7 @@ public class AimAssistance extends Module {
     @Override
     public void onUpdate() {
 
-        if(_mc.thePlayer != null){
+        if(MC.thePlayer != null){
 
             if(_activation_timer.isStopped()) {
                 // If the aim assist is not activated, we check if the user made the actions to activate it
@@ -143,16 +143,6 @@ public class AimAssistance extends Module {
         }
     }
 
-    @Override
-    void onEnable() {
-
-    }
-
-    @Override
-    void onDisable() {
-
-    }
-
     public static ArrayList<Option> getDefaultOptions(){
         return DEFAULT_OPTIONS;
     }
@@ -173,9 +163,9 @@ public class AimAssistance extends Module {
 
         List<? extends Entity> entities;
         if(((ToggleOption) _options.get(I_USE_ON_MOBS)).isActivated()){
-            entities = _mc.theWorld.loadedEntityList;
+            entities = MC.theWorld.loadedEntityList;
         }else{
-            entities = _mc.theWorld.playerEntities;
+            entities = MC.theWorld.playerEntities;
         }
 
         if(entities == null) return;
@@ -187,7 +177,7 @@ public class AimAssistance extends Module {
             if(entity instanceof EntityLivingBase){
                 if(entity instanceof EntityPlayerSP)
                     continue;
-                if(_mc.thePlayer.getDistanceToEntity(entity) <= range && _mc.thePlayer.canEntityBeSeen(entity))
+                if(MC.thePlayer.getDistanceToEntity(entity) <= range && MC.thePlayer.canEntityBeSeen(entity))
                     attackable_entities.add((EntityLivingBase) entity);
             }
         }
@@ -218,7 +208,7 @@ public class AimAssistance extends Module {
         boolean has_reached_a_living_entity = false;
         if(((ToggleOption) _options.get(I_STOP_WHEN_REACHED)).isActivated()) {
             try {
-                Entity mouseOverEntity = _mc.objectMouseOver.entityHit;
+                Entity mouseOverEntity = MC.objectMouseOver.entityHit;
                 if ((mouseOverEntity instanceof EntityLivingBase))
                     has_reached_a_living_entity = true;
             } catch (Exception ignored) {
@@ -232,17 +222,17 @@ public class AimAssistance extends Module {
     }
 
     private float[] getDiffFrom(EntityLivingBase entity){
-        final double diffX = entity.posX - _mc.thePlayer.posX;
-        final double diffZ = entity.posZ - _mc.thePlayer.posZ;
-        double diffY = entity.posY + entity.getEyeHeight() - (_mc.thePlayer.posY + _mc.thePlayer.getEyeHeight());
+        final double diffX = entity.posX - MC.thePlayer.posX;
+        final double diffZ = entity.posZ - MC.thePlayer.posZ;
+        double diffY = entity.posY + entity.getEyeHeight() - (MC.thePlayer.posY + MC.thePlayer.getEyeHeight());
 
         final double dist = MathHelper.sqrt_double(diffX * diffX + diffZ * diffZ);
 
         final float yaw = (float) ((Math.atan2(diffZ, diffX) * 180.0D / Math.PI) - 90.0F ) + shift_x;
         final float pitch = (float) - (Math.atan2(diffY, dist) * 180.0D / Math.PI) 		   + shift_y;
 
-        float distYaw = MathUtils.wrapAngleTo180_float(yaw - _mc.thePlayer.rotationYaw);
-        float distPitch = MathUtils.wrapAngleTo180_float(pitch - _mc.thePlayer.rotationPitch);
+        float distYaw = MathUtils.wrapAngleTo180_float(yaw - MC.thePlayer.rotationYaw);
+        float distPitch = MathUtils.wrapAngleTo180_float(pitch - MC.thePlayer.rotationPitch);
 
         return new float[]{distYaw, distPitch};
     }
@@ -251,8 +241,8 @@ public class AimAssistance extends Module {
         final float[] rotations = getRotationsNeeded(entity);
 
         if (rotations != null) {
-            _mc.thePlayer.rotationYaw = rotations[0];
-            _mc.thePlayer.rotationPitch = rotations[1];
+            MC.thePlayer.rotationYaw = rotations[0];
+            MC.thePlayer.rotationPitch = rotations[1];
         }
 
         log_info("Aiming at entity " + entity.getName() + ".");
@@ -268,24 +258,24 @@ public class AimAssistance extends Module {
         float step_x = ((ValueOption) _options.get(I_STEP_X)).getVal();
         float step_y = ((ValueOption) _options.get(I_STEP_Y)).getVal();
 
-        final double diffX = entity.posX - _mc.thePlayer.posX;
-        final double diffZ = entity.posZ - _mc.thePlayer.posZ;
-        double diffY = entity.posY + entity.getEyeHeight() - (_mc.thePlayer.posY + _mc.thePlayer.getEyeHeight());
+        final double diffX = entity.posX - MC.thePlayer.posX;
+        final double diffZ = entity.posZ - MC.thePlayer.posZ;
+        double diffY = entity.posY + entity.getEyeHeight() - (MC.thePlayer.posY + MC.thePlayer.getEyeHeight());
 
         final double dist = MathHelper.sqrt_double(diffX * diffX + diffZ * diffZ);
         final float yaw = (float) ((Math.atan2(diffZ, diffX) * 180.0D / Math.PI) - 90.0F ) + shift_x;
         final float pitch = (float) -(Math.atan2(diffY, dist) * 180.0D / Math.PI) 		   + shift_y;
 
-        if(MathHelper.abs(MathUtils.wrapAngleTo180_float(yaw - _mc.thePlayer.rotationYaw)) <=+ radius_x
-                && MathHelper.abs(MathUtils.wrapAngleTo180_float(pitch - _mc.thePlayer.rotationPitch)) <= radius_y){
+        if(MathHelper.abs(MathUtils.wrapAngleTo180_float(yaw - MC.thePlayer.rotationYaw)) <=+ radius_x
+                && MathHelper.abs(MathUtils.wrapAngleTo180_float(pitch - MC.thePlayer.rotationPitch)) <= radius_y){
             float yawFinal, pitchFinal;
 
-            yawFinal = ((MathUtils.wrapAngleTo180_float(yaw - _mc.thePlayer.rotationYaw)) * step_x) / 100;
-            pitchFinal = ((MathUtils.wrapAngleTo180_float(pitch - _mc.thePlayer.rotationPitch)) * step_y) / 100;
+            yawFinal = ((MathUtils.wrapAngleTo180_float(yaw - MC.thePlayer.rotationYaw)) * step_x) / 100;
+            pitchFinal = ((MathUtils.wrapAngleTo180_float(pitch - MC.thePlayer.rotationPitch)) * step_y) / 100;
 
-            return new float[] { _mc.thePlayer.rotationYaw + yawFinal, _mc.thePlayer.rotationPitch + pitchFinal};
+            return new float[] { MC.thePlayer.rotationYaw + yawFinal, MC.thePlayer.rotationPitch + pitchFinal};
         }else{
-            return new float[] { _mc.thePlayer.rotationYaw, _mc.thePlayer.rotationPitch};
+            return new float[] { MC.thePlayer.rotationYaw, MC.thePlayer.rotationPitch};
         }
     }
 }

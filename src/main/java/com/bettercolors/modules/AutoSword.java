@@ -13,13 +13,13 @@ public class AutoSword extends Module {
 
     @Override
     public void onUpdate() {
-        if(_mc.thePlayer != null){
+        if(MC.thePlayer != null){
             if(isKeyState(KEY.ATTACK, KEY_STATE.JUST_PRESSED)){
                 // We find the best sword
                 float max_damage = -1;
                 int best_item = -1;
                 for(int slot = 0; slot < 9 ; slot ++){
-                    ItemStack stack = _mc.thePlayer.inventory.mainInventory[slot];
+                    ItemStack stack = MC.thePlayer.inventory.mainInventory[slot];
                     if(stack == null) continue;
                     if(stack.getItem() instanceof ItemSword){
                         ItemSword sword = (ItemSword) stack.getItem();
@@ -36,21 +36,11 @@ public class AutoSword extends Module {
                     }
                 }
                 // We give the best sword to the player
-                if(best_item != -1 && _mc.thePlayer.inventory.currentItem != best_item){
-                    log_info("Better sword found (" +  _mc.thePlayer.inventory.mainInventory[best_item].getDisplayName() + ").");
-                    _mc.thePlayer.inventory.currentItem = best_item;
+                if(best_item != -1 && MC.thePlayer.inventory.currentItem != best_item){
+                    log_info("Better sword found (" +  MC.thePlayer.inventory.mainInventory[best_item].getDisplayName() + ").");
+                    MC.thePlayer.inventory.currentItem = best_item;
                 }
             }
         }
-    }
-
-    @Override
-    void onEnable() {
-
-    }
-
-    @Override
-    void onDisable() {
-
     }
 }

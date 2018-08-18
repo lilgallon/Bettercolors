@@ -5,18 +5,18 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-public class Filer {
+class Filer {
 
-    private String _filename;
+    private final String FILENAME;
 
     public Filer(String filename){
         if(!filename.endsWith(".properties")){
             filename += ".properties";
         }
-        _filename = filename;
+        FILENAME = filename;
     }
 
-    public void write(Map<String, String> options_to_write, boolean only_absents){
+    void write(Map<String, String> options_to_write, boolean only_absents){
         Map<String, String> options = readAll();
         if(options != null) {
             if(only_absents){
@@ -33,7 +33,7 @@ public class Filer {
         Properties prop = new Properties();
         OutputStream output = null;
         try {
-            output = new FileOutputStream(getSettingsDirectory() + "\\" + _filename);
+            output = new FileOutputStream(getSettingsDirectory() + "\\" + FILENAME);
             for(Map.Entry<String, String> option : options.entrySet()){
                 prop.setProperty(option.getKey(), option.getValue());
             }
@@ -55,13 +55,13 @@ public class Filer {
      * @param key the key of the property
      * @return the specific value associated to the key
      */
-    public String read(String key){
+    String read(String key){
         Properties prop = new Properties();
 
         String value;
         InputStream input;
         try{
-            input = new FileInputStream(getSettingsDirectory().toString() + "\\" + _filename);
+            input = new FileInputStream(getSettingsDirectory().toString() + "\\" + FILENAME);
             prop.load(input);
             value = prop.getProperty(key);
         } catch (IOException e) {
@@ -82,28 +82,26 @@ public class Filer {
     /**
      * @return  all the properties with their values.
      */
-    public Map<String, String> readAll(){
+    Map<String, String> readAll(){
         Properties prop = new Properties();
 
         Map<String, String> values = new HashMap<>();
         InputStream input;
         try{
-            input = new FileInputStream(getSettingsDirectory().toString() + "\\" + _filename);
+            input = new FileInputStream(getSettingsDirectory().toString() + "\\" + FILENAME);
             prop.load(input);
 
-            for(Object keyo : prop.keySet()){
-                String key = (String) keyo;
+            for(Object key_o : prop.keySet()){
+                String key = (String) key_o;
                 values.put(key, prop.getProperty(key));
             }
         } catch (IOException e) {
-            e.printStackTrace();
             return null;
         }
 
         try{
             input.close();
         } catch (IOException e) {
-            e.printStackTrace();
             return null;
         }
         return values;

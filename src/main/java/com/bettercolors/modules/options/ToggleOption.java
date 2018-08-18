@@ -13,7 +13,7 @@ public class ToggleOption extends Option {
 
     @Override
     void saveOption(){
-        SettingsUtils.setOption(_name, Boolean.toString(_activated));
+        SettingsUtils.setOption(NAME, Boolean.toString(_activated));
     }
 
     public void setActivated(boolean activated){

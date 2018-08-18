@@ -75,7 +75,7 @@ public class ClickAssistance extends Module {
 
     @Override
     public void onUpdate() {
-        if(_mc.thePlayer != null){
+        if(MC.thePlayer != null){
 
             if(_activation_timer.isStopped()) {
                 // If the click assist is not activated, we check if the user made the actions to activate it
@@ -120,16 +120,6 @@ public class ClickAssistance extends Module {
         }
     }
 
-    @Override
-    void onEnable() {
-
-    }
-
-    @Override
-    void onDisable() {
-
-    }
-
     public static ArrayList<Option> getDefaultOptions(){
         return DEFAULT_OPTIONS;
     }
@@ -142,17 +132,17 @@ public class ClickAssistance extends Module {
 
         Entity target = null;
         try{
-            target = _mc.objectMouseOver.entityHit;
+            target = MC.objectMouseOver.entityHit;
         }catch (Exception ignored){}
 
         int rand = MathUtils.random(0, 100);
         if(rand <= chance){
             if( (only_on_entity || packets) && target != null){
-                if (_mc.thePlayer.getDistanceToEntity(target) <= _mc.playerController.getBlockReachDistance() &&
+                if (MC.thePlayer.getDistanceToEntity(target) <= MC.playerController.getBlockReachDistance() &&
                         (team_filter && !isInSameTeam(target))) {
                     if (packets) {
-                        _mc.thePlayer.sendQueue.addToSendQueue(new C02PacketUseEntity(target, C02PacketUseEntity.Action.ATTACK));
-                        _mc.thePlayer.swingItem();
+                        MC.thePlayer.sendQueue.addToSendQueue(new C02PacketUseEntity(target, C02PacketUseEntity.Action.ATTACK));
+                        MC.thePlayer.swingItem();
                     } else {
                         click();
                     }

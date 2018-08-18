@@ -23,25 +23,33 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Window extends AbstractWindow{
+public class Window extends JFrame{
 
     public static Window instance;
 
-    private ArrayList<Module> _modules;
+    private final ArrayList<Module> MODULES;
     
     private JTextPane _console;
     private JScrollPane _scroll;
-    private ArrayList<JCheckBox> _checkboxes_activation;
-    private ArrayList<JCheckBox> _checkboxes_modules;
-    private Map<JLabel, JSlider> _sliders_modules;
+    private final ArrayList<JCheckBox> CHECKBOXES_ACTIVATION;
+    private final ArrayList<JCheckBox> CHECKBOXES_MODULES;
+    private final Map<JLabel, JSlider> SLIDERS_MODULES;
 
     public Window(String title, ArrayList<Module> modules, String last_version) {
-        super(title, 450, 600);
+        super(title);
+        int width = 450;
+        int height = 600;
+        setBounds((int)Toolkit.getDefaultToolkit().getScreenSize().getWidth()/2-width/2,(int)Toolkit.getDefaultToolkit().getScreenSize().getHeight()/2-height/2,width,height);
+        setIconImage(new ImageIcon(this.getClass().getResource("/images/bettercolors_symbol.png")).getImage());
+        setResizable(true);
+        setVisible(false);
+
+
         instance = this;
-        _modules = modules;
-        _checkboxes_activation = new ArrayList<>();
-        _checkboxes_modules = new ArrayList<>();
-        _sliders_modules = new HashMap<>();
+        MODULES = modules;
+        CHECKBOXES_ACTIVATION = new ArrayList<>();
+        CHECKBOXES_MODULES = new ArrayList<>();
+        SLIDERS_MODULES = new HashMap<>();
 
         // Header
         JPanel header_layout = new JPanel();
@@ -64,11 +72,11 @@ public class Window extends AbstractWindow{
         getContentPane().add(modules_related_layout, "Center");
         getContentPane().add(footer_layout, "South");
         pack();
-        super.update();
+        repaint();
     }
 
     private void setupHeader(JPanel header_layout){
-
+        // TODO title ?
     }
 
     private void setupFooter(JPanel footer_layout, String last_version){
@@ -88,7 +96,7 @@ public class Window extends AbstractWindow{
             update.setForeground(new Color(0, 70, 100));
             update.setText("Update available ! Version " + last_version + ".");
             Font font = update.getFont();
-            Map attributes = font.getAttributes();
+            Map<TextAttribute, Object> attributes = new HashMap<>(font.getAttributes());
             attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
             update.setFont(font.deriveFont(attributes));
             update.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -106,7 +114,6 @@ public class Window extends AbstractWindow{
             });
         }
 
-
         footer_layout.add(credits, "West");
         footer_layout.add(update, "Center");
     }
@@ -115,10 +122,10 @@ public class Window extends AbstractWindow{
     private void setupModulesActivationStatus(JPanel modules_related_layout){
         // Setup grid
         JPanel activation_grid = new JPanel();
-        activation_grid.setLayout(new GridLayout((int)Math.ceil((double)_modules.size() / 2d), 2));
+        activation_grid.setLayout(new GridLayout((int)Math.ceil((double) MODULES.size() / 2d), 2));
         activation_grid.setBorder(new TitledBorder(new EtchedBorder(), "Modules"));
 
-        for(Module module : _modules) {
+        for(Module module : MODULES) {
             // Setup checkboxes
             final JCheckBox checkBox = new JCheckBox(module.getClass().getSimpleName());
             checkBox.setSelected(module.isActivated());
@@ -128,7 +135,7 @@ public class Window extends AbstractWindow{
                 checkBox.setSelected(module.isActivated());
                 repaint();
             });
-            _checkboxes_activation.add(checkBox);
+            CHECKBOXES_ACTIVATION.add(checkBox);
             // Put checkboxes on grid
             activation_grid.add(checkBox);
         }
@@ -138,7 +145,7 @@ public class Window extends AbstractWindow{
     private void setupModulesOptions(JPanel modules_related_layout){
         JTabbedPane tabbedPane = new JTabbedPane();
 
-        for(Module module : _modules){
+        for(Module module : MODULES){
             if(module.getOptions().size() == 0) continue;
 
             JPanel module_options_panel = new JPanel();
@@ -158,7 +165,7 @@ public class Window extends AbstractWindow{
                         checkBox.setSelected(toggle_option.isActivated());
                         repaint();
                     });
-                    _checkboxes_modules.add(checkBox);
+                    CHECKBOXES_MODULES.add(checkBox);
                     // Put checkboxes on grid
                     checkboxes_grid.add(checkBox);
                 }
@@ -176,15 +183,15 @@ public class Window extends AbstractWindow{
                     slider.setMinimum(value_option.getMin());
                     slider.setMaximum(value_option.getMax());
                     slider.setValue(value_option.getVal());
-                    slider.setMinorTickSpacing(value_option.getMinortTickSpacing());
-                    slider.setMajorTickSpacing(value_option.getMajortTickSpacing());
+                    slider.setMinorTickSpacing(value_option.getMinorTickSpacing());
+                    slider.setMajorTickSpacing(value_option.getMajorTickSpacing());
                     slider.setPaintTicks(true);
                     slider.addChangeListener(e -> {
                         value_option.setVal(slider.getValue());
                         label.setText(value_option.getName() + " [" + Integer.toString(value_option.getVal()) + "]");
                         repaint();
                     });
-                    _sliders_modules.put(label, slider);
+                    SLIDERS_MODULES.put(label, slider);
                     sliders_grid.add(label);
                     sliders_grid.add(slider);
                 }
@@ -230,25 +237,21 @@ public class Window extends AbstractWindow{
         modules_related_layout.add(panel,"South");
     }
 
-    private void appendToPane(JTextPane tp, String msg, Color c, boolean new_line)
+    private void appendToPane(JTextPane tp, String msg, Color c)
     {
         StyleContext sc = StyleContext.getDefaultStyleContext();
-        AttributeSet aset = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Foreground, c);
+        AttributeSet attribute_set = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Foreground, c);
 
-        aset = sc.addAttribute(aset, StyleConstants.FontFamily, "Lucida Console");
-        aset = sc.addAttribute(aset, StyleConstants.Alignment, StyleConstants.ALIGN_JUSTIFIED);
+        attribute_set = sc.addAttribute(attribute_set, StyleConstants.FontFamily, "Lucida Console");
+        attribute_set = sc.addAttribute(attribute_set, StyleConstants.Alignment, StyleConstants.ALIGN_JUSTIFIED);
 
         int len = tp.getDocument().getLength();
 
         try {
-            tp.getDocument().insertString(len, msg, aset);
+            tp.getDocument().insertString(len, msg, attribute_set);
         } catch (BadLocationException e) {
             e.printStackTrace();
         }
-    }
-
-    public void addText(String text){
-        addText(text, Color.WHITE,false);
     }
 
     public void addText(String text, boolean new_line){
@@ -258,30 +261,30 @@ public class Window extends AbstractWindow{
     public void addText(String text, Color color, boolean new_line){
 
         if(new_line){
-            appendToPane(_console, "\n"+text, color, new_line);
+            appendToPane(_console, "\n"+text, color);
         }else{
-            appendToPane(_console, text, color, new_line);
+            appendToPane(_console, text, color);
         }
 
         // auto _scroll
         _console.validate();
         _scroll.getVerticalScrollBar().setValue(_scroll.getVerticalScrollBar().getMaximum());
-        super.update();
+        repaint();
     }
 
     public void resetText(){
         _console.setText("");
-        super.update();
+        repaint();
     }
 
 
     public void synchronizeComponents(){
-        for(JCheckBox checkbox : _checkboxes_activation){
+        for(JCheckBox checkbox : CHECKBOXES_ACTIVATION){
             boolean found = false;
             int i = 0;
-            while(!found && i < _modules.size()){
-                if(checkbox.getText().equalsIgnoreCase(_modules.get(i).getClass().getSimpleName())){
-                    checkbox.setSelected((_modules.get(i)).isActivated());
+            while(!found && i < MODULES.size()){
+                if(checkbox.getText().equalsIgnoreCase(MODULES.get(i).getClass().getSimpleName())){
+                    checkbox.setSelected((MODULES.get(i)).isActivated());
                     found = true;
                 }else{
                     ++ i;
@@ -289,14 +292,14 @@ public class Window extends AbstractWindow{
             }
         }
 
-        for(Module module : _modules){
+        for(Module module : MODULES){
             ArrayList<ToggleOption> toggle_options = Option.getToggleOptions(module.getOptions());
             for(ToggleOption toggle_option : toggle_options){
                 boolean found = false;
                 int i = 0;
-                while(!found && i < _checkboxes_modules.size()){
-                    if(_checkboxes_modules.get(i).getText().equalsIgnoreCase(toggle_option.getName())){
-                        _checkboxes_modules.get(i).setSelected(toggle_option.isActivated());
+                while(!found && i < CHECKBOXES_MODULES.size()){
+                    if(CHECKBOXES_MODULES.get(i).getText().equalsIgnoreCase(toggle_option.getName())){
+                        CHECKBOXES_MODULES.get(i).setSelected(toggle_option.isActivated());
                         found = true;
                     }else{
                         ++ i;
@@ -305,10 +308,10 @@ public class Window extends AbstractWindow{
             }
         }
 
-        for(Module module : _modules){
+        for(Module module : MODULES){
             ArrayList<ValueOption> value_options = Option.getValueOptions(module.getOptions());
             for(ValueOption value_option : value_options){
-                for(Map.Entry<JLabel, JSlider> entry : _sliders_modules.entrySet()){
+                for(Map.Entry<JLabel, JSlider> entry : SLIDERS_MODULES.entrySet()){
                     if(entry.getKey().getText().contains(value_option.getName())){
                         entry.getKey().setText(value_option.getName() + " [" + Integer.toString(value_option.getVal()) + "]");
                         entry.getValue().setValue(value_option.getVal());
@@ -319,5 +322,9 @@ public class Window extends AbstractWindow{
         }
 
         repaint();
+    }
+
+    public void toggle(){
+        setVisible(!isVisible());
     }
 }

@@ -9,8 +9,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SettingsUtils {
-    // TODO
-    private static String SETTINGS_FILENAME = "settings";
+    // TODO -> CHANGE TO NORMAL CLASS TO ADD THE POSSIBILITY TO CHANGE THE FILENAME FOR MULTIPLE CONFIGURATIONS
+    private final static String SETTINGS_FILENAME = "settings";
 
 
     public static void setOptions(ArrayList<ArrayList<Option>> modules_options, boolean only_absents){

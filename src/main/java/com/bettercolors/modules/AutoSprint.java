@@ -2,7 +2,7 @@ package com.bettercolors.modules;
 
 public class AutoSprint extends Module{
 
-    private final String LOG_PREFIX = "[AS] ";
+    private final String LOG_PREFIX = "[ASp] ";
 
     public AutoSprint(String name, int toggle_key, boolean is_activated, String symbol) {
         super(name, toggle_key, is_activated, symbol);

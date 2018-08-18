@@ -1,7 +1,13 @@
 package com.bettercolors.modules;
 
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemSword;
+
 public class AutoSword extends Module {
 
+    private final String LOG_PREFIX = "[ASw] ";
 
     public AutoSword(String name, int toggle_key, boolean is_activated, String symbol) {
         super(name, toggle_key, is_activated, symbol);
@@ -10,7 +16,33 @@ public class AutoSword extends Module {
     @Override
     public void onUpdate() {
         if(_mc.thePlayer != null){
-
+            if(isKeyState(KEY.ATTACK, KEY_STATE.JUST_PRESSED)){
+                // We find the best sword
+                float max_damage = -1;
+                int best_item = -1;
+                for(int slot = 0; slot < 9 ; slot ++){
+                    ItemStack stack = _mc.thePlayer.inventory.mainInventory[slot];
+                    if(stack == null) continue;
+                    if(stack.getItem() instanceof ItemSword){
+                        ItemSword sword = (ItemSword) stack.getItem();
+                        float damage = sword.getMaxDamage();
+                        if(sword.hasEffect(stack)){
+                            // The damage calculation is not correct here, but we just need to find the item with the most
+                            // powerful enchantment, so we don't care.
+                            damage += EnchantmentHelper.getEnchantmentLevel(Enchantment.sharpness.effectId, stack);
+                        }
+                        if(damage >= max_damage){
+                            best_item = slot;
+                            max_damage = damage;
+                        }
+                    }
+                }
+                // We give the best sword to the player
+                if(best_item != -1 && _mc.thePlayer.inventory.currentItem != best_item){
+                    log_info(LOG_PREFIX + "Better sword found (" +  _mc.thePlayer.inventory.mainInventory[best_item].getDisplayName() + ").");
+                    _mc.thePlayer.inventory.currentItem = best_item;
+                }
+            }
         }
     }
 

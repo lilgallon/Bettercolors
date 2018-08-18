@@ -123,6 +123,8 @@ public abstract class Module {
         }else if(!_mc.gameSettings.keyBindUseItem.isKeyDown() && _key_handler.get(KEY.USE) != KEY_STATE.IDLE){
             _key_handler.replace(KEY.USE, KEY_STATE.IDLE);
         }
+
+        onUpdate();
     }
 
     abstract void onUpdate();

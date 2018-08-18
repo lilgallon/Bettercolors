@@ -17,7 +17,6 @@ public class ClickAssistance extends Module {
 
     private static final String PACKETS = "Packets";
     private static final String ONLY_ON_ENTITY = "Only_on_entity";
-    private static final String USE_ON_MOBS = "Use_on_mobs";
     private static final String TEAM_FILTER = "Team_filter";
     private static final String ADDITIONAL_CLICKS = "Additional_clicks";
     private static final String CHANCE = "Chance";
@@ -39,7 +38,6 @@ public class ClickAssistance extends Module {
 
         DEFAULT_OPTIONS.add(new ToggleOption(PACKETS, false));
         DEFAULT_OPTIONS.add(new ToggleOption(ONLY_ON_ENTITY, false));
-        DEFAULT_OPTIONS.add(new ToggleOption(USE_ON_MOBS, false));
         DEFAULT_OPTIONS.add(new ToggleOption(TEAM_FILTER, true));
 
         DEFAULT_OPTIONS.add(new ValueOption(ADDITIONAL_CLICKS, 2, 0, 5, 0, 1));

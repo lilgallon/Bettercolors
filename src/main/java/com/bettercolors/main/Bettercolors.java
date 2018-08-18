@@ -40,6 +40,8 @@ public class Bettercolors {
         DEFAULT_ACTIVATION_STATUS = new ArrayList<>();
         DEFAULT_ACTIVATION_STATUS.add(new ToggleOption(AimAssistance.class.getSimpleName(), true));
         DEFAULT_ACTIVATION_STATUS.add(new ToggleOption(ClickAssistance.class.getSimpleName(), true));
+        DEFAULT_ACTIVATION_STATUS.add(new ToggleOption(AutoSprint.class.getSimpleName(), true));
+        DEFAULT_ACTIVATION_STATUS.add(new ToggleOption(AutoSword.class.getSimpleName(), true));
     }
 
     private ArrayList<Option> _activation_status;

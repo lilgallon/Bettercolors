@@ -1,9 +1,7 @@
 package com.bettercolors.main;
 
 import com.bettercolors.io.SettingsUtils;
-import com.bettercolors.modules.AimAssistance;
-import com.bettercolors.modules.ClickAssistance;
-import com.bettercolors.modules.Module;
+import com.bettercolors.modules.*;
 import com.bettercolors.modules.options.Option;
 import com.bettercolors.modules.options.ToggleOption;
 import com.bettercolors.view.Window;
@@ -47,7 +45,7 @@ public class Bettercolors {
     private ArrayList<Option> _activation_status;
 
     private static int KEY_PAGE_UP = 201;
-    private ArrayList<Module> _mods;
+    private ArrayList<Module> _modules;
     private Map<String, Boolean> _key_down;
     private final String WINDOW = "windowGUI";
     private Window _window;
@@ -71,31 +69,36 @@ public class Bettercolors {
         options = SettingsUtils.getOptions();
 
 		// Mods initialisation
-		_mods = new ArrayList<>();
-		_mods.add(new AimAssistance("Aim assistance", Keyboard.KEY_HOME, Boolean.parseBoolean(options.get(AimAssistance.class.getSimpleName())), options, "aim_symbol.png"));
-		_mods.add(new ClickAssistance("Click assistance", KEY_PAGE_UP, Boolean.parseBoolean(options.get(ClickAssistance.class.getSimpleName())), options, "click_symbol.png"));
+		_modules = new ArrayList<>();
+		_modules.add(new AimAssistance("Aim assistance", Keyboard.KEY_HOME, Boolean.parseBoolean(options.get(AimAssistance.class.getSimpleName())), options, "aim_symbol.png"));
+		_modules.add(new ClickAssistance("Click assistance", KEY_PAGE_UP, Boolean.parseBoolean(options.get(ClickAssistance.class.getSimpleName())), options, "click_symbol.png"));
+		_modules.add(new AutoSprint("Auto sprint", -1, Boolean.parseBoolean(options.get(AutoSprint.class.getSimpleName())), "sprint_symbol.png"));
+		_modules.add(new AutoSword("Auto sword", -1, Boolean.parseBoolean(options.get(AutoSword.class.getSimpleName())), "sword_symbol.png"));
 
 		// KeyEvent
         _key_down = new HashMap<>();
-        _key_down.put(AimAssistance.class.getSimpleName(), false);
-        _key_down.put(ClickAssistance.class.getSimpleName(), false);
+        for(Module module : _modules){
+            _key_down.put(module.getClass().getSimpleName(), false);
+        }
         _key_down.put(WINDOW, false);
 
 		// AbstractWindow initialisation
-        _window = new Window("Bettercolors " + Reference.VERSION, _mods, getLastVersion());
+        _window = new Window("Bettercolors " + Reference.VERSION, _modules, getLastVersion());
 	}
 
 	@SubscribeEvent
 	public void onClientTickEvent(ClientTickEvent event){
-        for(Module mod : _mods){
-            if(Keyboard.isKeyDown(mod.getToggleKey())){
-                _key_down.replace(mod.getClass().getSimpleName(), true);
-            }else if(_key_down.get(mod.getClass().getSimpleName())){
-                // KEY RELEASED !
-                mod.toggle();
-                _window.synchronizeComponents();
-                SettingsUtils.setOption(mod.getClass().getSimpleName(), Boolean.toString(mod.isActivated()));
-                _key_down.replace(mod.getClass().getSimpleName(), false);
+        for(Module mod : _modules){
+            if(mod.getToggleKey() != -1) {
+                if (Keyboard.isKeyDown(mod.getToggleKey())) {
+                    _key_down.replace(mod.getClass().getSimpleName(), true);
+                } else if (_key_down.get(mod.getClass().getSimpleName())) {
+                    // KEY RELEASED !
+                    mod.toggle();
+                    _window.synchronizeComponents();
+                    SettingsUtils.setOption(mod.getClass().getSimpleName(), Boolean.toString(mod.isActivated()));
+                    _key_down.replace(mod.getClass().getSimpleName(), false);
+                }
             }
         }
 
@@ -109,9 +112,9 @@ public class Bettercolors {
 
 	@SubscribeEvent
 	public void clientTick(final TickEvent event){
-        for(Module mod : _mods){
+        for(Module mod : _modules){
             if(mod.isActivated()){
-                mod.onUpdate();
+                mod.update();
             }
         }
 	}

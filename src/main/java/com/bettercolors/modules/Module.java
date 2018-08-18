@@ -4,19 +4,25 @@ import com.bettercolors.modules.options.Option;
 import com.bettercolors.view.Window;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ContainerPlayer;
-import org.lwjgl.input.Keyboard;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public abstract class Module {
+
 
     // Utility
     static Minecraft _mc = Minecraft.getMinecraft();
     String _last_log_msg;
+
+    // Keys utility
+    private Map<KEY, KEY_STATE> _key_handler;
+    enum KEY{ ATTACK, USE }
+    enum KEY_STATE{ JUST_PRESSED, BEING_PRESSED, JUST_RELEASED, IDLE}
 
     // Module details
     private final String _name;
@@ -34,6 +40,10 @@ public abstract class Module {
         _toggle_key = toggle_key;
         _symbol = symbol;
         _options = new ArrayList<>();
+
+        _key_handler = new HashMap<>();
+        _key_handler.put(KEY.ATTACK, KEY_STATE.IDLE);
+        _key_handler.put(KEY.USE, KEY_STATE.IDLE);
     }
 
     public void toggle(){
@@ -93,7 +103,29 @@ public abstract class Module {
         return _mc.thePlayer.isPlayerSleeping() || _mc.thePlayer.isDead || !(_mc.thePlayer.openContainer instanceof ContainerPlayer);
     }
 
-    public abstract void onUpdate();
+    boolean isKeyState(KEY key, KEY_STATE state){
+        return _key_handler.get(key) == state;
+    }
+
+    public void update(){
+        if(_mc.gameSettings.keyBindAttack.isKeyDown() && _key_handler.get(KEY.ATTACK) == KEY_STATE.IDLE){
+            _key_handler.replace(KEY.ATTACK, KEY_STATE.JUST_PRESSED);
+        }else if(_mc.gameSettings.keyBindAttack.isKeyDown() && _key_handler.get(KEY.ATTACK) == KEY_STATE.JUST_PRESSED) {
+            _key_handler.replace(KEY.ATTACK, KEY_STATE.BEING_PRESSED);
+        }else if(!_mc.gameSettings.keyBindAttack.isKeyDown() && _key_handler.get(KEY.ATTACK) != KEY_STATE.IDLE){
+            _key_handler.replace(KEY.ATTACK, KEY_STATE.IDLE);
+        }
+
+        if(_mc.gameSettings.keyBindUseItem.isKeyDown() && _key_handler.get(KEY.USE) == KEY_STATE.IDLE){
+            _key_handler.replace(KEY.USE, KEY_STATE.JUST_PRESSED);
+        }else if(_mc.gameSettings.keyBindUseItem.isKeyDown() && _key_handler.get(KEY.USE) == KEY_STATE.JUST_PRESSED) {
+            _key_handler.replace(KEY.USE, KEY_STATE.BEING_PRESSED);
+        }else if(!_mc.gameSettings.keyBindUseItem.isKeyDown() && _key_handler.get(KEY.USE) != KEY_STATE.IDLE){
+            _key_handler.replace(KEY.USE, KEY_STATE.IDLE);
+        }
+    }
+
+    abstract void onUpdate();
     abstract void onEnable();
     abstract void onDisable();
 

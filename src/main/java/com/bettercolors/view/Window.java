@@ -139,6 +139,8 @@ public class Window extends AbstractWindow{
         JTabbedPane tabbedPane = new JTabbedPane();
 
         for(Module module : _modules){
+            if(module.getOptions().size() == 0) continue;
+
             JPanel module_options_panel = new JPanel();
             module_options_panel.setLayout(new BorderLayout());
             module_options_panel.setBorder(new TitledBorder(new EtchedBorder(), module.getName()));

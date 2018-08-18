@@ -66,10 +66,6 @@ public class AimAssistance extends Module {
 
     private final String LOG_PREFIX = "[AA] ";
 
-    private Map<String, Boolean> _key_handler;
-    private final static String ATTACK = "attack";
-    private final static String USE = "use";
-
     private TimeHelper _post_activation_timer;
     private int _post_activation_click_counter;
 
@@ -101,10 +97,6 @@ public class AimAssistance extends Module {
         ((ValueOption) _options.get(I_CLICKS_TO_ACTIVATE)).setVal(Integer.parseInt(options.get(CLICKS_TO_ACTIVATE)));
         ((ValueOption) _options.get(I_TIME_TO_ACTIVATE)).setVal(Integer.parseInt(options.get(TIME_TO_ACTIVATE)));
 
-        _key_handler = new HashMap<>();
-        _key_handler.put(ATTACK, false);
-        _key_handler.put(USE, false);
-
         _post_activation_timer = new TimeHelper();
         _post_activation_click_counter = 0;
 
@@ -116,34 +108,12 @@ public class AimAssistance extends Module {
     public void onUpdate() {
 
         if(_mc.thePlayer != null){
-            boolean attack_pressed = false;
-            boolean use_pressed = false;
-
-            if(_mc.gameSettings.keyBindAttack.isKeyDown() && !_key_handler.get(ATTACK)){
-                _key_handler.replace(ATTACK, true);
-                // HAS PRESSED ATTACK KEY
-                attack_pressed = true;
-            }else if(!_mc.gameSettings.keyBindAttack.isKeyDown() && _key_handler.get(ATTACK)){
-                _key_handler.replace(ATTACK, false);
-                // HAS RELEASED ATTACK KEY
-
-            }
-
-            if(_mc.gameSettings.keyBindUseItem.isKeyDown() && !_key_handler.get(USE)){
-                _key_handler.replace(ATTACK, true);
-                // HAS PRESSED USE KEY
-                use_pressed = true;
-            }else if(!_mc.gameSettings.keyBindUseItem.isKeyDown() && _key_handler.get(USE)){
-                _key_handler.replace(ATTACK, false);
-                // HAS RELEASED USE KEY
-
-            }
 
             if(_activation_timer.isStopped()) {
                 // If the aim assist is not activated, we check if the user made the actions to activate it
-                if (attack_pressed && !_post_activation_timer.isStopped()) {
+                if (isKeyState(KEY.ATTACK, KEY_STATE.JUST_PRESSED) && !_post_activation_timer.isStopped()) {
                     _post_activation_click_counter++;
-                } else if (attack_pressed && _post_activation_timer.isStopped()) {
+                } else if (isKeyState(KEY.ATTACK, KEY_STATE.JUST_PRESSED) && _post_activation_timer.isStopped()) {
                     // Attack pressed just pressed and timer stopped
                     _post_activation_timer.start();
                     _post_activation_click_counter = 1;
@@ -164,7 +134,7 @@ public class AimAssistance extends Module {
             }
 
             if(!_activation_timer.isStopped() &&
-                    ( use_pressed || _activation_timer.isDelayComplete(((ValueOption) _options.get(I_DURATION)).getVal()) || isInGui())){
+                    ( isKeyState(KEY.USE, KEY_STATE.JUST_PRESSED) || _activation_timer.isDelayComplete(((ValueOption) _options.get(I_DURATION)).getVal()) || isInGui())){
                 _activation_timer.stop();
                 _refreshrate_timer.stop();
                 log_info(LOG_PREFIX + "Aim assistance stopped.");
@@ -173,7 +143,7 @@ public class AimAssistance extends Module {
             if(!_activation_timer.isStopped()){
                 int refreshrate = ((ValueOption) _options.get(I_REFRESH_RATE)).getVal();
                 if(_refreshrate_timer.isDelayComplete(refreshrate)){
-                    useAimAssist(attack_pressed);
+                    useAimAssist(isKeyState(KEY.ATTACK, KEY_STATE.JUST_PRESSED));
                     _refreshrate_timer.reset();
                 }
             }
@@ -248,10 +218,6 @@ public class AimAssistance extends Module {
 
         if(target == null) return;
 
-        // Now we retrieve the distances between the cross hair and the target
-        float distYaw = MathHelper.abs(getDiffFrom(target)[0]);
-        float distPitch = MathHelper.abs(getDiffFrom(target)[1]);
-
         boolean has_reached_a_living_entity = false;
         if(((ToggleOption) _options.get(I_STOP_WHEN_REACHED)).isActivated()) {
             try {
@@ -262,9 +228,7 @@ public class AimAssistance extends Module {
             }
         }
 
-        if(has_reached_a_living_entity){
-            // todo stop aim
-        }else{
+        if(!has_reached_a_living_entity){
             aimEntity(target);
         }
 
@@ -294,7 +258,7 @@ public class AimAssistance extends Module {
             _mc.thePlayer.rotationPitch = rotations[1];
         }
 
-        log_info(LOG_PREFIX + "Aiming at entity " + entity.getName());
+        log_info(LOG_PREFIX + "Aiming at entity " + entity.getName() + ".");
     }
 
     private float[] getRotationsNeeded(EntityLivingBase entity) {
@@ -317,8 +281,6 @@ public class AimAssistance extends Module {
 
         if(MathHelper.abs(MathUtils.wrapAngleTo180_float(yaw - _mc.thePlayer.rotationYaw)) <=+ radius_x
                 && MathHelper.abs(MathUtils.wrapAngleTo180_float(pitch - _mc.thePlayer.rotationPitch)) <= radius_y){
-            float distYaw = MathUtils.wrapAngleTo180_float(yaw - _mc.thePlayer.rotationYaw);
-            float distPitch = MathUtils.wrapAngleTo180_float(pitch - _mc.thePlayer.rotationPitch);
             float yawFinal, pitchFinal;
 
             yawFinal = ((MathUtils.wrapAngleTo180_float(yaw - _mc.thePlayer.rotationYaw)) * step_x) / 100;

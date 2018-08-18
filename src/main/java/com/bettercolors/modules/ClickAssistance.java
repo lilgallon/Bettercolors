@@ -26,14 +26,12 @@ public class ClickAssistance extends Module {
     private static final String TIME_TO_ACTIVATE = "CA_Time_to_activate";
     private static final int I_PACKETS = 0;
     private static final int I_ONLY_ON_ENTITY = 1;
-    private static final int I_USE_ON_MOBS = 2;
-    private static final int I_TEAM_FILTER = 3;
-    private static final int I_ADDITIONAL_CLICKS = 4;
-    private static final int I_CHANCE = 5;
-    private static final int I_DURATION = 6;
-    private static final int I_CLICKS_TO_ACTIVATE = 7;
-    private static final int I_TIME_TO_ACTIVATE = 8;
-
+    private static final int I_TEAM_FILTER = 2;
+    private static final int I_ADDITIONAL_CLICKS = 3;
+    private static final int I_CHANCE = 4;
+    private static final int I_DURATION = 5;
+    private static final int I_CLICKS_TO_ACTIVATE = 6;
+    private static final int I_TIME_TO_ACTIVATE = 7;
 
     private static final ArrayList<Option> DEFAULT_OPTIONS;
     static{
@@ -53,9 +51,6 @@ public class ClickAssistance extends Module {
 
     private final String LOG_PREFIX = "[CA] ";
 
-    private Map<String, Boolean> _key_handler;
-    private final static String ATTACK = "attack";
-
     private TimeHelper _post_activation_timer;
     private int _post_activation_click_counter;
 
@@ -69,16 +64,12 @@ public class ClickAssistance extends Module {
         _options = DEFAULT_OPTIONS;
         ((ToggleOption) _options.get(I_PACKETS)).setActivated(Boolean.parseBoolean(options.get(PACKETS)));
         ((ToggleOption) _options.get(I_ONLY_ON_ENTITY)).setActivated(Boolean.parseBoolean(options.get(ONLY_ON_ENTITY)));
-        ((ToggleOption) _options.get(I_USE_ON_MOBS)).setActivated(Boolean.parseBoolean(options.get(USE_ON_MOBS)));
         ((ToggleOption) _options.get(I_TEAM_FILTER)).setActivated(Boolean.parseBoolean(options.get(TEAM_FILTER)));
         ((ValueOption) _options.get(I_ADDITIONAL_CLICKS)).setVal(Integer.parseInt(options.get(ADDITIONAL_CLICKS)));
         ((ValueOption) _options.get(I_CHANCE)).setVal(Integer.parseInt(options.get(CHANCE)));
         ((ValueOption) _options.get(I_DURATION)).setVal(Integer.parseInt(options.get(DURATION)));
         ((ValueOption) _options.get(I_CLICKS_TO_ACTIVATE)).setVal(Integer.parseInt(options.get(CLICKS_TO_ACTIVATE)));
         ((ValueOption) _options.get(I_TIME_TO_ACTIVATE)).setVal(Integer.parseInt(options.get(TIME_TO_ACTIVATE)));
-
-        _key_handler = new HashMap<>();
-        _key_handler.put(ATTACK, false);
 
         _post_activation_timer = new TimeHelper();
         _post_activation_click_counter = 0;
@@ -90,23 +81,14 @@ public class ClickAssistance extends Module {
     @Override
     public void onUpdate() {
         if(_mc.thePlayer != null){
-            boolean attack_pressed = false;
-            if(_mc.gameSettings.keyBindAttack.isKeyDown() && !_key_handler.get(ATTACK)){
-                _key_handler.replace(ATTACK, true);
-                // HAS PRESSED ATTACK KEY
-                attack_pressed = true;
-            }else if(!_mc.gameSettings.keyBindAttack.isKeyDown() && _key_handler.get(ATTACK)){
-                _key_handler.replace(ATTACK, false);
-                // HAS RELEASED ATTACK KEY
-            }
 
             if(_activation_timer.isStopped()) {
                 // If the click assist is not activated, we check if the user made the actions to activate it
-                if (attack_pressed && _post_activation_timer.isStopped()) {
+                if (isKeyState(KEY.ATTACK, KEY_STATE.JUST_PRESSED) && _post_activation_timer.isStopped()) {
                     // Attack pressed just pressed and timer stopped
                     _post_activation_timer.start();
                     _post_activation_click_counter = 1;
-                } else if (attack_pressed && !_post_activation_timer.isStopped()) {
+                } else if (isKeyState(KEY.ATTACK, KEY_STATE.JUST_PRESSED) && !_post_activation_timer.isStopped()) {
                     _post_activation_click_counter++;
                 }
 
@@ -158,7 +140,6 @@ public class ClickAssistance extends Module {
     }
 
     private void useClickAssist(){
-        boolean use_on_mobs = ((ToggleOption) _options.get(I_USE_ON_MOBS)).isActivated();
         boolean packets = ((ToggleOption) _options.get(I_PACKETS)).isActivated();
         boolean team_filter = ((ToggleOption) _options.get(I_TEAM_FILTER)).isActivated();
         boolean only_on_entity = ((ToggleOption) _options.get(I_ONLY_ON_ENTITY)).isActivated();

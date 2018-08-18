@@ -7,6 +7,12 @@ import net.minecraft.item.ItemSword;
 
 public class AutoSword extends Module {
 
+    /**
+     * @param name the name.
+     * @param toggle_key the toggle key (-1 -> none).
+     * @param is_activated the initial state.
+     * @param symbol the picture name.
+     */
     public AutoSword(String name, int toggle_key, boolean is_activated, String symbol) {
         super(name, toggle_key, is_activated, symbol, "[ASw]");
     }

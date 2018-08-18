@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 public class AimAssistance extends Module {
+
     private static final String STOP_ON_RIGHT_CLICK = "Stop_on_right_click";
     private static final String USE_ON_MOBS = "Use_on_mobs";
     private static final String TEAM_FILTER = "Team_filter";
@@ -29,6 +30,7 @@ public class AimAssistance extends Module {
     private static final String DURATION = "AA_Duration";
     private static final String CLICKS_TO_ACTIVATE = "AA_Clicks_to_activate";
     private static final String TIME_TO_ACTIVATE = "AA_Time_to_activate";
+
     private static final int I_STOP_ON_RIGHT_CLICK = 0;
     private static final int I_USE_ON_MOBS = 1;
     private static final int I_TEAM_FILTER = 2;
@@ -72,6 +74,13 @@ public class AimAssistance extends Module {
     private float shift_x = 0;
     private float shift_y = 0;
 
+    /**
+     * @param name the name.
+     * @param toggle_key the toggle key (-1 -> none).
+     * @param is_activated the initial state.
+     * @param options the options for the mod.
+     * @param symbol the picture name.
+     */
     public AimAssistance(String name, int toggle_key, boolean is_activated, Map<String, String> options, String symbol) {
 
         super(name, toggle_key, is_activated, symbol, "[AA]");
@@ -99,9 +108,7 @@ public class AimAssistance extends Module {
 
     @Override
     public void onUpdate() {
-
         if(MC.thePlayer != null){
-
             if(_activation_timer.isStopped()) {
                 // If the aim assist is not activated, we check if the user made the actions to activate it
                 if (isKeyState(KEY.ATTACK, KEY_STATE.JUST_PRESSED) && !_post_activation_timer.isStopped()) {
@@ -231,8 +238,8 @@ public class AimAssistance extends Module {
         final float yaw = (float) ((Math.atan2(diffZ, diffX) * 180.0D / Math.PI) - 90.0F ) + shift_x;
         final float pitch = (float) - (Math.atan2(diffY, dist) * 180.0D / Math.PI) 		   + shift_y;
 
-        float distYaw = MathUtils.wrapAngleTo180_float(yaw - MC.thePlayer.rotationYaw);
-        float distPitch = MathUtils.wrapAngleTo180_float(pitch - MC.thePlayer.rotationPitch);
+        float distYaw = MathHelper.wrapAngleTo180_float(yaw - MC.thePlayer.rotationYaw);
+        float distPitch = MathHelper.wrapAngleTo180_float(pitch - MC.thePlayer.rotationPitch);
 
         return new float[]{distYaw, distPitch};
     }
@@ -266,12 +273,12 @@ public class AimAssistance extends Module {
         final float yaw = (float) ((Math.atan2(diffZ, diffX) * 180.0D / Math.PI) - 90.0F ) + shift_x;
         final float pitch = (float) -(Math.atan2(diffY, dist) * 180.0D / Math.PI) 		   + shift_y;
 
-        if(MathHelper.abs(MathUtils.wrapAngleTo180_float(yaw - MC.thePlayer.rotationYaw)) <=+ radius_x
-                && MathHelper.abs(MathUtils.wrapAngleTo180_float(pitch - MC.thePlayer.rotationPitch)) <= radius_y){
+        if(MathHelper.abs(MathHelper.wrapAngleTo180_float(yaw - MC.thePlayer.rotationYaw)) <=+ radius_x
+                && MathHelper.abs(MathHelper.wrapAngleTo180_float(pitch - MC.thePlayer.rotationPitch)) <= radius_y){
             float yawFinal, pitchFinal;
 
-            yawFinal = ((MathUtils.wrapAngleTo180_float(yaw - MC.thePlayer.rotationYaw)) * step_x) / 100;
-            pitchFinal = ((MathUtils.wrapAngleTo180_float(pitch - MC.thePlayer.rotationPitch)) * step_y) / 100;
+            yawFinal = ((MathHelper.wrapAngleTo180_float(yaw - MC.thePlayer.rotationYaw)) * step_x) / 100;
+            pitchFinal = ((MathHelper.wrapAngleTo180_float(pitch - MC.thePlayer.rotationPitch)) * step_y) / 100;
 
             return new float[] { MC.thePlayer.rotationYaw + yawFinal, MC.thePlayer.rotationPitch + pitchFinal};
         }else{

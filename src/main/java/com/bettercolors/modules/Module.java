@@ -18,6 +18,7 @@ public abstract class Module {
     private final String LOG_PREFIX;
     private String _last_log_msg;
     final static Minecraft MC = Minecraft.getMinecraft();
+
     // Keys utility
     private final Map<KEY, KEY_STATE> KEY_HANDLER;
     enum KEY{ ATTACK, USE }
@@ -32,6 +33,13 @@ public abstract class Module {
     private final int TOGGLE_KEY;
     private boolean _is_activated;
 
+    /**
+     * @param name the name.
+     * @param toggle_key the toggle key (-1 -> none).
+     * @param is_activated the initial state.
+     * @param symbol the picture name.
+     * @param log_prefix the prefix for console logging.
+     */
     Module(String name, int toggle_key, boolean is_activated, String symbol, String log_prefix){
         _last_log_msg = "";
         _name = name;
@@ -46,10 +54,17 @@ public abstract class Module {
         KEY_HANDLER.put(KEY.USE, KEY_STATE.IDLE);
     }
 
+    /**
+     * It toggles the module.
+     */
     public void toggle(){
         _is_activated = !_is_activated;
     }
 
+    /**
+     * It sends an information message to the window's console.
+     * @param msg the message to send.
+     */
     void log_info(String msg){
         if(!msg.equalsIgnoreCase(_last_log_msg)) {
             _last_log_msg = msg;
@@ -57,6 +72,10 @@ public abstract class Module {
         }
     }
 
+    /**
+     * It sends an error message to the window's console.
+     * @param msg the message to send.
+     */
     void log_error(String msg){
         if(!msg.equalsIgnoreCase(_last_log_msg)) {
             _last_log_msg = msg;
@@ -64,6 +83,10 @@ public abstract class Module {
         }
     }
 
+    /**
+     * @param entity the entity (can be anything).
+     * @return true if the given entity is in the same team as the player.
+     */
     boolean isInSameTeam(Entity entity){
         if(!(entity instanceof EntityPlayer))
             return false;
@@ -81,6 +104,10 @@ public abstract class Module {
         return same_team;
     }
 
+    /**
+     * @param e entity.
+     * @return the team tag of the entity.
+     */
     private String exportTag(EntityPlayer e){
         String tag;
         try{
@@ -92,15 +119,26 @@ public abstract class Module {
         return tag;
     }
 
+    /**
+     * @return true if the user is in a Gui (he can't move).
+     */
     boolean isInGui(){
         if(MC.thePlayer == null) return true;
         return MC.thePlayer.isPlayerSleeping() || MC.thePlayer.isDead || !(MC.thePlayer.openContainer instanceof ContainerPlayer);
     }
 
+    /**
+     * @param key the key to check the state.
+     * @param state the state of the key.
+     * @return true if the [key] is currently at the state [state].
+     */
     boolean isKeyState(KEY key, KEY_STATE state){
         return KEY_HANDLER.get(key) == state;
     }
 
+    /**
+     * It updates the module and the key handler.
+     */
     public void update(){
         if(MC.gameSettings.keyBindAttack.isKeyDown() && KEY_HANDLER.get(KEY.ATTACK) == KEY_STATE.IDLE){
             KEY_HANDLER.replace(KEY.ATTACK, KEY_STATE.JUST_PRESSED);
@@ -125,6 +163,9 @@ public abstract class Module {
         onUpdate();
     }
 
+    /**
+     * Used in children to run the module.
+     */
     abstract void onUpdate();
 
     // Getters

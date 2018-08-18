@@ -10,6 +10,14 @@ public class ValueOption extends Option {
     private final int MAJOR_TICK_SPC;
     private int _val;
 
+    /**
+     * @param name the name.
+     * @param val the initial value.
+     * @param min the minimum value.
+     * @param max the maximum value.
+     * @param minor_tick_spc the minor tick spacing (for the slider).
+     * @param major_tick_spc the major tick spacing (for the slider).
+     */
     public ValueOption(String name, int val, int min, int max, int minor_tick_spc, int major_tick_spc) {
         super(name);
         _val = val;
@@ -25,6 +33,10 @@ public class ValueOption extends Option {
     public int getMajorTickSpacing(){ return MAJOR_TICK_SPC; }
     public int getMinorTickSpacing(){ return MINOR_TICK_SPC; }
 
+    /**
+     * It changes the current value of the option. This method test if the value is correct before updating it.
+     * @param val the new value.
+     */
     public void setVal(int val){
         if(val > MAX) {
             throw new IllegalArgumentException("The value " + Integer.toString(val) +
@@ -38,6 +50,9 @@ public class ValueOption extends Option {
         }
     }
 
+    /**
+     * It saves the option to the configuration file (the selected one).
+     */
     @Override
     void saveOption() {
         SettingsUtils.setOption(NAME, Integer.toString(_val));

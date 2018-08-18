@@ -26,9 +26,7 @@ import java.util.Map;
 public class Window extends JFrame{
 
     public static Window instance;
-
     private final ArrayList<Module> MODULES;
-    
     private JTextPane _console;
     private JScrollPane _scroll;
     private final ArrayList<JCheckBox> CHECKBOXES_ACTIVATION;
@@ -37,13 +35,13 @@ public class Window extends JFrame{
 
     public Window(String title, ArrayList<Module> modules, String last_version) {
         super(title);
+
         int width = 450;
         int height = 600;
         setBounds((int)Toolkit.getDefaultToolkit().getScreenSize().getWidth()/2-width/2,(int)Toolkit.getDefaultToolkit().getScreenSize().getHeight()/2-height/2,width,height);
         setIconImage(new ImageIcon(this.getClass().getResource("/images/bettercolors_symbol.png")).getImage());
         setResizable(true);
         setVisible(false);
-
 
         instance = this;
         MODULES = modules;
@@ -117,7 +115,6 @@ public class Window extends JFrame{
         footer_layout.add(credits, "West");
         footer_layout.add(update, "Center");
     }
-
 
     private void setupModulesActivationStatus(JPanel modules_related_layout){
         // Setup grid
@@ -278,6 +275,9 @@ public class Window extends JFrame{
     }
 
 
+    /**
+     * It synchronizes the modules' components with the modules' current configuration.
+     */
     public void synchronizeComponents(){
         for(JCheckBox checkbox : CHECKBOXES_ACTIVATION){
             boolean found = false;
@@ -324,6 +324,9 @@ public class Window extends JFrame{
         repaint();
     }
 
+    /**
+     * It hides / un-hide the window.
+     */
     public void toggle(){
         setVisible(!isVisible());
     }

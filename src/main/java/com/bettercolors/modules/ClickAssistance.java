@@ -52,6 +52,13 @@ public class ClickAssistance extends Module {
     private TimeHelper _activation_timer;
     private TimeHelper _click_timer;
 
+    /**
+     * @param name the name.
+     * @param toggle_key the toggle key (-1 -> none).
+     * @param is_activated the initial state.
+     * @param options the options for the mod.
+     * @param symbol the picture name.
+     */
     public ClickAssistance(String name, int toggle_key, boolean is_activated, Map<String, String> options, String symbol) {
 
         super(name, toggle_key, is_activated, symbol, "[CA]");

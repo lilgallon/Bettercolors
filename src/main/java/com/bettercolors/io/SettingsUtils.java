@@ -9,10 +9,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SettingsUtils {
+
     // TODO -> CHANGE TO NORMAL CLASS TO ADD THE POSSIBILITY TO CHANGE THE FILENAME FOR MULTIPLE CONFIGURATIONS
+    // TODO: Edit : remove final modifier to be able to change it according to the selected filename (change utils to helper).
     private final static String SETTINGS_FILENAME = "settings";
 
-
+    /**
+     * It updates the configuration file with all the options given in [modules_options].
+     * @param modules_options the options to update or create in the settings file.
+     * @param only_absents if this variable is set to true, it will ONLY CREATE the options that were NOT ALREADY in the configuration file.
+     */
     public static void setOptions(ArrayList<ArrayList<Option>> modules_options, boolean only_absents){
         Map<String, String> options = new HashMap<>();
         for(ArrayList<Option> module_options : modules_options) {
@@ -29,16 +35,28 @@ public class SettingsUtils {
         settings.write(options, only_absents);
     }
 
+    /**
+     * @return all the options in the configuration file.
+     */
     public static Map<String, String> getOptions(){
         Filer settings = new Filer(SETTINGS_FILENAME);
         return settings.readAll();
     }
 
+    /**
+     * @param name name of the option.
+     * @return the value of the option.
+     */
     public static String getOption(String name){
         Filer settings = new Filer(SETTINGS_FILENAME);
         return settings.read(name);
     }
 
+    /**
+     * Please note that if the option does not exist, it will create it.
+     * @param option the option name.
+     * @param value the new value for this option.
+     */
     public static void setOption(String option, String value){
         Map<String, String> options = new HashMap<>();
         options.put(option, value);

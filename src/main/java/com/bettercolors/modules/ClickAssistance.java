@@ -10,7 +10,6 @@ import net.minecraft.network.play.client.C02PacketUseEntity;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 public class ClickAssistance extends Module {
@@ -47,8 +46,6 @@ public class ClickAssistance extends Module {
         DEFAULT_OPTIONS.add(new ValueOption(TIME_TO_ACTIVATE, 1000, 0, 10000, 200, 1000));
     }
 
-    private final String LOG_PREFIX = "[CA] ";
-
     private TimeHelper _post_activation_timer;
     private int _post_activation_click_counter;
 
@@ -57,7 +54,7 @@ public class ClickAssistance extends Module {
 
     public ClickAssistance(String name, int toggle_key, boolean is_activated, Map<String, String> options, String symbol) {
 
-        super(name, toggle_key, is_activated, symbol);
+        super(name, toggle_key, is_activated, symbol, "[CA]");
 
         _options = DEFAULT_OPTIONS;
         ((ToggleOption) _options.get(I_PACKETS)).setActivated(Boolean.parseBoolean(options.get(PACKETS)));
@@ -97,7 +94,7 @@ public class ClickAssistance extends Module {
                     _post_activation_timer.stop();
                     _activation_timer.start();
                     _click_timer.start();
-                    log_info(LOG_PREFIX + "Click assistance started.");
+                    log_info("Click assistance started.");
                 }else if(_post_activation_timer.isDelayComplete(post_activation_duration)
                         && _post_activation_click_counter < post_activation_clicks){
                     _post_activation_timer.stop();
@@ -108,7 +105,7 @@ public class ClickAssistance extends Module {
                     ( _activation_timer.isDelayComplete(((ValueOption) _options.get(I_DURATION)).getVal()) || isInGui())){
                 _activation_timer.stop();
                 _click_timer.stop();
-                log_info(LOG_PREFIX + "Click assistance stopped.");
+                log_info("Click assistance stopped.");
             }
 
             if(!_activation_timer.isStopped()){
@@ -174,7 +171,7 @@ public class ClickAssistance extends Module {
             bot.mousePress(16);
             bot.mouseRelease(16);
         } catch (AWTException e){
-            log_error(LOG_PREFIX + "Tried to click the mouse but a problem happened.");
+            log_error("Tried to click the mouse but a problem happened.");
         }
     }
 }

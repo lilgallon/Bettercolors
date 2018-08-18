@@ -7,10 +7,8 @@ import net.minecraft.item.ItemSword;
 
 public class AutoSword extends Module {
 
-    private final String LOG_PREFIX = "[ASw] ";
-
     public AutoSword(String name, int toggle_key, boolean is_activated, String symbol) {
-        super(name, toggle_key, is_activated, symbol);
+        super(name, toggle_key, is_activated, symbol, "[ASw]");
     }
 
     @Override
@@ -39,7 +37,7 @@ public class AutoSword extends Module {
                 }
                 // We give the best sword to the player
                 if(best_item != -1 && _mc.thePlayer.inventory.currentItem != best_item){
-                    log_info(LOG_PREFIX + "Better sword found (" +  _mc.thePlayer.inventory.mainInventory[best_item].getDisplayName() + ").");
+                    log_info("Better sword found (" +  _mc.thePlayer.inventory.mainInventory[best_item].getDisplayName() + ").");
                     _mc.thePlayer.inventory.currentItem = best_item;
                 }
             }

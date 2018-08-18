@@ -63,24 +63,18 @@ public class AimAssistance extends Module {
         DEFAULT_OPTIONS.add(new ValueOption(TIME_TO_ACTIVATE, 1000, 0, 10000, 200, 1000));
     }
 
-    private final String LOG_PREFIX = "[AA] ";
-
     private TimeHelper _post_activation_timer;
     private int _post_activation_click_counter;
 
     private TimeHelper _activation_timer;
-    private TimeHelper _refreshrate_timer;
+    private TimeHelper _refresh_rate_timer;
 
     private float shift_x = 0;
     private float shift_y = 0;
-    private final int shift_x_max = 10;
-    private final int shift_x_min = -10;
-    private final int shift_y_max = 20;
-    private final int shift_y_min = -20;
 
     public AimAssistance(String name, int toggle_key, boolean is_activated, Map<String, String> options, String symbol) {
 
-        super(name, toggle_key, is_activated, symbol);
+        super(name, toggle_key, is_activated, symbol, "[AA]");
 
         _options = DEFAULT_OPTIONS;
         ((ToggleOption) _options.get(I_STOP_ON_RIGHT_CLICK)).setActivated(Boolean.parseBoolean(options.get(STOP_ON_RIGHT_CLICK)));
@@ -100,7 +94,7 @@ public class AimAssistance extends Module {
         _post_activation_click_counter = 0;
 
         _activation_timer = new TimeHelper();
-        _refreshrate_timer = new TimeHelper();
+        _refresh_rate_timer = new TimeHelper();
     }
 
     @Override
@@ -124,8 +118,8 @@ public class AimAssistance extends Module {
                         && _post_activation_click_counter >= post_activation_clicks){
                     _post_activation_timer.stop();
                     _activation_timer.start();
-                    _refreshrate_timer.start();
-                    log_info(LOG_PREFIX + "Aim assistance started.");
+                    _refresh_rate_timer.start();
+                    log_info("Aim assistance started.");
                 }else if(_post_activation_timer.isDelayComplete(post_activation_duration)
                             && _post_activation_click_counter < post_activation_clicks){
                     _post_activation_timer.stop();
@@ -135,15 +129,15 @@ public class AimAssistance extends Module {
             if(!_activation_timer.isStopped() &&
                     ( isKeyState(KEY.USE, KEY_STATE.JUST_PRESSED) || _activation_timer.isDelayComplete(((ValueOption) _options.get(I_DURATION)).getVal()) || isInGui())){
                 _activation_timer.stop();
-                _refreshrate_timer.stop();
-                log_info(LOG_PREFIX + "Aim assistance stopped.");
+                _refresh_rate_timer.stop();
+                log_info("Aim assistance stopped.");
             }
 
             if(!_activation_timer.isStopped()){
-                int refreshrate = ((ValueOption) _options.get(I_REFRESH_RATE)).getVal();
-                if(_refreshrate_timer.isDelayComplete(refreshrate)){
+                int refresh_rate = ((ValueOption) _options.get(I_REFRESH_RATE)).getVal();
+                if(_refresh_rate_timer.isDelayComplete(refresh_rate)){
                     useAimAssist(isKeyState(KEY.ATTACK, KEY_STATE.JUST_PRESSED));
-                    _refreshrate_timer.reset();
+                    _refresh_rate_timer.reset();
                 }
             }
         }
@@ -169,7 +163,11 @@ public class AimAssistance extends Module {
         // -> Can be an option for a future update !
         if(is_attack_key_pressed){
             // Generate new shifts
+            int shift_x_max = 10;
+            int shift_x_min = -10;
             shift_x = MathUtils.random(shift_x_min, shift_x_max);
+            int shift_y_max = 20;
+            int shift_y_min = -20;
             shift_y = MathUtils.random(shift_y_min, shift_y_max);
         }
 
@@ -257,7 +255,7 @@ public class AimAssistance extends Module {
             _mc.thePlayer.rotationPitch = rotations[1];
         }
 
-        log_info(LOG_PREFIX + "Aiming at entity " + entity.getName() + ".");
+        log_info("Aiming at entity " + entity.getName() + ".");
     }
 
     private float[] getRotationsNeeded(EntityLivingBase entity) {

@@ -16,6 +16,7 @@ public abstract class Module {
 
 
     // Utility
+    private final String LOG_PREFIX;
     private String _last_log_msg;
     static Minecraft _mc = Minecraft.getMinecraft();
     // Keys utility
@@ -32,12 +33,13 @@ public abstract class Module {
     private int _toggle_key;
     private boolean _is_activated;
 
-    Module(String name, int toggle_key, boolean is_activated, String symbol){
+    Module(String name, int toggle_key, boolean is_activated, String symbol, String log_prefix){
         _last_log_msg = "";
         _name = name;
         _is_activated = is_activated;
         _toggle_key = toggle_key;
         _symbol = symbol;
+        LOG_PREFIX = log_prefix;
         _options = new ArrayList<>();
 
         _key_handler = new HashMap<>();
@@ -57,14 +59,14 @@ public abstract class Module {
     void log_info(String msg){
         if(!msg.equalsIgnoreCase(_last_log_msg)) {
             _last_log_msg = msg;
-            Window.instance.addText(msg, true);
+            Window.instance.addText(LOG_PREFIX + " " + msg, true);
         }
     }
 
     void log_error(String msg){
         if(!msg.equalsIgnoreCase(_last_log_msg)) {
             _last_log_msg = msg;
-            Window.instance.addText(msg, Color.RED, true);
+            Window.instance.addText(LOG_PREFIX + " " + msg, Color.RED, true);
         }
     }
 

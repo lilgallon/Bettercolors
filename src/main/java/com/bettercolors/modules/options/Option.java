@@ -43,6 +43,30 @@ public abstract class Option {
     }
 
     /**
+     * Need this function since ArrayList<Option>.indexOf(String) doesn't work whereas we have redefined the "equals"
+     * function in Option class.
+     * @param options the options list
+     * @param option_name the option name to find in the list
+     * @return the index of the option name in the list name (-1 if not found)
+     */
+    public static int getIndex(ArrayList<Option> options, String option_name){
+        boolean found = false;
+        int i = 0;
+        int index = -1;
+
+        while (!found && i < options.size()){
+            if(options.get(i).getName().equalsIgnoreCase(option_name)){
+                index = i;
+                found = true;
+            }else{
+                i ++;
+            }
+        }
+
+        return index;
+    }
+
+    /**
      * @return the name of the option.
      */
     public String getName(){
@@ -53,4 +77,14 @@ public abstract class Option {
      * It saves the option on the configuration file. It needs to be called every time the option is updated.
      */
     abstract void saveOption();
+
+    @Override
+    public boolean equals(Object obj){
+        if(obj == null) return false;
+        if(obj instanceof String){
+            String str = (String)obj;
+            return str.equalsIgnoreCase(NAME);
+        }
+        return obj == this;
+    }
 }

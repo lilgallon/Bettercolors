@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-class Filer {
+public class Filer {
 
     private final String FILENAME;
 
@@ -107,7 +107,7 @@ class Filer {
         return values;
     }
 
-    private static File getSettingsDirectory() {
+    public static File getSettingsDirectory() {
         // String settingsDir = System.getProperty("user.home");
         String settingsDir = System.getProperty("user.dir");
         if(settingsDir == null) {

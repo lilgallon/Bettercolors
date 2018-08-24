@@ -1,5 +1,6 @@
 package com.bettercolors.view;
 
+import com.bettercolors.io.Filer;
 import com.bettercolors.io.SettingsUtils;
 import com.bettercolors.main.Bettercolors;
 import com.bettercolors.main.Reference;
@@ -9,6 +10,7 @@ import com.bettercolors.modules.options.ToggleOption;
 import com.bettercolors.modules.options.ValueOption;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.text.*;
@@ -32,6 +34,7 @@ public class Window extends JFrame{
     private final ArrayList<JCheckBox> CHECKBOXES_ACTIVATION;
     private final ArrayList<JCheckBox> CHECKBOXES_MODULES;
     private final Map<JLabel, JSlider> SLIDERS_MODULES;
+    private final String LOG_PREFIX = "[Gui] ";
 
     public Window(String title, ArrayList<Module> modules, String last_version) {
         super(title);
@@ -142,12 +145,12 @@ public class Window extends JFrame{
     private void setupModulesOptions(JPanel modules_related_layout){
         JTabbedPane tabbedPane = new JTabbedPane();
 
+        // Modules' related tabs
         for(Module module : MODULES){
             if(module.getOptions().size() == 0) continue;
 
             JPanel module_options_panel = new JPanel();
             module_options_panel.setLayout(new BorderLayout());
-            module_options_panel.setBorder(new TitledBorder(new EtchedBorder(), module.getName()));
 
             ArrayList<ToggleOption> toggle_options = Option.getToggleOptions(module.getOptions());
             if(toggle_options != null) {
@@ -198,6 +201,64 @@ public class Window extends JFrame{
             ImageIcon icon = new ImageIcon(this.getClass().getResource("/images/" + module.getSymbol()));
             tabbedPane.addTab(module.getName(), icon, module_options_panel);
         }
+        // --
+
+        // Settings' related tab
+        JPanel settings_panel = new JPanel();
+        settings_panel.setBorder(new EmptyBorder(10, 10, 10, 10));
+        settings_panel.setLayout(new BorderLayout(0, 15));
+
+        final String selected_file_prefix = "Selected config : ";
+        JLabel selected_file = new JLabel(selected_file_prefix + SettingsUtils.SETTINGS_FILENAME);
+        settings_panel.add(selected_file, "North");
+
+        DefaultListModel<String> filenames = SettingsUtils.getAllSettingsFilenames();
+        JList<String> list = new JList<>(filenames);
+        list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        list.setSelectedIndex(filenames.indexOf(SettingsUtils.SETTINGS_FILENAME));
+        settings_panel.add(new JScrollPane(list), "Center");
+
+        JPanel buttons = new JPanel();
+        buttons.setLayout(new FlowLayout());
+        // select button
+        JButton select_button = new JButton("Load");
+        select_button.addActionListener(e -> {
+            SettingsUtils.SETTINGS_FILENAME = list.getSelectedValue();
+            selected_file.setText(selected_file_prefix + SettingsUtils.SETTINGS_FILENAME);
+            // Load configuration
+            Map<String, String> options = SettingsUtils.getOptions();
+            for(Module module : MODULES){
+                module.setOptions(options);
+                module.setActivated(Boolean.parseBoolean(options.get(module.getClass().getSimpleName())));
+            }
+            addText(LOG_PREFIX + "Loaded \"" + SettingsUtils.SETTINGS_FILENAME + "\".", true);
+            synchronizeComponents();
+        });
+        buttons.add(select_button);
+        // open button
+        JButton open_button = new JButton("Open");
+        open_button.addActionListener(e -> {
+            try {
+                Desktop.getDesktop().open(Filer.getSettingsDirectory());
+            } catch (IOException e1) {
+                addText(LOG_PREFIX + "unable to open the settings directory !", Color.RED, true);
+            }
+        });
+        buttons.add(open_button);
+        // refresh button
+        JButton refresh_button = new JButton("Refresh");
+        refresh_button.addActionListener(e ->{
+            list.setModel(SettingsUtils.getAllSettingsFilenames());
+            list.setSelectedIndex(SettingsUtils.getAllSettingsFilenames().indexOf(SettingsUtils.SETTINGS_FILENAME));
+            // todo log found files
+        });
+        buttons.add(refresh_button);
+        settings_panel.add(buttons, "South");
+
+        ImageIcon icon = new ImageIcon(this.getClass().getResource("/images/settings_symbol.png"));
+        tabbedPane.addTab("Settings", icon, settings_panel);
+        // --
+
         modules_related_layout.add(tabbedPane, "Center");
     }
 
@@ -273,7 +334,6 @@ public class Window extends JFrame{
         _console.setText("");
         repaint();
     }
-
 
     /**
      * It synchronizes the modules' components with the modules' current configuration.

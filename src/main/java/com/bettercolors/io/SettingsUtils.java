@@ -4,6 +4,8 @@ import com.bettercolors.modules.options.Option;
 import com.bettercolors.modules.options.ToggleOption;
 import com.bettercolors.modules.options.ValueOption;
 
+import javax.swing.*;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,7 +14,7 @@ public class SettingsUtils {
 
     // TODO -> CHANGE TO NORMAL CLASS TO ADD THE POSSIBILITY TO CHANGE THE FILENAME FOR MULTIPLE CONFIGURATIONS
     // TODO: Edit : remove final modifier to be able to change it according to the selected filename (change utils to helper).
-    private final static String SETTINGS_FILENAME = "settings";
+    public static String SETTINGS_FILENAME = "default";
 
     /**
      * It updates the configuration file with all the options given in [modules_options].
@@ -63,5 +65,21 @@ public class SettingsUtils {
 
         Filer settings = new Filer(SETTINGS_FILENAME);
         settings.write(options, false);
+    }
+
+    /**
+     * @return all the settings filenames (without .properties extension)
+     */
+    public static DefaultListModel<String> getAllSettingsFilenames(){
+        DefaultListModel<String> filenames = new DefaultListModel<>();
+        File folder = Filer.getSettingsDirectory();
+        File[] files = folder.listFiles();
+        if(files == null) return filenames;
+        for(File file : files){
+            if(file.isFile() && file.getName().endsWith(".properties")){
+                filenames.addElement(file.getName().replace(".properties", ""));
+            }
+        }
+        return filenames;
     }
 }

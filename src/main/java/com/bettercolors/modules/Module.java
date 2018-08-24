@@ -1,6 +1,8 @@
 package com.bettercolors.modules;
 
 import com.bettercolors.modules.options.Option;
+import com.bettercolors.modules.options.ToggleOption;
+import com.bettercolors.modules.options.ValueOption;
 import com.bettercolors.view.Window;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
@@ -164,9 +166,33 @@ public abstract class Module {
     }
 
     /**
+     * It updates the options of the module. The options variable can contain ANY options, so it needs to check if the
+     * option exists in the current module.
+     */
+    public void setOptions(Map<String, String> options){
+        if(_options == null) return;
+        if(_options.size() == 0) return;
+        for(Map.Entry<String,String> option : options.entrySet()){
+            String option_name = option.getKey();
+            String option_value = option.getValue();
+            int index = Option.getIndex(_options, option_name);
+            if(index != -1){
+                if(_options.get(index) instanceof ToggleOption){
+                    ((ToggleOption) _options.get(index)).setActivated(Boolean.parseBoolean(option_value));
+                }else{
+                    ((ValueOption) _options.get(index)).setVal(Integer.parseInt(option_value));
+                }
+            }
+        }
+    }
+
+    /**
      * Used in children to run the module.
      */
     abstract void onUpdate();
+
+    // Setters
+    public void setActivated(boolean activated){ _is_activated = activated; }
 
     // Getters
     public String getName() { return _name; }

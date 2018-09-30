@@ -5,7 +5,6 @@ import com.bettercolors.modules.*;
 import com.bettercolors.modules.options.Option;
 import com.bettercolors.modules.options.ToggleOption;
 import com.bettercolors.view.Window;
-import com.google.gson.JsonObject;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;

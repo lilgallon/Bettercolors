@@ -3,6 +3,7 @@ package com.bettercolors.utils;
 import java.util.Random;
 
 public class MathUtils {
+
 	/**
 	 * @param min the minimum value.
 	 * @param max the maximum value.

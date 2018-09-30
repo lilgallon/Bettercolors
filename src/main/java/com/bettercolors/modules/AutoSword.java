@@ -5,8 +5,6 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 
-import java.util.Map;
-
 public class AutoSword extends Module {
 
     /**

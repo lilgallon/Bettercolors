@@ -53,9 +53,9 @@ public class Window extends JFrame{
         SLIDERS_MODULES = new HashMap<>();
 
         // Header
-        JPanel header_layout = new JPanel();
-        header_layout.setLayout(new BorderLayout());
-        setupHeader(header_layout);
+        // JPanel header_layout = new JPanel();
+        // header_layout.setLayout(new BorderLayout());
+        // setupHeader(header_layout);
 
         // Modules
         JPanel modules_related_layout = new JPanel();
@@ -69,16 +69,18 @@ public class Window extends JFrame{
         footer_layout.setLayout(new BorderLayout());
         setupFooter(footer_layout, last_version);
 
-        getContentPane().add(header_layout, "North");
+        // getContentPane().add(header_layout, "North");
         getContentPane().add(modules_related_layout, "Center");
         getContentPane().add(footer_layout, "South");
         pack();
         repaint();
     }
 
+    /*
     private void setupHeader(JPanel header_layout){
-        // TODO title ?
+        // READY TO GET IMPLEMENTED IF NEEDED
     }
+    */
 
     private void setupFooter(JPanel footer_layout, String last_version){
         JLabel credits = new JLabel(" Bettercolors " + Reference.VERSION + " for MC " + Reference.ACCEPTED_VERSIONS.replace("[", "").replace("]", "") + " by N3RO. ");

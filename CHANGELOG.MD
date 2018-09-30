@@ -66,3 +66,22 @@
 **V5.1**
 - Added HWID verification
 - Added right SHIFT key to toggle the GUI which is closed by default
+
+**V6.0-b1 : MAJOR UPDATE**
+
+*Everything has been recoded from scratch. Now adding new modules is extremely easy and everything is optimized.*
+- Interface :
+    - New external interface made to contain a lot of modules,
+    - Dynamic components : you can resize it the way you want,
+    - A settings management section : you can save, load, and create settings presets.
+- Modules :
+    - Aim assistance :
+        - Added "Stop when reached" option
+    - Click Assistance :
+        - Fixed the fact that it sometimes stays activated whereas it shouldn't
+    - Autosword : automatically use the best sword in your hotbar,
+    - Autosprint : automatically sprint when going forward.
+- Misc :
+    - Overall optimisation,
+    - Settings file is now in the game directory,
+    - Version checker.

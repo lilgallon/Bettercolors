@@ -67,7 +67,7 @@
 - Added HWID verification
 - Added right SHIFT key to toggle the GUI which is closed by default
 
-**V6.0 : MAJOR UPDATE**
+**V6.0-b1 : MAJOR UPDATE**
 
 *Everything has been recoded from scratch. Now adding new modules is extremely easy and everything is optimized.*
 - Interface :

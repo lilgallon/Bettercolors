@@ -5,6 +5,7 @@ import com.bettercolors.modules.*;
 import com.bettercolors.modules.options.Option;
 import com.bettercolors.modules.options.ToggleOption;
 import com.bettercolors.view.Window;
+import com.google.gson.JsonObject;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
@@ -23,6 +24,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Mod(modid = Reference.MOD_ID,
 	 name = Reference.NAME,
@@ -122,17 +124,20 @@ public class Bettercolors {
 	}
 
     /**
-     * @return the last version tag.
-     * TODO: check last version with github last release tag
+     * @return the last version tag from the github release page.
      */
 	private String getLastVersion(){
         String last_version;
 
         try{
-            URL url = new URL("https://n3roo.github.io/files/bettercolors-version.txt");
+            // Retrieve JSON
+            URL url = new URL("https://api.github.com/repos/n3roo/bettercolors/releases/latest");
             BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
-            last_version = in.readLine();
+            String json = in.lines().collect(Collectors.joining());
             in.close();
+
+            // Get last version from JSON
+            last_version = json.split("\"tag_name\"")[1].split("\"")[1];
         } catch (MalformedURLException e){
             return URL_PROBLEM;
         } catch (IOException e){

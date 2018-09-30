@@ -92,28 +92,31 @@ The recommended values are the default one. This configuration bypasses ANY anti
 
 The changelog is available [here](CHANGELOG.MD).
 
+## Found a bug ?
+
+Go to the [issues](https://github.com/N3ROO/Bettercolors/issues) section, and open a new issue ! :)
+
 ## Developer section
 
 This section shwo you how to get a working development environment.
 
 ### 1. Download your favorite IDE
 
-todo
+It is easier to set up forge with [Eclipse](https://www.eclipse.org/neon/). Otherwise, you can use [IntelliJ](https://www.jetbrains.com/idea/) that is way better java IDE than Ecplise.
 
-### 2. Clone the repository
+### 2. Set up forge & IDE
 
-todo
+- Download [forge 1.8.9-11.15.1.1722](https://adfoc.us/serve/sitelinks/?id=271228&url=https://files.minecraftforge.net/maven/net/minecraftforge/forge/1.8.9-11.15.1.1722/forge-1.8.9-11.15.1.1722-mdk.zip),
+- Extract everything from the zip file to the project folder (named "Bettercolors" for example),
+- Delete the src/ folder (since the example code is useless here),
+- Clone or download the content of this repository in the project folder,
+- Follow the instructions in the "README.txt" file if you are using Eclipse, otherwise, take a look to this [youtube video](https://www.youtube.com/watch?v=G2aPT36kf60)
 
-### 3. Set up forge
+Once it's done, you should be able to launch the mod from your favorite IDE.
 
-todo
+### 3. Contributing
 
-### 4. Set up your IDE
-
-todo
-
-### 5. Contributing
-
-todo
-
-- Setup IntelliJ with Forge & updating forge - [Youtube video](https://www.youtube.com/watch?v=G2aPT36kf60)
+If you want to contribute, make sure to :
+- not push the forge .txt files,
+- keep the same coding style that is already used (plus headers describing every function),
+- describe what is the purpose of your pull request.

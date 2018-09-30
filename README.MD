@@ -2,8 +2,6 @@
 
 # Bettercolors 6
 ![Forge dev version: 1.8.9-11.15.1.1722](https://img.shields.io/badge/forge_dev-1.8.9_11.15.1.1722-green.svg)
-![Hack status](https://img.shields.io/badge/status-undetected-green.svg)
-
 ![Release](https://img.shields.io/github/release/n3roo/bettercolors.svg)
 ![Downloads](https://img.shields.io/github/downloads/n3roo/bettercolors/latest/total.svg)
 ![Issues](https://img.shields.io/github/issues/n3roo/bettercolors.svg)

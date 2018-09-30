@@ -64,27 +64,30 @@ The recommended values are the default one.
 
 | Setting                     | Default       | Minimum     | Maximum   | Type    |
 |-----------------------------|---------------|-------------|-----------|---------|
+| AutoSprint                  | true          | false       | true      | boolean |
+| AutoSword                   | true          | false       | true      | boolean |
 | AimAssist (AA)              | true          | false       | true      | boolean |
 | ClickAssist (CA)            | true          | false       | true      | boolean |
+| AA_StopRightClick           | true          | false       | true      | boolean |
+| AA_StopWhenReached          | true          | false       | true      | boolean |
+| AA_UseOnMobs                | false         | false       | true      | boolean |
+| AA_TeamFilter               | true          | false       | true      | boolean |
 | AA_RefreshRate (ms)         | 2             | 0           | 10        | integer |
 | AA_StepX                    | 5             | 1 (0=OFF)   | 80        | float   |
 | AA_StepY                    | 5             | 1 (0=OFF)   | 80        | float   |
 | AA_Range                    | 5             | 1 (0=OFF)   | 100       | float   |
 | AA_RadiusX                  | 60            | 1 (0=OFF)   | 180       | float   |
 | AA_RadiusY                  | 30            | 1 (0=OFF)   | 90        | float   |
-| AA_StopRightClick           | true          | false       | true      | boolean |
-| AA_StopWhenReached          | true          | false       | true      | boolean |
-| AA_ClicksToActivate         | 2             | 0           | 20        | integer |
-| AA_TimeToActivate(ms)       | 1500          | 0           | 100000    | integer |
-| CA_Addition                 | 2             | 1 (0=OFF)   | 10        | long    |
-| CA_CPSChance                | 80            | 1 (0=OFF)   | 100       | integer |
+| AA_ClicksToActivate         | 3             | 0           | 20        | integer |
+| AA_TimeToActivate(ms)       | 1000          | 0           | 100000    | integer |
 | CA_Packets                  | false         | false       | true      | boolean |
 | CA_OnlyOnEntity             | false         | false       | true      | boolean |
+| CA_TeamFilter               | true          | false       | true      | boolean |
+| CA_Addition                 | 2             | 1 (0=OFF)   | 10        | long    |
+| CA_CPSChance                | 80            | 1 (0=OFF)   | 100       | integer |
 | CA_CPSActivationTime        | 1500          | 0.1 (0=OFF) | unlimited | float   |
 | CA_CPSClicksToActivate      | 3             | 0           | unlimited | integer |
-| CA_TimeToActivate(ms)       | 1500          | 0           | 10000     | integer |
-| UseOnMobs                   | false         | false       | true      | boolean |
-| TeamFilter                  | true          | false       | true      | boolean |
+| CA_TimeToActivate(ms)       | 1000          | 0           | 10000     | integer |
 
 ## Changelog
 

@@ -9,6 +9,9 @@ public class Filer {
 
     private final String FILENAME;
 
+    /**
+     * @param filename name of the file to use (from the settings directory).
+     */
     public Filer(String filename){
         if(!filename.endsWith(".properties")){
             filename += ".properties";
@@ -16,6 +19,12 @@ public class Filer {
         FILENAME = filename;
     }
 
+    /**
+     * It writes all the options to the file. If only_absent is set to true,
+     * it will only write the options that are not already in the file, and ignore the others.
+     * @param options_to_write options to write on the file,
+     * @param only_absents if sets to true, it ignore the options already written in the file.
+     */
     void write(Map<String, String> options_to_write, boolean only_absents){
         Map<String, String> options = readAll();
         if(options != null) {
@@ -80,7 +89,7 @@ public class Filer {
     }
 
     /**
-     * @return  all the properties with their values.
+     * @return all the properties with their values.
      */
     Map<String, String> readAll(){
         Properties prop = new Properties();
@@ -107,8 +116,10 @@ public class Filer {
         return values;
     }
 
+    /**
+     * @return the settings directory ("bettercolors" folder in the minecraft game directory).
+     */
     public static File getSettingsDirectory() {
-        // String settingsDir = System.getProperty("user.home");
         String settingsDir = System.getProperty("user.dir");
         if(settingsDir == null) {
             throw new IllegalStateException("user.dir==null");

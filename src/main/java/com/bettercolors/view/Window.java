@@ -295,6 +295,12 @@ public class Window extends JFrame{
         modules_related_layout.add(panel,"South");
     }
 
+    /**
+     * Writes the message "msg" to the console "tp" with the color "c".
+     * @param tp the console text pane,
+     * @param msg the message to write,
+     * @param c the color of the message.
+     */
     private void appendToPane(JTextPane tp, String msg, Color c)
     {
         StyleContext sc = StyleContext.getDefaultStyleContext();
@@ -312,10 +318,21 @@ public class Window extends JFrame{
         }
     }
 
+    /**
+     * Adds text to the console.
+     * @param text the text,
+     * @param new_line if it should create a new line.
+     */
     public void addText(String text, boolean new_line){
         addText(text, Color.WHITE, new_line);
     }
 
+    /**
+     * Adds text to the console.
+     * @param text the text,
+     * @param color color of the text,
+     * @param new_line if it should create a new line.
+     */
     public void addText(String text, Color color, boolean new_line){
 
         if(new_line){
@@ -330,6 +347,9 @@ public class Window extends JFrame{
         repaint();
     }
 
+    /**
+     * It clears the console.
+     */
     public void resetText(){
         _console.setText("");
         repaint();
@@ -385,7 +405,7 @@ public class Window extends JFrame{
     }
 
     /**
-     * It hides / un-hide the window.
+     * It hides / reveals the window.
      */
     public void toggle(){
         setVisible(!isVisible());

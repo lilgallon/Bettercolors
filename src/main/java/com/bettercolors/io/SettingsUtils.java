@@ -12,8 +12,6 @@ import java.util.Map;
 
 public class SettingsUtils {
 
-    // TODO -> CHANGE TO NORMAL CLASS TO ADD THE POSSIBILITY TO CHANGE THE FILENAME FOR MULTIPLE CONFIGURATIONS
-    // TODO: Edit : remove final modifier to be able to change it according to the selected filename (change utils to helper).
     public static String SETTINGS_FILENAME = "default";
 
     /**

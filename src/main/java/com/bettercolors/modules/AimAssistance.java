@@ -154,6 +154,10 @@ public class AimAssistance extends Module {
         return DEFAULT_OPTIONS;
     }
 
+    /**
+     * It calls all the functions to create the aim assistance.
+     * @param is_attack_key_pressed if set to true, it will recalculate the random shifts with the target.
+     */
     private void useAimAssist(boolean is_attack_key_pressed){
 
         // Random shift from the target (so it looks human)
@@ -228,6 +232,10 @@ public class AimAssistance extends Module {
 
     }
 
+    /**
+     * @param entity the target to aim.
+     * @return the [x, y] difference from the player aim to the target.
+     */
     private float[] getDiffFrom(EntityLivingBase entity){
         final double diffX = entity.posX - MC.thePlayer.posX;
         final double diffZ = entity.posZ - MC.thePlayer.posZ;
@@ -244,6 +252,9 @@ public class AimAssistance extends Module {
         return new float[]{distYaw, distPitch};
     }
 
+    /**
+     * @param entity the entity to aim.
+     */
     private synchronized void aimEntity(EntityLivingBase entity) {
         final float[] rotations = getRotationsNeeded(entity);
 
@@ -255,6 +266,10 @@ public class AimAssistance extends Module {
         log_info("Aiming at entity " + entity.getName() + ".");
     }
 
+    /**
+     * @param entity the target to aim.
+     * @return the [x, y] new positions of the player aim.
+     */
     private float[] getRotationsNeeded(EntityLivingBase entity) {
         if (entity == null) {
             return null;

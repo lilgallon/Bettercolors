@@ -160,6 +160,9 @@ public class ClickAssistance extends Module {
         }
     }
 
+    /**
+     * Human-like click (fake mouse click).
+     */
     private void click(){
         Robot bot;
         try{

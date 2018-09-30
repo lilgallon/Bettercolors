@@ -121,8 +121,11 @@ public class Bettercolors {
         }
 	}
 
+    /**
+     * @return the last version tag.
+     * TODO: check last version with github last release tag
+     */
 	private String getLastVersion(){
-
         String last_version;
 
         try{

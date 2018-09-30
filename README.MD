@@ -112,6 +112,10 @@ It is easier to set up forge with [Eclipse](https://www.eclipse.org/neon/). Othe
 
 Once it's done, you should be able to launch the mod from your favorite IDE.
 
+### 3. Build the .jar
+
+Open a terminal and write `.\gradlew build`.
+
 ### 3. Contributing
 
 If you want to contribute, make sure to :

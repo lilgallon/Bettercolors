@@ -1,6 +1,6 @@
 ![header](gitresources/header.png)
 
-# N3RO's Better colors
+# Bettercolors 6
 ![Forge dev version: 1.8.9-11.15.1.1722](https://img.shields.io/badge/forge_dev-1.8.9_11.15.1.1722-green.svg)
 ![Hack status](https://img.shields.io/badge/status-undetected-green.svg)
 
@@ -12,7 +12,9 @@ A silent hack built within the forge API. It bypasses the best anticheats (forge
 
 ## Disclamer
 
-Use it at your own risk!
+I made that project to learn Java in a funny way. I started 2 years ago but the repositories are, and will stay private. Only this repository will stay public. This has been made for educational purposes. I'm still improving it from time to time.
+
+**Use it at your own risk ! I won't be responsible of anything you do wrong with this mod.**
 
 ## Features description
 
@@ -86,8 +88,32 @@ The recommended values are the default one. This configuration bypasses ANY anti
 - `PAGE_UP` : Toggle click assist
 - `RIGHT_SHIFT` : Toggle GUI
 
+## Changelog
 
-## Misc
+The changelog is available [here](CHANGELOG.MD).
 
-- Changelog available [here](CHANGELOG.MD).
+## Developer section
+
+This section shwo you how to get a working development environment.
+
+### 1. Download your favorite IDE
+
+todo
+
+### 2. Clone the repository
+
+todo
+
+### 3. Set up forge
+
+todo
+
+### 4. Set up your IDE
+
+todo
+
+### 5. Contributing
+
+todo
+
 - Setup IntelliJ with Forge & updating forge - [Youtube video](https://www.youtube.com/watch?v=G2aPT36kf60)

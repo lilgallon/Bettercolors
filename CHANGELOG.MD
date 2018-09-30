@@ -78,7 +78,7 @@
     - Aim assistance :
         - Added "Stop when reached" option
     - Click Assistance :
-        - ...
+        - Fixed the fact that it sometimes stays activated whereas it shouldn't
     - Autosword : automatically use the best sword in your hotbar,
     - Autosprint : automatically sprint when going forward.
 - Misc :

@@ -250,9 +250,17 @@ public class Window extends JFrame{
         // refresh button
         JButton refresh_button = new JButton("Refresh");
         refresh_button.addActionListener(e ->{
-            list.setModel(SettingsUtils.getAllSettingsFilenames());
+            DefaultListModel<String> new_list = SettingsUtils.getAllSettingsFilenames();
+            int length_diff = new_list.size() - list.getModel().getSize();
+            list.setModel(new_list);
             list.setSelectedIndex(SettingsUtils.getAllSettingsFilenames().indexOf(SettingsUtils.SETTINGS_FILENAME));
-            // todo log found files
+            if(length_diff == 0){
+                addText(LOG_PREFIX + "No new files found.", true);
+            }else if(length_diff == 1){
+                addText(LOG_PREFIX + "Found " + Integer.toString(length_diff) + " new file.", true);
+            }else if(length_diff > 1){
+                addText(LOG_PREFIX + "Found " + Integer.toString(length_diff) + " new files.", true);
+            }
         });
         buttons.add(refresh_button);
         settings_panel.add(buttons, "South");

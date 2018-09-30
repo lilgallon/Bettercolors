@@ -8,7 +8,7 @@
 ![Downloads](https://img.shields.io/github/downloads/n3roo/bettercolors/latest/total.svg)
 ![Issues](https://img.shields.io/github/issues/n3roo/bettercolors.svg)
 
-A silent hack built within the forge API. It bypasses the best anticheats (forge mods and servers).
+A silent hack built within the forge API. It bypasses powerful anticheats (forge mods and servers).
 
 ## Disclamer
 
@@ -29,6 +29,12 @@ I made that project to learn Java in a funny way. I started 2 years ago but the 
 **Teammate detection :** The mod find your teammates from any server game mode, and prevent hacks to be activated on them.
 
 **Settings :** You can configure every mod and all is saved in real-time.
+
+## Commands
+
+- `HOME` : Toggle aim assist
+- `PAGE_UP` : Toggle click assist
+- `RIGHT_SHIFT` : Toggle GUI
 
 ## Features help
 
@@ -54,14 +60,13 @@ I made that project to learn Java in a funny way. I started 2 years ago but the 
 
 ## Values
 
-The recommended values are the default one. This configuration bypasses ANY anticheat.
-
+The recommended values are the default one.
 
 | Setting                     | Default       | Minimum     | Maximum   | Type    |
 |-----------------------------|---------------|-------------|-----------|---------|
 | AimAssist (AA)              | true          | false       | true      | boolean |
 | ClickAssist (CA)            | true          | false       | true      | boolean |
-| AA_RefreshRate (ms)         | 2             | 0           | 10        | int     |
+| AA_RefreshRate (ms)         | 2             | 0           | 10        | integer |
 | AA_StepX                    | 5             | 1 (0=OFF)   | 80        | float   |
 | AA_StepY                    | 5             | 1 (0=OFF)   | 80        | float   |
 | AA_Range                    | 5             | 1 (0=OFF)   | 100       | float   |
@@ -69,24 +74,17 @@ The recommended values are the default one. This configuration bypasses ANY anti
 | AA_RadiusY                  | 30            | 1 (0=OFF)   | 90        | float   |
 | AA_StopRightClick           | true          | false       | true      | boolean |
 | AA_StopWhenReached          | true          | false       | true      | boolean |
-| AA_ClicksToActivate         | 2             | 0           | 20        | int     |
-| AA_TimeToActivate(ms)       | 1500          | 0           | 100000    | int     |
+| AA_ClicksToActivate         | 2             | 0           | 20        | integer |
+| AA_TimeToActivate(ms)       | 1500          | 0           | 100000    | integer |
 | CA_Addition                 | 2             | 1 (0=OFF)   | 10        | long    |
-| CA_CPSChance                | 80            | 1 (0=OFF)   | 100       | int     |
+| CA_CPSChance                | 80            | 1 (0=OFF)   | 100       | integer |
 | CA_Packets                  | false         | false       | true      | boolean |
 | CA_OnlyOnEntity             | false         | false       | true      | boolean |
 | CA_CPSActivationTime        | 1500          | 0.1 (0=OFF) | unlimited | float   |
-| CA_CPSClicksToActivate      | 3             | 0           | unlimited | int     |
-| CA_TimeToActivate(ms)       | 1500          | 0           | 10000     | int     |
+| CA_CPSClicksToActivate      | 3             | 0           | unlimited | integer |
+| CA_TimeToActivate(ms)       | 1500          | 0           | 10000     | integer |
 | UseOnMobs                   | false         | false       | true      | boolean |
 | TeamFilter                  | true          | false       | true      | boolean |
-
-
-## Commands
-
-- `HOME` : Toggle aim assist
-- `PAGE_UP` : Toggle click assist
-- `RIGHT_SHIFT` : Toggle GUI
 
 ## Changelog
 

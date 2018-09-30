@@ -1,7 +1,5 @@
 package com.bettercolors.modules;
 
-import java.util.Map;
-
 public class AutoSprint extends Module{
 
     /**

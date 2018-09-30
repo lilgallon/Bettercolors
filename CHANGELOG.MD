@@ -69,16 +69,18 @@
 
 **V6.0 : MAJOR UPDATE**
 
-*Everything has been recoded from zero. Now adding new modules is extremely easy and everything is optimized.*
+*Everything has been recoded from scratch. Now adding new modules is extremely easy and everything is optimized.*
 - Interface :
     - New external interface made to contain a lot of modules,
     - Dynamic components : you can resize it the way you want,
+    - A settings management section : you can save, load, and create settings presets.
 - Modules :
     - Aim assistance :
         - Added "Stop when reached" option
     - Click Assistance :
         - ...
-    - More modules to come...
+    - Autosword : automatically use the best sword in your hotbar,
+    - Autosprint : automatically sprint when going forward.
 - Misc :
     - Overall optimisation,
     - Settings file is now in the game directory,

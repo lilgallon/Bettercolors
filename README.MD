@@ -30,6 +30,8 @@ I made that project to learn Java in a funny way. I started 2 years ago but the 
 
 **Settings :** You can configure every mod and all is saved in real-time.
 
+**Settings presets :** You can save, load, and create settings presets from a cool interface.
+
 ## Commands
 
 - `HOME` : Toggle aim assist

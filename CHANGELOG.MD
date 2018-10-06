@@ -67,7 +67,7 @@
 - Added HWID verification
 - Added right SHIFT key to toggle the GUI which is closed by default
 
-**V6.0 : MAJOR UPDATE**
+**V6.0-b1 : MAJOR UPDATE**
 
 *Everything has been recoded from scratch. Now adding new modules is extremely easy and everything is optimized.*
 - Interface :
@@ -85,3 +85,10 @@
     - Overall optimisation,
     - Settings file is now in the game directory,
     - Version checker.
+    
+ **V6.0-b2**
+ - Aim assistance :
+    - Fixed random shifts not calculating at each click
+    - Improved default settings
+- Auto sprint :
+    - Fixed a crash

@@ -11,6 +11,8 @@ public class ValueOption extends Option {
     private int _val;
 
     /**
+     * @param prefix prefix of the option (module name for example) -> used to prevent conflict if some modules have the
+     *               same option name.
      * @param name the name.
      * @param val the initial value.
      * @param min the minimum value.
@@ -18,8 +20,8 @@ public class ValueOption extends Option {
      * @param minor_tick_spc the minor tick spacing (for the slider).
      * @param major_tick_spc the major tick spacing (for the slider).
      */
-    public ValueOption(String name, int val, int min, int max, int minor_tick_spc, int major_tick_spc) {
-        super(name);
+    public ValueOption(String prefix, String name, int val, int min, int max, int minor_tick_spc, int major_tick_spc) {
+        super(prefix, name);
         _val = val;
         MIN = min;
         MAX = max;
@@ -55,6 +57,6 @@ public class ValueOption extends Option {
      */
     @Override
     void saveOption() {
-        SettingsUtils.setOption(NAME, Integer.toString(_val));
+        SettingsUtils.setOption(PREFIX + "_" + NAME, Integer.toString(_val));
     }
 }

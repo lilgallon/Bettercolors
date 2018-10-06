@@ -7,11 +7,13 @@ public class ToggleOption extends Option {
     private boolean _activated;
 
     /**
+     * @param prefix prefix of the option (module name for example) -> used to prevent conflict if some modules have the
+     *               same option name.
      * @param name name of the option.
      * @param activated the initial state of the option.
      */
-    public ToggleOption(String name, boolean activated) {
-        super(name);
+    public ToggleOption(String prefix, String name, boolean activated) {
+        super(prefix, name);
         _activated = activated;
     }
 
@@ -44,6 +46,6 @@ public class ToggleOption extends Option {
      */
     @Override
     void saveOption(){
-        SettingsUtils.setOption(NAME, Boolean.toString(_activated));
+        SettingsUtils.setOption(PREFIX + "_" + NAME, Boolean.toString(_activated));
     }
 }

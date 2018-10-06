@@ -88,7 +88,10 @@
     
  **V6.0-b2**
  - Aim assistance :
-    - Fixed random shifts not calculating at each click
+    - Fixed random shifts not calculating at each click (#6 - #4)
     - Improved default settings
 - Auto sprint :
-    - Fixed a crash
+    - Fixed a crash (#5)
+- Settings :
+    - Fixed CA team filter and AA team filter (#3)
+    - Improved settings design to prevent conflicts

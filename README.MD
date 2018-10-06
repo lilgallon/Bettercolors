@@ -4,7 +4,9 @@
 ![Forge dev version: 1.8.9-11.15.1.1722](https://img.shields.io/badge/forge_dev-1.8.9_11.15.1.1722-green.svg)
 ![Release](https://img.shields.io/github/release/n3roo/bettercolors.svg)
 ![Downloads](https://img.shields.io/github/downloads/n3roo/bettercolors/total.svg)
-![Issues](https://img.shields.io/github/issues/n3roo/bettercolors.svg)
+![Open issues](https://img.shields.io/github/issues/n3roo/bettercolors.svg)
+![Closed issues](https://img.shields.io/github/issues-closed-raw/n3roo/bettercolors.svg)
+![Closed pull requests](https://img.shields.io/github/issues-pr-closed/n3roo/bettercolors.svg)
 
 A silent hack built within the forge API. It bypasses powerful anticheats (forge mods and servers).
 

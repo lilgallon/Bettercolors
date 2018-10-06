@@ -92,6 +92,7 @@ public class Bettercolors {
 	@SubscribeEvent
 	public void onClientTickEvent(ClientTickEvent event){
         for(Module mod : _modules){
+            mod.updateKeyHandler();
             if(mod.getToggleKey() != -1) {
                 if (Keyboard.isKeyDown(mod.getToggleKey())) {
                     _key_down.replace(mod.getClass().getSimpleName(), true);

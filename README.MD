@@ -73,9 +73,10 @@ The recommended values are the default one.
 | AA_RadiusX                  | 60            | 1 (0=OFF)   | 180       | float   |
 | AA_RadiusY                  | 30            | 1 (0=OFF)   | 90        | float   |
 | AA_StopRightClick           | true          | false       | true      | boolean |
-| AA_StopWhenReached          | true          | false       | true      | boolean |
+| AA_StopWhenReached          | false         | false       | true     | boolean |
+| AA_Duration(ms)             | 2000          | 0           | 100000    | integer |
 | AA_ClicksToActivate         | 2             | 0           | 20        | integer |
-| AA_TimeToActivate(ms)       | 1500          | 0           | 100000    | integer |
+| AA_TimeToActivate(ms)       | 700           | 0           | 100000    | integer |
 | CA_Addition                 | 2             | 1 (0=OFF)   | 10        | long    |
 | CA_CPSChance                | 80            | 1 (0=OFF)   | 100       | integer |
 | CA_Packets                  | false         | false       | true      | boolean |

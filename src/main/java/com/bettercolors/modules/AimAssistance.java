@@ -52,7 +52,7 @@ public class AimAssistance extends Module {
         DEFAULT_OPTIONS.add(new ToggleOption(STOP_ON_RIGHT_CLICK, true));
         DEFAULT_OPTIONS.add(new ToggleOption(USE_ON_MOBS, false));
         DEFAULT_OPTIONS.add(new ToggleOption(TEAM_FILTER, true));
-        DEFAULT_OPTIONS.add(new ToggleOption(STOP_WHEN_REACHED, true));
+        DEFAULT_OPTIONS.add(new ToggleOption(STOP_WHEN_REACHED, false));
 
         DEFAULT_OPTIONS.add(new ValueOption(REFRESH_RATE, 2, 0, 10, 1, 5));
         DEFAULT_OPTIONS.add(new ValueOption(STEP_X, 5, 0, 20, 1, 5));
@@ -60,9 +60,9 @@ public class AimAssistance extends Module {
         DEFAULT_OPTIONS.add(new ValueOption(RANGE, 5, 0, 10, 1, 5));
         DEFAULT_OPTIONS.add(new ValueOption(RADIUS_X, 60, 0, 180, 5, 25));
         DEFAULT_OPTIONS.add(new ValueOption(RADIUS_Y, 30, 0, 90, 3, 15));
-        DEFAULT_OPTIONS.add(new ValueOption(DURATION, 1500, 0, 10000, 200, 1000));
-        DEFAULT_OPTIONS.add(new ValueOption(CLICKS_TO_ACTIVATE, 3, 0, 20, 1, 5));
-        DEFAULT_OPTIONS.add(new ValueOption(TIME_TO_ACTIVATE, 1000, 0, 10000, 200, 1000));
+        DEFAULT_OPTIONS.add(new ValueOption(DURATION, 2000, 0, 10000, 200, 1000));
+        DEFAULT_OPTIONS.add(new ValueOption(CLICKS_TO_ACTIVATE, 2, 0, 20, 1, 5));
+        DEFAULT_OPTIONS.add(new ValueOption(TIME_TO_ACTIVATE, 700, 0, 10000, 200, 1000));
     }
 
     private TimeHelper _post_activation_timer;
@@ -164,11 +164,11 @@ public class AimAssistance extends Module {
         // -> Can be an option for a future update !
         if(is_attack_key_pressed){
             // Generate new shifts
-            int shift_x_max = 10;
-            int shift_x_min = -10;
+            int shift_x_max = 7;
+            int shift_x_min = -7;
             shift_x = MathUtils.random(shift_x_min, shift_x_max);
-            int shift_y_max = 20;
-            int shift_y_min = -20;
+            int shift_y_max = 10;
+            int shift_y_min = -10;
             shift_y = MathUtils.random(shift_y_min, shift_y_max);
         }
 

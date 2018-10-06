@@ -139,9 +139,16 @@ public abstract class Module {
     }
 
     /**
-     * It updates the module and the key handler.
+     * It updates the module
      */
     public void update(){
+        onUpdate();
+    }
+
+    /**
+     * It updates the key handler
+     */
+    public void updateKeyHandler(){
         if(MC.gameSettings.keyBindAttack.isKeyDown() && KEY_HANDLER.get(KEY.ATTACK) == KEY_STATE.IDLE){
             KEY_HANDLER.replace(KEY.ATTACK, KEY_STATE.JUST_PRESSED);
         }else if(MC.gameSettings.keyBindAttack.isKeyDown() && KEY_HANDLER.get(KEY.ATTACK) == KEY_STATE.JUST_PRESSED) {
@@ -161,8 +168,6 @@ public abstract class Module {
         }else if(!MC.gameSettings.keyBindUseItem.isKeyDown() && KEY_HANDLER.get(KEY.USE) == KEY_STATE.JUST_RELEASED){
             KEY_HANDLER.replace(KEY.USE, KEY_STATE.IDLE);
         }
-
-        onUpdate();
     }
 
     /**

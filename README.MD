@@ -3,7 +3,7 @@
 # Bettercolors 6
 ![Forge dev version: 1.8.9-11.15.1.1722](https://img.shields.io/badge/forge_dev-1.8.9_11.15.1.1722-green.svg)
 ![Release](https://img.shields.io/github/release/n3roo/bettercolors.svg)
-![Downloads](https://img.shields.io/github/downloads/n3roo/bettercolors/latest/total.svg)
+![Downloads](https://img.shields.io/github/downloads/n3roo/bettercolors/total.svg)
 ![Issues](https://img.shields.io/github/issues/n3roo/bettercolors.svg)
 
 A silent hack built within the forge API. It bypasses powerful anticheats (forge mods and servers).
@@ -73,7 +73,7 @@ The recommended values are the default one.
 | AA_RadiusX                  | 60            | 1 (0=OFF)   | 180       | float   |
 | AA_RadiusY                  | 30            | 1 (0=OFF)   | 90        | float   |
 | AA_StopRightClick           | true          | false       | true      | boolean |
-| AA_StopWhenReached          | false         | false       | true     | boolean |
+| AA_StopWhenReached          | false         | false       | true      | boolean |
 | AA_Duration(ms)             | 2000          | 0           | 100000    | integer |
 | AA_ClicksToActivate         | 2             | 0           | 20        | integer |
 | AA_TimeToActivate(ms)       | 700           | 0           | 100000    | integer |

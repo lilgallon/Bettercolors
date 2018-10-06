@@ -85,3 +85,16 @@
     - Overall optimisation,
     - Settings file is now in the game directory,
     - Version checker.
+    
+**V6.0-b2**
+*Settings file of this version are incompatible with the precedents*
+- Aim assistance :
+   - Fixed random shifts not calculating at each click (#6 - #4)
+   - Improved default settings
+- Auto sprint :
+    - Fixed a crash (#5)
+- Settings :
+    - Fixed CA team filter and AA team filter (#3)
+    - Improved settings design to prevent conflicts
+- Interface :
+    - Improved option names

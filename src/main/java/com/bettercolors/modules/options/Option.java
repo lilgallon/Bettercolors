@@ -4,9 +4,11 @@ import java.util.ArrayList;
 
 public abstract class Option {
 
+    final String PREFIX;
     final String NAME;
 
-    Option(String name){
+    Option(String prefix, String name){
+        PREFIX = prefix ;
         NAME = name;
     }
 
@@ -55,7 +57,7 @@ public abstract class Option {
         int index = -1;
 
         while (!found && i < options.size()){
-            if(options.get(i).getName().equalsIgnoreCase(option_name)){
+            if(options.get(i).getCompleteName().equalsIgnoreCase(option_name)){
                 index = i;
                 found = true;
             }else{
@@ -64,6 +66,15 @@ public abstract class Option {
         }
 
         return index;
+    }
+
+    /**
+     * @return the complete name of the option "PREFIX_NAME".
+     */
+    public String getCompleteName(){
+        if(PREFIX.equals(""))
+            return NAME;
+        return PREFIX + "_" + NAME;
     }
 
     /**
@@ -83,6 +94,8 @@ public abstract class Option {
         if(obj == null) return false;
         if(obj instanceof String){
             String str = (String)obj;
+            if(!PREFIX.equals(""))
+                return str.equalsIgnoreCase(PREFIX + "_" + NAME);
             return str.equalsIgnoreCase(NAME);
         }
         return obj == this;

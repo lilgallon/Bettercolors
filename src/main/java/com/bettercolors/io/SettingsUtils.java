@@ -24,9 +24,9 @@ public class SettingsUtils {
         for(ArrayList<Option> module_options : modules_options) {
             for (Option option : module_options) {
                 if (option instanceof ValueOption) {
-                    options.put(option.getName(), Integer.toString(((ValueOption) option).getVal()));
+                    options.put(option.getCompleteName(), Integer.toString(((ValueOption) option).getVal()));
                 } else if (option instanceof ToggleOption) {
-                    options.put(option.getName(), Boolean.toString(((ToggleOption) option).isActivated()));
+                    options.put(option.getCompleteName(), Boolean.toString(((ToggleOption) option).isActivated()));
                 }
             }
         }

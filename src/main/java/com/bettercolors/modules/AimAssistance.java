@@ -17,6 +17,8 @@ import java.util.Map;
 
 public class AimAssistance extends Module {
 
+    private static final String PREFIX = "AA";
+
     private static final String STOP_ON_RIGHT_CLICK = "Stop_on_right_click";
     private static final String USE_ON_MOBS = "Use_on_mobs";
     private static final String TEAM_FILTER = "Team_filter";
@@ -27,9 +29,9 @@ public class AimAssistance extends Module {
     private static final String RANGE = "Range";
     private static final String RADIUS_X = "Radius_X";
     private static final String RADIUS_Y = "Radius_Y";
-    private static final String DURATION = "AA_Duration";
-    private static final String CLICKS_TO_ACTIVATE = "AA_Clicks_to_activate";
-    private static final String TIME_TO_ACTIVATE = "AA_Time_to_activate";
+    private static final String DURATION = "Duration";
+    private static final String CLICKS_TO_ACTIVATE = "Clicks_to_activate";
+    private static final String TIME_TO_ACTIVATE = "Time_to_activate";
 
     private static final int I_STOP_ON_RIGHT_CLICK = 0;
     private static final int I_USE_ON_MOBS = 1;
@@ -49,20 +51,20 @@ public class AimAssistance extends Module {
     static{
         DEFAULT_OPTIONS = new ArrayList<>();
 
-        DEFAULT_OPTIONS.add(new ToggleOption(STOP_ON_RIGHT_CLICK, true));
-        DEFAULT_OPTIONS.add(new ToggleOption(USE_ON_MOBS, false));
-        DEFAULT_OPTIONS.add(new ToggleOption(TEAM_FILTER, true));
-        DEFAULT_OPTIONS.add(new ToggleOption(STOP_WHEN_REACHED, true));
+        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, STOP_ON_RIGHT_CLICK, true));
+        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, USE_ON_MOBS, false));
+        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, TEAM_FILTER, true));
+        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, STOP_WHEN_REACHED, false));
 
-        DEFAULT_OPTIONS.add(new ValueOption(REFRESH_RATE, 2, 0, 10, 1, 5));
-        DEFAULT_OPTIONS.add(new ValueOption(STEP_X, 5, 0, 20, 1, 5));
-        DEFAULT_OPTIONS.add(new ValueOption(STEP_Y, 5, 0, 20, 1, 5));
-        DEFAULT_OPTIONS.add(new ValueOption(RANGE, 5, 0, 10, 1, 5));
-        DEFAULT_OPTIONS.add(new ValueOption(RADIUS_X, 60, 0, 180, 5, 25));
-        DEFAULT_OPTIONS.add(new ValueOption(RADIUS_Y, 30, 0, 90, 3, 15));
-        DEFAULT_OPTIONS.add(new ValueOption(DURATION, 1500, 0, 10000, 200, 1000));
-        DEFAULT_OPTIONS.add(new ValueOption(CLICKS_TO_ACTIVATE, 3, 0, 20, 1, 5));
-        DEFAULT_OPTIONS.add(new ValueOption(TIME_TO_ACTIVATE, 1000, 0, 10000, 200, 1000));
+        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, REFRESH_RATE, 2, 0, 10, 1, 5));
+        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, STEP_X, 5, 0, 20, 1, 5));
+        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, STEP_Y, 5, 0, 20, 1, 5));
+        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, RANGE, 5, 0, 10, 1, 5));
+        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, RADIUS_X, 60, 0, 180, 5, 25));
+        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, RADIUS_Y, 30, 0, 90, 3, 15));
+        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, DURATION, 2000, 0, 10000, 200, 1000));
+        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, CLICKS_TO_ACTIVATE, 2, 0, 20, 1, 5));
+        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, TIME_TO_ACTIVATE, 700, 0, 10000, 200, 1000));
     }
 
     private TimeHelper _post_activation_timer;
@@ -86,18 +88,18 @@ public class AimAssistance extends Module {
         super(name, toggle_key, is_activated, symbol, "[AA]");
 
         _options = DEFAULT_OPTIONS;
-        ((ToggleOption) _options.get(I_STOP_ON_RIGHT_CLICK)).setActivated(Boolean.parseBoolean(options.get(STOP_ON_RIGHT_CLICK)));
-        ((ToggleOption) _options.get(I_USE_ON_MOBS)).setActivated(Boolean.parseBoolean(options.get(USE_ON_MOBS)));
-        ((ToggleOption) _options.get(I_TEAM_FILTER)).setActivated(Boolean.parseBoolean(options.get(TEAM_FILTER)));
-        ((ValueOption) _options.get(I_REFRESH_RATE)).setVal(Integer.parseInt(options.get(REFRESH_RATE)));
-        ((ValueOption) _options.get(I_STEP_X)).setVal(Integer.parseInt(options.get(STEP_X)));
-        ((ValueOption) _options.get(I_STEP_Y)).setVal(Integer.parseInt(options.get(STEP_Y)));
-        ((ValueOption) _options.get(I_RANGE)).setVal(Integer.parseInt(options.get(RANGE)));
-        ((ValueOption) _options.get(I_RADIUS_X)).setVal(Integer.parseInt(options.get(RADIUS_X)));
-        ((ValueOption) _options.get(I_RADIUS_Y)).setVal(Integer.parseInt(options.get(RADIUS_Y)));
-        ((ValueOption) _options.get(I_DURATION)).setVal(Integer.parseInt(options.get(DURATION)));
-        ((ValueOption) _options.get(I_CLICKS_TO_ACTIVATE)).setVal(Integer.parseInt(options.get(CLICKS_TO_ACTIVATE)));
-        ((ValueOption) _options.get(I_TIME_TO_ACTIVATE)).setVal(Integer.parseInt(options.get(TIME_TO_ACTIVATE)));
+        ((ToggleOption) _options.get(I_STOP_ON_RIGHT_CLICK)).setActivated(Boolean.parseBoolean(options.get(_options.get(I_STOP_ON_RIGHT_CLICK).getCompleteName())));
+        ((ToggleOption) _options.get(I_USE_ON_MOBS)).setActivated(Boolean.parseBoolean(options.get(_options.get(I_USE_ON_MOBS).getCompleteName())));
+        ((ToggleOption) _options.get(I_TEAM_FILTER)).setActivated(Boolean.parseBoolean(options.get(_options.get(I_TEAM_FILTER).getCompleteName())));
+        ((ValueOption) _options.get(I_REFRESH_RATE)).setVal(Integer.parseInt(options.get(_options.get(I_REFRESH_RATE).getCompleteName())));
+        ((ValueOption) _options.get(I_STEP_X)).setVal(Integer.parseInt(options.get(_options.get(I_STEP_X).getCompleteName())));
+        ((ValueOption) _options.get(I_STEP_Y)).setVal(Integer.parseInt(options.get(_options.get(I_STEP_Y).getCompleteName())));
+        ((ValueOption) _options.get(I_RANGE)).setVal(Integer.parseInt(options.get(_options.get(I_RANGE).getCompleteName())));
+        ((ValueOption) _options.get(I_RADIUS_X)).setVal(Integer.parseInt(options.get(_options.get(I_RADIUS_X).getCompleteName())));
+        ((ValueOption) _options.get(I_RADIUS_Y)).setVal(Integer.parseInt(options.get(_options.get(I_RADIUS_Y).getCompleteName())));
+        ((ValueOption) _options.get(I_DURATION)).setVal(Integer.parseInt(options.get(_options.get(I_DURATION).getCompleteName())));
+        ((ValueOption) _options.get(I_CLICKS_TO_ACTIVATE)).setVal(Integer.parseInt(options.get(_options.get(I_CLICKS_TO_ACTIVATE).getCompleteName())));
+        ((ValueOption) _options.get(I_TIME_TO_ACTIVATE)).setVal(Integer.parseInt(options.get(_options.get(I_TIME_TO_ACTIVATE).getCompleteName())));
 
         _post_activation_timer = new TimeHelper();
         _post_activation_click_counter = 0;
@@ -164,11 +166,11 @@ public class AimAssistance extends Module {
         // -> Can be an option for a future update !
         if(is_attack_key_pressed){
             // Generate new shifts
-            int shift_x_max = 10;
-            int shift_x_min = -10;
+            int shift_x_max = 7;
+            int shift_x_min = -7;
             shift_x = MathUtils.random(shift_x_min, shift_x_max);
-            int shift_y_max = 20;
-            int shift_y_min = -20;
+            int shift_y_max = 10;
+            int shift_y_min = -10;
             shift_y = MathUtils.random(shift_y_min, shift_y_max);
         }
 

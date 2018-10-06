@@ -14,14 +14,16 @@ import java.util.Map;
 
 public class ClickAssistance extends Module {
 
+    private static final String PREFIX = "CA";
+
     private static final String PACKETS = "Packets";
     private static final String ONLY_ON_ENTITY = "Only_on_entity";
     private static final String TEAM_FILTER = "Team_filter";
     private static final String ADDITIONAL_CLICKS = "Additional_clicks";
     private static final String CHANCE = "Chance";
     private static final String DURATION = "Duration";
-    private static final String CLICKS_TO_ACTIVATE = "CA_Clicks_to_activate";
-    private static final String TIME_TO_ACTIVATE = "CA_Time_to_activate";
+    private static final String CLICKS_TO_ACTIVATE = "Clicks_to_activate";
+    private static final String TIME_TO_ACTIVATE = "Time_to_activate";
     private static final int I_PACKETS = 0;
     private static final int I_ONLY_ON_ENTITY = 1;
     private static final int I_TEAM_FILTER = 2;
@@ -35,15 +37,15 @@ public class ClickAssistance extends Module {
     static{
         DEFAULT_OPTIONS = new ArrayList<>();
 
-        DEFAULT_OPTIONS.add(new ToggleOption(PACKETS, false));
-        DEFAULT_OPTIONS.add(new ToggleOption(ONLY_ON_ENTITY, false));
-        DEFAULT_OPTIONS.add(new ToggleOption(TEAM_FILTER, true));
+        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, PACKETS, false));
+        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, ONLY_ON_ENTITY, false));
+        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, TEAM_FILTER, true));
 
-        DEFAULT_OPTIONS.add(new ValueOption(ADDITIONAL_CLICKS, 2, 0, 5, 0, 1));
-        DEFAULT_OPTIONS.add(new ValueOption(CHANCE, 80, 0, 100, 5, 25));
-        DEFAULT_OPTIONS.add(new ValueOption(DURATION, 1500, 0, 10000, 200, 1000));
-        DEFAULT_OPTIONS.add(new ValueOption(CLICKS_TO_ACTIVATE, 3, 0, 20, 1, 5));
-        DEFAULT_OPTIONS.add(new ValueOption(TIME_TO_ACTIVATE, 1000, 0, 10000, 200, 1000));
+        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, ADDITIONAL_CLICKS, 2, 0, 5, 0, 1));
+        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, CHANCE, 80, 0, 100, 5, 25));
+        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, DURATION, 1500, 0, 10000, 200, 1000));
+        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, CLICKS_TO_ACTIVATE, 3, 0, 20, 1, 5));
+        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, TIME_TO_ACTIVATE, 1000, 0, 10000, 200, 1000));
     }
 
     private TimeHelper _post_activation_timer;
@@ -64,14 +66,14 @@ public class ClickAssistance extends Module {
         super(name, toggle_key, is_activated, symbol, "[CA]");
 
         _options = DEFAULT_OPTIONS;
-        ((ToggleOption) _options.get(I_PACKETS)).setActivated(Boolean.parseBoolean(options.get(PACKETS)));
-        ((ToggleOption) _options.get(I_ONLY_ON_ENTITY)).setActivated(Boolean.parseBoolean(options.get(ONLY_ON_ENTITY)));
-        ((ToggleOption) _options.get(I_TEAM_FILTER)).setActivated(Boolean.parseBoolean(options.get(TEAM_FILTER)));
-        ((ValueOption) _options.get(I_ADDITIONAL_CLICKS)).setVal(Integer.parseInt(options.get(ADDITIONAL_CLICKS)));
-        ((ValueOption) _options.get(I_CHANCE)).setVal(Integer.parseInt(options.get(CHANCE)));
-        ((ValueOption) _options.get(I_DURATION)).setVal(Integer.parseInt(options.get(DURATION)));
-        ((ValueOption) _options.get(I_CLICKS_TO_ACTIVATE)).setVal(Integer.parseInt(options.get(CLICKS_TO_ACTIVATE)));
-        ((ValueOption) _options.get(I_TIME_TO_ACTIVATE)).setVal(Integer.parseInt(options.get(TIME_TO_ACTIVATE)));
+        ((ToggleOption) _options.get(I_PACKETS)).setActivated(Boolean.parseBoolean(options.get(_options.get(I_PACKETS).getCompleteName())));
+        ((ToggleOption) _options.get(I_ONLY_ON_ENTITY)).setActivated(Boolean.parseBoolean(options.get(_options.get(I_ONLY_ON_ENTITY).getCompleteName())));
+        ((ToggleOption) _options.get(I_TEAM_FILTER)).setActivated(Boolean.parseBoolean(options.get(_options.get(I_TEAM_FILTER).getCompleteName())));
+        ((ValueOption) _options.get(I_ADDITIONAL_CLICKS)).setVal(Integer.parseInt(options.get(_options.get(I_ADDITIONAL_CLICKS).getCompleteName())));
+        ((ValueOption) _options.get(I_CHANCE)).setVal(Integer.parseInt(options.get(_options.get(I_CHANCE).getCompleteName())));
+        ((ValueOption) _options.get(I_DURATION)).setVal(Integer.parseInt(options.get(_options.get(I_DURATION).getCompleteName())));
+        ((ValueOption) _options.get(I_CLICKS_TO_ACTIVATE)).setVal(Integer.parseInt(options.get(_options.get(I_CLICKS_TO_ACTIVATE).getCompleteName())));
+        ((ValueOption) _options.get(I_TIME_TO_ACTIVATE)).setVal(Integer.parseInt(options.get(_options.get(I_TIME_TO_ACTIVATE).getCompleteName())));
 
         _post_activation_timer = new TimeHelper();
         _post_activation_click_counter = 0;

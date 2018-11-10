@@ -153,6 +153,7 @@ public class Window extends JFrame{
 
             JPanel module_options_panel = new JPanel();
             module_options_panel.setLayout(new BorderLayout());
+            module_options_panel.setBorder(new EmptyBorder(10, 10, 10, 10));
 
             ArrayList<ToggleOption> toggle_options = Option.getToggleOptions(module.getOptions());
             if(toggle_options != null) {

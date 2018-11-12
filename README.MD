@@ -36,7 +36,7 @@ I made that project to learn Java in a funny way. I started 2 years ago but the 
 
 - `HOME` : Toggle aim assist
 - `PAGE_UP` : Toggle click assist
-- `RIGHT_SHIFT` : Toggle GUI
+- `INSERT` : Toggle GUI
 
 ## Features help
 

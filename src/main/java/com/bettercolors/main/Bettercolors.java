@@ -106,7 +106,7 @@ public class Bettercolors {
             }
         }
 
-        if(Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)){
+        if(Keyboard.isKeyDown(Keyboard.KEY_INSERT)){
             _key_down.replace(WINDOW, true);
         }else if(_key_down.get(WINDOW)){
             _key_down.replace(WINDOW, false);

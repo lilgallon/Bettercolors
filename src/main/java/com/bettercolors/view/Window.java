@@ -354,7 +354,12 @@ public class Window extends JFrame{
 
         // auto _scroll
         _console.validate();
-        _scroll.getVerticalScrollBar().setValue(_scroll.getVerticalScrollBar().getMaximum());
+        try {
+            _scroll.getVerticalScrollBar().setValue(_scroll.getVerticalScrollBar().getMaximum());
+        }catch(NullPointerException ignored){
+            // Seems to happen when the console has a lot of text, but nothing is sure. Need to take a look at it ;)
+        }
+
         repaint();
     }
 

@@ -4,7 +4,9 @@
 ![Forge dev version: 1.8.9-11.15.1.1722](https://img.shields.io/badge/forge_dev-1.8.9_11.15.1.1722-green.svg)
 ![Release](https://img.shields.io/github/release/n3roo/bettercolors.svg)
 ![Downloads](https://img.shields.io/github/downloads/n3roo/bettercolors/total.svg)
-![Issues](https://img.shields.io/github/issues/n3roo/bettercolors.svg)
+![Open issues](https://img.shields.io/github/issues/n3roo/bettercolors.svg)
+![Closed issues](https://img.shields.io/github/issues-closed-raw/n3roo/bettercolors.svg)
+![Closed pull requests](https://img.shields.io/github/issues-pr-closed/n3roo/bettercolors.svg)
 
 A silent hack built within the forge API. It bypasses powerful anticheats (forge mods and servers).
 
@@ -105,13 +107,24 @@ It is easier to set up forge with [Eclipse](https://www.eclipse.org/neon/). Othe
 
 ### 2. Set up forge & IDE
 
-- Download [forge 1.8.9-11.15.1.1722](https://adfoc.us/serve/sitelinks/?id=271228&url=https://files.minecraftforge.net/maven/net/minecraftforge/forge/1.8.9-11.15.1.1722/forge-1.8.9-11.15.1.1722-mdk.zip),
-- Extract everything from the zip file to the project folder (named "Bettercolors" for example),
-- Delete the src/ folder (since the example code is useless here),
-- Clone or download the content of this repository in the project folder,
-- Follow the instructions in the "README.txt" file if you are using Eclipse, otherwise, take a look to this [youtube video](https://www.youtube.com/watch?v=G2aPT36kf60)
+- Clone this project `git clone <link>`
+- Go in the project directory
 
-Once it's done, you should be able to launch the mod from your favorite IDE.
+- Now if you use eclipse :
+    - Open a terminal and type `.\gradlew setupDecompWorkspace`
+    - Open a terminal and type `.\gradlew eclipse`
+    - Open eclipse and switch your workspace to eclipse/
+
+- And if you use IntelliJ IDEA :
+    - Open IntelliJ IDEA, and open the "build.gradle" file as a project
+    - A window will show up, change nothing but "create separate module per source set" that needs to be checked
+    - Wait for IntelliJ to process with gradle
+    - Open a terminal and type `.\gradlew wrapper --gradle-version 3.4`
+    - Now, in intelliJ, if gradlew shows up and says "Gradle projects need to be imported", then click on "import changes", and wait for the process to finish
+    - Open the gradle tab (on the right), right click on "setupDecompWorkspace" (in Tasks/forgegradle), and click on "create bettercolors [setup...]", now in vm option, add "-Xmx4g -Xms4g", click apply, and then double click "setupDecompWorkspace"
+    - In the same tab, execute "genIntellijRuns", now you should be able to launch minecraft through intelliJ
+
+Now it should be done (please refer to [FORGE-INSTRUCTIONS.txt](FORGE-INSTRUCTIONS.txt) or this [youtube video](https://www.youtube.com/watch?v=G2aPT36kf60) if you have any problem)
 
 ### 3. Build the .jar
 

@@ -110,5 +110,6 @@
     - Added margin in tabs (#9)
     - Changed default toggle key from right shift to insert
     
-- Developer
+- Developer section :
     - Changed versioning to semantic versioning
+    - Improved documentation to set up the project

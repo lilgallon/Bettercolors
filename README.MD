@@ -8,13 +8,13 @@
 ![Closed issues](https://img.shields.io/github/issues-closed-raw/n3roo/bettercolors.svg)
 ![Closed pull requests](https://img.shields.io/github/issues-pr-closed/n3roo/bettercolors.svg)
 
-A silent hack built within the forge API. It bypasses powerful anticheats (forge mods and servers).
+A silent "hack" built within the forge API. It bypasses powerful anticheats (forge mods and servers) to help you improve your gameplay.
 
-## Disclamer
+## Disclaimer
 
-I made that project to learn Java in a funny way. I started 2 years ago but the repositories are, and will stay private. Only this repository will stay public. This has been made for educational purposes. I'm still improving it from time to time.
+I made this project to learn Java in a funny way. I started 2 years ago but the others repositories are, and will stay private. Only this repository will stay public because it can be used by newbies to improve their aim and click rate without giving them a huge advantage. This has been made for educational purposes, and you have to check that the server you are playing on **accept** the use of this mod.
 
-**Use it at your own risk ! I won't be responsible of anything you do wrong with this mod.**
+**Please make sure that the server you are playing on accepts the use of this mod ! Use it at your own risk. I won't be responsible of anything you do wrong with this mod.**
 
 ## Features description
 
@@ -26,7 +26,7 @@ I made that project to learn Java in a funny way. I started 2 years ago but the 
 
 **Console :** Curious ? There is a console showing everything happening in the mod. 
 
-**Teammate detection :** The mod find your teammates from any server game mode, and prevent hacks to be activated on them.
+**Teammate detection :** The mod find your teammates from any server game mode, and prevent modules to be activated on them.
 
 **Settings :** You can configure every mod and all is saved in real-time.
 

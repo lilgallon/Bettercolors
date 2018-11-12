@@ -101,7 +101,14 @@
 **V6.0-b3**
 - Autosprint :
     - Fixed player sprinting backwards (#11)
-- Autoclick :
-    - Fixed autoclick automatically toggling on even if not attacking living entities (#12)
+- Autosword :
+    - Fixed autosword automatically toggling on even if not attacking living entities (#12)
+- Miscellaneous
+    - Fixed a rare crash probably linked to the fact that there was too much text in the console (#13)
+    - Improved version checker
 - Interface
     - Added margin in tabs (#9)
+    - Changed default toggle key from right shift to insert
+    
+- Developer
+    - Changed versioning to semantic versioning

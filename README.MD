@@ -99,7 +99,7 @@ Go to the [issues](https://github.com/N3ROO/Bettercolors/issues) section, and op
 
 ## Developer section
 
-This section shwo you how to get a working development environment.
+This section show you how to get a working development environment.
 
 ### 1. Download your favorite IDE
 
@@ -130,9 +130,8 @@ Now it should be done (please refer to [FORGE-INSTRUCTIONS.txt](FORGE-INSTRUCTIO
 
 Open a terminal and write `.\gradlew build`.
 
-### 3. Contributing
+### 4. Contributing
 
 If you want to contribute, make sure to :
-- not push the forge .txt files,
 - keep the same coding style that is already used (plus headers describing every function),
 - describe what is the purpose of your pull request.

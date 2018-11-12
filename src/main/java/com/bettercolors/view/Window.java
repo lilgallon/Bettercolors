@@ -86,9 +86,11 @@ public class Window extends JFrame{
         JLabel credits = new JLabel(" Bettercolors " + Reference.VERSION + " for MC " + Reference.ACCEPTED_VERSIONS.replace("[", "").replace("]", "") + " by N3RO. ");
 
         JLabel update = new JLabel();
+
         if(last_version.equalsIgnoreCase(Reference.VERSION)){
             update.setForeground(new Color(0, 100, 0 ));
             update.setText("Mod up-to-date ! :)");
+            addText("You are using the last version ! ;) " + last_version + ".", Color.GREEN, true);
         }else if(last_version.equalsIgnoreCase(Bettercolors.INTERNET_PROBLEM)){
             update.setForeground(new Color(200, 100, 0));
             update.setText(Bettercolors.INTERNET_PROBLEM);
@@ -96,25 +98,50 @@ public class Window extends JFrame{
             update.setForeground(new Color(100, 0, 0));
             update.setText(Bettercolors.URL_PROBLEM);
         }else{
-            update.setForeground(new Color(0, 70, 100));
-            update.setText("Update available ! Version " + last_version + ".");
-            Font font = update.getFont();
-            Map<TextAttribute, Object> attributes = new HashMap<>(font.getAttributes());
-            attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
-            update.setFont(font.deriveFont(attributes));
-            update.setCursor(new Cursor(Cursor.HAND_CURSOR));
-            update.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseClicked(MouseEvent e) {
-                    super.mouseClicked(e);
-                    try {
-                        Desktop.getDesktop().browse(new URI(Bettercolors.DOWNLOAD_URL));
-                    } catch (URISyntaxException | IOException ex) {
-                        addText("Error while trying to go to the download page.", Color.RED, true);
-                        addText("Here is the download page : " + Bettercolors.DOWNLOAD_URL, Color.RED, true);
-                    }
+            int[] version_dif = Bettercolors.compareVersions(Reference.VERSION, last_version);
+            if(version_dif != null) {
+                int total_dif = 0;
+                for (int i : version_dif) {
+                    total_dif += i;
                 }
-            });
+                if(total_dif > 1){
+                    update.setForeground(new Color(0, 70, 100));
+                    addText(Integer.toString(total_dif) + " updates available !", Color.ORANGE, true);
+                }else if(total_dif == 1){
+                    update.setForeground(new Color(0, 70, 100));
+                    addText("One update available !", Color.ORANGE, true);
+                }else if(total_dif < 0){
+                    update.setForeground(new Color(150, 70, 0));
+                    addText("You are using a dev version.", Color.ORANGE, true);
+                    addText("Be careful ! It is used for testing.", Color.ORANGE, true);
+                }
+                addText("Last stable version : " + last_version + ".", Color.ORANGE, true);
+
+                update.setText("Update available ! Version " + last_version + ".");
+                Font font = update.getFont();
+                Map<TextAttribute, Object> attributes = new HashMap<>(font.getAttributes());
+                attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+                update.setFont(font.deriveFont(attributes));
+                update.setCursor(new Cursor(Cursor.HAND_CURSOR));
+                update.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+                        super.mouseClicked(e);
+                        try {
+                            Desktop.getDesktop().browse(new URI(Bettercolors.DOWNLOAD_URL));
+                        } catch (URISyntaxException | IOException ex) {
+                            addText("Error while trying to go to the download page.", Color.RED, true);
+                            addText("Here is the download page : " + Bettercolors.DOWNLOAD_URL, Color.RED, true);
+                        }
+                    }
+                });
+            }else{
+                update.setForeground(new Color(120, 20, 20));
+                addText("Unable to compare versions !", Color.RED, true);
+                addText("If you are using a version below 6.0.0-b3, it is normal.", Color.RED, true);
+                addText("Otherwise this problem should be reported to https://github.com/N3ROO/Bettercolors/issues.", Color.RED, true);
+                update.setText("Unable to compare versions");
+            }
         }
 
         footer_layout.add(credits, "West");

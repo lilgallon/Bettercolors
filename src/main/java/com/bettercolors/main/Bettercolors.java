@@ -106,7 +106,7 @@ public class Bettercolors {
             }
         }
 
-        if(Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)){
+        if(Keyboard.isKeyDown(Keyboard.KEY_INSERT)){
             _key_down.replace(WINDOW, true);
         }else if(_key_down.get(WINDOW)){
             _key_down.replace(WINDOW, false);
@@ -145,5 +145,40 @@ public class Bettercolors {
         }
 
         return last_version;
+    }
+
+    /**
+     * It compares the two given versions, and return the difference :
+     * int[a, b, c, d]
+     * - a is the major version dif,
+     * - b is the minor version dif,
+     * - c is the patch version dif,
+     * - d is the beta version dif.
+     * If error, returns null.
+     * @param current_version current version
+     * @param last_version last version
+     * @return the version difference
+     */
+    public static int[] compareVersions(String current_version, String last_version){
+        int[] diff = {0, 0, 0, 0};
+
+        String[] current_version_split = current_version.split(".");
+        String[] last_version_split = current_version.split(".");
+
+        if(current_version_split.length == 3 && last_version_split.length == 3){
+            diff[0] = Integer.parseInt(last_version_split[0]) -  Integer.parseInt(current_version_split[0]);
+            diff[1] = Integer.parseInt(last_version_split[1]) -  Integer.parseInt(current_version_split[1]);
+            diff[2] = Integer.parseInt(last_version_split[2].split("-")[0]) -  Integer.parseInt(current_version_split[2].split("-")[0]);
+
+            int current_beta_number = current_version_split[2].split("-").length == 2 ? Integer.parseInt(current_version_split[2].split("-")[1].replace("b", "")) : 0;
+            int last_beta_number = last_version_split[2].split("-").length == 2 ? Integer.parseInt(last_version_split[2].split("-")[1].replace("b", "")) : 0;
+            diff[3] = last_beta_number - current_beta_number;
+        }else{
+            System.out.println("Error when comparing versions : expected a version format maj.min.patch(-bnumber), but received :");
+            System.out.println("[" + current_version + "] and [" + last_version + "]");
+            diff = null;
+        }
+
+        return diff;
     }
 }

@@ -68,7 +68,6 @@
 - Added right SHIFT key to toggle the GUI which is closed by default
 
 **V6.0-b1 : MAJOR UPDATE**
-
 *Everything has been recoded from scratch. Now adding new modules is extremely easy and everything is optimized.*
 - Interface :
     - New external interface made to contain a lot of modules,
@@ -98,3 +97,19 @@
     - Improved settings design to prevent conflicts
 - Interface :
     - Improved option names
+    
+**V6.0-b3**
+- Autosprint :
+    - Fixed player sprinting backwards (#11)
+- Autosword :
+    - Fixed autosword automatically toggling on even if not attacking living entities (#12)
+- Miscellaneous
+    - Fixed a rare crash probably linked to the fact that there was too much text in the console (#13)
+    - Improved version checker
+- Interface
+    - Added margin in tabs (#9)
+    - Changed default toggle key from right shift to insert
+    
+- Developer section :
+    - Changed versioning to semantic versioning
+    - Improved documentation to set up the project

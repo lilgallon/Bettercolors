@@ -2,6 +2,8 @@ package com.bettercolors.modules;
 
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 
@@ -20,7 +22,15 @@ public class AutoSword extends Module {
     @Override
     public void onUpdate() {
         if(MC.thePlayer != null){
-            if(isKeyState(KEY.ATTACK, KEY_STATE.JUST_PRESSED)){
+
+            boolean has_clicked_on_living_entity = false;
+            try {
+                Entity mouseOverEntity = MC.objectMouseOver.entityHit;
+                if ((mouseOverEntity instanceof EntityLivingBase))
+                    has_clicked_on_living_entity = true;
+            } catch (Exception ignored) {}
+
+            if(isKeyState(KEY.ATTACK, KEY_STATE.JUST_PRESSED) && has_clicked_on_living_entity){
                 // We find the best sword
                 float max_damage = -1;
                 int best_item = -1;

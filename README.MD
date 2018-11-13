@@ -12,15 +12,15 @@ A silent "hack" built within the forge API. It bypasses powerful anticheats (for
 
 ## Disclaimer
 
-I made this project to learn Java in a funny way. I started 2 years ago but the others repositories are, and will stay private. Only this repository will stay public because it can be used by newbies to improve their aim and click rate without giving them a huge advantage. This has been made for educational purposes, and you have to check that the server you are playing on **accept** the use of this mod.
+I made this project to learn Java in a funny way. I started 2 years ago but the other repositories are, and will stay private. Only this repository will stay public because it can be used by newbies to improve their aim and their click rate without giving them a huge advantage. This has been made for educational purposes.
 
-**Please make sure that the server you are playing on accepts the use of this mod ! Use it at your own risk. I won't be responsible of anything you do wrong with this mod.**
+**Please make sure that the server you are playing on allows the use of this mod ! Use it at your own risk. I won't be responsible for anything you do wrong with this mod.**
 
 ## Features description
 
-**Aim assistance :** A smooth and human-like aim assistance 100% undetectable by any anticheat. It is invisible since it looks absolutely human. You can record videos while using it without any problem.
+**Aim assistance :** A smooth and humanlike aim assistance 100% undetectable by any anticheat. It is invisible since it looks absolutely human. You can record videos while using it without any problem.
 
-**Click assistance :** A human-like click assistance that send REAL clicks, to help you clicking faster. It can bypass forge CPS counter mods by toggling packets.
+**Click assistance :**  A humanlike click assistance that sends REAL clicks, to help you click faster. It can bypass forge CPS counter mods by toggling packets.
 
 **External interface :** A clean external interface to configure the mod outside the minecraft client, so you can record without any problem !
 
@@ -28,9 +28,9 @@ I made this project to learn Java in a funny way. I started 2 years ago but the 
 
 **Teammate detection :** The mod find your teammates from any server game mode, and prevent modules to be activated on them.
 
-**Settings :** You can configure every mod and all is saved in real-time.
+**Settings :** You can configure every mod and all is saved in real time.
 
-**Settings presets :** You can save, load, and create settings presets from a cool interface.
+**Settings preset :** You can save, load, and create settings presets from a cool interface.
 
 ## Commands
 
@@ -46,18 +46,18 @@ I made this project to learn Java in a funny way. I started 2 years ago but the 
     - The aim force is defined by step X and step Y,
     - The aim range sets the maximum distance to aim an entity,
     - The aim radius is the FOV in which you will aim at an entity,
-    - "Stop when reached" : it means that when you aim at an entity, the aimassist stops
+    - "Stop when reached" : it means that when you aim at an entity, the aim assistance stops
 
 - Click assistance :
-    - "Packets" : Send packets instead of REAL clicks (**bypass forge anticheat but more risky server-side**)
-    - "Only on entity" : It will click only if you are aiming entity,
-    - Additional clicks defines how many clicks will be sent in addition to yours,
-    - Chance is the chance of every artificial click to be sent,
+    - "Packets" : Send packets instead of REAL clicks (**bypass forge anticheat but riskier server side**)
+    - "Only on entity" : It will click only if you are aiming an entity,
+    - Additional clicks define how many clicks will be sent in addition to yours,
+    - Chance is the probability of every artificial click to be sent,
     - Duration corresponds to the activation time of the click assistance,
     
 - Common :
-    - "Use on mobs" : Defines if the modules works on mobs,
-    - "Team filter" : Defines if the modules works on teammates,
+    - "Use on mobs" : Defines if the modules take into account mobs,
+    - "Team filter" : Defines if the modules take into account teammates,
     - Clicks / Time to activate defines the number of clicks per time that you need to do in order to activate the modules.
 
 ## Values

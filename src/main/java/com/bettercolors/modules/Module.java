@@ -19,7 +19,7 @@ public abstract class Module {
     // Utility
     private final String LOG_PREFIX;
     private String _last_log_msg;
-    final static Minecraft MC = Minecraft.getMinecraft();
+    final static Minecraft MC = Minecraft.getInstance();
 
     // Keys utility
     private final Map<KEY, KEY_STATE> KEY_HANDLER;
@@ -98,7 +98,7 @@ public abstract class Module {
         try {
             // Check friends / teammate
             target_tag = exportTag((EntityPlayer) entity);
-            if (exportTag(MC.thePlayer).equalsIgnoreCase(target_tag)) {
+            if (exportTag(MC.player).equalsIgnoreCase(target_tag)) {
                 same_team = true;
             }
 
@@ -113,7 +113,7 @@ public abstract class Module {
     private String exportTag(EntityPlayer e){
         String tag;
         try{
-            tag = e.getDisplayName().getUnformattedText().split(e.getName())[0].replace(" ","");
+            tag = e.getDisplayName().getUnformattedComponentText().split(e.getName().getString())[0].replace(" ","");
             tag = tag.replace("§","");
         }catch(Exception exc){
             tag = "";
@@ -125,8 +125,8 @@ public abstract class Module {
      * @return true if the user is in a Gui (he can't move).
      */
     boolean isInGui(){
-        if(MC.thePlayer == null) return true;
-        return MC.thePlayer.isPlayerSleeping() || MC.thePlayer.isDead || !(MC.thePlayer.openContainer instanceof ContainerPlayer);
+        if(MC.player == null) return true;
+        return MC.player.isPlayerSleeping() || !MC.player.isLiving() || !(MC.player.openContainer instanceof ContainerPlayer);
     }
 
     /**

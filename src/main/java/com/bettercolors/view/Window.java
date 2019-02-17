@@ -8,6 +8,7 @@ import com.bettercolors.modules.Module;
 import com.bettercolors.modules.options.Option;
 import com.bettercolors.modules.options.ToggleOption;
 import com.bettercolors.modules.options.ValueOption;
+import net.minecraftforge.common.ForgeConfig;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -21,6 +22,8 @@ import java.awt.font.TextAttribute;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,13 +39,27 @@ public class Window extends JFrame{
     private final Map<JLabel, JSlider> SLIDERS_MODULES;
     private final String LOG_PREFIX = "[Gui] ";
 
+//    private String RESOURCE_PATH;
+
     public Window(String title, ArrayList<Module> modules, String last_version) {
         super(title);
+
+        // We need to find the resource path
+//        URL[] urls = ((URLClassLoader) ClassLoader.getSystemClassLoader()).getURLs();
+//        for (URL url : urls) {
+//            String urlStr = url.toString();
+//            String[] urlSplit = urlStr.split("/");
+//            if(urlSplit[urlSplit.length - 1].equals("resources")){
+//                RESOURCE_PATH = urlStr.replace("file:/", "");
+//                break;
+//            }
+//        }
 
         int width = 450;
         int height = 600;
         setBounds((int)Toolkit.getDefaultToolkit().getScreenSize().getWidth()/2-width/2,(int)Toolkit.getDefaultToolkit().getScreenSize().getHeight()/2-height/2,width,height);
-        setIconImage(new ImageIcon(this.getClass().getResource("/images/bettercolors_symbol.png")).getImage());
+
+        //setIconImage(new ImageIcon(this.getClass().getResource("bettercolors_symbol.png")).getImage());
         setResizable(true);
         setVisible(false);
 
@@ -228,8 +245,9 @@ public class Window extends JFrame{
 
                 module_options_panel.add(sliders_grid, "Center");
             }
-            ImageIcon icon = new ImageIcon(this.getClass().getResource("/images/" + module.getSymbol()));
-            tabbedPane.addTab(module.getName(), icon, module_options_panel);
+            //ImageIcon icon = new ImageIcon(this.getClass().getResource("/images/" + module.getSymbol()));
+            //tabbedPane.addTab(module.getName(), icon, module_options_panel);
+            tabbedPane.addTab(module.getName(), module_options_panel);
         }
         // --
 
@@ -293,8 +311,9 @@ public class Window extends JFrame{
         buttons.add(refresh_button);
         settings_panel.add(buttons, "South");
 
-        ImageIcon icon = new ImageIcon(this.getClass().getResource("/images/settings_symbol.png"));
-        tabbedPane.addTab("Settings", icon, settings_panel);
+        //ImageIcon icon = new ImageIcon(this.getClass().getResource("/images/settings_symbol.png"));
+        //tabbedPane.addTab("Settings", icon, settings_panel);
+        tabbedPane.addTab("Settings", settings_panel);
         // --
 
         modules_related_layout.add(tabbedPane, "Center");

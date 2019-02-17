@@ -21,11 +21,11 @@ public class AutoSword extends Module {
 
     @Override
     public void onUpdate() {
-        if(MC.thePlayer != null){
+        if(MC.player != null){
 
             boolean has_clicked_on_living_entity = false;
             try {
-                Entity mouseOverEntity = MC.objectMouseOver.entityHit;
+                Entity mouseOverEntity = MC.objectMouseOver.entity;
                 if ((mouseOverEntity instanceof EntityLivingBase))
                     has_clicked_on_living_entity = true;
             } catch (Exception ignored) {}
@@ -35,15 +35,16 @@ public class AutoSword extends Module {
                 float max_damage = -1;
                 int best_item = -1;
                 for(int slot = 0; slot < 9 ; slot ++){
-                    ItemStack stack = MC.thePlayer.inventory.mainInventory[slot];
-                    if(stack == null) continue;
+                    ItemStack stack = MC.player.inventory.mainInventory.get(slot);
                     if(stack.getItem() instanceof ItemSword){
                         ItemSword sword = (ItemSword) stack.getItem();
                         float damage = sword.getMaxDamage();
                         if(sword.hasEffect(stack)){
                             // The damage calculation is not correct here, but we just need to find the item with the most
                             // powerful enchantment, so we don't care.
-                            damage += EnchantmentHelper.getEnchantmentLevel(Enchantment.sharpness.effectId, stack);
+                            // 16 for sharpness : https://www.minecraftforum.net/forums/minecraft-java-edition/redstone-discussion-and/commands-command-blocks-and/2891015-1-13-full-enchantment-ids-small-give-tutorial
+                            if(Enchantment.getEnchantmentByID(16) != null)
+                                damage += EnchantmentHelper.getEnchantmentLevel(Enchantment.getEnchantmentByID(16), stack);
                         }
                         if(damage >= max_damage){
                             best_item = slot;
@@ -52,9 +53,9 @@ public class AutoSword extends Module {
                     }
                 }
                 // We give the best sword to the player
-                if(best_item != -1 && MC.thePlayer.inventory.currentItem != best_item){
-                    log_info("Better sword found (" +  MC.thePlayer.inventory.mainInventory[best_item].getDisplayName() + ").");
-                    MC.thePlayer.inventory.currentItem = best_item;
+                if(best_item != -1 && MC.player.inventory.currentItem != best_item){
+                    log_info("Better sword found (" +  MC.player.inventory.mainInventory.get(best_item).getDisplayName() + ").");
+                    MC.player.inventory.currentItem = best_item;
                 }
             }
         }

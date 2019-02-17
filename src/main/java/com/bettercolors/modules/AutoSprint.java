@@ -14,10 +14,10 @@ public class AutoSprint extends Module{
 
     @Override
     public void onUpdate() {
-        if(MC.thePlayer != null){
-            if(MC.thePlayer.moveForward > 0 && !MC.thePlayer.isSprinting()){
+        if(MC.player != null){
+            if(MC.player.moveForward > 0 && !MC.player.isSprinting()){
                 log_info("forcing player to run.");
-                MC.thePlayer.setSprinting(true);
+                MC.player.setSprinting(true);
             }
         }
     }

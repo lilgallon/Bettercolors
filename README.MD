@@ -119,9 +119,8 @@ It is easier to set up forge with [Eclipse](https://www.eclipse.org/neon/). Othe
     - Open IntelliJ IDEA, and open the "build.gradle" file as a project
     - A window will show up, change nothing but "create separate module per source set" that needs to be **disabled**
     - Wait for IntelliJ to process with gradle
-    - Once it's done, open a terminal and type `gradlew setupDecompWorkspace -Xmx4g -Xms4g`
     - Open a terminal and type `gradlew genIntellijRuns`
-    - Next to the "run" button, select "client" and run it. If it does not work, it should open a window. Then, in "Use classpath of module:", select `com.bettercolors.main.Bettercolors`
+    - Next to the "run" button, select "client" and run it. If it does not work, it should open a window. Then, in "Use classpath of module:", select `com.bettercolors.main.Bettercolors` (the first run takes time, you have to wait a bit).
 
 Now it should be done (please refer to [FORGE-INSTRUCTIONS.txt](FORGE-INSTRUCTIONS.txt) or this [youtube video](https://www.youtube.com/watch?v=G2aPT36kf60) if you have any problem)
 

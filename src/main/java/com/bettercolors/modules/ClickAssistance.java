@@ -6,7 +6,8 @@ import com.bettercolors.modules.options.ValueOption;
 import com.bettercolors.utils.MathUtils;
 import com.bettercolors.utils.TimeHelper;
 import net.minecraft.entity.Entity;
-import net.minecraft.network.play.client.C02PacketUseEntity;
+import net.minecraft.network.play.client.CPacketUseEntity;
+import net.minecraft.util.EnumHand;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -84,7 +85,7 @@ public class ClickAssistance extends Module {
 
     @Override
     public void onUpdate() {
-        if(MC.thePlayer != null){
+        if(MC.player != null){
 
             if(_activation_timer.isStopped()) {
                 // If the click assist is not activated, we check if the user made the actions to activate it
@@ -141,17 +142,17 @@ public class ClickAssistance extends Module {
 
         Entity target = null;
         try{
-            target = MC.objectMouseOver.entityHit;
+            target = MC.objectMouseOver.entity;
         }catch (Exception ignored){}
 
         int rand = MathUtils.random(0, 100);
         if(rand <= chance){
             if( (only_on_entity || packets) && target != null){
-                if (MC.thePlayer.getDistanceToEntity(target) <= MC.playerController.getBlockReachDistance() &&
+                if (MC.player.getDistance(target) <= MC.playerController.getBlockReachDistance() &&
                         (team_filter && !isInSameTeam(target))) {
                     if (packets) {
-                        MC.thePlayer.sendQueue.addToSendQueue(new C02PacketUseEntity(target, C02PacketUseEntity.Action.ATTACK));
-                        MC.thePlayer.swingItem();
+                        MC.player.connection.sendPacket(new CPacketUseEntity(target, EnumHand.MAIN_HAND));
+                        MC.player.swingArm(EnumHand.MAIN_HAND);
                     } else {
                         click();
                     }

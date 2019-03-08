@@ -30,6 +30,7 @@ public class Bettercolors {
 
     public final static String URL_PROBLEM = "Url problem (please contact developer).";
     public final static String INTERNET_PROBLEM = "No internet connection. :(";
+    public final static String NO_VERSION_FOUND = "No version found.";
     public final static String DOWNLOAD_URL = "https://github.com/N3ROO/Bettercolors/releases/latest";
 
     private final static ArrayList<Option> DEFAULT_ACTIVATION_STATUS;
@@ -122,20 +123,37 @@ public class Bettercolors {
 	}
 
     /**
-     * @return the last version tag from the github release page.
+     * @return the last version tag from the github release page (without the MC version in it).
      */
 	private String getLastVersion(){
-        String last_version;
+        final String MC_PREFIX = "-MC";
+        String last_version = "";
 
         try{
             // Retrieve JSON
-            URL url = new URL("https://api.github.com/repos/n3roo/bettercolors/releases/latest");
+            URL url = new URL("https://api.github.com/repos/n3roo/bettercolors/releases");
             BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
             String json = in.lines().collect(Collectors.joining());
             in.close();
 
             // Get last version from JSON
-            last_version = json.split("\"tag_name\"")[1].split("\"")[1];
+            String[] tags = json.split("\"tag_name\"");
+            int i = 0;
+            boolean found = false;
+            while(i < tags.length && !found){
+                last_version = tags[i].split("\"")[1];
+                if(last_version.endsWith(MC_PREFIX + Reference.MAIN_MC_VERSION)){
+                    found = true;
+                }else{
+                    i ++;
+                }
+            }
+
+            if(!found){
+                return NO_VERSION_FOUND;
+            }else{
+                last_version = last_version.replace(MC_PREFIX + Reference.MAIN_MC_VERSION, "");
+            }
         } catch (MalformedURLException e){
             return URL_PROBLEM;
         } catch (IOException e){

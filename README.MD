@@ -115,18 +115,18 @@ It is easier to set up forge with [Eclipse](https://www.eclipse.org/neon/). Othe
     - Open a terminal and type `.\gradlew eclipse`
     - Open eclipse and switch your workspace to eclipse/
 
-- And if you use IntelliJ IDEA :
+- And if you use IntelliJ IDEA **recommanded** :
     - Open IntelliJ IDEA, and open the "build.gradle" file as a project
-    - A window will show up, change nothing but "create separate module per source set" that needs to be **disabled**
-    - Wait for IntelliJ to process with gradle
-    - Open a terminal and type `gradlew genIntellijRuns`
-    - Next to the "run" button, select "client" and run it. If it does not work, it should open a window. Then, in "Use classpath of module:", select `com.bettercolors.main.Bettercolors` (the first run takes time, you have to wait a bit).
+    - A window will show up, change nothing but "create separate module per source set" that needs to be **disabled**, then click ok (make sure that the Gradle JVM is java < 11)
+    - Wait for IntelliJ to start and to process with gradle (it took me 6 minutes with a good computer)
+    - Open a terminal and type `gradlew genIntellijRuns` (it took me 2 minutes)
+    - Next to the "run" button, select "ADD CONFIGURATION" and select runClient (in Application tab). Then, in "Use classpath of module:", select `com.bettercolors.main.Bettercolors`. Click ok. Now you can run the client. (the first run takes time, you have to wait a bit).
 
-Now it should be done (please refer to [FORGE-INSTRUCTIONS.txt](FORGE-INSTRUCTIONS.txt) or this [youtube video](https://www.youtube.com/watch?v=G2aPT36kf60) if you have any problem)
+Now it should be done (please refer to [FORGE-INSTRUCTIONS.txt](FORGE-INSTRUCTIONS.txt) or this [youtube video](https://www.youtube.com/watch?v=G2aPT36kf60) if you have any problem). The steps were updated recently (08/03/2019).
 
 ### 3. Build the .jar
 
-Open a terminal and write `.\gradlew build`.
+Open a terminal and write `.\gradlew build`. The jar built is located in build/lib/.
 
 ### 4. Contributing
 

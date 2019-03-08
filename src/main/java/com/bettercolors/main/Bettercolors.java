@@ -4,16 +4,16 @@ import com.bettercolors.io.SettingsUtils;
 import com.bettercolors.modules.*;
 import com.bettercolors.modules.options.Option;
 import com.bettercolors.modules.options.ToggleOption;
-import com.bettercolors.utils.KeyHandler;
 import com.bettercolors.view.Window;
+import net.minecraft.client.util.InputMappings;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import org.lwjgl.glfw.GLFW;
 
-import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -53,8 +53,7 @@ public class Bettercolors {
         MinecraftForge.EVENT_BUS.register(this);
 
         // Mod init
-        System.setProperty("java.awt.headless", "false");
-        KeyHandler.init();
+        System.setProperty("java.awt.headless", "false"); // this new forge version does not line swing ;(
         initMod();
     }
 
@@ -71,11 +70,9 @@ public class Bettercolors {
         options = SettingsUtils.getOptions();
 
         // Mods initialisation
-        int KEY_HOME = KeyEvent.VK_HOME;
-        int KEY_PAGE_UP = KeyEvent.VK_PAGE_UP;
         _modules = new ArrayList<>();
-        _modules.add(new AimAssistance("Aim assistance", KEY_HOME, Boolean.parseBoolean(options.get(AimAssistance.class.getSimpleName())), options, "aim_symbol.png"));
-        _modules.add(new ClickAssistance("Click assistance", KEY_PAGE_UP, Boolean.parseBoolean(options.get(ClickAssistance.class.getSimpleName())), options, "click_symbol.png"));
+        _modules.add(new AimAssistance("Aim assistance", GLFW.GLFW_KEY_HOME, Boolean.parseBoolean(options.get(AimAssistance.class.getSimpleName())), options, "aim_symbol.png"));
+        _modules.add(new ClickAssistance("Click assistance", GLFW.GLFW_KEY_PAGE_UP, Boolean.parseBoolean(options.get(ClickAssistance.class.getSimpleName())), options, "click_symbol.png"));
         _modules.add(new AutoSprint("Auto sprint", -1, Boolean.parseBoolean(options.get(AutoSprint.class.getSimpleName())), "sprint_symbol.png"));
         _modules.add(new AutoSword("Auto sword", -1, Boolean.parseBoolean(options.get(AutoSword.class.getSimpleName())), "sword_symbol.png"));
 
@@ -95,8 +92,7 @@ public class Bettercolors {
         for(Module mod : _modules){
             mod.updateKeyHandler();
             if(mod.getToggleKey() != -1) {
-
-                if (KeyHandler.isKeyPressed(mod.getToggleKey())) {
+                if (InputMappings.isKeyDown(mod.getToggleKey())) {
                     _key_down.replace(mod.getClass().getSimpleName(), true);
                 } else if (_key_down.get(mod.getClass().getSimpleName())) {
                     // KEY RELEASED !
@@ -108,7 +104,7 @@ public class Bettercolors {
             }
         }
 
-        if(KeyHandler.isKeyPressed(KeyEvent.VK_INSERT)){
+        if(InputMappings.isKeyDown(GLFW.GLFW_KEY_INSERT)){
             _key_down.replace(WINDOW, true);
         }else if(_key_down.get(WINDOW)){
             _key_down.replace(WINDOW, false);

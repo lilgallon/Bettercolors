@@ -20,10 +20,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.font.TextAttribute;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.URLClassLoader;
+import java.net.*;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -38,28 +36,31 @@ public class Window extends JFrame{
     private final ArrayList<JCheckBox> CHECKBOXES_MODULES;
     private final Map<JLabel, JSlider> SLIDERS_MODULES;
     private final String LOG_PREFIX = "[Gui] ";
-
-//    private String RESOURCE_PATH;
+    private URL RESOURCE_URL;
 
     public Window(String title, ArrayList<Module> modules, String last_version) {
         super(title);
 
-        // We need to find the resource path
-//        URL[] urls = ((URLClassLoader) ClassLoader.getSystemClassLoader()).getURLs();
-//        for (URL url : urls) {
-//            String urlStr = url.toString();
-//            String[] urlSplit = urlStr.split("/");
-//            if(urlSplit[urlSplit.length - 1].equals("resources")){
-//                RESOURCE_PATH = urlStr.replace("file:/", "");
-//                break;
-//            }
-//        }
+        // We need to find the resource path because this forge version has broken the true resource path
+        URL[] urls = ((URLClassLoader) ClassLoader.getSystemClassLoader()).getURLs();
+        for (URL url : urls) {
+            String urlStr = url.toString();
+            String[] urlSplit = urlStr.split("/");
+            if(urlSplit[urlSplit.length - 1].equals("resources")){
+                RESOURCE_URL = url;
+                break;
+            }
+        }
 
         int width = 450;
         int height = 600;
         setBounds((int)Toolkit.getDefaultToolkit().getScreenSize().getWidth()/2-width/2,(int)Toolkit.getDefaultToolkit().getScreenSize().getHeight()/2-height/2,width,height);
 
-        //setIconImage(new ImageIcon(this.getClass().getResource("bettercolors_symbol.png")).getImage());
+        try {
+            setIconImage(new ImageIcon(new URL(RESOURCE_URL + "images/bettercolors_symbol.png")).getImage());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
         setResizable(true);
         setVisible(false);
 
@@ -245,9 +246,13 @@ public class Window extends JFrame{
 
                 module_options_panel.add(sliders_grid, "Center");
             }
-            //ImageIcon icon = new ImageIcon(this.getClass().getResource("/images/" + module.getSymbol()));
-            //tabbedPane.addTab(module.getName(), icon, module_options_panel);
-            tabbedPane.addTab(module.getName(), module_options_panel);
+            try {
+                ImageIcon icon = new ImageIcon(new URL(RESOURCE_URL + "images/" + module.getSymbol()));
+                tabbedPane.addTab(module.getName(), icon, module_options_panel);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+                tabbedPane.addTab(module.getName(), module_options_panel);
+            }
         }
         // --
 
@@ -311,9 +316,13 @@ public class Window extends JFrame{
         buttons.add(refresh_button);
         settings_panel.add(buttons, "South");
 
-        //ImageIcon icon = new ImageIcon(this.getClass().getResource("/images/settings_symbol.png"));
-        //tabbedPane.addTab("Settings", icon, settings_panel);
-        tabbedPane.addTab("Settings", settings_panel);
+        try {
+            ImageIcon icon = new ImageIcon(new URL(RESOURCE_URL + "images/settings_symbol.png"));
+            tabbedPane.addTab("Settings", icon, settings_panel);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            tabbedPane.addTab("Settings", settings_panel);
+        }
         // --
 
         modules_related_layout.add(tabbedPane, "Center");

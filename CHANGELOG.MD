@@ -60,7 +60,7 @@
 
 **V5.0**
 - Added console windows output
-- Right click desactivate aimassist during a fight
+- Right click deactivate aimassist during a fight
 - Fixed aim step Y in report showing the default value
 
 **V5.1**

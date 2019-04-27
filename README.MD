@@ -18,9 +18,9 @@ I made this project to learn Java in a funny way. I started 2 years ago but the 
 
 ## Features description
 
-**Aim assistance :** A smooth and humanlike aim assistance 100% undetectable by any anticheat. It is invisible since it looks absolutely human. You can record videos while using it without any problem.
+**Aim assistance :** A smooth and human-like aim assistance 100% undetectable by any anticheat. It is invisible since it looks absolutely human. You can record videos while using it without any problem.
 
-**Click assistance :**  A humanlike click assistance that sends REAL clicks, to help you click faster. It can bypass forge CPS counter mods by toggling packets.
+**Click assistance :**  A human-like click assistance that sends REAL clicks, to help you click faster. It can bypass forge CPS counter mods by toggling packets.
 
 **External interface :** A clean external interface to configure the mod outside the minecraft client, so you can record without any problem !
 
@@ -115,7 +115,7 @@ It is easier to set up forge with [Eclipse](https://www.eclipse.org/neon/). Othe
     - Open a terminal and type `.\gradlew eclipse`
     - Open eclipse and switch your workspace to eclipse/
 
-- And if you use IntelliJ IDEA **recommanded** :
+- And if you use IntelliJ IDEA **recommended** :
     - Open IntelliJ IDEA, and open the "build.gradle" file as a project
     - A window will show up, change nothing but "create separate module per source set" that needs to be **disabled**, then click ok (make sure that the Gradle JVM is java < 11)
     - Wait for IntelliJ to start and to process with gradle (it took me 6 minutes with a good computer)

@@ -8,7 +8,7 @@ import com.bettercolors.modules.Module;
 import com.bettercolors.modules.options.Option;
 import com.bettercolors.modules.options.ToggleOption;
 import com.bettercolors.modules.options.ValueOption;
-import net.minecraftforge.common.ForgeConfig;
+import mdlaf.MaterialLookAndFeel;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -21,7 +21,6 @@ import java.awt.event.MouseEvent;
 import java.awt.font.TextAttribute;
 import java.io.IOException;
 import java.net.*;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;

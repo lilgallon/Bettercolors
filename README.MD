@@ -1,4 +1,4 @@
-![header](gitresources/header.png)
+![header](.github/header.png)
 
 # Bettercolors 6
 ![Forge dev version: 1.8.9-11.15.1.1722](https://img.shields.io/badge/forge_dev-1.8.9_11.15.1.1722-green.svg)

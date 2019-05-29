@@ -61,9 +61,6 @@ public class Bettercolors {
         // Antialiasing font
         System.setProperty("awt.useSystemAAFontSettings","on");
         System.setProperty("swing.aatext", "true");
-        // Swing font
-        System.setProperty("swing.plaf.metal.controlFont", "Roboto");
-        System.setProperty("swing.plaf.metal.userFont", "Roboto");
 
         // Mod init
         initMod();

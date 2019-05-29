@@ -1,7 +1,7 @@
 ![header](.github/header.png)
 
 # Bettercolors 6
-![Forge dev version: 1.13.2 25.0.73](https://img.shields.io/badge/forge_dev-1.13.2_25.0.22-green.svg)
+![Forge dev version: 1.13.2 25.0.219](https://img.shields.io/badge/forge_dev-1.13.2_25.0.219-green.svg)
 ![Release](https://img.shields.io/github/release/n3roo/bettercolors.svg)
 ![Downloads](https://img.shields.io/github/downloads/n3roo/bettercolors/total.svg)
 ![Open issues](https://img.shields.io/github/issues/n3roo/bettercolors.svg)
@@ -9,6 +9,8 @@
 ![Closed pull requests](https://img.shields.io/github/issues-pr-closed/n3roo/bettercolors.svg)
 
 A silent "hack" built within the forge API. It bypasses powerful anticheats (forge mods and servers) to help you improve your gameplay.
+
+![preview](.github/screenshot.png)
 
 ## Disclaimer
 

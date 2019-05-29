@@ -8,9 +8,6 @@ import com.bettercolors.modules.Module;
 import com.bettercolors.modules.options.Option;
 import com.bettercolors.modules.options.ToggleOption;
 import com.bettercolors.modules.options.ValueOption;
-import it.unimi.dsi.fastutil.Stack;
-import mdlaf.MaterialLookAndFeel;
-
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
@@ -34,7 +31,6 @@ public class Window extends JFrame{
     private final ArrayList<JCheckBox> CHECKBOXES_MODULES;
     private final Map<JLabel, JSlider> SLIDERS_MODULES;
     private final String LOG_PREFIX = "[Gui] ";
-    private URL RESOURCE_URL;
     private final int WIDTH = 450;
     private final int HEIGHT = 600;
 
@@ -45,27 +41,15 @@ public class Window extends JFrame{
 
         waitingMessages = new LinkedList<>();
 
-        // We need to find the resource path because this forge version has broken the true resource path
-        URL[] urls = ((URLClassLoader) ClassLoader.getSystemClassLoader()).getURLs();
-        for (URL url : urls) {
-            String urlStr = url.toString();
-            String[] urlSplit = urlStr.split("/");
-            if(urlSplit[urlSplit.length - 1].equals("resources")){
-                RESOURCE_URL = url;
-                break;
-            }
-        }
-        if(RESOURCE_URL == null)
-            RESOURCE_URL = Window.class.getClassLoader().getResource("");
-
         setBounds((int)Toolkit.getDefaultToolkit().getScreenSize().getWidth()/2-WIDTH/2,
                 (int)Toolkit.getDefaultToolkit().getScreenSize().getHeight()/2-HEIGHT/2,
                 WIDTH, HEIGHT);
 
         try {
-            setIconImage(new ImageIcon(new URL(RESOURCE_URL + "images/bettercolors_symbol.png")).getImage());
-        } catch (MalformedURLException e) {
+            setIconImage(new ImageIcon(Objects.requireNonNull(Window.class.getClassLoader().getResource("images/bettercolors_symbol.png"))).getImage());
+        } catch (NullPointerException e) {
             e.printStackTrace();
+            addText("Failed to load images/bettercolors_symbol.png", Color.RED, true);
         }
         setResizable(true);
         setVisible(false);
@@ -257,11 +241,11 @@ public class Window extends JFrame{
                 module_options_panel.add(sliders_grid, "Center");
             }
             try {
-                ImageIcon icon = new ImageIcon(new URL(RESOURCE_URL + "images/" + module.getSymbol()));
+                ImageIcon icon = new ImageIcon(Objects.requireNonNull(Window.class.getClassLoader().getResource("images/" + module.getSymbol())));
                 tabbedPane.addTab(module.getName(), icon, module_options_panel);
-            } catch (MalformedURLException e) {
+            } catch (NullPointerException e) {
                 e.printStackTrace();
-                addText("Failed to load " +  RESOURCE_URL + "image/" + module.getSymbol(), Color.RED, true);
+                addText("Failed to load image/" + module.getSymbol(), Color.RED, true);
                 tabbedPane.addTab(module.getName(), module_options_panel);
             }
         }
@@ -328,11 +312,11 @@ public class Window extends JFrame{
         settings_panel.add(buttons, "South");
 
         try {
-            ImageIcon icon = new ImageIcon(new URL(RESOURCE_URL + "images/settings_symbol.png"));
+            ImageIcon icon = new ImageIcon(Objects.requireNonNull(Window.class.getClassLoader().getResource("images/settings_symbol.png")));
             tabbedPane.addTab("Settings", icon, settings_panel);
-        } catch (MalformedURLException e) {
+        } catch (NullPointerException e) {
             e.printStackTrace();
-            addText("Failed to load " +  RESOURCE_URL + "image/settings_symbol.png", Color.RED, true);
+            addText("Failed to load image/settings_symbol.png", Color.RED, true);
             tabbedPane.addTab("Settings", settings_panel);
         }
         // --

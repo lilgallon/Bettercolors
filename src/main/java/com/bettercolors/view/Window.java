@@ -8,7 +8,8 @@ import com.bettercolors.modules.Module;
 import com.bettercolors.modules.options.Option;
 import com.bettercolors.modules.options.ToggleOption;
 import com.bettercolors.modules.options.ValueOption;
-import net.minecraftforge.common.ForgeConfig;
+import it.unimi.dsi.fastutil.Stack;
+import mdlaf.MaterialLookAndFeel;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -21,10 +22,7 @@ import java.awt.event.MouseEvent;
 import java.awt.font.TextAttribute;
 import java.io.IOException;
 import java.net.*;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class Window extends JFrame{
 
@@ -37,9 +35,15 @@ public class Window extends JFrame{
     private final Map<JLabel, JSlider> SLIDERS_MODULES;
     private final String LOG_PREFIX = "[Gui] ";
     private URL RESOURCE_URL;
+    private final int WIDTH = 450;
+    private final int HEIGHT = 600;
+
+    private Queue<Message> waitingMessages;
 
     public Window(String title, ArrayList<Module> modules, String last_version) {
         super(title);
+
+        waitingMessages = new LinkedList<>();
 
         // We need to find the resource path because this forge version has broken the true resource path
         URL[] urls = ((URLClassLoader) ClassLoader.getSystemClassLoader()).getURLs();
@@ -51,10 +55,12 @@ public class Window extends JFrame{
                 break;
             }
         }
+        if(RESOURCE_URL == null)
+            RESOURCE_URL = Window.class.getClassLoader().getResource("");
 
-        int width = 450;
-        int height = 600;
-        setBounds((int)Toolkit.getDefaultToolkit().getScreenSize().getWidth()/2-width/2,(int)Toolkit.getDefaultToolkit().getScreenSize().getHeight()/2-height/2,width,height);
+        setBounds((int)Toolkit.getDefaultToolkit().getScreenSize().getWidth()/2-WIDTH/2,
+                (int)Toolkit.getDefaultToolkit().getScreenSize().getHeight()/2-HEIGHT/2,
+                WIDTH, HEIGHT);
 
         try {
             setIconImage(new ImageIcon(new URL(RESOURCE_URL + "images/bettercolors_symbol.png")).getImage());
@@ -231,6 +237,7 @@ public class Window extends JFrame{
                 for(ValueOption value_option : value_options){
                     final JLabel label = new JLabel(value_option.getName() + " [" + Integer.toString(value_option.getVal()) + "]");
                     final JSlider slider = new JSlider();
+                    slider.setPreferredSize(new Dimension(WIDTH/2, 10));
                     slider.setMinimum(value_option.getMin());
                     slider.setMaximum(value_option.getMax());
                     slider.setValue(value_option.getVal());
@@ -254,6 +261,7 @@ public class Window extends JFrame{
                 tabbedPane.addTab(module.getName(), icon, module_options_panel);
             } catch (MalformedURLException e) {
                 e.printStackTrace();
+                addText("Failed to load " +  RESOURCE_URL + "image/" + module.getSymbol(), Color.RED, true);
                 tabbedPane.addTab(module.getName(), module_options_panel);
             }
         }
@@ -324,6 +332,7 @@ public class Window extends JFrame{
             tabbedPane.addTab("Settings", icon, settings_panel);
         } catch (MalformedURLException e) {
             e.printStackTrace();
+            addText("Failed to load " +  RESOURCE_URL + "image/settings_symbol.png", Color.RED, true);
             tabbedPane.addTab("Settings", settings_panel);
         }
         // --
@@ -358,6 +367,11 @@ public class Window extends JFrame{
         welcome_message += "|                                                |\n";
         welcome_message += "x~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~x\n";
         _console.setText(welcome_message);
+
+        while(!waitingMessages.isEmpty()){
+            Message message = waitingMessages.poll();
+            addText(message.text, message.color, message.newline);
+        }
 
         // Put the panel on the window
         panel.add(_scroll);
@@ -403,6 +417,10 @@ public class Window extends JFrame{
      * @param new_line if it should create a new line.
      */
     public void addText(String text, Color color, boolean new_line){
+        if(_console == null) {
+            waitingMessages.add(new Message(text, color, new_line));
+            return;
+        }
 
         if(new_line){
             appendToPane(_console, "\n"+text, color);
@@ -483,5 +501,17 @@ public class Window extends JFrame{
      */
     public void toggle(){
         setVisible(!isVisible());
+    }
+
+    class Message{
+        public String text;
+        public Color color;
+        public Boolean newline;
+
+        public Message(String text, Color color, Boolean newline){
+            this.text = text;
+            this.color = color;
+            this.newline = newline;
+        }
     }
 }

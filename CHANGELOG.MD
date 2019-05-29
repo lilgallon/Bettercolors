@@ -113,3 +113,7 @@
 - Developer section :
     - Changed versioning to semantic versioning
     - Improved documentation to set up the project
+
+**V6.0 MC_1.13**
+- Changed UI theme to material UI
+- Added error messages in the console if some resources were not loaded

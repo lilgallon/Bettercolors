@@ -122,6 +122,9 @@ It is easier to set up forge with [Eclipse](https://www.eclipse.org/neon/). Othe
     - Open a terminal and type `gradlew genIntellijRuns` (it took me 2 minutes)
     - Next to the "run" button, select "ADD CONFIGURATION" and select runClient (in Application tab). Then, in "Use classpath of module:", select `com.bettercolors.main.Bettercolors`. Click ok. Now you can run the client. (the first run takes time, you have to wait a bit).
 
+When you make a change in build.gradle, make sure to run `gradlew clean` & `gradlew build`.
+If your JAVA_HOME points to a java version below 8 or above 11, use this command: `gradlew -Dorg.gradle.java.home="path/to/javaSDK >8 & <11"` instead of simply `gradlew`.
+
 Now it should be done (please refer to [FORGE-INSTRUCTIONS.txt](FORGE-INSTRUCTIONS.txt) or this [youtube video](https://www.youtube.com/watch?v=G2aPT36kf60) if you have any problem). The steps were updated recently (08/03/2019).
 
 ### 3. Build the .jar

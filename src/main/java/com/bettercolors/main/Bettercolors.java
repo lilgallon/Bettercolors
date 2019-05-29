@@ -5,6 +5,7 @@ import com.bettercolors.modules.*;
 import com.bettercolors.modules.options.Option;
 import com.bettercolors.modules.options.ToggleOption;
 import com.bettercolors.view.Window;
+import mdlaf.MaterialLookAndFeel;
 import net.minecraft.client.util.InputMappings;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -14,6 +15,9 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.lwjgl.glfw.GLFW;
 
+import javax.swing.*;
+import javax.swing.plaf.FontUIResource;
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -53,8 +57,17 @@ public class Bettercolors {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::clientTick);
         MinecraftForge.EVENT_BUS.register(this);
 
+        // This new forge version does not like swing ;(
+        System.setProperty("java.awt.headless", "false");
+
+        // Antialiasing font
+        System.setProperty("awt.useSystemAAFontSettings","on");
+        System.setProperty("swing.aatext", "true");
+        // Swing font
+        System.setProperty("swing.plaf.metal.controlFont", "Roboto");
+        System.setProperty("swing.plaf.metal.userFont", "Roboto");
+
         // Mod init
-        System.setProperty("java.awt.headless", "false"); // this new forge version does not line swing ;(
         initMod();
     }
 
@@ -83,6 +96,13 @@ public class Bettercolors {
             _key_down.put(module.getClass().getSimpleName(), false);
         }
         _key_down.put(WINDOW, false);
+
+        // Change swing theme to material
+        try {
+            UIManager.setLookAndFeel(new MaterialLookAndFeel());
+        } catch (UnsupportedLookAndFeelException e) {
+            e.printStackTrace ();
+        }
 
         // AbstractWindow initialisation
         _window = new Window("Bettercolors " + Reference.VERSION, _modules, getLastVersion());

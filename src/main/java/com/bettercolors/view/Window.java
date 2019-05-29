@@ -131,15 +131,15 @@ public class Window extends JFrame{
                 for (int i : version_dif) {
                     total_dif += i;
                 }
-                if(total_dif > 1){
+                if(total_dif < 1){
                     update.setForeground(new Color(0, 70, 100));
-                    addText(Integer.toString(total_dif) + " updates available !", Color.ORANGE, true);
+                    addText(-total_dif + " updates available !", Color.ORANGE, true);
                 }else if(total_dif == 1){
                     update.setForeground(new Color(0, 70, 100));
                     addText("One update available !", Color.ORANGE, true);
-                }else if(total_dif < 0){
+                }else{
                     update.setForeground(new Color(150, 70, 0));
-                    addText("You are using a dev version.", Color.ORANGE, true);
+                    addText("You are using a dev version (dif=" + total_dif + ").", Color.ORANGE, true);
                     addText("Be careful ! It is used for testing.", Color.ORANGE, true);
                 }
                 addText("Last stable version : " + last_version + ".", Color.ORANGE, true);

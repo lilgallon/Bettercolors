@@ -198,10 +198,10 @@ public class Bettercolors {
     public static int[] compareVersions(String current_version, String last_version){
         int[] diff = {0, 0, 0, 0};
 
-        String[] current_version_split = current_version.split(".");
-        String[] last_version_split = current_version.split(".");
+        String[] current_version_split = current_version.split("\\.");
+        String[] last_version_split = last_version.split("\\.");
 
-        if(current_version_split.length == 3 && last_version_split.length == 3){
+        if(current_version_split.length == 3 && last_version_split.length == 3) {
             diff[0] = Integer.parseInt(last_version_split[0]) -  Integer.parseInt(current_version_split[0]);
             diff[1] = Integer.parseInt(last_version_split[1]) -  Integer.parseInt(current_version_split[1]);
             diff[2] = Integer.parseInt(last_version_split[2].split("-")[0]) -  Integer.parseInt(current_version_split[2].split("-")[0]);
@@ -209,7 +209,7 @@ public class Bettercolors {
             int current_beta_number = current_version_split[2].split("-").length == 2 ? Integer.parseInt(current_version_split[2].split("-")[1].replace("b", "")) : 0;
             int last_beta_number = last_version_split[2].split("-").length == 2 ? Integer.parseInt(last_version_split[2].split("-")[1].replace("b", "")) : 0;
             diff[3] = last_beta_number - current_beta_number;
-        }else{
+        } else {
             System.out.println("Error when comparing versions : expected a version format maj.min.patch(-bnumber), but received :");
             System.out.println("[" + current_version + "] and [" + last_version + "]");
             diff = null;

@@ -16,8 +16,6 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.lwjgl.glfw.GLFW;
 
 import javax.swing.*;
-import javax.swing.plaf.FontUIResource;
-import java.awt.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -109,7 +107,7 @@ public class Bettercolors {
     }
 
 	@SubscribeEvent
-	public void onClientTickEvent(ClientTickEvent event){
+    public void onClientTickEvent(ClientTickEvent event){
         for(Module mod : _modules){
             mod.updateKeyHandler();
             if(mod.getToggleKey() != -1) {
@@ -134,7 +132,7 @@ public class Bettercolors {
 	}
 
     @SubscribeEvent
-	public void clientTick(final TickEvent event){
+    public void clientTick(final TickEvent event){
         for(Module mod : _modules){
             if(mod.isActivated()){
                 mod.update();

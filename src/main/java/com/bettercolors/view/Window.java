@@ -219,7 +219,7 @@ public class Window extends JFrame{
                 sliders_grid.setLayout(new GridLayout(value_options.size(), 2));
 
                 for(ValueOption value_option : value_options){
-                    final JLabel label = new JLabel(value_option.getName() + " [" + Integer.toString(value_option.getVal()) + "]");
+                    final JLabel label = new JLabel(value_option.getName() + " [" + value_option.getVal() + "]");
                     final JSlider slider = new JSlider();
                     slider.setPreferredSize(new Dimension(WIDTH/2, 10));
                     slider.setMinimum(value_option.getMin());
@@ -230,7 +230,7 @@ public class Window extends JFrame{
                     slider.setPaintTicks(true);
                     slider.addChangeListener(e -> {
                         value_option.setVal(slider.getValue());
-                        label.setText(value_option.getName() + " [" + Integer.toString(value_option.getVal()) + "]");
+                        label.setText(value_option.getName() + " [" + value_option.getVal() + "]");
                         repaint();
                     });
                     SLIDERS_MODULES.put(label, slider);
@@ -303,9 +303,9 @@ public class Window extends JFrame{
             if(length_diff == 0){
                 addText(LOG_PREFIX + "No new files found.", true);
             }else if(length_diff == 1){
-                addText(LOG_PREFIX + "Found " + Integer.toString(length_diff) + " new file.", true);
+                addText(LOG_PREFIX + "Found " + length_diff + " new file.", true);
             }else if(length_diff > 1){
-                addText(LOG_PREFIX + "Found " + Integer.toString(length_diff) + " new files.", true);
+                addText(LOG_PREFIX + "Found " + length_diff + " new files.", true);
             }
         });
         buttons.add(refresh_button);
@@ -469,7 +469,7 @@ public class Window extends JFrame{
             for(ValueOption value_option : value_options){
                 for(Map.Entry<JLabel, JSlider> entry : SLIDERS_MODULES.entrySet()){
                     if(entry.getKey().getText().contains(value_option.getName())){
-                        entry.getKey().setText(value_option.getName() + " [" + Integer.toString(value_option.getVal()) + "]");
+                        entry.getKey().setText(value_option.getName() + " [" + value_option.getVal() + "]");
                         entry.getValue().setValue(value_option.getVal());
                         break; // :(
                     }
@@ -488,11 +488,11 @@ public class Window extends JFrame{
     }
 
     class Message{
-        public String text;
-        public Color color;
-        public Boolean newline;
+        String text;
+        Color color;
+        Boolean newline;
 
-        public Message(String text, Color color, Boolean newline){
+        Message(String text, Color color, Boolean newline){
             this.text = text;
             this.color = color;
             this.newline = newline;

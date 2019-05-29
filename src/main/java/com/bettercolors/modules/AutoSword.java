@@ -7,6 +7,8 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 
+import java.util.Objects;
+
 public class AutoSword extends Module {
 
     /**
@@ -43,8 +45,12 @@ public class AutoSword extends Module {
                             // The damage calculation is not correct here, but we just need to find the item with the most
                             // powerful enchantment, so we don't care.
                             // 16 for sharpness : https://www.minecraftforum.net/forums/minecraft-java-edition/redstone-discussion-and/commands-command-blocks-and/2891015-1-13-full-enchantment-ids-small-give-tutorial
-                            if(Enchantment.getEnchantmentByID(16) != null)
-                                damage += EnchantmentHelper.getEnchantmentLevel(Enchantment.getEnchantmentByID(16), stack);
+                            try {
+                                if (Enchantment.getEnchantmentByID(16) != null)
+                                    damage += EnchantmentHelper.getEnchantmentLevel(Objects.requireNonNull(Enchantment.getEnchantmentByID(16)), stack);
+                            } catch (NullPointerException ignored){
+                                log_error("Could not get enchantment id 16 (sharpness).");
+                            }
                         }
                         if(damage >= max_damage){
                             best_item = slot;

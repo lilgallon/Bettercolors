@@ -8,6 +8,7 @@ import com.bettercolors.modules.Module;
 import com.bettercolors.modules.options.Option;
 import com.bettercolors.modules.options.ToggleOption;
 import com.bettercolors.modules.options.ValueOption;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
@@ -46,7 +47,7 @@ public class Window extends JFrame{
                 WIDTH, HEIGHT);
 
         try {
-            setIconImage(new ImageIcon(Objects.requireNonNull(this.getClass().getResource("src/main/resources/images/bettercolors_symbol.png"))).getImage());
+            setIconImage(new ImageIcon(Objects.requireNonNull(this.getClass().getClassLoader().getResource("images/bettercolors_symbol.png"))).getImage());
         } catch (NullPointerException e) {
             e.printStackTrace();
             addText("Failed to load images/bettercolors_symbol.png", Color.RED, true);
@@ -241,7 +242,7 @@ public class Window extends JFrame{
                 module_options_panel.add(sliders_grid, "Center");
             }
             try {
-                ImageIcon icon = new ImageIcon(Objects.requireNonNull(this.getClass().getResource("src/main/resources/images/" + module.getSymbol())));
+                ImageIcon icon = new ImageIcon(Objects.requireNonNull(this.getClass().getClassLoader().getResource("images/" + module.getSymbol())));
                 tabbedPane.addTab(module.getName(), icon, module_options_panel);
             } catch (NullPointerException e) {
                 e.printStackTrace();
@@ -312,7 +313,7 @@ public class Window extends JFrame{
         settings_panel.add(buttons, "South");
 
         try {
-            ImageIcon icon = new ImageIcon(Objects.requireNonNull(this.getClass().getResource("src/main/resources/images/settings_symbol.png")));
+            ImageIcon icon = new ImageIcon(Objects.requireNonNull(this.getClass().getClassLoader().getResource("images/settings_symbol.png")));
             tabbedPane.addTab("Settings", icon, settings_panel);
         } catch (NullPointerException e) {
             e.printStackTrace();

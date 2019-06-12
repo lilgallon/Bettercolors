@@ -115,5 +115,10 @@
     - Improved documentation to set up the project
 
 **V6.0 MC_1.13**
-- Changed UI theme to material UI
+
+Forge 1.13.2 seems to be stable at this point. Bettercolors 6.0.0-b3 has some issues with resources which are fixed now.
+
 - Added error messages in the console if some resources were not loaded
+- Improved version checker
+- Improved font rendering
+- Fixed resource loading (forge fixed the resource loader, so I had to remove the trick to get it working)

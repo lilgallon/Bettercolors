@@ -46,7 +46,7 @@ public class Window extends JFrame{
                 WIDTH, HEIGHT);
 
         try {
-            setIconImage(new ImageIcon(Objects.requireNonNull(Window.class.getClassLoader().getResource("images/bettercolors_symbol.png"))).getImage());
+            setIconImage(new ImageIcon(Objects.requireNonNull(this.getClass().getResource("src/main/resources/images/bettercolors_symbol.png"))).getImage());
         } catch (NullPointerException e) {
             e.printStackTrace();
             addText("Failed to load images/bettercolors_symbol.png", Color.RED, true);
@@ -241,11 +241,11 @@ public class Window extends JFrame{
                 module_options_panel.add(sliders_grid, "Center");
             }
             try {
-                ImageIcon icon = new ImageIcon(Objects.requireNonNull(Window.class.getClassLoader().getResource("images/" + module.getSymbol())));
+                ImageIcon icon = new ImageIcon(Objects.requireNonNull(this.getClass().getResource("src/main/resources/images/" + module.getSymbol())));
                 tabbedPane.addTab(module.getName(), icon, module_options_panel);
             } catch (NullPointerException e) {
                 e.printStackTrace();
-                addText("Failed to load image/" + module.getSymbol(), Color.RED, true);
+                addText("Failed to load images/" + module.getSymbol(), Color.RED, true);
                 tabbedPane.addTab(module.getName(), module_options_panel);
             }
         }
@@ -312,11 +312,11 @@ public class Window extends JFrame{
         settings_panel.add(buttons, "South");
 
         try {
-            ImageIcon icon = new ImageIcon(Objects.requireNonNull(Window.class.getClassLoader().getResource("images/settings_symbol.png")));
+            ImageIcon icon = new ImageIcon(Objects.requireNonNull(this.getClass().getResource("src/main/resources/images/settings_symbol.png")));
             tabbedPane.addTab("Settings", icon, settings_panel);
         } catch (NullPointerException e) {
             e.printStackTrace();
-            addText("Failed to load image/settings_symbol.png", Color.RED, true);
+            addText("Failed to load images/settings_symbol.png", Color.RED, true);
             tabbedPane.addTab("Settings", settings_panel);
         }
         // --

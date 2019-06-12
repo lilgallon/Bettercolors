@@ -23,19 +23,19 @@ I made this project to learn Java in a funny way. I started 2 years ago but the 
 
 ## Features description
 
-**Aim assistance :** A smooth and human-like aim assistance 100% undetectable by any anticheat. It is invisible since it looks absolutely human. You can record videos while using it without any problem.
+⚔️ **Aim assistance :** A smooth and human-like aim assistance 100% undetectable by any anticheat. It is invisible since it looks absolutely human. You can record videos while using it without any problem.
 
-**Click assistance :**  A human-like click assistance that sends REAL clicks, to help you click faster. It can bypass forge CPS counter mods by toggling packets.
+🖱️ **Click assistance :**  A human-like click assistance that sends REAL clicks, to help you click faster. It can bypass forge CPS counter mods by toggling packets.
 
-**External interface :** A clean external interface to configure the mod outside the minecraft client, so you can record without any problem !
+📟 **External interface :** A clean external interface to configure the mod outside the minecraft client, so you can record without any problem !
 
-**Console :** Curious ? There is a console showing everything happening in the mod. 
+📋 **Console :** Curious ? There is a console showing everything happening in the mod. 
 
-**Teammate detection :** The mod find your teammates from any server game mode, and prevent modules to be activated on them.
+🎎 **Teammate detection :** The mod find your teammates from any server game mode, and prevent modules to be activated on them.
 
-**Settings :** You can configure every mod and all is saved in real time.
+🛠 **Settings :** You can configure every mod and all is saved in real time.
 
-**Settings preset :** You can save, load, and create settings presets from a cool interface.
+⚒ **Settings preset :** You can save, load, and create settings presets from a cool interface.
 
 ## Commands
 

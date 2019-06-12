@@ -5,7 +5,6 @@ import com.bettercolors.modules.*;
 import com.bettercolors.modules.options.Option;
 import com.bettercolors.modules.options.ToggleOption;
 import com.bettercolors.view.Window;
-import mdlaf.MaterialLookAndFeel;
 import net.minecraft.client.util.InputMappings;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -15,7 +14,6 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.lwjgl.glfw.GLFW;
 
-import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -91,13 +89,6 @@ public class Bettercolors {
             _key_down.put(module.getClass().getSimpleName(), false);
         }
         _key_down.put(WINDOW, false);
-
-        // Change swing theme to material
-        try {
-            UIManager.setLookAndFeel(new MaterialLookAndFeel());
-        } catch (UnsupportedLookAndFeelException e) {
-            e.printStackTrace ();
-        }
 
         // AbstractWindow initialisation
         _window = new Window("Bettercolors " + Reference.VERSION, _modules, getLastVersion());

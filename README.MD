@@ -1,12 +1,15 @@
-![header](.github/header.png)
-
-# Bettercolors 6
-![Forge dev version: 1.13.2 25.0.219](https://img.shields.io/badge/forge_dev-1.13.2_25.0.219-green.svg)
-![Release](https://img.shields.io/github/release/n3roo/bettercolors.svg)
-![Downloads](https://img.shields.io/github/downloads/n3roo/bettercolors/total.svg)
-![Open issues](https://img.shields.io/github/issues/n3roo/bettercolors.svg)
-![Closed issues](https://img.shields.io/github/issues-closed-raw/n3roo/bettercolors.svg)
-![Closed pull requests](https://img.shields.io/github/issues-pr-closed/n3roo/bettercolors.svg)
+<h3 align="center">
+  <img src=".github/header.png">
+</h3>
+ 
+<p align="center">
+    <a href="https://img.shields.io/badge/forge_dev-1.13.2_25.0.219-green.svg"><img alt="Forge dev version: 1.13.2 25.0.219" src="https://img.shields.io/badge/forge_dev-1.13.2_25.0.219-green.svg"/></a>
+    <a href="https://img.shields.io/github/release/n3roo/bettercolors.svg"><img alt="Release" src="https://img.shields.io/github/release/n3roo/bettercolors.svg"/></a>
+    <a href="https://img.shields.io/github/downloads/n3roo/bettercolors/total.svg"><img alt="Downloads" src="https://img.shields.io/github/downloads/n3roo/bettercolors/total.svg"/></a>
+    <a href="https://img.shields.io/github/issues/n3roo/bettercolors.svg"><img alt="Open issues" src="https://img.shields.io/github/issues/n3roo/bettercolors.svg"/></a>
+    <a href="https://img.shields.io/github/issues-closed-raw/n3roo/bettercolors.svg"><img alt="Closed issues" src="https://img.shields.io/github/issues-closed-raw/n3roo/bettercolors.svg"/></a>
+    <a href="https://img.shields.io/github/issues-pr-closed/n3roo/bettercolors.svg"><img alt="Closed pull requests" src="https://img.shields.io/github/issues-pr-closed/n3roo/bettercolors.svg"/></a>
+</p>
 
 A silent "hack" built within the forge API. It bypasses powerful anticheats (forge mods and servers) to help you improve your gameplay.
 

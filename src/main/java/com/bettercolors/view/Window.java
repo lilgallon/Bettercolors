@@ -47,8 +47,8 @@ public class Window extends JFrame{
                 WIDTH, HEIGHT);
 
         try {
-            setIconImage(new ImageIcon(Objects.requireNonNull(this.getClass().getClassLoader().getResource("images/bettercolors_symbol.png"))).getImage());
-        } catch (NullPointerException e) {
+            setIconImage(new ImageIcon(Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("images/bettercolors_symbol.png"))).getImage());
+        } catch (Exception e) {
             e.printStackTrace();
             addText("Failed to load images/bettercolors_symbol.png", Color.RED, true);
         }
@@ -242,9 +242,9 @@ public class Window extends JFrame{
                 module_options_panel.add(sliders_grid, "Center");
             }
             try {
-                ImageIcon icon = new ImageIcon(Objects.requireNonNull(this.getClass().getClassLoader().getResource("images/" + module.getSymbol())));
+                ImageIcon icon = new ImageIcon(Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("images/" + module.getSymbol())));
                 tabbedPane.addTab(module.getName(), icon, module_options_panel);
-            } catch (NullPointerException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 addText("Failed to load images/" + module.getSymbol(), Color.RED, true);
                 tabbedPane.addTab(module.getName(), module_options_panel);
@@ -313,9 +313,9 @@ public class Window extends JFrame{
         settings_panel.add(buttons, "South");
 
         try {
-            ImageIcon icon = new ImageIcon(Objects.requireNonNull(this.getClass().getClassLoader().getResource("images/settings_symbol.png")));
+            ImageIcon icon = new ImageIcon(Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("images/settings_symbol.png")));
             tabbedPane.addTab("Settings", icon, settings_panel);
-        } catch (NullPointerException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             addText("Failed to load images/settings_symbol.png", Color.RED, true);
             tabbedPane.addTab("Settings", settings_panel);
@@ -417,7 +417,7 @@ public class Window extends JFrame{
         _console.validate();
         try {
             _scroll.getVerticalScrollBar().setValue(_scroll.getVerticalScrollBar().getMaximum());
-        }catch(NullPointerException ignored){
+        }catch(Exception ignored){
             // Seems to happen when the console has a lot of text, but nothing is sure. Need to take a look at it ;)
         }
 

@@ -114,9 +114,10 @@
     - Changed versioning to semantic versioning
     - Improved documentation to set up the project
 
-**V6.0 MC_1.13**
+**V6.0.0 MC_1.13**
 
-Forge 1.13.2 seems to be stable at this point. Bettercolors 6.0.0-b3 has some issues with resources which are fixed now.
+Forge 1.13.2 seems to be stable at this point.
+This update is backwards compatible with settings files from v6.0.0-b2 and higher.
 
 - Added error messages in the console if some resources were not loaded
 - Improved font rendering (antialiasing)

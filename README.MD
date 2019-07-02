@@ -54,7 +54,7 @@ I made this project to learn Java in a funny way. I started 2 years ago but the 
     - "Stop when reached" : it means that when you aim at an entity, the aim assistance stops
 
 - Click assistance :
-    - "Packets" : Send packets instead of REAL clicks (**bypass forge anticheat but riskier server side**)
+    - "Packets" : Send packets instead of REAL clicks (**bypasses forge anticheats mods but riskier on server side**)
     - "Only on entity" : It will click only if you are aiming an entity,
     - Additional clicks define how many clicks will be sent in addition to yours,
     - Chance is the probability of every artificial click to be sent,

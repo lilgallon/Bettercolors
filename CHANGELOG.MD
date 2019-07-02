@@ -121,5 +121,7 @@ Forge 1.13.2 seems to be stable at this point. Bettercolors 6.0.0-b3 has some is
 - Added error messages in the console if some resources were not loaded
 - Improved font rendering (antialiasing)
 - Improved error messages (they can be sent even if the window is not ready)
+- Fixed crash in mod menu (#21)
+- Fixed team filter (#20)
 - Fixed & improved version checker
 - Fixed resource loading (forge fixed the resource loader, so I had to remove the trick to get it working)

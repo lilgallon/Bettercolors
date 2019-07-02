@@ -25,7 +25,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Mod(Reference.MOD_ID)
-
 public class Bettercolors {
 
     public final static String URL_PROBLEM = "Url problem (please contact developer).";

@@ -98,6 +98,7 @@ public abstract class Module {
         try {
             // Check friends / teammate
             target_tag = exportTag((EntityPlayer) entity);
+
             if (exportTag(MC.player).equalsIgnoreCase(target_tag)) {
                 same_team = true;
             }
@@ -113,7 +114,7 @@ public abstract class Module {
     private String exportTag(EntityPlayer e){
         String tag;
         try{
-            tag = e.getDisplayName().getUnformattedComponentText().split(e.getName().getString())[0].replace(" ","");
+            tag = e.getDisplayName().getFormattedText().split(e.getName().getString())[0].replace(" ","");
             tag = tag.replace("§","");
         }catch(Exception exc){
             tag = "";

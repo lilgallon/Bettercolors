@@ -25,11 +25,11 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Mod(Reference.MOD_ID)
-
 public class Bettercolors {
 
     public final static String URL_PROBLEM = "Url problem (please contact developer).";
     public final static String INTERNET_PROBLEM = "No internet connection. :(";
+    public final static String NO_VERSION_FOUND = "No version found.";
     public final static String DOWNLOAD_URL = "https://github.com/N3ROO/Bettercolors/releases/latest";
 
     private final static ArrayList<Option> DEFAULT_ACTIVATION_STATUS;
@@ -52,8 +52,14 @@ public class Bettercolors {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::clientTick);
         MinecraftForge.EVENT_BUS.register(this);
 
+        // This new forge version does not like swing ;(
+        System.setProperty("java.awt.headless", "false");
+
+        // Antialiasing font
+        System.setProperty("awt.useSystemAAFontSettings","on");
+        System.setProperty("swing.aatext", "true");
+
         // Mod init
-        System.setProperty("java.awt.headless", "false"); // this new forge version does not line swing ;(
         initMod();
     }
 
@@ -88,7 +94,7 @@ public class Bettercolors {
     }
 
 	@SubscribeEvent
-	public void onClientTickEvent(ClientTickEvent event){
+    public void onClientTickEvent(ClientTickEvent event){
         for(Module mod : _modules){
             mod.updateKeyHandler();
             if(mod.getToggleKey() != -1) {
@@ -113,7 +119,7 @@ public class Bettercolors {
 	}
 
     @SubscribeEvent
-	public void clientTick(final TickEvent event){
+    public void clientTick(final TickEvent event){
         for(Module mod : _modules){
             if(mod.isActivated()){
                 mod.update();
@@ -122,20 +128,37 @@ public class Bettercolors {
 	}
 
     /**
-     * @return the last version tag from the github release page.
+     * @return the last version tag from the github release page (without the MC version in it).
      */
 	private String getLastVersion(){
-        String last_version;
+        final String MC_PREFIX = "-MC";
+        String last_version = "";
 
         try{
             // Retrieve JSON
-            URL url = new URL("https://api.github.com/repos/n3roo/bettercolors/releases/latest");
+            URL url = new URL("https://api.github.com/repos/n3roo/bettercolors/releases");
             BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
             String json = in.lines().collect(Collectors.joining());
             in.close();
 
             // Get last version from JSON
-            last_version = json.split("\"tag_name\"")[1].split("\"")[1];
+            String[] tags = json.split("\"tag_name\"");
+            int i = 0;
+            boolean found = false;
+            while(i < tags.length && !found){
+                last_version = tags[i].split("\"")[1];
+                if(last_version.endsWith(MC_PREFIX + Reference.MAIN_MC_VERSION)){
+                    found = true;
+                }else{
+                    i ++;
+                }
+            }
+
+            if(!found){
+                return NO_VERSION_FOUND;
+            }else{
+                last_version = last_version.replace(MC_PREFIX + Reference.MAIN_MC_VERSION, "");
+            }
         } catch (MalformedURLException e){
             return URL_PROBLEM;
         } catch (IOException e){
@@ -160,10 +183,10 @@ public class Bettercolors {
     public static int[] compareVersions(String current_version, String last_version){
         int[] diff = {0, 0, 0, 0};
 
-        String[] current_version_split = current_version.split(".");
-        String[] last_version_split = current_version.split(".");
+        String[] current_version_split = current_version.split("\\.");
+        String[] last_version_split = last_version.split("\\.");
 
-        if(current_version_split.length == 3 && last_version_split.length == 3){
+        if(current_version_split.length == 3 && last_version_split.length == 3) {
             diff[0] = Integer.parseInt(last_version_split[0]) -  Integer.parseInt(current_version_split[0]);
             diff[1] = Integer.parseInt(last_version_split[1]) -  Integer.parseInt(current_version_split[1]);
             diff[2] = Integer.parseInt(last_version_split[2].split("-")[0]) -  Integer.parseInt(current_version_split[2].split("-")[0]);
@@ -171,7 +194,7 @@ public class Bettercolors {
             int current_beta_number = current_version_split[2].split("-").length == 2 ? Integer.parseInt(current_version_split[2].split("-")[1].replace("b", "")) : 0;
             int last_beta_number = last_version_split[2].split("-").length == 2 ? Integer.parseInt(last_version_split[2].split("-")[1].replace("b", "")) : 0;
             diff[3] = last_beta_number - current_beta_number;
-        }else{
+        } else {
             System.out.println("Error when comparing versions : expected a version format maj.min.patch(-bnumber), but received :");
             System.out.println("[" + current_version + "] and [" + last_version + "]");
             diff = null;

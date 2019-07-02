@@ -1,14 +1,19 @@
-![header](gitresources/header.png)
-
-# Bettercolors 6
-![Forge dev version: 1.13.2 25.0.73](https://img.shields.io/badge/forge_dev-1.13.2_25.0.22-green.svg)
-![Release](https://img.shields.io/github/release/n3roo/bettercolors.svg)
-![Downloads](https://img.shields.io/github/downloads/n3roo/bettercolors/total.svg)
-![Open issues](https://img.shields.io/github/issues/n3roo/bettercolors.svg)
-![Closed issues](https://img.shields.io/github/issues-closed-raw/n3roo/bettercolors.svg)
-![Closed pull requests](https://img.shields.io/github/issues-pr-closed/n3roo/bettercolors.svg)
+<h3 align="center">
+  <img src=".github/header.png">
+</h3>
+ 
+<p align="center">
+    <a href="https://img.shields.io/badge/forge_dev-1.13.2_25.0.219-green.svg"><img alt="Forge dev version: 1.13.2 25.0.219" src="https://img.shields.io/badge/forge_dev-1.13.2_25.0.219-green.svg"/></a>
+    <a href="https://img.shields.io/github/release/n3roo/bettercolors.svg"><img alt="Release" src="https://img.shields.io/github/release/n3roo/bettercolors.svg"/></a>
+    <a href="https://img.shields.io/github/downloads/n3roo/bettercolors/total.svg"><img alt="Downloads" src="https://img.shields.io/github/downloads/n3roo/bettercolors/total.svg"/></a>
+    <a href="https://img.shields.io/github/issues/n3roo/bettercolors.svg"><img alt="Open issues" src="https://img.shields.io/github/issues/n3roo/bettercolors.svg"/></a>
+    <a href="https://img.shields.io/github/issues-closed-raw/n3roo/bettercolors.svg"><img alt="Closed issues" src="https://img.shields.io/github/issues-closed-raw/n3roo/bettercolors.svg"/></a>
+    <a href="https://img.shields.io/github/issues-pr-closed/n3roo/bettercolors.svg"><img alt="Closed pull requests" src="https://img.shields.io/github/issues-pr-closed/n3roo/bettercolors.svg"/></a>
+</p>
 
 A silent "hack" built within the forge API. It bypasses powerful anticheats (forge mods and servers) to help you improve your gameplay.
+
+![preview](.github/screenshot.png)
 
 ## Disclaimer
 
@@ -18,19 +23,19 @@ I made this project to learn Java in a funny way. I started 2 years ago but the 
 
 ## Features description
 
-**Aim assistance :** A smooth and humanlike aim assistance 100% undetectable by any anticheat. It is invisible since it looks absolutely human. You can record videos while using it without any problem.
+⚔️ **Aim assistance :** A smooth and human-like aim assistance 100% undetectable by any anticheat. It is invisible since it looks absolutely human. You can record videos while using it without any problem.
 
-**Click assistance :**  A humanlike click assistance that sends REAL clicks, to help you click faster. It can bypass forge CPS counter mods by toggling packets.
+🖱️ **Click assistance :**  A human-like click assistance that sends REAL clicks, to help you click faster. It can bypass forge CPS counter mods by toggling packets.
 
-**External interface :** A clean external interface to configure the mod outside the minecraft client, so you can record without any problem !
+📟 **External interface :** A clean external interface to configure the mod outside the minecraft client, so you can record without any problem !
 
-**Console :** Curious ? There is a console showing everything happening in the mod. 
+📋 **Console :** Curious ? There is a console showing everything happening in the mod. 
 
-**Teammate detection :** The mod find your teammates from any server game mode, and prevent modules to be activated on them.
+🎎 **Teammate detection :** The mod find your teammates from any server game mode, and prevent modules to be activated on them.
 
-**Settings :** You can configure every mod and all is saved in real time.
+🛠 **Settings :** You can configure every mod and all is saved in real time.
 
-**Settings preset :** You can save, load, and create settings presets from a cool interface.
+⚒ **Settings preset :** You can save, load, and create settings presets from a cool interface.
 
 ## Commands
 
@@ -115,18 +120,21 @@ It is easier to set up forge with [Eclipse](https://www.eclipse.org/neon/). Othe
     - Open a terminal and type `.\gradlew eclipse`
     - Open eclipse and switch your workspace to eclipse/
 
-- And if you use IntelliJ IDEA :
+- And if you use IntelliJ IDEA **recommended** :
     - Open IntelliJ IDEA, and open the "build.gradle" file as a project
-    - A window will show up, change nothing but "create separate module per source set" that needs to be **disabled**
-    - Wait for IntelliJ to process with gradle
-    - Open a terminal and type `gradlew genIntellijRuns`
-    - Next to the "run" button, select "client" and run it. If it does not work, it should open a window. Then, in "Use classpath of module:", select `com.bettercolors.main.Bettercolors` (the first run takes time, you have to wait a bit).
+    - A window will show up, change nothing but "create separate module per source set" that needs to be **disabled**, then click ok (make sure that the Gradle JVM is java < 11)
+    - Wait for IntelliJ to start and to process with gradle (it took me 6 minutes with a good computer)
+    - Open a terminal and type `gradlew genIntellijRuns` (it took me 2 minutes)
+    - Next to the "run" button, select "ADD CONFIGURATION" and select runClient (in Application tab). Then, in "Use classpath of module:", select `com.bettercolors.main.Bettercolors`. Click ok. Now you can run the client. (the first run takes time, you have to wait a bit).
 
-Now it should be done (please refer to [FORGE-INSTRUCTIONS.txt](FORGE-INSTRUCTIONS.txt) or this [youtube video](https://www.youtube.com/watch?v=G2aPT36kf60) if you have any problem)
+When you make a change in build.gradle, make sure to run `gradlew clean` & `gradlew build`.
+If your JAVA_HOME points to a java version below 8 or above 11, use this command: `gradlew -Dorg.gradle.java.home="path/to/javaSDK >8 & <11"` instead of simply `gradlew`.
+
+Now it should be done (please refer to [FORGE-INSTRUCTIONS.txt](FORGE-INSTRUCTIONS.txt) or this [youtube video](https://www.youtube.com/watch?v=G2aPT36kf60) if you have any problem). The steps were updated recently (08/03/2019).
 
 ### 3. Build the .jar
 
-Open a terminal and write `.\gradlew build`.
+Open a terminal and write `.\gradlew build`. The jar built is located in build/lib/.
 
 ### 4. Contributing
 

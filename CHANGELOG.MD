@@ -60,7 +60,7 @@
 
 **V5.0**
 - Added console windows output
-- Right click desactivate aimassist during a fight
+- Right click deactivate aimassist during a fight
 - Fixed aim step Y in report showing the default value
 
 **V5.1**
@@ -113,3 +113,16 @@
 - Developer section :
     - Changed versioning to semantic versioning
     - Improved documentation to set up the project
+
+**V6.0.0 MC_1.13**
+
+Forge 1.13.2 seems to be stable at this point.
+This update is backwards compatible with settings files from v6.0.0-b2 and higher.
+
+- Added error messages in the console if some resources were not loaded
+- Improved font rendering (antialiasing)
+- Improved error messages (they can be sent even if the window is not ready)
+- Fixed crash in mod menu (#21)
+- Fixed team filter (#20)
+- Fixed & improved version checker
+- Fixed resource loading (forge fixed the resource loader, so I had to remove the trick to get it working)

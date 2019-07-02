@@ -8,7 +8,6 @@ import com.bettercolors.modules.Module;
 import com.bettercolors.modules.options.Option;
 import com.bettercolors.modules.options.ToggleOption;
 import com.bettercolors.modules.options.ValueOption;
-import net.minecraftforge.common.ForgeConfig;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -21,10 +20,7 @@ import java.awt.event.MouseEvent;
 import java.awt.font.TextAttribute;
 import java.io.IOException;
 import java.net.*;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class Window extends JFrame{
 
@@ -36,30 +32,25 @@ public class Window extends JFrame{
     private final ArrayList<JCheckBox> CHECKBOXES_MODULES;
     private final Map<JLabel, JSlider> SLIDERS_MODULES;
     private final String LOG_PREFIX = "[Gui] ";
-    private URL RESOURCE_URL;
+    private final int WIDTH = 450;
+    private final int HEIGHT = 600;
+
+    private Queue<Message> waitingMessages;
 
     public Window(String title, ArrayList<Module> modules, String last_version) {
         super(title);
 
-        // We need to find the resource path because this forge version has broken the true resource path
-        URL[] urls = ((URLClassLoader) ClassLoader.getSystemClassLoader()).getURLs();
-        for (URL url : urls) {
-            String urlStr = url.toString();
-            String[] urlSplit = urlStr.split("/");
-            if(urlSplit[urlSplit.length - 1].equals("resources")){
-                RESOURCE_URL = url;
-                break;
-            }
-        }
+        waitingMessages = new LinkedList<>();
 
-        int width = 450;
-        int height = 600;
-        setBounds((int)Toolkit.getDefaultToolkit().getScreenSize().getWidth()/2-width/2,(int)Toolkit.getDefaultToolkit().getScreenSize().getHeight()/2-height/2,width,height);
+        setBounds((int)Toolkit.getDefaultToolkit().getScreenSize().getWidth()/2-WIDTH/2,
+                (int)Toolkit.getDefaultToolkit().getScreenSize().getHeight()/2-HEIGHT/2,
+                WIDTH, HEIGHT);
 
         try {
-            setIconImage(new ImageIcon(new URL(RESOURCE_URL + "images/bettercolors_symbol.png")).getImage());
-        } catch (MalformedURLException e) {
+            setIconImage(new ImageIcon(Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("images/bettercolors_symbol.png"))).getImage());
+        } catch (Exception e) {
             e.printStackTrace();
+            addText("Failed to load images/bettercolors_symbol.png", Color.RED, true);
         }
         setResizable(true);
         setVisible(false);
@@ -115,6 +106,9 @@ public class Window extends JFrame{
         }else if(last_version.equalsIgnoreCase(Bettercolors.URL_PROBLEM)){
             update.setForeground(new Color(100, 0, 0));
             update.setText(Bettercolors.URL_PROBLEM);
+        }else if(last_version.equalsIgnoreCase(Bettercolors.NO_VERSION_FOUND)) {
+            update.setForeground(new Color(200, 200, 0));
+            update.setText(Bettercolors.URL_PROBLEM);
         }else{
             int[] version_dif = Bettercolors.compareVersions(Reference.VERSION, last_version);
             if(version_dif != null) {
@@ -122,15 +116,15 @@ public class Window extends JFrame{
                 for (int i : version_dif) {
                     total_dif += i;
                 }
-                if(total_dif > 1){
+                if(total_dif < 1){
                     update.setForeground(new Color(0, 70, 100));
-                    addText(Integer.toString(total_dif) + " updates available !", Color.ORANGE, true);
+                    addText(-total_dif + " updates available !", Color.ORANGE, true);
                 }else if(total_dif == 1){
                     update.setForeground(new Color(0, 70, 100));
                     addText("One update available !", Color.ORANGE, true);
-                }else if(total_dif < 0){
+                }else{
                     update.setForeground(new Color(150, 70, 0));
-                    addText("You are using a dev version.", Color.ORANGE, true);
+                    addText("You are using a dev version (dif=" + total_dif + ").", Color.ORANGE, true);
                     addText("Be careful ! It is used for testing.", Color.ORANGE, true);
                 }
                 addText("Last stable version : " + last_version + ".", Color.ORANGE, true);
@@ -226,8 +220,9 @@ public class Window extends JFrame{
                 sliders_grid.setLayout(new GridLayout(value_options.size(), 2));
 
                 for(ValueOption value_option : value_options){
-                    final JLabel label = new JLabel(value_option.getName() + " [" + Integer.toString(value_option.getVal()) + "]");
+                    final JLabel label = new JLabel(value_option.getName() + " [" + value_option.getVal() + "]");
                     final JSlider slider = new JSlider();
+                    slider.setPreferredSize(new Dimension(WIDTH/2, 10));
                     slider.setMinimum(value_option.getMin());
                     slider.setMaximum(value_option.getMax());
                     slider.setValue(value_option.getVal());
@@ -236,7 +231,7 @@ public class Window extends JFrame{
                     slider.setPaintTicks(true);
                     slider.addChangeListener(e -> {
                         value_option.setVal(slider.getValue());
-                        label.setText(value_option.getName() + " [" + Integer.toString(value_option.getVal()) + "]");
+                        label.setText(value_option.getName() + " [" + value_option.getVal() + "]");
                         repaint();
                     });
                     SLIDERS_MODULES.put(label, slider);
@@ -247,10 +242,11 @@ public class Window extends JFrame{
                 module_options_panel.add(sliders_grid, "Center");
             }
             try {
-                ImageIcon icon = new ImageIcon(new URL(RESOURCE_URL + "images/" + module.getSymbol()));
+                ImageIcon icon = new ImageIcon(Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("images/" + module.getSymbol())));
                 tabbedPane.addTab(module.getName(), icon, module_options_panel);
-            } catch (MalformedURLException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
+                addText("Failed to load images/" + module.getSymbol(), Color.RED, true);
                 tabbedPane.addTab(module.getName(), module_options_panel);
             }
         }
@@ -308,19 +304,20 @@ public class Window extends JFrame{
             if(length_diff == 0){
                 addText(LOG_PREFIX + "No new files found.", true);
             }else if(length_diff == 1){
-                addText(LOG_PREFIX + "Found " + Integer.toString(length_diff) + " new file.", true);
+                addText(LOG_PREFIX + "Found " + length_diff + " new file.", true);
             }else if(length_diff > 1){
-                addText(LOG_PREFIX + "Found " + Integer.toString(length_diff) + " new files.", true);
+                addText(LOG_PREFIX + "Found " + length_diff + " new files.", true);
             }
         });
         buttons.add(refresh_button);
         settings_panel.add(buttons, "South");
 
         try {
-            ImageIcon icon = new ImageIcon(new URL(RESOURCE_URL + "images/settings_symbol.png"));
+            ImageIcon icon = new ImageIcon(Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("images/settings_symbol.png")));
             tabbedPane.addTab("Settings", icon, settings_panel);
-        } catch (MalformedURLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
+            addText("Failed to load images/settings_symbol.png", Color.RED, true);
             tabbedPane.addTab("Settings", settings_panel);
         }
         // --
@@ -355,6 +352,11 @@ public class Window extends JFrame{
         welcome_message += "|                                                |\n";
         welcome_message += "x~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~x\n";
         _console.setText(welcome_message);
+
+        while(!waitingMessages.isEmpty()){
+            Message message = waitingMessages.poll();
+            addText(message.text, message.color, message.newline);
+        }
 
         // Put the panel on the window
         panel.add(_scroll);
@@ -400,6 +402,10 @@ public class Window extends JFrame{
      * @param new_line if it should create a new line.
      */
     public void addText(String text, Color color, boolean new_line){
+        if(_console == null) {
+            waitingMessages.add(new Message(text, color, new_line));
+            return;
+        }
 
         if(new_line){
             appendToPane(_console, "\n"+text, color);
@@ -411,7 +417,7 @@ public class Window extends JFrame{
         _console.validate();
         try {
             _scroll.getVerticalScrollBar().setValue(_scroll.getVerticalScrollBar().getMaximum());
-        }catch(NullPointerException ignored){
+        }catch(Exception ignored){
             // Seems to happen when the console has a lot of text, but nothing is sure. Need to take a look at it ;)
         }
 
@@ -464,7 +470,7 @@ public class Window extends JFrame{
             for(ValueOption value_option : value_options){
                 for(Map.Entry<JLabel, JSlider> entry : SLIDERS_MODULES.entrySet()){
                     if(entry.getKey().getText().contains(value_option.getName())){
-                        entry.getKey().setText(value_option.getName() + " [" + Integer.toString(value_option.getVal()) + "]");
+                        entry.getKey().setText(value_option.getName() + " [" + value_option.getVal() + "]");
                         entry.getValue().setValue(value_option.getVal());
                         break; // :(
                     }
@@ -480,5 +486,17 @@ public class Window extends JFrame{
      */
     public void toggle(){
         setVisible(!isVisible());
+    }
+
+    class Message{
+        String text;
+        Color color;
+        Boolean newline;
+
+        Message(String text, Color color, Boolean newline){
+            this.text = text;
+            this.color = color;
+            this.newline = newline;
+        }
     }
 }

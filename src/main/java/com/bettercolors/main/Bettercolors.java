@@ -5,7 +5,7 @@ import com.bettercolors.modules.*;
 import com.bettercolors.modules.options.Option;
 import com.bettercolors.modules.options.ToggleOption;
 import com.bettercolors.view.Window;
-import net.minecraft.client.util.InputMappings;
+import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -42,12 +42,12 @@ public class Bettercolors {
     }
 
     private ArrayList<Module> _modules;
-    private Map<String, Boolean> _key_down;
     private final String WINDOW = "windowGUI";
     private Window _window;
 
     public Bettercolors(){
         // Forge event registering
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onKey);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onClientTickEvent);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::clientTick);
         MinecraftForge.EVENT_BUS.register(this);
@@ -82,39 +82,32 @@ public class Bettercolors {
         _modules.add(new AutoSprint("Auto sprint", -1, Boolean.parseBoolean(options.get(AutoSprint.class.getSimpleName())), "sprint_symbol.png"));
         _modules.add(new AutoSword("Auto sword", -1, Boolean.parseBoolean(options.get(AutoSword.class.getSimpleName())), "sword_symbol.png"));
 
-        // KeyEvent
-        _key_down = new HashMap<>();
-        for(Module module : _modules){
-            _key_down.put(module.getClass().getSimpleName(), false);
-        }
-        _key_down.put(WINDOW, false);
-
         // AbstractWindow initialisation
         _window = new Window("Bettercolors " + Reference.VERSION, _modules, getLastVersion());
     }
 
-	@SubscribeEvent
-    public void onClientTickEvent(ClientTickEvent event){
+    @SubscribeEvent
+    public void onKey(final InputEvent.KeyInputEvent event) {
+
         for(Module mod : _modules){
-            mod.updateKeyHandler();
             if(mod.getToggleKey() != -1) {
-                if (InputMappings.isKeyDown(mod.getToggleKey())) {
-                    _key_down.replace(mod.getClass().getSimpleName(), true);
-                } else if (_key_down.get(mod.getClass().getSimpleName())) {
-                    // KEY RELEASED !
+                if (event.getKey() == mod.getToggleKey() && event.getAction() == GLFW.GLFW_RELEASE) {
                     mod.toggle();
                     _window.synchronizeComponents();
                     SettingsUtils.setOption(mod.getClass().getSimpleName(), Boolean.toString(mod.isActivated()));
-                    _key_down.replace(mod.getClass().getSimpleName(), false);
                 }
             }
         }
 
-        if(InputMappings.isKeyDown(GLFW.GLFW_KEY_INSERT)){
-            _key_down.replace(WINDOW, true);
-        }else if(_key_down.get(WINDOW)){
-            _key_down.replace(WINDOW, false);
+        if(event.getKey() == GLFW.GLFW_KEY_INSERT && event.getAction() == GLFW.GLFW_RELEASE){
             _window.toggle();
+        }
+    }
+
+	@SubscribeEvent
+    public void onClientTickEvent(ClientTickEvent event){
+        for(Module mod : _modules) {
+            mod.updateKeyHandler();
         }
 	}
 

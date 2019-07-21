@@ -11,6 +11,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 
 import java.util.ArrayList;
@@ -177,12 +178,19 @@ public class AimAssistance extends Module {
             shift_y = MathUtils.random(shift_y_min, shift_y_max);
         }
 
-        AxisAlignedBB aabb = new AxisAlignedBB(-15, -15, -15, 15, 15 ,15);
-        List<LivingEntity> entities = new ArrayList<>();
+        BlockPos playerPos = MC.player.getPosition();
+        int playerX = playerPos.getX();
+        int playerY = playerPos.getY();
+        int playerZ = playerPos.getZ();
+        AxisAlignedBB area =
+                new AxisAlignedBB(playerX - 10, playerY - 10, playerZ - 10,
+                        playerX + 10, playerY + 10, playerZ + 10);
+
+        List<LivingEntity> entities;
         if(((ToggleOption) _options.get(I_USE_ON_MOBS)).isActivated()){
-            MC.world.getChunk(MC.player.getPosition()).getEntitiesOfTypeWithinAABB(LivingEntity.class, aabb, entities, null);
+            entities = MC.world.getEntitiesWithinAABB(LivingEntity.class, area);
         }else{
-            MC.world.getChunk(MC.player.getPosition()).getEntitiesOfTypeWithinAABB(PlayerEntity.class, aabb, entities, null);
+            entities = MC.world.getEntitiesWithinAABB(PlayerEntity.class, area);
         }
 
         if(entities.size() == 0) return;
@@ -225,7 +233,7 @@ public class AimAssistance extends Module {
         boolean has_reached_a_living_entity = false;
         if(((ToggleOption) _options.get(I_STOP_WHEN_REACHED)).isActivated()) {
             try {
-                Entity mouseOverEntity = (Entity) MC.objectMouseOver.hitInfo;
+                Entity mouseOverEntity = MC.pointedEntity;
                 if ((mouseOverEntity instanceof LivingEntity))
                     has_reached_a_living_entity = true;
             } catch (Exception ignored) {
@@ -270,7 +278,7 @@ public class AimAssistance extends Module {
             MC.player.rotationPitch = rotations[1];
         }
 
-        log_info("Aiming at entity " + entity.getName() + ".");
+        log_info("Aiming at entity " + entity.getName().getFormattedText() + ".");
     }
 
     /**

@@ -27,6 +27,7 @@ public class Window extends JFrame{
     public static Window instance;
     private final ArrayList<Module> MODULES;
     private JTextPane _console;
+    private int _textCounter = 0;
     private JScrollPane _scroll;
     private final ArrayList<JCheckBox> CHECKBOXES_ACTIVATION;
     private final ArrayList<JCheckBox> CHECKBOXES_MODULES;
@@ -405,6 +406,12 @@ public class Window extends JFrame{
         if(_console == null) {
             waitingMessages.add(new Message(text, color, new_line));
             return;
+        }
+
+        _textCounter ++;
+        if(_textCounter > 30) {
+            resetText();
+            _textCounter = 0;
         }
 
         if(new_line){

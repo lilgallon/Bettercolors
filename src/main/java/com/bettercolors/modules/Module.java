@@ -127,7 +127,7 @@ public abstract class Module {
      */
     boolean isInGui(){
         if(MC.player == null) return true;
-        return MC.player.isPlayerSleeping() || !MC.player.isLiving() || !(MC.player.openContainer instanceof PlayerContainer);
+        return MC.player.isSleeping() || !MC.player.isLiving() || !(MC.player.openContainer instanceof PlayerContainer);
     }
 
     /**

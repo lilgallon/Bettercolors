@@ -106,14 +106,13 @@ public class Bettercolors {
 
 	@SubscribeEvent
     public void onClientTickEvent(ClientTickEvent event){
-        for(Module mod : _modules) {
-            mod.updateKeyHandler();
-        }
+
 	}
 
     @SubscribeEvent
     public void clientTick(final TickEvent event){
         for(Module mod : _modules){
+            mod.updateKeyHandler();
             if(mod.isActivated()){
                 mod.update();
             }

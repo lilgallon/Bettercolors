@@ -6,6 +6,7 @@ import com.bettercolors.modules.options.ValueOption;
 import com.bettercolors.utils.MathUtils;
 import com.bettercolors.utils.TimeHelper;
 import net.minecraft.entity.Entity;
+import net.minecraft.network.play.client.CEntityActionPacket;
 import net.minecraft.network.play.client.CUseEntityPacket;
 import net.minecraft.util.Hand;
 
@@ -142,7 +143,7 @@ public class ClickAssistance extends Module {
 
         Entity target = null;
         try{
-            target = (Entity) MC.objectMouseOver.hitInfo;
+            target = MC.pointedEntity;
         }catch (Exception ignored){}
 
         int rand = MathUtils.random(0, 100);
@@ -151,7 +152,7 @@ public class ClickAssistance extends Module {
                 if (MC.player.getDistance(target) <= MC.playerController.getBlockReachDistance() &&
                         (team_filter && !isInSameTeam(target))) {
                     if (packets) {
-                        MC.player.connection.sendPacket(new CUseEntityPacket(target, Hand.MAIN_HAND));
+                        MC.playerController.attackEntity(MC.player, target);
                         MC.player.swingArm(Hand.MAIN_HAND);
                     } else {
                         click();

@@ -3,7 +3,7 @@
 </h3>
  
 <p align="center">
-    <a href="https://img.shields.io/badge/forge_dev-1.13.2_25.0.219-green.svg"><img alt="Forge dev version: 1.13.2 25.0.219" src="https://img.shields.io/badge/forge_dev-1.13.2_25.0.219-green.svg"/></a>
+    <a href="https://img.shields.io/badge/forge_dev-1.14.4_28.0.11-green.svg"><img alt="Forge dev version: 1.14.4-28.0.11" src="https://img.shields.io/badge/forge_dev-1.14.4_28.0.11-green.svg"/></a>
     <a href="https://img.shields.io/github/release/n3roo/bettercolors.svg"><img alt="Release" src="https://img.shields.io/github/release/n3roo/bettercolors.svg"/></a>
     <a href="https://img.shields.io/github/downloads/n3roo/bettercolors/total.svg"><img alt="Downloads" src="https://img.shields.io/github/downloads/n3roo/bettercolors/total.svg"/></a>
     <a href="https://img.shields.io/github/issues/n3roo/bettercolors.svg"><img alt="Open issues" src="https://img.shields.io/github/issues/n3roo/bettercolors.svg"/></a>
@@ -127,7 +127,7 @@ It is easier to set up forge with [Eclipse](https://www.eclipse.org/neon/). Othe
     - Open a terminal and type `gradlew genIntellijRuns` (it took me 2 minutes)
     - Next to the "run" button, select "ADD CONFIGURATION" and select runClient (in Application tab). Then, in "Use classpath of module:", select `com.bettercolors.main.Bettercolors`. Click ok. Now you can run the client. (the first run takes time, you have to wait a bit).
 
-When you make a change in build.gradle, make sure to run `gradlew clean` & `gradlew build`.
+When you make a change in build.gradle, make sure to run `gradlew clean`.
 If your JAVA_HOME points to a java version below 8 or above 11, use this command: `gradlew -Dorg.gradle.java.home="path/to/javaSDK >8 & <11"` instead of simply `gradlew`.
 
 Now it should be done (please refer to [FORGE-INSTRUCTIONS.txt](FORGE-INSTRUCTIONS.txt) or this [youtube video](https://www.youtube.com/watch?v=G2aPT36kf60) if you have any problem). The steps were updated recently (08/03/2019).

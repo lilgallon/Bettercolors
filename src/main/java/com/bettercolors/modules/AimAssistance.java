@@ -6,12 +6,15 @@ import com.bettercolors.modules.options.ValueOption;
 import com.bettercolors.utils.MathUtils;
 import com.bettercolors.utils.TimeHelper;
 import com.google.common.collect.Lists;
-import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -174,35 +177,36 @@ public class AimAssistance extends Module {
             shift_y = MathUtils.random(shift_y_min, shift_y_max);
         }
 
-        List<? extends Entity> entities;
+        AxisAlignedBB aabb = new AxisAlignedBB(-15, -15, -15, 15, 15 ,15);
+        List<LivingEntity> entities = new ArrayList<>();
         if(((ToggleOption) _options.get(I_USE_ON_MOBS)).isActivated()){
-            entities = MC.world.loadedEntityList;
+            MC.world.getChunk(MC.player.getPosition()).getEntitiesOfTypeWithinAABB(LivingEntity.class, aabb, entities, null);
         }else{
-            entities = MC.world.playerEntities;
+            MC.world.getChunk(MC.player.getPosition()).getEntitiesOfTypeWithinAABB(PlayerEntity.class, aabb, entities, null);
         }
 
-        if(entities == null) return;
+        if(entities.size() == 0) return;
 
         // We retrieve all the entity that the user can aim at
         int range = ((ValueOption) _options.get(I_RANGE)).getVal();
-        List<EntityLivingBase> attackable_entities = Lists.newArrayList();
+        List<LivingEntity> attackableEntities = Lists.newArrayList();
         for(Entity entity : entities){
-            if(entity instanceof EntityLivingBase){
-                if(entity instanceof EntityPlayerSP)
+            if(entity instanceof LivingEntity){
+                if(entity instanceof ClientPlayerEntity)
                     continue;
                 if(MC.player.getDistance(entity) <= range && MC.player.canEntityBeSeen(entity))
-                    attackable_entities.add((EntityLivingBase) entity);
+                    attackableEntities.add((LivingEntity) entity);
             }
         }
 
-        if(attackable_entities.size() == 0) return;
+        if(attackableEntities.size() == 0) return;
 
         // Now we chose the entity to attack (we take the closest one)
-        EntityLivingBase target = null;
+        LivingEntity target = null;
         float minDistDirect = Float.MAX_VALUE;
 
         boolean team_filter = ((ToggleOption) _options.get(I_TEAM_FILTER)).isActivated();
-        for(EntityLivingBase entity : attackable_entities){
+        for(LivingEntity entity : attackableEntities){
             if(team_filter && isInSameTeam(entity)) continue;
 
             // Calculate distances
@@ -221,8 +225,8 @@ public class AimAssistance extends Module {
         boolean has_reached_a_living_entity = false;
         if(((ToggleOption) _options.get(I_STOP_WHEN_REACHED)).isActivated()) {
             try {
-                Entity mouseOverEntity = MC.objectMouseOver.entity;
-                if ((mouseOverEntity instanceof EntityLivingBase))
+                Entity mouseOverEntity = (Entity) MC.objectMouseOver.hitInfo;
+                if ((mouseOverEntity instanceof LivingEntity))
                     has_reached_a_living_entity = true;
             } catch (Exception ignored) {
             }
@@ -238,7 +242,7 @@ public class AimAssistance extends Module {
      * @param entity the target to aim.
      * @return the [x, y] difference from the player aim to the target.
      */
-    private float[] getDiffFrom(EntityLivingBase entity){
+    private float[] getDiffFrom(LivingEntity entity){
         final double diffX = entity.posX - MC.player.posX;
         final double diffZ = entity.posZ - MC.player.posZ;
         double diffY = entity.posY + entity.getEyeHeight() - (MC.player.posY + MC.player.getEyeHeight());
@@ -258,7 +262,7 @@ public class AimAssistance extends Module {
     /**
      * @param entity the entity to aim.
      */
-    private synchronized void aimEntity(EntityLivingBase entity) {
+    private synchronized void aimEntity(LivingEntity entity) {
         final float[] rotations = getRotationsNeeded(entity);
 
         if (rotations != null) {
@@ -273,7 +277,7 @@ public class AimAssistance extends Module {
      * @param entity the target to aim.
      * @return the [x, y] new positions of the player aim.
      */
-    private float[] getRotationsNeeded(EntityLivingBase entity) {
+    private float[] getRotationsNeeded(LivingEntity entity) {
         if (entity == null) {
             return null;
         }

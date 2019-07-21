@@ -3,9 +3,9 @@ package com.bettercolors.modules;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemSword;
+import net.minecraft.item.SwordItem;
 
 import java.util.Objects;
 
@@ -27,8 +27,8 @@ public class AutoSword extends Module {
 
             boolean has_clicked_on_living_entity = false;
             try {
-                Entity mouseOverEntity = MC.objectMouseOver.entity;
-                if ((mouseOverEntity instanceof EntityLivingBase))
+                Entity mouseOverEntity = (Entity) MC.objectMouseOver.hitInfo;
+                if ((mouseOverEntity instanceof LivingEntity))
                     has_clicked_on_living_entity = true;
             } catch (Exception ignored) {}
 
@@ -38,9 +38,9 @@ public class AutoSword extends Module {
                 int best_item = -1;
                 for(int slot = 0; slot < 9 ; slot ++){
                     ItemStack stack = MC.player.inventory.mainInventory.get(slot);
-                    if(stack.getItem() instanceof ItemSword){
-                        ItemSword sword = (ItemSword) stack.getItem();
-                        float damage = sword.getMaxDamage();
+                    if(stack.getItem() instanceof SwordItem){
+                        SwordItem sword = (SwordItem) stack.getItem();
+                        float damage = sword.getAttackDamage();
                         if(sword.hasEffect(stack)){
                             // The damage calculation is not correct here, but we just need to find the item with the most
                             // powerful enchantment, so we don't care.

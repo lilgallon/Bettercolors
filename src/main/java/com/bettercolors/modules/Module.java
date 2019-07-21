@@ -6,8 +6,8 @@ import com.bettercolors.modules.options.ValueOption;
 import com.bettercolors.view.Window;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.ContainerPlayer;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.container.PlayerContainer;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -90,14 +90,14 @@ public abstract class Module {
      * @return true if the given entity is in the same team as the player.
      */
     boolean isInSameTeam(Entity entity){
-        if(!(entity instanceof EntityPlayer))
+        if(!(entity instanceof PlayerEntity))
             return false;
 
         boolean same_team = false;
         String target_tag;
         try {
             // Check friends / teammate
-            target_tag = exportTag((EntityPlayer) entity);
+            target_tag = exportTag((PlayerEntity) entity);
 
             if (exportTag(MC.player).equalsIgnoreCase(target_tag)) {
                 same_team = true;
@@ -111,7 +111,7 @@ public abstract class Module {
      * @param e entity.
      * @return the team tag of the entity.
      */
-    private String exportTag(EntityPlayer e){
+    private String exportTag(PlayerEntity e){
         String tag;
         try{
             tag = e.getDisplayName().getFormattedText().split(e.getName().getString())[0].replace(" ","");
@@ -127,7 +127,7 @@ public abstract class Module {
      */
     boolean isInGui(){
         if(MC.player == null) return true;
-        return MC.player.isPlayerSleeping() || !MC.player.isLiving() || !(MC.player.openContainer instanceof ContainerPlayer);
+        return MC.player.isPlayerSleeping() || !MC.player.isLiving() || !(MC.player.openContainer instanceof PlayerContainer);
     }
 
     /**

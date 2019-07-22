@@ -20,16 +20,12 @@ plugins {
     id "net.minecraftforge.gradle.forge" version "2.0.2"
 }
 */
-version = "6.0.0-b3"
+version = "6.0.0"
 group= "com.bettercolors.main" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "bettercolors"
 
-// Important ! The code uses lambda expressions & diamond operators
-sourceCompatibility = JavaVersion.VERSION_1_8
-targetCompatibility = JavaVersion.VERSION_1_8
-
 minecraft {
-    version = "1.8.9-11.15.1.1722"
+    version = "1.8.9-11.15.1.1902-1.8.9"
     runDir = "run"
     
     // the mappings can be changed at any time, and must be in the following format.

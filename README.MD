@@ -1,5 +1,3 @@
-![header](.github/header.png)
-
 <h3 align="center">
   <img src=".github/header.png">
 </h3>

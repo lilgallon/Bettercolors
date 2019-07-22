@@ -21,20 +21,21 @@ import java.awt.font.TextAttribute;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class Window extends JFrame{
 
     public static Window instance;
     private final ArrayList<Module> MODULES;
     private JTextPane _console;
+    private int _messageCounter = 0;
     private JScrollPane _scroll;
     private final ArrayList<JCheckBox> CHECKBOXES_ACTIVATION;
     private final ArrayList<JCheckBox> CHECKBOXES_MODULES;
     private final Map<JLabel, JSlider> SLIDERS_MODULES;
     private final String LOG_PREFIX = "[Gui] ";
+
+    private Queue<Message> waitingMessages;
 
     public Window(String title, ArrayList<Module> modules, String last_version) {
         super(title);
@@ -42,7 +43,12 @@ public class Window extends JFrame{
         int width = 450;
         int height = 600;
         setBounds((int)Toolkit.getDefaultToolkit().getScreenSize().getWidth()/2-width/2,(int)Toolkit.getDefaultToolkit().getScreenSize().getHeight()/2-height/2,width,height);
-        setIconImage(new ImageIcon(this.getClass().getResource("/images/bettercolors_symbol.png")).getImage());
+        try {
+            setIconImage(new ImageIcon(this.getClass().getResource("/images/bettercolors_symbol.png")).getImage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            addText("Failed to load /images/bettercolors_symbol.png", Color.RED, true);
+        }
         setResizable(true);
         setVisible(false);
 
@@ -51,6 +57,8 @@ public class Window extends JFrame{
         CHECKBOXES_ACTIVATION = new ArrayList<>();
         CHECKBOXES_MODULES = new ArrayList<>();
         SLIDERS_MODULES = new HashMap<>();
+
+        waitingMessages = new LinkedList<>();
 
         // Header
         // JPanel header_layout = new JPanel();
@@ -97,6 +105,9 @@ public class Window extends JFrame{
         }else if(last_version.equalsIgnoreCase(Bettercolors.URL_PROBLEM)){
             update.setForeground(new Color(100, 0, 0));
             update.setText(Bettercolors.URL_PROBLEM);
+        }else if(last_version.equalsIgnoreCase(Bettercolors.NO_VERSION_FOUND)) {
+            update.setForeground(new Color(200, 200, 0));
+            update.setText(Bettercolors.URL_PROBLEM);
         }else{
             int[] version_dif = Bettercolors.compareVersions(Reference.VERSION, last_version);
             if(version_dif != null) {
@@ -104,15 +115,15 @@ public class Window extends JFrame{
                 for (int i : version_dif) {
                     total_dif += i;
                 }
-                if(total_dif > 1){
+                if(total_dif < 1){
                     update.setForeground(new Color(0, 70, 100));
-                    addText(Integer.toString(total_dif) + " updates available !", Color.ORANGE, true);
+                    addText(- total_dif + " updates available !", Color.ORANGE, true);
                 }else if(total_dif == 1){
                     update.setForeground(new Color(0, 70, 100));
                     addText("One update available !", Color.ORANGE, true);
-                }else if(total_dif < 0){
+                }else{
                     update.setForeground(new Color(150, 70, 0));
-                    addText("You are using a dev version.", Color.ORANGE, true);
+                    addText("You are using a dev version. (dif=" + total_dif + ").", Color.ORANGE, true);
                     addText("Be careful ! It is used for testing.", Color.ORANGE, true);
                 }
                 addText("Last stable version : " + last_version + ".", Color.ORANGE, true);
@@ -138,8 +149,7 @@ public class Window extends JFrame{
             }else{
                 update.setForeground(new Color(120, 20, 20));
                 addText("Unable to compare versions !", Color.RED, true);
-                addText("If you are using a version below 6.0.0-b3, it is normal.", Color.RED, true);
-                addText("Otherwise this problem should be reported to https://github.com/N3ROO/Bettercolors/issues.", Color.RED, true);
+                addText("This problem should be reported to https://github.com/N3ROO/Bettercolors/issues.", Color.RED, true);
                 update.setText("Unable to compare versions");
             }
         }
@@ -208,7 +218,7 @@ public class Window extends JFrame{
                 sliders_grid.setLayout(new GridLayout(value_options.size(), 2));
 
                 for(ValueOption value_option : value_options){
-                    final JLabel label = new JLabel(value_option.getName() + " [" + Integer.toString(value_option.getVal()) + "]");
+                    final JLabel label = new JLabel(value_option.getName() + " [" + value_option.getVal() + "]");
                     final JSlider slider = new JSlider();
                     slider.setMinimum(value_option.getMin());
                     slider.setMaximum(value_option.getMax());
@@ -218,7 +228,7 @@ public class Window extends JFrame{
                     slider.setPaintTicks(true);
                     slider.addChangeListener(e -> {
                         value_option.setVal(slider.getValue());
-                        label.setText(value_option.getName() + " [" + Integer.toString(value_option.getVal()) + "]");
+                        label.setText(value_option.getName() + " [" + value_option.getVal() + "]");
                         repaint();
                     });
                     SLIDERS_MODULES.put(label, slider);
@@ -228,8 +238,14 @@ public class Window extends JFrame{
 
                 module_options_panel.add(sliders_grid, "Center");
             }
-            ImageIcon icon = new ImageIcon(this.getClass().getResource("/images/" + module.getSymbol()));
-            tabbedPane.addTab(module.getName(), icon, module_options_panel);
+            try{
+                ImageIcon icon = new ImageIcon(this.getClass().getResource("/images/" + module.getSymbol()));
+                tabbedPane.addTab(module.getName(), icon, module_options_panel);
+            } catch (Exception e) {
+                addText("Failed to load /images/" + module.getSymbol(), Color.RED, true);
+                tabbedPane.addTab(module.getName(), module_options_panel);
+            }
+
         }
         // --
 
@@ -285,16 +301,22 @@ public class Window extends JFrame{
             if(length_diff == 0){
                 addText(LOG_PREFIX + "No new files found.", true);
             }else if(length_diff == 1){
-                addText(LOG_PREFIX + "Found " + Integer.toString(length_diff) + " new file.", true);
+                addText(LOG_PREFIX + "Found " + length_diff + " new file.", true);
             }else if(length_diff > 1){
-                addText(LOG_PREFIX + "Found " + Integer.toString(length_diff) + " new files.", true);
+                addText(LOG_PREFIX + "Found " + length_diff + " new files.", true);
             }
         });
         buttons.add(refresh_button);
         settings_panel.add(buttons, "South");
 
-        ImageIcon icon = new ImageIcon(this.getClass().getResource("/images/settings_symbol.png"));
-        tabbedPane.addTab("Settings", icon, settings_panel);
+        try {
+            ImageIcon icon = new ImageIcon(this.getClass().getResource("/images/settings_symbol.png"));
+            tabbedPane.addTab("Settings", icon, settings_panel);
+        } catch (Exception e) {
+            addText("Failed to load /images/settings_symbol.png", Color.RED, true);
+            tabbedPane.addTab("Settings", settings_panel);
+        }
+
         // --
 
         modules_related_layout.add(tabbedPane, "Center");
@@ -327,6 +349,11 @@ public class Window extends JFrame{
         welcome_message += "|                                                |\n";
         welcome_message += "x~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~x\n";
         _console.setText(welcome_message);
+
+        while(!waitingMessages.isEmpty()){
+            Message message = waitingMessages.poll();
+            addText(message.text, message.color, message.newline);
+        }
 
         // Put the panel on the window
         panel.add(_scroll);
@@ -372,6 +399,17 @@ public class Window extends JFrame{
      * @param new_line if it should create a new line.
      */
     public void addText(String text, Color color, boolean new_line){
+
+        if(_console == null) {
+            waitingMessages.add(new Message(text, color, new_line));
+            return;
+        }
+
+        _messageCounter ++;
+        if(_messageCounter > 30) {
+            resetText();
+            _messageCounter = 0;
+        }
 
         if(new_line){
             appendToPane(_console, "\n"+text, color);
@@ -436,7 +474,7 @@ public class Window extends JFrame{
             for(ValueOption value_option : value_options){
                 for(Map.Entry<JLabel, JSlider> entry : SLIDERS_MODULES.entrySet()){
                     if(entry.getKey().getText().contains(value_option.getName())){
-                        entry.getKey().setText(value_option.getName() + " [" + Integer.toString(value_option.getVal()) + "]");
+                        entry.getKey().setText(value_option.getName() + " [" + value_option.getVal() + "]");
                         entry.getValue().setValue(value_option.getVal());
                         break; // :(
                     }
@@ -452,5 +490,17 @@ public class Window extends JFrame{
      */
     public void toggle(){
         setVisible(!isVisible());
+    }
+}
+
+class Message{
+    String text;
+    Color color;
+    Boolean newline;
+
+    Message(String text, Color color, Boolean newline){
+        this.text = text;
+        this.color = color;
+        this.newline = newline;
     }
 }

@@ -41,11 +41,11 @@ public class ValueOption extends Option {
      */
     public void setVal(int val){
         if(val > MAX) {
-            throw new IllegalArgumentException("The value " + Integer.toString(val) +
-                    " is bigger than its max : " + Integer.toString(MAX));
+            throw new IllegalArgumentException("The value " + val +
+                    " is bigger than its max : " + MAX);
         }else if(val < MIN){
-            throw new IllegalArgumentException("The value " + Integer.toString(val) +
-                    " is lower than its min : " + Integer.toString(MIN));
+            throw new IllegalArgumentException("The value " + val +
+                    " is lower than its min : " + MIN);
         }else{
             _val = val;
             saveOption();

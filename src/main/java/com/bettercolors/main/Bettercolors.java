@@ -34,8 +34,10 @@ public class Bettercolors {
 
     public final static String URL_PROBLEM = "Url problem (please contact developer).";
     public final static String INTERNET_PROBLEM = "No internet connection. :(";
-    public final static String NO_VERSION_FOUND = "No version found.";
+    public final static String UNRELEASED = "Preview version (not released yet).";
+    public final static String EMPTY_PAGE = "Github release page has an issue.";
     public final static String DOWNLOAD_URL = "https://github.com/N3ROO/Bettercolors/releases/latest";
+
 
     private final static ArrayList<Option> DEFAULT_ACTIVATION_STATUS;
     static{
@@ -144,6 +146,7 @@ public class Bettercolors {
 
             // Get last version from JSON
             String[] tags = json.split("\"tag_name\"");
+
             int i = 0;
             boolean found = false;
             while(i < tags.length && !found){
@@ -156,14 +159,16 @@ public class Bettercolors {
             }
 
             if(!found){
-                return NO_VERSION_FOUND;
+                return UNRELEASED;
             }else{
                 last_version = last_version.replace(MC_PREFIX + Reference.MAIN_MC_VERSION, "");
             }
-        } catch (MalformedURLException e){
+        } catch (MalformedURLException e) {
             return URL_PROBLEM;
-        } catch (IOException e){
+        } catch (IOException e) {
             return INTERNET_PROBLEM;
+        } catch (Exception e) {
+            return EMPTY_PAGE;
         }
 
         return last_version;

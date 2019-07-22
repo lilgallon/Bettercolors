@@ -105,9 +105,12 @@ public class Window extends JFrame{
         }else if(last_version.equalsIgnoreCase(Bettercolors.URL_PROBLEM)){
             update.setForeground(new Color(100, 0, 0));
             update.setText(Bettercolors.URL_PROBLEM);
-        }else if(last_version.equalsIgnoreCase(Bettercolors.NO_VERSION_FOUND)) {
+        }else if(last_version.equalsIgnoreCase(Bettercolors.UNRELEASED)) {
             update.setForeground(new Color(200, 200, 0));
-            update.setText(Bettercolors.URL_PROBLEM);
+            update.setText(Bettercolors.UNRELEASED);
+        }else if(last_version.equalsIgnoreCase(Bettercolors.EMPTY_PAGE)) {
+            update.setForeground(new Color(100, 0, 0));
+            update.setText(Bettercolors.EMPTY_PAGE);
         }else{
             int[] version_dif = Bettercolors.compareVersions(Reference.VERSION, last_version);
             if(version_dif != null) {

@@ -138,8 +138,7 @@ public class Window extends JFrame{
             }else{
                 update.setForeground(new Color(120, 20, 20));
                 addText("Unable to compare versions !", Color.RED, true);
-                addText("If you are using a version below 6.0.0-b3, it is normal.", Color.RED, true);
-                addText("Otherwise this problem should be reported to https://github.com/N3ROO/Bettercolors/issues.", Color.RED, true);
+                addText("This problem should be reported to https://github.com/N3ROO/Bettercolors/issues.", Color.RED, true);
                 update.setText("Unable to compare versions");
             }
         }

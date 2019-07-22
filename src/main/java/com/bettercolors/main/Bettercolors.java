@@ -59,7 +59,11 @@ public class Bettercolors {
 		// Registers tick event
         FMLCommonHandler.instance().bus().register(this);
 
-		// Settings management
+        // Antialiasing font
+        System.setProperty("awt.useSystemAAFontSettings","on");
+        System.setProperty("swing.aatext", "true");
+
+        // Settings management
         Map<String, String> options = SettingsUtils.getOptions();
         ArrayList<ArrayList<Option>> modules_options = new ArrayList<>();
         modules_options.add(AimAssistance.getDefaultOptions());

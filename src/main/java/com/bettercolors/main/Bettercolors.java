@@ -34,6 +34,7 @@ public class Bettercolors {
 
     public final static String URL_PROBLEM = "Url problem (please contact developer).";
     public final static String INTERNET_PROBLEM = "No internet connection. :(";
+    public final static String NO_VERSION_FOUND = "No version found.";
     public final static String DOWNLOAD_URL = "https://github.com/N3ROO/Bettercolors/releases/latest";
 
     private final static ArrayList<Option> DEFAULT_ACTIVATION_STATUS;

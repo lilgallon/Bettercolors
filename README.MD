@@ -115,12 +115,12 @@ It is easier to set up forge with [Eclipse](https://www.eclipse.org/neon/). Othe
 - Clone this project `git clone <link>`
 - Go in the project directory
 
-- Now if you use eclipse :
+- Now if you use eclipse:
     - Open a terminal and type `.\gradlew setupDecompWorkspace`
     - Open a terminal and type `.\gradlew eclipse`
     - Open eclipse and switch your workspace to eclipse/
 
-- And if you use IntelliJ IDEA **recommended** :
+- And if you use IntelliJ IDEA (2018.x.x) **recommended**:
     - Open IntelliJ IDEA, and open the "build.gradle" file as a project
     - A window will show up, change nothing but "create separate module per source set" that needs to be **disabled**, then click ok (make sure that the Gradle JVM is java < 11)
     - Wait for IntelliJ to start and to process with gradle (it took me 6 minutes with a good computer)

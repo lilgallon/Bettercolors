@@ -1,6 +1,8 @@
-name: Java CI
+name: Build MC_1.8.9
 
-on: [push]
+on:
+  push:
+    branches: MC_1.8.9
 
 jobs:
   build:

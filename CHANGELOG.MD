@@ -118,7 +118,15 @@
 
 This update is backwards compatible with settings files from v6.0.0-b2 and higher.
 
-- ✔️ Added error messages in the console if some resources were not loaded
+- ✔ Added error messages in the console if some resources were not loaded
 - ✨ Improved font rendering (anti aliasing)
 - ✨ Improved error messages (they can be sent even if the window is not ready)
 - 💫 Fixed & improved version checker
+
+**V6.0.1 MC_1.8.9**
+
+This is an **important** security update. It also fixes some bugs.
+
+- ✨ Changed modid to make sure that bettercolors is not recognizable (#28) - thanks @patricktelling
+- 💫 Fixed stop on right click that stayed activated even if toggled off (#29)
+- 💫 Fixed aim assistance that was not turned off when the user was in the pause menu (#25)

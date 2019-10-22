@@ -114,7 +114,7 @@
     - Changed versioning to semantic versioning
     - Improved documentation to set up the project
 
-**V6.0.0 MC_1.13**
+**V6.0.0 MC_1.13.2**
 
 Forge 1.13.2 seems to be stable at this point.
 This update is backwards compatible with settings files from v6.0.0-b2 and higher.
@@ -126,3 +126,13 @@ This update is backwards compatible with settings files from v6.0.0-b2 and highe
 - Fixed team filter (#20)
 - Fixed & improved version checker
 - Fixed resource loading (forge fixed the resource loader, so I had to remove the trick to get it working)
+
+**V6.0.0 MC_1.14.4**
+
+Exactly the same version as V6.0.0 MC_1.13, but for Minecraft 1.14.4
+
+**V6.0.1 MC_1.14.4**
+
+- Updated to the latest forge stable version (28.1.0)
+- Fixed "missing forge files" during build due to forge's package layout change (#27) - thanks @patricktelling
+- Changed modid to make sure that bettercolors is not recognizable (#28) - thanks @patricktelling

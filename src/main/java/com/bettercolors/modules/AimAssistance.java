@@ -136,7 +136,8 @@ public class AimAssistance extends Module {
             }
 
             if(!_activation_timer.isStopped() &&
-                    ( isKeyState(KEY.USE, KEY_STATE.JUST_PRESSED) || _activation_timer.isDelayComplete(((ValueOption) _options.get(I_DURATION)).getVal()) || isInGui())){
+                    ( (isKeyState(KEY.USE, KEY_STATE.JUST_PRESSED) && ((ToggleOption) _options.get(I_STOP_ON_RIGHT_CLICK)).isActivated()) ||
+                            _activation_timer.isDelayComplete(((ValueOption) _options.get(I_DURATION)).getVal()) || isInGui())){
                 _activation_timer.stop();
                 _refresh_rate_timer.stop();
                 log_info("Aim assistance stopped.");

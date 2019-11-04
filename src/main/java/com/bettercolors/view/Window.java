@@ -357,7 +357,7 @@ public class Window extends JFrame{
         _scroll = new JScrollPane (_console);
         _scroll.setVerticalScrollBarPolicy( JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         _scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        _scroll.setPreferredSize(new Dimension(425,100));
+        _scroll.setPreferredSize(new Dimension(425,200));
 
         // TextArea custom
         //info_box.setWrapStyleWord(true);

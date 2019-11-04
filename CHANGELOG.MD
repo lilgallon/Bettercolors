@@ -136,3 +136,8 @@ Exactly the same version as V6.0.0 MC_1.13, but for Minecraft 1.14.4
 - Updated to the latest forge stable version (28.1.0)
 - Fixed "missing forge files" during build due to forge's package layout change (#27) - thanks @patricktelling
 - Changed modid to make sure that bettercolors is not recognizable (#28) - thanks @patricktelling
+
+**V6.1.0 MC_1.14.4**
+
+- Added "write changelog of last version in console if the mod is out dated" (#30)
+- Increased the size of the console (100 -> 200)

@@ -1,6 +1,8 @@
 name: Build MC_1.13.2
 
 on:
+  pull_request:
+    branches: MC_1.13.2
   push:
     branches: MC_1.13.2
 

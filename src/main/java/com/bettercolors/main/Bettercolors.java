@@ -106,7 +106,7 @@ public class Bettercolors {
 
 	@SubscribeEvent
     public void onClientTickEvent(ClientTickEvent event){
-
+        // test
 	}
 
     @SubscribeEvent

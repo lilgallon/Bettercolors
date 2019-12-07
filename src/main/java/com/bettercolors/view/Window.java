@@ -267,10 +267,18 @@ public class Window extends JFrame{
         JButton keybind = new JButton("Change the key to toggle the GUI [" + Bettercolors.TOGGLE_KEY_NAME + "]");
         keybind.addActionListener(e -> {
             JDialog dialog = new JDialog(instance, "Message");
-            JLabel msg = new JLabel("Please press a key...");
+            JLabel msg = new JLabel(
+                    "<html>Press a key...<br>" +
+                    "Please note that due to the difference between<br>" +
+                    "VK and GLFW key events, ALT, CTRL and SHIFT<br>" +
+                    "keys do not take into account left / right. Only<br>" +
+                    "the right key is working. So if you choose<br>" +
+                    "the left key, it will register the right one.</html>");
             msg.setHorizontalAlignment(JLabel.CENTER);
-            dialog.add(msg);
-            dialog.setSize(200, 100);
+            dialog.getRootPane().setBorder(new EmptyBorder(10, 10, 10, 10));
+            dialog.setLayout(new BorderLayout(0, 15));
+            dialog.add(msg, "North");
+            dialog.pack();
             dialog.setLocationRelativeTo(instance);
             dialog.addKeyListener(new KeyListener() {
                 @Override

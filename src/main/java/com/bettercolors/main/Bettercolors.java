@@ -32,6 +32,9 @@ public class Bettercolors {
     public final static String NO_VERSION_FOUND = "No version found.";
     public final static String DOWNLOAD_URL = "https://github.com/N3ROO/Bettercolors/releases/latest";
 
+    public static String TOGGLE_KEY_NAME = "insert code: 260";
+    public static int TOGGLE_KEY = GLFW.GLFW_KEY_INSERT;
+
     private final static ArrayList<Option> DEFAULT_ACTIVATION_STATUS;
     static{
         DEFAULT_ACTIVATION_STATUS = new ArrayList<>();
@@ -99,18 +102,14 @@ public class Bettercolors {
             }
         }
 
-        if(event.getKey() == GLFW.GLFW_KEY_INSERT && event.getAction() == GLFW.GLFW_RELEASE){
+        if(event.getKey() == TOGGLE_KEY && event.getAction() == GLFW.GLFW_RELEASE){
             _window.toggle();
         }
     }
 
 	@SubscribeEvent
     public void onClientTickEvent(ClientTickEvent event){
-<<<<<<< feature-15
-        // test
-=======
-        // ...
->>>>>>> local
+
 	}
 
     @SubscribeEvent

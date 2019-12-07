@@ -106,7 +106,11 @@ public class Bettercolors {
 
 	@SubscribeEvent
     public void onClientTickEvent(ClientTickEvent event){
+<<<<<<< feature-15
         // test
+=======
+        // ...
+>>>>>>> local
 	}
 
     @SubscribeEvent

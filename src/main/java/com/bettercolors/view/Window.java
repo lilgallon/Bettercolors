@@ -285,6 +285,7 @@ public class Window extends JFrame{
                         } else {
                             Bettercolors.TOGGLE_KEY_NAME = e.getKeyChar() + " code: " + glfw_code;
                             Bettercolors.TOGGLE_KEY = glfw_code;
+                            SettingsUtils.setOption(Bettercolors.TOGGLE_KEY_OPTION, Integer.toString(glfw_code));
                             keybind.setText("Change the key to toggle the GUI [" + Bettercolors.TOGGLE_KEY_NAME + "]");
                         }
                     }

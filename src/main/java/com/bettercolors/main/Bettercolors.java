@@ -32,6 +32,7 @@ public class Bettercolors {
     public final static String NO_VERSION_FOUND = "No version found.";
     public final static String DOWNLOAD_URL = "https://github.com/N3ROO/Bettercolors/releases/latest";
 
+    public final static String TOGGLE_KEY_OPTION = "toggle_key";
     public static String TOGGLE_KEY_NAME = "insert code: 260";
     public static int TOGGLE_KEY = GLFW.GLFW_KEY_INSERT;
 
@@ -84,6 +85,12 @@ public class Bettercolors {
         _modules.add(new ClickAssistance("Click assistance", GLFW.GLFW_KEY_PAGE_UP, Boolean.parseBoolean(options.get(ClickAssistance.class.getSimpleName())), options, "click_symbol.png"));
         _modules.add(new AutoSprint("Auto sprint", -1, Boolean.parseBoolean(options.get(AutoSprint.class.getSimpleName())), "sprint_symbol.png"));
         _modules.add(new AutoSword("Auto sword", -1, Boolean.parseBoolean(options.get(AutoSword.class.getSimpleName())), "sword_symbol.png"));
+
+        // Gui toggle key
+        try {
+            String gui_toggle_key = SettingsUtils.getOption(TOGGLE_KEY_OPTION);
+            Bettercolors.TOGGLE_KEY = Integer.parseInt(gui_toggle_key);
+        } catch (Exception ignored) { } // We are here because the setting does not exist yet (the user never updated the GUI toggle key)
 
         // AbstractWindow initialisation
         _window = new Window("Bettercolors " + Reference.VERSION, _modules, getLastVersion());

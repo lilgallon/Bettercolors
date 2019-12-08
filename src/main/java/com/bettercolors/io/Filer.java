@@ -117,7 +117,7 @@ public class Filer {
     }
 
     /**
-     * @return the settings directory ("bettercolors" folder in the minecraft game directory).
+     * @return the settings directory ("config" folder in the minecraft game directory).
      */
     public static File getSettingsDirectory() {
         String settingsDir = System.getProperty("user.dir");
@@ -125,7 +125,7 @@ public class Filer {
             throw new IllegalStateException("user.dir==null");
         }
         File home = new File(settingsDir);
-        File settingsDirectory = new File(home, "bettercolors");
+        File settingsDirectory = new File(home, "config");
         if(!settingsDirectory.exists()) {
             if(!settingsDirectory.mkdir()) {
                 throw new IllegalStateException(settingsDirectory.toString());

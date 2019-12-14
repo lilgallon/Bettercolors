@@ -151,4 +151,5 @@ If you want to contribute, make sure to :
 ### 5. Credits & Acknowledgements
 
 - [@N3ROO](https://github.com/N3ROO)  - *Main developer*
-- [@patricktelling](https://github.com/patricktelling) - *Pointed out important issues ([#27](https://github.com/N3ROO/Bettercolors/issues/27) & [#28](https://github.com/N3ROO/Bettercolors/issues/28))*
+- [@patricktelling](https://github.com/patricktelling) - *Pointed out important issues (#27 & #28)*
+- [@shorebre4k](https://github.com/shorebre4k) - *Added option to change the GUI's toggle key (issue #15 & pull request #35)*

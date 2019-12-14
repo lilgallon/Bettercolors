@@ -140,3 +140,5 @@ Exactly the same version as V6.0.0 MC_1.13, but for Minecraft 1.14.4
 **V6.1.0 MC_1.14.4**
 
 - Fixed "Stop on right click stays activated even if toggled off" (#29)
+- Added "write changelog of last version in console if the mod is out dated" (#30)
+- Increased the size of the console (100 -> 200)

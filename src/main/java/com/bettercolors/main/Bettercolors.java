@@ -83,7 +83,7 @@ public class Bettercolors {
         _modules.add(new AutoSword("Auto sword", -1, Boolean.parseBoolean(options.get(AutoSword.class.getSimpleName())), "sword_symbol.png"));
 
         // AbstractWindow initialisation
-        _window = new Window("Bettercolors " + Reference.VERSION, _modules, getLastVersion());
+        _window = new Window("Bettercolors " + Reference.VERSION, _modules, getVersionInformation());
     }
 
     @SubscribeEvent
@@ -122,9 +122,10 @@ public class Bettercolors {
     /**
      * @return the last version tag from the github release page (without the MC version in it).
      */
-	private String getLastVersion(){
+	private String[] getVersionInformation(){
         final String MC_PREFIX = "-MC";
         String last_version = "";
+        String changelog = "";
 
         try{
             // Retrieve JSON
@@ -135,6 +136,8 @@ public class Bettercolors {
 
             // Get last version from JSON
             String[] tags = json.split("\"tag_name\"");
+            String[] bodies = json.split("\"body\"");
+
             int i = 0;
             boolean found = false;
             while(i < tags.length && !found){
@@ -147,17 +150,17 @@ public class Bettercolors {
             }
 
             if(!found){
-                return NO_VERSION_FOUND;
+                return new String[]{NO_VERSION_FOUND, ""};
             }else{
                 last_version = last_version.replace(MC_PREFIX + Reference.MAIN_MC_VERSION, "");
             }
         } catch (MalformedURLException e){
-            return URL_PROBLEM;
+            return new String[]{URL_PROBLEM, ""};
         } catch (IOException e){
-            return INTERNET_PROBLEM;
+            return new String[]{INTERNET_PROBLEM, ""};
         }
 
-        return last_version;
+        return new String[]{last_version, changelog};
     }
 
     /**

@@ -1,4 +1,4 @@
-package com.bettercolors.utils;
+package dev.nero.bettercolors.utils;
 
 import org.lwjgl.glfw.GLFW;
 

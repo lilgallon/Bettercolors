@@ -1,19 +1,16 @@
-package com.bettercolors.view;
+package dev.nero.bettercolors.view;
 
-import com.bettercolors.io.Filer;
-import com.bettercolors.io.SettingsUtils;
-import com.bettercolors.main.Bettercolors;
-import com.bettercolors.main.Reference;
-import com.bettercolors.modules.Module;
-import com.bettercolors.modules.options.Option;
-import com.bettercolors.modules.options.ToggleOption;
-import com.bettercolors.modules.options.ValueOption;
-import com.bettercolors.utils.VKtoGLFW;
-import net.minecraft.client.Minecraft;
-import org.lwjgl.glfw.GLFW;
+import dev.nero.bettercolors.io.Filer;
+import dev.nero.bettercolors.io.SettingsUtils;
+import dev.nero.bettercolors.main.Bettercolors;
+import dev.nero.bettercolors.main.Reference;
+import dev.nero.bettercolors.modules.Module;
+import dev.nero.bettercolors.modules.options.Option;
+import dev.nero.bettercolors.modules.options.ToggleOption;
+import dev.nero.bettercolors.modules.options.ValueOption;
+import dev.nero.bettercolors.utils.VKtoGLFW;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;

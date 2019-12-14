@@ -1,13 +1,11 @@
-package com.bettercolors.modules;
+package dev.nero.bettercolors.modules;
 
-import com.bettercolors.modules.options.Option;
-import com.bettercolors.modules.options.ToggleOption;
-import com.bettercolors.modules.options.ValueOption;
-import com.bettercolors.utils.MathUtils;
-import com.bettercolors.utils.TimeHelper;
+import dev.nero.bettercolors.modules.options.Option;
+import dev.nero.bettercolors.modules.options.ToggleOption;
+import dev.nero.bettercolors.modules.options.ValueOption;
+import dev.nero.bettercolors.utils.MathUtils;
+import dev.nero.bettercolors.utils.TimeHelper;
 import net.minecraft.entity.Entity;
-import net.minecraft.network.play.client.CEntityActionPacket;
-import net.minecraft.network.play.client.CUseEntityPacket;
 import net.minecraft.util.Hand;
 
 import java.awt.*;

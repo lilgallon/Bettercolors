@@ -131,7 +131,7 @@ It is easier to set up forge with [Eclipse](https://www.eclipse.org/neon/). Othe
     - A window will show up, change nothing but "create separate module per source set" that needs to be **disabled**, then click ok (make sure that the Gradle JVM is java < 11)
     - Wait for IntelliJ to start and to process with gradle (it took me 6 minutes with a good computer)
     - Open a terminal and type `gradlew genIntellijRuns` (it took me 2 minutes)
-    - Next to the "run" button, select "ADD CONFIGURATION" and select runClient (in Application tab). Then, in "Use classpath of module:", select `com.bettercolors.main.Bettercolors`. Click ok. Now you can run the client. (the first run takes time, you have to wait a bit).
+    - Next to the "run" button, select "ADD CONFIGURATION" and select runClient (in Application tab). Then, in "Use classpath of module:", select `dev.nero.bettercolors.main.Bettercolors`. Click ok. Now you can run the client. (the first run takes time, you have to wait a bit).
 
 When you make a change in build.gradle, make sure to run `gradlew clean`.
 If your JAVA_HOME points to a java version below 8 or above 11, use this command: `gradlew -Dorg.gradle.java.home="path/to/javaSDK >8 & <11"` instead of simply `gradlew`.

@@ -1,10 +1,10 @@
-package com.bettercolors.main;
+package dev.nero.bettercolors.main;
 
-import com.bettercolors.io.SettingsUtils;
-import com.bettercolors.modules.*;
-import com.bettercolors.modules.options.Option;
-import com.bettercolors.modules.options.ToggleOption;
-import com.bettercolors.view.Window;
+import dev.nero.bettercolors.io.SettingsUtils;
+import dev.nero.bettercolors.modules.*;
+import dev.nero.bettercolors.modules.options.Option;
+import dev.nero.bettercolors.modules.options.ToggleOption;
+import dev.nero.bettercolors.view.Window;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -20,7 +20,6 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 

@@ -1,8 +1,8 @@
-package com.bettercolors.io;
+package dev.nero.bettercolors.io;
 
-import com.bettercolors.modules.options.Option;
-import com.bettercolors.modules.options.ToggleOption;
-import com.bettercolors.modules.options.ValueOption;
+import dev.nero.bettercolors.modules.options.Option;
+import dev.nero.bettercolors.modules.options.ToggleOption;
+import dev.nero.bettercolors.modules.options.ValueOption;
 
 import javax.swing.*;
 import java.io.File;

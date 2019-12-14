@@ -1,4 +1,4 @@
-package com.bettercolors.main;
+package dev.nero.bettercolors.main;
 
 public class Reference {
 	public static final String MOD_ID = "mcp";

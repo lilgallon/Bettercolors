@@ -1,14 +1,11 @@
-package com.bettercolors.modules;
+package dev.nero.bettercolors.modules;
 
-import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.SwordItem;
-
-import java.util.Objects;
 
 public class AutoSword extends Module {
 

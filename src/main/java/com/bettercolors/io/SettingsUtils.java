@@ -12,7 +12,7 @@ import java.util.Map;
 
 public class SettingsUtils {
 
-    public static String SETTINGS_FILENAME = "default";
+    public static String SETTINGS_FILENAME = "bc_default";
 
     /**
      * It updates the configuration file with all the options given in [modules_options].

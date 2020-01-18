@@ -130,3 +130,7 @@ This is an **important** security update. It also fixes some bugs.
 - ✨ Changed modid to make sure that bettercolors is not recognizable (#28) - thanks @patricktelling
 - 💫 Fixed stop on right click that stayed activated even if toggled off (#29)
 - 💫 Fixed aim assistance that was not turned off when the user was in the pause menu (#25)
+
+**V6.1.0 MC1.8.9**
+
+- ✔ Added an option to change the toggle key (insert by default) (#15)

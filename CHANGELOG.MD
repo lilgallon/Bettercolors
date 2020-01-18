@@ -139,3 +139,4 @@ move your settings files to the config/ folder instead of the bettercolors/ fold
 - ✔ Added an option to change the toggle key (insert by default) (#15)
 - ✔ Added "write changelog of last version in console if the mod is out dated" (#30)
 - ✨ Increased the size of the console (100 -> 200)
+- 💫 Fixed wrong version difference computation (#39)

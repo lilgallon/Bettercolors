@@ -9,6 +9,7 @@ import dev.nero.bettercolors.modules.options.Option;
 import dev.nero.bettercolors.modules.options.ToggleOption;
 import dev.nero.bettercolors.modules.options.ValueOption;
 import dev.nero.bettercolors.utils.VKtoAWT;
+import org.lwjgl.input.Keyboard;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -311,9 +312,10 @@ public class Window extends JFrame{
 
                 @Override
                 public void keyPressed(KeyEvent e) {
-                    if(dialog.isVisible()) {
+                    if (dialog.isVisible()) {
                         int code = VKtoAWT.convertVKSwingtoAWT(e.getKeyCode());
-                        Bettercolors.TOGGLE_KEY_NAME = e.getKeyChar() + " code: " + code;
+                        if (code < 0) { return; }
+                        Bettercolors.TOGGLE_KEY_NAME = Keyboard.getKeyName(code).equals("") ? Integer.toString(e.getKeyCode()) : Keyboard.getKeyName(code);
                         Bettercolors.TOGGLE_KEY = code;
                         SettingsUtils.setOption(Bettercolors.TOGGLE_KEY_OPTION, Integer.toString(code));
                         keybind.setText("Change the key to toggle the GUI [" + Bettercolors.TOGGLE_KEY_NAME + "]");
@@ -355,6 +357,11 @@ public class Window extends JFrame{
                 module.setOptions(options);
                 module.setActivated(Boolean.parseBoolean(options.get(module.getClass().getSimpleName())));
             }
+            // Update the toggle key and the HUD
+            Bettercolors.TOGGLE_KEY = Integer.parseInt(options.get(Bettercolors.TOGGLE_KEY_OPTION));
+            Bettercolors.TOGGLE_KEY_NAME = Keyboard.getKeyName(Bettercolors.TOGGLE_KEY).equals("") ? Integer.toString(Bettercolors.TOGGLE_KEY) : Keyboard.getKeyName(Bettercolors.TOGGLE_KEY);
+            keybind.setText("Change the key to toggle the GUI [" + Bettercolors.TOGGLE_KEY_NAME + "]");
+
             addText(LOG_PREFIX + "Loaded \"" + SettingsUtils.SETTINGS_FILENAME + "\".", true);
             synchronizeComponents();
         });

@@ -12,7 +12,7 @@ import java.util.Map;
 
 public class SettingsUtils {
 
-    public static String SETTINGS_FILENAME = "bc_default";
+    public static String SETTINGS_FILENAME = "default";
 
     /**
      * It updates the configuration file with all the options given in [modules_options].
@@ -74,8 +74,10 @@ public class SettingsUtils {
         File[] files = folder.listFiles();
         if(files == null) return filenames;
         for(File file : files){
-            if(file.isFile() && file.getName().endsWith(".properties")){
-                filenames.addElement(file.getName().replace(".properties", ""));
+            if(file.isFile() && file.getName().endsWith(".properties") && file.getName().startsWith("bc_")){
+                String name = file.getName().replaceFirst("bc_", "");
+                name = name.replace(".properties", "");
+                filenames.addElement(name);
             }
         }
         return filenames;

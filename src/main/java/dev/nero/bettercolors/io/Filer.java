@@ -16,6 +16,9 @@ public class Filer {
         if(!filename.endsWith(".properties")){
             filename += ".properties";
         }
+        if(!filename.startsWith("bc_")) {
+            filename = "bc_" + filename;
+        }
         FILENAME = filename;
     }
 

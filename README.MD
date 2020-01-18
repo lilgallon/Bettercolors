@@ -12,9 +12,9 @@
 </p>
 
 <p align="center">
-    <a href="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC1.8.9/badge.svg"><img alt="Build Status" src="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC_1.8.9/badge.svg" /></a>
-    <a href="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC1.13.2/badge.svg"><img alt="Build Status" src="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC_1.13.2/badge.svg" /></a>
-    <a href="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC1.14.4/badge.svg"><img alt="Build Status" src="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC_1.14.4/badge.svg" /></a>
+    <a href="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC1.8.9/badge.svg"><img alt="Build Status" src="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC1.8.9/badge.svg" /></a>
+    <a href="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC1.13.2/badge.svg"><img alt="Build Status" src="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC1.13.2/badge.svg" /></a>
+    <a href="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC1.14.4/badge.svg"><img alt="Build Status" src="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC1.14.4/badge.svg" /></a>
 </p>
 
 A silent "hack" built within the forge API. It bypasses powerful anticheats (forge mods and servers) to help you improve your gameplay.

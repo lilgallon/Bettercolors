@@ -1,4 +1,4 @@
-package com.bettercolors.modules.options;
+package dev.nero.bettercolors.modules.options;
 
 import java.util.ArrayList;
 

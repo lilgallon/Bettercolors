@@ -1,6 +1,6 @@
-package com.bettercolors.modules.options;
+package dev.nero.bettercolors.modules.options;
 
-import com.bettercolors.io.SettingsUtils;
+import dev.nero.bettercolors.io.SettingsUtils;
 
 public class ToggleOption extends Option {
 

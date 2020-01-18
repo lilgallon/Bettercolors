@@ -1,4 +1,4 @@
-package com.bettercolors.modules;
+package dev.nero.bettercolors.modules;
 
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;

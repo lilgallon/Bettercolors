@@ -1,4 +1,4 @@
-package com.bettercolors.utils;
+package dev.nero.bettercolors.utils;
 
 public class TimeHelper {
 	private long lastMS = 0L;

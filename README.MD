@@ -134,7 +134,7 @@ It is easier to set up forge with [Eclipse](https://www.eclipse.org/neon/). Othe
     - Now, in intelliJ, if gradlew shows up and says "Gradle projects need to be imported", then click on "import changes", and wait for the process to finish
     - Open the gradle tab (on the right), right click on "setupDecompWorkspace" (in Tasks/forgegradle), and click on "create bettercolors [setup...]", now in vm option, add "-Xmx4g -Xms4g", click apply, and then click on run (at the top left of IntelliJ window)
     - In the same tab, execute "genIntellijRuns"
-	- Finally, at the top, click on "Minecraft Client" and select "edit configurations". In "Use classpath of module" select "com.bettercolors.main.Bettercolors".
+	- Finally, at the top, click on "Minecraft Client" and select "edit configurations". In "Use classpath of module" select "dev.nero.bettercolors.main.Bettercolors".
 	- Now you should be able to launch minecraft through intelliJ (if it does not wok, make sure that you use Java JDK 8<->10)
 
 Now it should be done (please refer to [FORGE-INSTRUCTIONS.txt](FORGE-INSTRUCTIONS.txt) or this [youtube video](https://www.youtube.com/watch?v=G2aPT36kf60) if you have any problem)

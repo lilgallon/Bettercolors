@@ -21,7 +21,7 @@ plugins {
 }
 */
 version = "6.1.0"
-group= "com.bettercolors.main" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+group= "dev.nero.bettercolors.main" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "bettercolors"
 
 // Important ! The code uses lambda expressions & diamond operators

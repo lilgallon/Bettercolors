@@ -1,4 +1,4 @@
-package com.bettercolors.modules;
+package dev.nero.bettercolors.modules;
 
 public class AutoSprint extends Module{
 

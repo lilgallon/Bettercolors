@@ -140,3 +140,4 @@ move your settings files to the config/ folder instead of the bettercolors/ fold
 - Added "write changelog of last version in console if the mod is out dated" (#30)
 - Increased the size of the console (100 -> 200)
 - Fixed wrong version difference computation (#39)
+- Only bettercolors' settings files are now shown in the settings selector (#40)

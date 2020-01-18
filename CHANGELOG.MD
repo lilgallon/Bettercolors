@@ -141,3 +141,5 @@ move your settings files to the config/ folder instead of the bettercolors/ fold
 - Increased the size of the console (100 -> 200)
 - Fixed wrong version difference computation (#39)
 - Only bettercolors' settings files are now shown in the settings selector (#40)
+- Loading settings now automatically update the toggle key (#41)
+- Improved toggle key selector (#41)

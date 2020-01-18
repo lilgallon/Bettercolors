@@ -38,6 +38,9 @@ public class Bettercolors {
     public final static String EMPTY_PAGE = "Github release page has an issue.";
     public final static String DOWNLOAD_URL = "https://github.com/N3ROO/Bettercolors/releases/latest";
 
+    public final static String TOGGLE_KEY_OPTION = "toggle_key";
+    public static String TOGGLE_KEY_NAME = "insert code: 260";
+    public static int TOGGLE_KEY = Keyboard.KEY_INSERT;
 
     private final static ArrayList<Option> DEFAULT_ACTIVATION_STATUS;
     static{
@@ -85,7 +88,13 @@ public class Bettercolors {
 		_modules.add(new AutoSprint("Auto sprint", -1, Boolean.parseBoolean(options.get(AutoSprint.class.getSimpleName())), "sprint_symbol.png"));
 		_modules.add(new AutoSword("Auto sword", -1, Boolean.parseBoolean(options.get(AutoSword.class.getSimpleName())), "sword_symbol.png"));
 
-		// KeyEvent
+        // Gui toggle key
+        try {
+            String gui_toggle_key = SettingsUtils.getOption(TOGGLE_KEY_OPTION);
+            Bettercolors.TOGGLE_KEY = Integer.parseInt(gui_toggle_key);
+        } catch (Exception ignored) { } // We are here because the setting does not exist yet (the user never updated the GUI toggle key)
+
+        // KeyEvent
         _key_down = new HashMap<>();
         for(Module module : _modules){
             _key_down.put(module.getClass().getSimpleName(), false);
@@ -113,7 +122,7 @@ public class Bettercolors {
             }
         }
 
-        if(Keyboard.isKeyDown(Keyboard.KEY_INSERT)){
+        if(Keyboard.isKeyDown(TOGGLE_KEY)){
             _key_down.replace(WINDOW, true);
         }else if(_key_down.get(WINDOW)){
             _key_down.replace(WINDOW, false);

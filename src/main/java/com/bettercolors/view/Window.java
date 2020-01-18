@@ -8,6 +8,7 @@ import com.bettercolors.modules.Module;
 import com.bettercolors.modules.options.Option;
 import com.bettercolors.modules.options.ToggleOption;
 import com.bettercolors.modules.options.ValueOption;
+import com.bettercolors.utils.VKtoAWT;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -15,6 +16,8 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.text.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.font.TextAttribute;
@@ -278,15 +281,62 @@ public class Window extends JFrame{
         settings_panel.setBorder(new EmptyBorder(10, 10, 10, 10));
         settings_panel.setLayout(new BorderLayout(0, 15));
 
+        // List of parameters
+        // ! Update GridLayout if you add a new one
+        JButton keybind = new JButton("Change the key to toggle the GUI [" + Bettercolors.TOGGLE_KEY_NAME + "]");
+        keybind.addActionListener(e -> {
+            JDialog dialog = new JDialog(instance, "Message");
+            JLabel msg = new JLabel(
+                    "<html>Press a key...<br>" +
+                            "Please note that due to the difference between<br>" +
+                            "VK and AWT key events, CTRL and SHIFT<br>" +
+                            "keys do not take into account left / right. Only<br>" +
+                            "the right key is working. So if you choose<br>" +
+                            "the left key, it will register the right one.<br>" +
+                            "Also, ALT is not working, because there is no mapping <br>" +
+                            "for ALT with AWT events.</html>");
+            msg.setHorizontalAlignment(JLabel.CENTER);
+            dialog.getRootPane().setBorder(new EmptyBorder(10, 10, 10, 10));
+            dialog.setLayout(new BorderLayout(0, 15));
+            dialog.add(msg, "North");
+            dialog.pack();
+            dialog.setLocationRelativeTo(instance);
+            dialog.addKeyListener(new KeyListener() {
+                @Override
+                public void keyTyped(KeyEvent e) {}
+
+                @Override
+                public void keyPressed(KeyEvent e) {
+                    if(dialog.isVisible()) {
+                        int code = VKtoAWT.convertVKSwingtoAWT(e.getKeyCode());
+                        Bettercolors.TOGGLE_KEY_NAME = e.getKeyChar() + " code: " + code;
+                        Bettercolors.TOGGLE_KEY = code;
+                        SettingsUtils.setOption(Bettercolors.TOGGLE_KEY_OPTION, Integer.toString(code));
+                        keybind.setText("Change the key to toggle the GUI [" + Bettercolors.TOGGLE_KEY_NAME + "]");
+                    }
+                    dialog.setVisible(false);
+                }
+
+                @Override
+                public void keyReleased(KeyEvent e) {}
+            });
+
+            dialog.setVisible(true);
+        });
+        settings_panel.add(keybind, "North");
+
+        JPanel config_panel = new JPanel();
+        config_panel.setLayout(new BorderLayout());
+
         final String selected_file_prefix = "Selected config : ";
         JLabel selected_file = new JLabel(selected_file_prefix + SettingsUtils.SETTINGS_FILENAME);
-        settings_panel.add(selected_file, "North");
+        config_panel.add(selected_file, "North");
 
         DefaultListModel<String> filenames = SettingsUtils.getAllSettingsFilenames();
         JList<String> list = new JList<>(filenames);
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         list.setSelectedIndex(filenames.indexOf(SettingsUtils.SETTINGS_FILENAME));
-        settings_panel.add(new JScrollPane(list), "Center");
+        config_panel.add(new JScrollPane(list), "Center");
 
         JPanel buttons = new JPanel();
         buttons.setLayout(new FlowLayout());
@@ -331,7 +381,7 @@ public class Window extends JFrame{
             }
         });
         buttons.add(refresh_button);
-        settings_panel.add(buttons, "South");
+        config_panel.add(buttons, "South");
 
         try {
             ImageIcon icon = new ImageIcon(this.getClass().getResource("/images/settings_symbol.png"));
@@ -340,6 +390,8 @@ public class Window extends JFrame{
             addText("Failed to load /images/settings_symbol.png", Color.RED, true);
             tabbedPane.addTab("Settings", settings_panel);
         }
+
+        settings_panel.add(config_panel, "Center");
 
         // --
 

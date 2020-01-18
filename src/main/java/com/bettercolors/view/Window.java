@@ -422,7 +422,7 @@ public class Window extends JFrame{
         welcome_message += "|       .-``'.    Bettercolors 6    .'''-.       |\n";
         welcome_message += "|     .`   .`~     Made by N3RO     ~`.   '.     |\n";
         welcome_message += "| _.-'     '._   github.com/N3ROO   _.'     '-._ |\n";
-        welcome_message += "|                                                |\n";
+        welcome_message += "| Acknowledgements: @shorebre4k  @patricktelling |\n";
         welcome_message += "x~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~x\n";
         _console.setText(welcome_message);
 

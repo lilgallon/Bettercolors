@@ -37,7 +37,7 @@ public class Window extends JFrame{
 
     private Queue<Message> waitingMessages;
 
-    public Window(String title, ArrayList<Module> modules, String last_version) {
+    public Window(String title, ArrayList<Module> modules, String[] versionInfo) {
         super(title);
 
         int width = 450;
@@ -75,7 +75,7 @@ public class Window extends JFrame{
         // Footer
         JPanel footer_layout = new JPanel();
         footer_layout.setLayout(new BorderLayout());
-        setupFooter(footer_layout, last_version);
+        setupFooter(footer_layout, versionInfo);
 
         // getContentPane().add(header_layout, "North");
         getContentPane().add(modules_related_layout, "Center");
@@ -90,9 +90,11 @@ public class Window extends JFrame{
     }
     */
 
-    private void setupFooter(JPanel footer_layout, String last_version){
-        JLabel credits = new JLabel(" Bettercolors " + Reference.VERSION + " for MC " + Reference.ACCEPTED_VERSIONS.replace("[", "").replace("]", "") + " by N3RO. ");
+    private void setupFooter(JPanel footer_layout, String[] versionInfo){
+        String last_version = versionInfo[0];
+        String changelog = versionInfo[1];
 
+        JLabel credits = new JLabel(" Bettercolors " + Reference.VERSION + " for MC " + Reference.ACCEPTED_VERSIONS.replace("[", "").replace("]", "") + " by N3RO. ");
         JLabel update = new JLabel();
 
         if(last_version.equalsIgnoreCase(Reference.VERSION)){
@@ -154,6 +156,25 @@ public class Window extends JFrame{
                 addText("Unable to compare versions !", Color.RED, true);
                 addText("This problem should be reported to https://github.com/N3ROO/Bettercolors/issues.", Color.RED, true);
                 update.setText("Unable to compare versions");
+            }
+
+            addText("", true);
+            addText("", true);
+            String[] lines = changelog.split("\\\\n");
+            for(String line : lines) {
+                String[] split = line.split("\\*\\*");
+                if(split.length % 2 == 1) {
+                    for(int i = 0; i < split.length; i ++) {
+                        if(i % 2 == 0) {
+                            addText(split[i], false);
+                        } else {
+                            addText(split[i], Color.RED, false);
+                        }
+                    }
+                    addText("", true);
+                } else {
+                    addText(line, true);
+                }
             }
         }
 
@@ -335,7 +356,7 @@ public class Window extends JFrame{
         _scroll = new JScrollPane (_console);
         _scroll.setVerticalScrollBarPolicy( JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         _scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        _scroll.setPreferredSize(new Dimension(425,100));
+        _scroll.setPreferredSize(new Dimension(425,200));
 
         // TextArea custom
         //info_box.setWrapStyleWord(true);

@@ -93,7 +93,7 @@ public class Bettercolors {
         _key_down.put(WINDOW, false);
 
 		// AbstractWindow initialisation
-        _window = new Window("Bettercolors " + Reference.VERSION, _modules, getLastVersion());
+        _window = new Window("Bettercolors " + Reference.VERSION, _modules, getVersionInformation());
 	}
 
 	@SubscribeEvent
@@ -131,11 +131,12 @@ public class Bettercolors {
 	}
 
     /**
-     * @return the last version tag from the github release page.
+     * @return the last version tag from the github release page and the changelog associated.
      */
-	private String getLastVersion(){
+	private String[] getVersionInformation(){
         final String MC_PREFIX = "-MC";
         String last_version = "";
+        String changelog = "";
 
         try{
             // Retrieve JSON
@@ -146,6 +147,7 @@ public class Bettercolors {
 
             // Get last version from JSON
             String[] tags = json.split("\"tag_name\"");
+            String[] bodies = json.split("\"body\"");
 
             int i = 0;
             boolean found = false;
@@ -153,25 +155,27 @@ public class Bettercolors {
                 last_version = tags[i].split("\"")[1];
                 if(last_version.endsWith(MC_PREFIX + Reference.MAIN_MC_VERSION)){
                     found = true;
+                    changelog = bodies[i].split("\"")[1];
                 }else{
                     i ++;
                 }
             }
 
             if(!found){
-                return UNRELEASED;
+                return new String[]{UNRELEASED, ""};
             }else{
                 last_version = last_version.replace(MC_PREFIX + Reference.MAIN_MC_VERSION, "");
+                changelog = changelog.replace("\\r", "");
             }
         } catch (MalformedURLException e) {
-            return URL_PROBLEM;
+            return new String[]{URL_PROBLEM, ""};
         } catch (IOException e) {
-            return INTERNET_PROBLEM;
+            return new String[]{INTERNET_PROBLEM, ""};
         } catch (Exception e) {
-            return EMPTY_PAGE;
+            return new String[]{EMPTY_PAGE, ""};
         }
 
-        return last_version;
+        return new String[]{last_version, changelog};
     }
 
     /**

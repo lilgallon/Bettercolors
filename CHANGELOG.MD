@@ -133,5 +133,8 @@ This is an **important** security update. It also fixes some bugs.
 
 **V6.1.0 MC_1.8.9**
 
+This update changes the settings directory. So if you want to keep your custom settings,
+move your settings files to the config/ folder instead of the bettercolors/ folder (#23).
+
 - Added "write changelog of last version in console if the mod is out dated" (#30)
 - Increased the size of the console (100 -> 200)

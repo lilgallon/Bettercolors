@@ -75,9 +75,7 @@ public class SettingsUtils {
         if(files == null) return filenames;
         for(File file : files){
             if(file.isFile() && file.getName().endsWith(".properties") && file.getName().startsWith("bc_")){
-                String name = file.getName().replaceFirst("bc_", "");
-                name = name.replace(".properties", "");
-                filenames.addElement(name);
+                filenames.addElement(file.getName().replace(".properties", "").replaceFirst("bc_", ""));
             }
         }
         return filenames;

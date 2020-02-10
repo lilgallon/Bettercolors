@@ -41,7 +41,14 @@ minecraft {
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
 }
 
+configurations {
+    inJar
+}
+configurations.compile.extendsFrom(configurations.inJar)
+
 dependencies {
+    inJar 'io.github.vincenzopalazzo:material-ui-swing:1.1.1_beta'
+
     // you may put jars on which you depend on in ./libs
     // or you may define them like so..
     //compile "some.group:artifact:version:classifier"
@@ -63,6 +70,12 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 
+}
+
+jar {
+    from(configurations.inJar) {
+        into 'META-I﻿NF/libraries'
+    }
 }
 
 processResources

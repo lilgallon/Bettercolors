@@ -112,7 +112,11 @@ public class Bettercolors {
         try {
             String gui_toggle_key = SettingsUtils.getOption(TOGGLE_KEY_OPTION);
             Bettercolors.TOGGLE_KEY = Integer.parseInt(gui_toggle_key);
-            Bettercolors.TOGGLE_KEY_NAME = "code: " + gui_toggle_key;
+            if (Keyboard.getKeyName(Bettercolors.TOGGLE_KEY).equals("")) {
+               Bettercolors.TOGGLE_KEY_NAME =  "code: " + Integer.toString(Bettercolors.TOGGLE_KEY);
+            } else {
+              Bettercolors.TOGGLE_KEY_NAME = Keyboard.getKeyName(Bettercolors.TOGGLE_KEY) + " code: " + Integer.toString(Bettercolors.TOGGLE_KEY);
+            }
         } catch (Exception ignored) { } // We are here because the setting does not exist yet (the user never updated the GUI toggle key)
 
         // KeyEvent

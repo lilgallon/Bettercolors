@@ -145,3 +145,6 @@ move your settings files to the config/ folder instead of the bettercolors/ fold
 - Fixed window size to match different themes
 - Fixed non-bettercolors settings file being shown in the settings tab
 - Fixed wrong version difference computation (#39)
+- Only bettercolors' settings files are now shown in the settings selector (#40)
+- Loading settings now automatically update the toggle key (#41)
+- Improved toggle key selector (#41)

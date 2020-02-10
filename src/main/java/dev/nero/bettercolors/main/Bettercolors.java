@@ -7,6 +7,7 @@ import dev.nero.bettercolors.modules.options.ToggleOption;
 import dev.nero.bettercolors.view.Window;
 import mdlaf.MaterialLookAndFeel;
 import mdlaf.themes.MaterialOceanicTheme;
+import mdlaf.themes.MaterialTheme;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
@@ -46,6 +47,7 @@ public class Bettercolors {
     public final static String TOGGLE_KEY_OPTION = "toggle_key";
     public static String TOGGLE_KEY_NAME = "insert code: 260";
     public static int TOGGLE_KEY = Keyboard.KEY_INSERT;
+    public static MaterialTheme selectedTheme = null;
 
     private final static ArrayList<Option> DEFAULT_ACTIVATION_STATUS;
     static{
@@ -107,6 +109,9 @@ public class Bettercolors {
         _key_down.put(WINDOW, false);
 
         Window.defaultLookAndFeel = UIManager.getLookAndFeel();
+
+        // TODO: get selected theme and load it
+        // update selectedTheme
 
 		// AbstractWindow initialisation
         _window = new Window("Bettercolors " + Reference.VERSION, _modules, getVersionInformation());

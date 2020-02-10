@@ -115,6 +115,7 @@ public class Window extends JFrame{
     }
 
     private void changeTheme(MaterialTheme theme) {
+        // TODO: save selected theme
         try {
             // null means not material theme
             if (theme != null) {
@@ -500,7 +501,11 @@ public class Window extends JFrame{
 
         _console.setEditable(false);
         _console.setFont(consoleFont);
-        _console.setBackground(new Color(0,30,50));
+        if (Bettercolors.selectedTheme instanceof JMarsDarkTheme) {
+            _console.setBackground(Color.DARK_GRAY);
+        } else {
+            _console.setBackground(new Color(0,30,50));
+        }
         _console.setForeground(Color.WHITE);
         String welcome_message = "";
         welcome_message += "x~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~x\n";

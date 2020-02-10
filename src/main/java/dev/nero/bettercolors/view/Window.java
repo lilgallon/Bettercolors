@@ -9,6 +9,11 @@ import dev.nero.bettercolors.modules.options.Option;
 import dev.nero.bettercolors.modules.options.ToggleOption;
 import dev.nero.bettercolors.modules.options.ValueOption;
 import dev.nero.bettercolors.utils.VKtoAWT;
+import mdlaf.MaterialLookAndFeel;
+import mdlaf.themes.JMarsDarkTheme;
+import mdlaf.themes.MaterialLiteTheme;
+import mdlaf.themes.MaterialOceanicTheme;
+import mdlaf.themes.MaterialTheme;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -29,6 +34,7 @@ import java.util.*;
 public class Window extends JFrame{
 
     public static Window instance;
+    public static LookAndFeel defaultLookAndFeel;
     private final ArrayList<Module> MODULES;
     private JTextPane _console;
     private int _messageCounter = 0;
@@ -63,6 +69,27 @@ public class Window extends JFrame{
 
         waitingMessages = new LinkedList<>();
 
+        // Toolbar
+        JMenuBar toolbar = new JMenuBar();
+        JMenu themes = new JMenu("Themes");
+        JMenuItem themeDefault = new JMenuItem("Default");
+        JMenuItem themeLight = new JMenuItem("Light");
+        JMenuItem themeDark = new JMenuItem("Dark Oceanic");
+        JMenuItem themeDark2 = new JMenuItem("Dark Gold");
+        themeDefault.addActionListener((event) -> this.changeTheme(null));
+        themeLight.addActionListener((event) -> this.changeTheme(new MaterialLiteTheme()));
+        themeDark.addActionListener((event) -> this.changeTheme(new MaterialOceanicTheme()));
+        themeDark2.addActionListener((event) -> {
+            this.changeTheme(new JMarsDarkTheme());
+            this._console.setBackground(Color.DARK_GRAY);
+        });
+        themes.add(themeDefault);
+        themes.add(themeLight);
+        themes.add(themeDark);
+        themes.add(themeDark2);
+        toolbar.add(themes);
+        setJMenuBar(toolbar);
+
         // Header
         // JPanel header_layout = new JPanel();
         // header_layout.setLayout(new BorderLayout());
@@ -85,6 +112,40 @@ public class Window extends JFrame{
         getContentPane().add(footer_layout, "South");
         pack();
         repaint();
+    }
+
+    private void changeTheme(MaterialTheme theme) {
+        try {
+            // null means not material theme
+            if (theme != null) {
+                if (!(UIManager.getLookAndFeel() instanceof MaterialLookAndFeel)) {
+                    UIManager.setLookAndFeel(new MaterialLookAndFeel());
+                }
+                MaterialLookAndFeel.changeTheme(theme);
+            } else {
+                UIManager.setLookAndFeel(defaultLookAndFeel);
+            }
+
+            SwingUtilities.updateComponentTreeUI(this);
+
+            Font consoleFont = new Font("Lucida Console", Font.PLAIN, 14);
+            try {
+                consoleFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResource("/fonts/Cascadia.ttf").openStream());
+                GraphicsEnvironment genv = GraphicsEnvironment.getLocalGraphicsEnvironment();
+                genv.registerFont(consoleFont);
+                consoleFont = consoleFont.deriveFont(14f);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            _console.setFont(consoleFont);
+            _console.setBackground(new Color(0, 30, 50));
+            _console.setForeground(Color.WHITE);
+
+            JOptionPane.showMessageDialog(this, "You should restart your game to apply the new theme completely");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /*
@@ -214,6 +275,7 @@ public class Window extends JFrame{
 
     private void setupModulesOptions(JPanel modules_related_layout){
         JTabbedPane tabbedPane = new JTabbedPane();
+        tabbedPane.setPreferredSize(new Dimension(100, 350));
 
         // Modules' related tabs
         for(Module module : MODULES){
@@ -222,6 +284,8 @@ public class Window extends JFrame{
             JPanel module_options_panel = new JPanel();
             module_options_panel.setLayout(new BorderLayout());
             module_options_panel.setBorder(new EmptyBorder(10, 10, 10, 10));
+
+            JPanel content = new JPanel(new BorderLayout());
 
             ArrayList<ToggleOption> toggle_options = Option.getToggleOptions(module.getOptions());
             if(toggle_options != null) {
@@ -254,9 +318,8 @@ public class Window extends JFrame{
                     slider.setMinimum(value_option.getMin());
                     slider.setMaximum(value_option.getMax());
                     slider.setValue(value_option.getVal());
-                    slider.setMinorTickSpacing(value_option.getMinorTickSpacing());
-                    slider.setMajorTickSpacing(value_option.getMajorTickSpacing());
-                    slider.setPaintTicks(true);
+                    slider.setMaximumSize(new Dimension(100, 10));
+                    slider.setMinimumSize(new Dimension(100, 5));
                     slider.addChangeListener(e -> {
                         value_option.setVal(slider.getValue());
                         label.setText(value_option.getName() + " [" + value_option.getVal() + "]");
@@ -268,13 +331,22 @@ public class Window extends JFrame{
                 }
 
                 module_options_panel.add(sliders_grid, "Center");
+
             }
+
+            content.add(module_options_panel);
+
+            JScrollPane scrollPane = new JScrollPane(module_options_panel,
+                    ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+                    ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+            content.add(scrollPane);
+
             try{
                 ImageIcon icon = new ImageIcon(this.getClass().getResource("/images/" + module.getSymbol()));
-                tabbedPane.addTab(module.getName(), icon, module_options_panel);
+                tabbedPane.addTab(module.getName(), icon, content);
             } catch (Exception e) {
                 addText("Failed to load /images/" + module.getSymbol(), Color.RED, true);
-                tabbedPane.addTab(module.getName(), module_options_panel);
+                tabbedPane.addTab(module.getName(), content);
             }
 
         }
@@ -394,9 +466,7 @@ public class Window extends JFrame{
             addText("Failed to load /images/settings_symbol.png", Color.RED, true);
             tabbedPane.addTab("Settings", settings_panel);
         }
-
         settings_panel.add(config_panel, "Center");
-
         // --
 
         modules_related_layout.add(tabbedPane, "Center");
@@ -406,6 +476,7 @@ public class Window extends JFrame{
         JPanel panel = new JPanel ();
         panel.setBorder ( new TitledBorder ( new EtchedBorder (), "Console" ) );
         panel.setLayout(new GridLayout(1,1));
+        panel.setPreferredSize(new Dimension(100, 200));
 
         // TextArea & ScrollPane init
         _console = new JTextPane();
@@ -416,8 +487,19 @@ public class Window extends JFrame{
 
         // TextArea custom
         //info_box.setWrapStyleWord(true);
+
+        Font consoleFont = new Font("Lucida Console", Font.PLAIN, 14);
+        try {
+            consoleFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResource("/fonts/Cascadia.ttf").openStream());
+            GraphicsEnvironment genv = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            genv.registerFont(consoleFont);
+            consoleFont = consoleFont.deriveFont(14f);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         _console.setEditable(false);
-        _console.setFont(new Font("Lucida Console", Font.PLAIN, 14));
+        _console.setFont(consoleFont);
         _console.setBackground(new Color(0,30,50));
         _console.setForeground(Color.WHITE);
         String welcome_message = "";
@@ -451,7 +533,7 @@ public class Window extends JFrame{
         StyleContext sc = StyleContext.getDefaultStyleContext();
         AttributeSet attribute_set = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Foreground, c);
 
-        attribute_set = sc.addAttribute(attribute_set, StyleConstants.FontFamily, "Lucida Console");
+        //attribute_set = sc.addAttribute(attribute_set, StyleConstants.FontFamily, "Lucida Console");
         attribute_set = sc.addAttribute(attribute_set, StyleConstants.Alignment, StyleConstants.ALIGN_JUSTIFIED);
 
         int len = tp.getDocument().getLength();

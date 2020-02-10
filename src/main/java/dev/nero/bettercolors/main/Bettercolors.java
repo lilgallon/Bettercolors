@@ -5,6 +5,8 @@ import dev.nero.bettercolors.modules.*;
 import dev.nero.bettercolors.modules.options.Option;
 import dev.nero.bettercolors.modules.options.ToggleOption;
 import dev.nero.bettercolors.view.Window;
+import mdlaf.MaterialLookAndFeel;
+import mdlaf.themes.MaterialOceanicTheme;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
@@ -16,6 +18,8 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
 
+import javax.swing.*;
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -101,6 +105,8 @@ public class Bettercolors {
             _key_down.put(module.getClass().getSimpleName(), false);
         }
         _key_down.put(WINDOW, false);
+
+        Window.defaultLookAndFeel = UIManager.getLookAndFeel();
 
 		// AbstractWindow initialisation
         _window = new Window("Bettercolors " + Reference.VERSION, _modules, getVersionInformation());

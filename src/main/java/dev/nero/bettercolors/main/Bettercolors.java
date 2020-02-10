@@ -6,6 +6,8 @@ import dev.nero.bettercolors.modules.options.Option;
 import dev.nero.bettercolors.modules.options.ToggleOption;
 import dev.nero.bettercolors.view.Window;
 import mdlaf.MaterialLookAndFeel;
+import mdlaf.themes.JMarsDarkTheme;
+import mdlaf.themes.MaterialLiteTheme;
 import mdlaf.themes.MaterialOceanicTheme;
 import mdlaf.themes.MaterialTheme;
 import net.minecraftforge.common.MinecraftForge;
@@ -45,9 +47,9 @@ public class Bettercolors {
     public final static String DOWNLOAD_URL = "https://github.com/N3ROO/Bettercolors/releases/latest";
 
     public final static String TOGGLE_KEY_OPTION = "toggle_key";
+    public final static String THEME_OPTION = "theme";
     public static String TOGGLE_KEY_NAME = "insert code: 260";
     public static int TOGGLE_KEY = Keyboard.KEY_INSERT;
-    public static MaterialTheme selectedTheme = null;
 
     private final static ArrayList<Option> DEFAULT_ACTIVATION_STATUS;
     static{
@@ -112,6 +114,35 @@ public class Bettercolors {
 
         // TODO: get selected theme and load it
         // update selectedTheme
+        try {
+            String theme = SettingsUtils.getOption(THEME_OPTION);
+
+            try {
+                switch (theme) {
+                    case Window.THEME_DEFAULT:
+                        UIManager.setLookAndFeel(Window.defaultLookAndFeel);
+                        Window.selectedTheme = Window.THEME_DEFAULT;
+                        break;
+                    case Window.THEME_MATERIAL_LIGHT:
+                        UIManager.setLookAndFeel(new MaterialLookAndFeel());
+                        MaterialLookAndFeel.changeTheme(new MaterialLiteTheme());
+                        Window.selectedTheme = Window.THEME_MATERIAL_LIGHT;
+                        break;
+                    case Window.THEME_MATERIAL_OCEANIC:
+                        UIManager.setLookAndFeel(new MaterialLookAndFeel());
+                        MaterialLookAndFeel.changeTheme(new MaterialOceanicTheme());
+                        Window.selectedTheme = Window.THEME_MATERIAL_OCEANIC;
+                        break;
+                    case Window.THEME_MATERIAL_GOLD:
+                        UIManager.setLookAndFeel(new MaterialLookAndFeel());
+                        MaterialLookAndFeel.changeTheme(new JMarsDarkTheme());
+                        Window.selectedTheme = Window.THEME_MATERIAL_GOLD;
+                        break;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } catch (Exception ignored) { } // We are here because the setting does not exist yet (the user never updated the GUI toggle key)
 
 		// AbstractWindow initialisation
         _window = new Window("Bettercolors " + Reference.VERSION, _modules, getVersionInformation());

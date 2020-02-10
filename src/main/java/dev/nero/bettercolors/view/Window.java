@@ -34,7 +34,6 @@ import java.util.*;
 public class Window extends JFrame{
 
     public static Window instance;
-    public static LookAndFeel defaultLookAndFeel;
     private final ArrayList<Module> MODULES;
     private JTextPane _console;
     private int _messageCounter = 0;
@@ -44,13 +43,21 @@ public class Window extends JFrame{
     private final Map<JLabel, JSlider> SLIDERS_MODULES;
     private final String LOG_PREFIX = "[Gui] ";
 
+    public static LookAndFeel defaultLookAndFeel;
+    public final static String THEME_DEFAULT = "default";
+    public final static String THEME_MATERIAL_LIGHT = "light";
+    public final static String THEME_MATERIAL_OCEANIC = "oceanic";
+    public final static String THEME_MATERIAL_GOLD = "gold";
+    public static String selectedTheme = THEME_DEFAULT;
+
     private Queue<Message> waitingMessages;
 
     public Window(String title, ArrayList<Module> modules, String[] versionInfo) {
         super(title);
 
-        int width = 450;
-        int height = 600;
+        int width = 500;
+        int height = 700;
+        setPreferredSize(new Dimension(width, height));
         setBounds((int)Toolkit.getDefaultToolkit().getScreenSize().getWidth()/2-width/2,(int)Toolkit.getDefaultToolkit().getScreenSize().getHeight()/2-height/2,width,height);
         try {
             setIconImage(new ImageIcon(this.getClass().getResource("/images/bettercolors_symbol.png")).getImage());
@@ -76,11 +83,11 @@ public class Window extends JFrame{
         JMenuItem themeLight = new JMenuItem("Material Light");
         JMenuItem themeDark = new JMenuItem("Material Oceanic");
         JMenuItem themeDark2 = new JMenuItem("Material Gold");
-        themeDefault.addActionListener((event) -> this.changeTheme(null));
-        themeLight.addActionListener((event) -> this.changeTheme(new MaterialLiteTheme()));
-        themeDark.addActionListener((event) -> this.changeTheme(new MaterialOceanicTheme()));
+        themeDefault.addActionListener((event) -> this.changeTheme(null, Window.THEME_DEFAULT));
+        themeLight.addActionListener((event) -> this.changeTheme(new MaterialLiteTheme(), Window.THEME_MATERIAL_LIGHT));
+        themeDark.addActionListener((event) -> this.changeTheme(new MaterialOceanicTheme(), Window.THEME_MATERIAL_OCEANIC));
         themeDark2.addActionListener((event) -> {
-            this.changeTheme(new JMarsDarkTheme());
+            this.changeTheme(new JMarsDarkTheme(), Window.THEME_MATERIAL_GOLD);
             this._console.setBackground(Color.DARK_GRAY);
         });
         themes.add(themeDefault);
@@ -114,7 +121,7 @@ public class Window extends JFrame{
         repaint();
     }
 
-    private void changeTheme(MaterialTheme theme) {
+    private void changeTheme(MaterialTheme theme, String themeId) {
         // TODO: save selected theme
         try {
             // null means not material theme
@@ -126,6 +133,9 @@ public class Window extends JFrame{
             } else {
                 UIManager.setLookAndFeel(defaultLookAndFeel);
             }
+
+            Window.selectedTheme = themeId;
+            SettingsUtils.setOption(Bettercolors.THEME_OPTION, themeId);
 
             SwingUtilities.updateComponentTreeUI(this);
 
@@ -160,12 +170,13 @@ public class Window extends JFrame{
         String changelog = versionInfo[1];
 
         JLabel credits = new JLabel(" Bettercolors " + Reference.VERSION + " for MC " + Reference.ACCEPTED_VERSIONS.replace("[", "").replace("]", "") + " by N3RO. ");
+        credits.setFont(new Font(credits.getFont().getFontName(), Font.PLAIN, 12));
         JLabel update = new JLabel();
 
         if(last_version.equalsIgnoreCase(Reference.VERSION)){
             update.setForeground(new Color(0, 100, 0 ));
             update.setText("Mod up-to-date ! :)");
-            addText("You are using the last version ! ;) " + last_version + ".", Color.GREEN, true);
+            addText("You are using the last version ! ;) " + last_version, Color.GREEN, true);
         }else if(last_version.equalsIgnoreCase(Bettercolors.INTERNET_PROBLEM)){
             update.setForeground(new Color(200, 100, 0));
             update.setText(Bettercolors.INTERNET_PROBLEM);
@@ -206,6 +217,7 @@ public class Window extends JFrame{
                 Font font = update.getFont();
                 Map<TextAttribute, Object> attributes = new HashMap<>(font.getAttributes());
                 attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+                attributes.put(TextAttribute.SIZE, 10);
                 update.setFont(font.deriveFont(attributes));
                 update.setCursor(new Cursor(Cursor.HAND_CURSOR));
                 update.addMouseListener(new MouseAdapter() {
@@ -321,6 +333,9 @@ public class Window extends JFrame{
                     slider.setValue(value_option.getVal());
                     slider.setMaximumSize(new Dimension(100, 10));
                     slider.setMinimumSize(new Dimension(100, 5));
+                    if (Window.selectedTheme.equalsIgnoreCase(Window.THEME_MATERIAL_GOLD)) {
+                        slider.setForeground(Color.ORANGE);
+                    }
                     slider.addChangeListener(e -> {
                         value_option.setVal(slider.getValue());
                         label.setText(value_option.getName() + " [" + value_option.getVal() + "]");
@@ -501,7 +516,7 @@ public class Window extends JFrame{
 
         _console.setEditable(false);
         _console.setFont(consoleFont);
-        if (Bettercolors.selectedTheme instanceof JMarsDarkTheme) {
+        if (Window.selectedTheme.equalsIgnoreCase(Window.THEME_MATERIAL_GOLD)) {
             _console.setBackground(Color.DARK_GRAY);
         } else {
             _console.setBackground(new Color(0,30,50));
@@ -515,7 +530,7 @@ public class Window extends JFrame{
         welcome_message += "| _.-'     '._   github.com/N3ROO   _.'     '-._ |\n";
         welcome_message += "| Acknowledgements: @shorebre4k  @patricktelling |\n";
         welcome_message += "x~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~x\n";
-        _console.setText(welcome_message);
+        addText(welcome_message, true);
 
         while(!waitingMessages.isEmpty()){
             Message message = waitingMessages.poll();
@@ -544,7 +559,7 @@ public class Window extends JFrame{
         int len = tp.getDocument().getLength();
 
         try {
-            tp.getDocument().insertString(len, msg + "!=", attribute_set);
+            tp.getDocument().insertString(len, msg, attribute_set);
         } catch (BadLocationException e) {
             e.printStackTrace();
         }

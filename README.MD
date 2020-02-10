@@ -19,7 +19,13 @@
 
 A silent "hack" built within the forge API. It bypasses powerful anticheats (forge mods and servers) to help you improve your gameplay.
 
-![preview](.github/screenshot6.png)
+![features](.github/features_main.png)
+
+## Last update
+
+*New themes, fixes and improvements.*
+
+![themes](.github/new_themes.png)
 
 ## Disclaimer
 
@@ -29,19 +35,21 @@ I made this project to learn Java in a funny way. I started 2 years ago but the 
 
 ## Features description
 
-⚔️ **Aim assistance :** A smooth and human-like aim assistance 100% undetectable by any anti-cheat. It is invisible since it looks absolutely human. You can record videos while using it without any problem.
+⚔️ **Aim assistance:** A smooth and human-like aim assistance 100% undetectable by any anti-cheat. It is invisible since it looks absolutely human. You can record videos while using it without any problem.
 
-🖱️ **Click assistance :**  An human-like click assistance that sends REAL clicks, to help you click faster. It can bypass forge CPS counter mods by toggling packets.
+🖱️ **Click assistance:**  An human-like click assistance that sends REAL clicks, to help you click faster. It can bypass forge CPS counter mods by toggling packets.
 
-📟 **External interface :** A clean external interface to configure the mod outside the minecraft client, so you can record without any problem !
+📟 **External interface:** A clean external interface to configure the mod outside the minecraft client, so you can record without any problem !
 
-📋 **Console :** Curious ? There is a console showing everything happening in the mod. 
+🎨 **Theme chooser:** 4 Themes are waiting for you: Default, Material Light, Material Oceanic and Material Gold.
 
-🎎 **Teammate detection :** The mod find your teammates from any server game mode, and prevent modules to be activated on them.
+📋 **Console:** Curious ? There is a console showing everything happening in the mod. 
 
-🛠 **Settings :** You can configure every mod and all is saved in real time.
+🎎 **Teammate detection:** The mod find your teammates from any server game mode, and prevent modules to be activated on them.
 
-⚒ **Settings preset :** You can save, load, and create settings presets from a cool interface.
+🛠 **Settings:** You can configure every mod and all is saved in real time.
+
+⚒ **Settings preset:** You can save, load, and create settings presets from a cool interface.
 
 ## Commands
 

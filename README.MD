@@ -107,6 +107,8 @@ The recommended values are the default one.
 | CA_TimeToActivate(ms)       | 1500          | 0           | 10000     | integer |
 | UseOnMobs                   | false         | false       | true      | boolean |
 | TeamFilter                  | true          | false       | true      | boolean |
+| toggle_key                  | 210 (insert)  | -           | -         | keycode |
+| theme                       | default light oceanic gold | - | - | string |
 
 ## Changelog
 

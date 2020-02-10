@@ -46,6 +46,7 @@ public class Bettercolors {
     public final static String UNRELEASED = "Preview version (not released yet).";
     public final static String EMPTY_PAGE = "Github release page has an issue.";
     public final static String DOWNLOAD_URL = "https://github.com/N3ROO/Bettercolors/releases/latest";
+    public final static String ISSUE_TRACKER = "https://github.com/N3ROO/Bettercolors/issues/new";
 
     public final static String TOGGLE_KEY_OPTION = "toggle_key";
     public final static String THEME_OPTION = "theme";

@@ -139,6 +139,8 @@ move your settings files to the config/ folder instead of the bettercolors/ fold
 - Added an option to change the toggle key (insert by default) (#15)
 - Added "write changelog of last version in console if the mod is out dated" (#30)
 - Added 3 new themes: Material Light, Material Oceanic, Material Gold (and the Default one)
+- Added "report a bug" menu item
+- Moved update checker to the menu (instead of the footer)
 - Changed console font to Cascadia (with ligatures & emojis)
 - Increased the size of the console (100 -> 200)
 - The selected settings file is now saved and loaded during startup

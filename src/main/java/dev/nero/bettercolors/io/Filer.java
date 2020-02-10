@@ -25,7 +25,7 @@ public class Filer {
      * @param options_to_write options to write on the file,
      * @param only_absents if sets to true, it ignore the options already written in the file.
      */
-    void write(Map<String, String> options_to_write, boolean only_absents){
+    public void write(Map<String, String> options_to_write, boolean only_absents){
         Map<String, String> options = readAll();
         if(options != null) {
             if(only_absents){
@@ -64,7 +64,7 @@ public class Filer {
      * @param key the key of the property
      * @return the specific value associated to the key
      */
-    String read(String key){
+    public String read(String key){
         Properties prop = new Properties();
 
         String value;

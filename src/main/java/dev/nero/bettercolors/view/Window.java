@@ -438,6 +438,12 @@ public class Window extends JFrame{
             SettingsUtils.SETTINGS_FILENAME = "bc_" + list.getSelectedValue();
             selected_file.setText(selected_file_prefix + SettingsUtils.SETTINGS_FILENAME);
 
+            // Update selected settings file
+            Map<String, String> option = new HashMap<>();
+            option.put("settings_file", SettingsUtils.SETTINGS_FILENAME);
+            Filer filer = new Filer("_bc_settingsfile");
+            filer.write(option, false);
+
             // Load configuration
             Map<String, String> options = SettingsUtils.getOptions();
             for(Module module : MODULES){

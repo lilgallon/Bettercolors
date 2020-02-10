@@ -1,5 +1,6 @@
 package dev.nero.bettercolors.main;
 
+import dev.nero.bettercolors.io.Filer;
 import dev.nero.bettercolors.io.SettingsUtils;
 import dev.nero.bettercolors.modules.*;
 import dev.nero.bettercolors.modules.options.Option;
@@ -77,6 +78,16 @@ public class Bettercolors {
         System.setProperty("awt.useSystemAAFontSettings","on");
         System.setProperty("swing.aatext", "true");
 
+        // Find selected settings file
+        // Write if empty
+        Map<String, String> option = new HashMap<>();
+        option.put("settings_file", SettingsUtils.SETTINGS_FILENAME);
+        Filer filer = new Filer("_bc_settingsfile");
+        filer.write(option, true);
+        // Load setting
+        String settings_file = filer.read("settings_file");
+        SettingsUtils.SETTINGS_FILENAME = settings_file;
+
         // Settings management
         Map<String, String> options = SettingsUtils.getOptions();
         ArrayList<ArrayList<Option>> modules_options = new ArrayList<>();
@@ -113,35 +124,35 @@ public class Bettercolors {
 
         Window.defaultLookAndFeel = UIManager.getLookAndFeel();
 
-        // TODO: get selected theme and load it
-        // update selectedTheme
         try {
             String theme = SettingsUtils.getOption(THEME_OPTION);
 
-            try {
-                switch (theme) {
-                    case Window.THEME_DEFAULT:
-                        UIManager.setLookAndFeel(Window.defaultLookAndFeel);
-                        Window.selectedTheme = Window.THEME_DEFAULT;
-                        break;
-                    case Window.THEME_MATERIAL_LIGHT:
-                        UIManager.setLookAndFeel(new MaterialLookAndFeel());
-                        MaterialLookAndFeel.changeTheme(new MaterialLiteTheme());
-                        Window.selectedTheme = Window.THEME_MATERIAL_LIGHT;
-                        break;
-                    case Window.THEME_MATERIAL_OCEANIC:
-                        UIManager.setLookAndFeel(new MaterialLookAndFeel());
-                        MaterialLookAndFeel.changeTheme(new MaterialOceanicTheme());
-                        Window.selectedTheme = Window.THEME_MATERIAL_OCEANIC;
-                        break;
-                    case Window.THEME_MATERIAL_GOLD:
-                        UIManager.setLookAndFeel(new MaterialLookAndFeel());
-                        MaterialLookAndFeel.changeTheme(new JMarsDarkTheme());
-                        Window.selectedTheme = Window.THEME_MATERIAL_GOLD;
-                        break;
+            if (theme != null) {
+                try {
+                    switch (theme) {
+                        case Window.THEME_DEFAULT:
+                            UIManager.setLookAndFeel(Window.defaultLookAndFeel);
+                            Window.selectedTheme = Window.THEME_DEFAULT;
+                            break;
+                        case Window.THEME_MATERIAL_LIGHT:
+                            UIManager.setLookAndFeel(new MaterialLookAndFeel());
+                            MaterialLookAndFeel.changeTheme(new MaterialLiteTheme());
+                            Window.selectedTheme = Window.THEME_MATERIAL_LIGHT;
+                            break;
+                        case Window.THEME_MATERIAL_OCEANIC:
+                            UIManager.setLookAndFeel(new MaterialLookAndFeel());
+                            MaterialLookAndFeel.changeTheme(new MaterialOceanicTheme());
+                            Window.selectedTheme = Window.THEME_MATERIAL_OCEANIC;
+                            break;
+                        case Window.THEME_MATERIAL_GOLD:
+                            UIManager.setLookAndFeel(new MaterialLookAndFeel());
+                            MaterialLookAndFeel.changeTheme(new JMarsDarkTheme());
+                            Window.selectedTheme = Window.THEME_MATERIAL_GOLD;
+                            break;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
             }
         } catch (Exception ignored) { } // We are here because the setting does not exist yet (the user never updated the GUI toggle key)
 

@@ -74,8 +74,8 @@ public class SettingsUtils {
         File[] files = folder.listFiles();
         if(files == null) return filenames;
         for(File file : files){
-            if(file.isFile() && file.getName().endsWith(".properties")){
-                filenames.addElement(file.getName().replace(".properties", ""));
+            if(file.isFile() && file.getName().endsWith(".properties") && file.getName().startsWith("bc_")){
+                filenames.addElement(file.getName().replace(".properties", "").replaceFirst("bc_", ""));
             }
         }
         return filenames;

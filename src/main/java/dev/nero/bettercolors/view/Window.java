@@ -435,14 +435,57 @@ public class Window extends JFrame{
         // select button
         JButton select_button = new JButton("Load");
         select_button.addActionListener(e -> {
-            SettingsUtils.SETTINGS_FILENAME = list.getSelectedValue();
+            SettingsUtils.SETTINGS_FILENAME = "bc_" + list.getSelectedValue();
             selected_file.setText(selected_file_prefix + SettingsUtils.SETTINGS_FILENAME);
+
             // Load configuration
             Map<String, String> options = SettingsUtils.getOptions();
             for(Module module : MODULES){
                 module.setOptions(options);
                 module.setActivated(Boolean.parseBoolean(options.get(module.getClass().getSimpleName())));
             }
+
+            // Keybind loader
+            try {
+                String gui_toggle_key = SettingsUtils.getOption(Bettercolors.TOGGLE_KEY_OPTION);
+                Bettercolors.TOGGLE_KEY = Integer.parseInt(gui_toggle_key);
+                Bettercolors.TOGGLE_KEY_NAME = "code: " + gui_toggle_key;
+                keybind.setText("Change the key to toggle the GUI [" + Bettercolors.TOGGLE_KEY_NAME + "]");
+            } catch (Exception ignored) { } // We are here because the setting does not exist yet (the user never updated the GUI toggle key)
+
+            try {
+                // Theme loader
+                String theme = SettingsUtils.getOption(Bettercolors.THEME_OPTION);
+                if (theme != null) {
+                    try {
+                        switch (theme) {
+                            case Window.THEME_DEFAULT:
+                                UIManager.setLookAndFeel(Window.defaultLookAndFeel);
+                                Window.selectedTheme = Window.THEME_DEFAULT;
+                                break;
+                            case Window.THEME_MATERIAL_LIGHT:
+                                UIManager.setLookAndFeel(new MaterialLookAndFeel());
+                                MaterialLookAndFeel.changeTheme(new MaterialLiteTheme());
+                                Window.selectedTheme = Window.THEME_MATERIAL_LIGHT;
+                                break;
+                            case Window.THEME_MATERIAL_OCEANIC:
+                                UIManager.setLookAndFeel(new MaterialLookAndFeel());
+                                MaterialLookAndFeel.changeTheme(new MaterialOceanicTheme());
+                                Window.selectedTheme = Window.THEME_MATERIAL_OCEANIC;
+                                break;
+                            case Window.THEME_MATERIAL_GOLD:
+                                UIManager.setLookAndFeel(new MaterialLookAndFeel());
+                                MaterialLookAndFeel.changeTheme(new JMarsDarkTheme());
+                                Window.selectedTheme = Window.THEME_MATERIAL_GOLD;
+                                _console.setBackground(Color.DARK_GRAY);
+                                break;
+                        }
+                    } catch(Exception ex){
+                        ex.printStackTrace();
+                    }
+                }
+            } catch (Exception ignored) {}
+
             addText(LOG_PREFIX + "Loaded \"" + SettingsUtils.SETTINGS_FILENAME + "\".", true);
             synchronizeComponents();
         });

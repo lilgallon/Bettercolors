@@ -538,13 +538,13 @@ public class Window extends JFrame{
         StyleContext sc = StyleContext.getDefaultStyleContext();
         AttributeSet attribute_set = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Foreground, c);
 
-        //attribute_set = sc.addAttribute(attribute_set, StyleConstants.FontFamily, "Lucida Console");
-        attribute_set = sc.addAttribute(attribute_set, StyleConstants.Alignment, StyleConstants.ALIGN_JUSTIFIED);
+        sc.addAttribute(attribute_set, StyleConstants.Alignment, StyleConstants.ALIGN_JUSTIFIED);
+        sc.addAttribute(attribute_set, TextAttribute.LIGATURES, TextAttribute.LIGATURES_ON);
 
         int len = tp.getDocument().getLength();
 
         try {
-            tp.getDocument().insertString(len, msg, attribute_set);
+            tp.getDocument().insertString(len, msg + "!=", attribute_set);
         } catch (BadLocationException e) {
             e.printStackTrace();
         }

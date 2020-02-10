@@ -73,9 +73,9 @@ public class Window extends JFrame{
         JMenuBar toolbar = new JMenuBar();
         JMenu themes = new JMenu("Themes");
         JMenuItem themeDefault = new JMenuItem("Default");
-        JMenuItem themeLight = new JMenuItem("Light");
-        JMenuItem themeDark = new JMenuItem("Dark Oceanic");
-        JMenuItem themeDark2 = new JMenuItem("Dark Gold");
+        JMenuItem themeLight = new JMenuItem("Material Light");
+        JMenuItem themeDark = new JMenuItem("Material Oceanic");
+        JMenuItem themeDark2 = new JMenuItem("Material Gold");
         themeDefault.addActionListener((event) -> this.changeTheme(null));
         themeLight.addActionListener((event) -> this.changeTheme(new MaterialLiteTheme()));
         themeDark.addActionListener((event) -> this.changeTheme(new MaterialOceanicTheme()));

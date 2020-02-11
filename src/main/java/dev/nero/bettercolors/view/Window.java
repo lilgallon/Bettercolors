@@ -262,6 +262,7 @@ public class Window extends JFrame{
             addText("", true);
             String[] lines = changelog.split("\\\\n");
             for(String line : lines) {
+                if (line.startsWith("![")) continue;
                 String[] split = line.split("\\*\\*");
                 if(split.length % 2 == 1) {
                     for(int i = 0; i < split.length; i ++) {

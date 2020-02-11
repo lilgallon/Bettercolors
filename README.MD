@@ -19,13 +19,17 @@
 
 A silent "hack" built within the forge API. It bypasses powerful anticheats (forge mods and servers) to help you improve your gameplay.
 
-![features](.github/features_main.png)
+<p align="center">
+    <img alt="features" src="https://raw.githubusercontent.com/N3ROO/Bettercolors/MC_1.8.9/.github/features_main_crop500.png" />
+</p>
 
 ## Last update
 
 *New themes, fixes and improvements.*
 
-![themes](.github/new_themes.png)
+<p align="center">
+    <img alt="themes" src="https://raw.githubusercontent.com/N3ROO/Bettercolors/MC_1.8.9/.github/new_themes_crop500.png" />
+</p>
 
 ## Disclaimer
 

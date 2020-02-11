@@ -155,7 +155,11 @@ Now it should be done (please refer to [FORGE-INSTRUCTIONS.txt](FORGE-INSTRUCTIO
 
 ### 3. Build the .jar
 
-Open a terminal and write `.\gradlew build`.
+I could not make the build working properly with an external library, so here is what you need to do:
+- Open a terminal and write `.\gradlew build`.
+- Open `build/libs/bettercolors-6.x.x.jar` with winrar (or something like this)
+- Go to `META-INF/libraries/material-ui-swing-x.x.x_x`
+- Copy all these files into `bettercolors-6.x.x.jar`
 
 ### 4. Contributing
 

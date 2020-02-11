@@ -48,7 +48,6 @@ configurations.compile.extendsFrom(configurations.inJar)
 
 dependencies {
     inJar 'io.github.vincenzopalazzo:material-ui-swing:1.1.1_beta'
-
     // you may put jars on which you depend on in ./libs
     // or you may define them like so..
     //compile "some.group:artifact:version:classifier"
@@ -74,7 +73,12 @@ dependencies {
 
 jar {
     from(configurations.inJar) {
-        into 'META-I﻿NF/libraries'
+        into 'META-INF/libraries'
+    }
+    manifest {
+        attributes(
+                'ContainedDeps': 'material-ui-swing-1.1.1_beta.jar'
+        )
     }
 }
 

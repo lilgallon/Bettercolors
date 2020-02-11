@@ -664,7 +664,7 @@ public class Window extends JFrame{
         }
 
         _messageCounter ++;
-        if(_messageCounter > 30) {
+        if(_messageCounter > 200) {
             resetText();
             _messageCounter = 0;
         }

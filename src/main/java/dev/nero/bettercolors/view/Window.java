@@ -48,6 +48,8 @@ public class Window extends JFrame{
     public final static String THEME_MATERIAL_GOLD = "gold";
     public static String selectedTheme = THEME_DEFAULT;
 
+    private JMenuBar toolbar;
+
     private Queue<Message> waitingMessages;
 
     public Window(String title, ArrayList<Module> modules, String[] versionInfo) {
@@ -79,7 +81,7 @@ public class Window extends JFrame{
         waitingMessages = new LinkedList<>();
 
         // Toolbar
-        JMenuBar toolbar = new JMenuBar();
+        toolbar = new JMenuBar();
         JMenu themes = new JMenu("Themes");
         JMenuItem themeDefault = new JMenuItem("Default");
         JMenuItem themeLight = new JMenuItem("Material Light");
@@ -97,6 +99,20 @@ public class Window extends JFrame{
         themes.add(themeDark);
         themes.add(themeDark2);
         toolbar.add(themes);
+
+        // Report a bug
+        JMenu report_menu = new JMenu("Found a bug?");
+        JMenuItem report = new JMenuItem("Report it");
+        report.addActionListener((event) -> {
+            try {
+                Desktop.getDesktop().browse(new URI(Bettercolors.ISSUE_TRACKER));
+            } catch (IOException | URISyntaxException e) {
+                e.printStackTrace();
+            }
+        });
+        report_menu.add(report);
+        toolbar.add(report_menu);
+
         setJMenuBar(toolbar);
 
         // Header
@@ -263,7 +279,9 @@ public class Window extends JFrame{
         }
 
         footer_layout.add(credits, "West");
-        footer_layout.add(update, "Center");
+
+        toolbar.add(update);
+        //footer_layout.add(update, "Center");
     }
 
     private void setupModulesActivationStatus(JPanel modules_related_layout){

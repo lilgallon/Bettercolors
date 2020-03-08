@@ -10,7 +10,6 @@ import mdlaf.MaterialLookAndFeel;
 import mdlaf.themes.JMarsDarkTheme;
 import mdlaf.themes.MaterialLiteTheme;
 import mdlaf.themes.MaterialOceanicTheme;
-import mdlaf.themes.MaterialTheme;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -34,6 +33,7 @@ import java.util.stream.Collectors;
 @Mod(Reference.MOD_ID)
 public class Bettercolors {
 
+    public final static String ISSUE_TRACKER = "https://github.com/N3ROO/Bettercolors/issues";
     public final static String URL_PROBLEM = "Url problem (please contact developer).";
     public final static String INTERNET_PROBLEM = "No internet connection. :(";
     public final static String NO_VERSION_FOUND = "No version found.";

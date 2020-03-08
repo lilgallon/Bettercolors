@@ -150,12 +150,14 @@ folder instead of the bettercolors folder.
 
 **V6.1.0 MC_1.14.4**
 
-- Added 3 new themes: Material Light, Material Oceanic, Material Gold (and the Default one)
+- Added 3 new themes: Material Light, Material Oceanic, Material Gold (in addition to the Default one)
+- Added 'report a bug' menu item
+- Moved update checker to the menu (instead of the footer)
 - Changed console font to Cascadia (with ligatures & emojis)
-- Fixed window size to match different themes
-- Loading settings now automatically update the toggle key (#41)
-- Improved toggle key selector (#41)
-- Only bettercolors' settings files are now shown in the settings selector (#40)
 - The selected settings file is now saved and loaded during startup
+- Fixed window size to match different themes
 - Fixed non-bettercolors settings file being shown in the settings tab
 - Fixed wrong version difference computation (#39)
+- Only bettercolors' settings files are now shown in the settings selector (#40)
+- Loading settings now automatically update the toggle key (#41)
+- Improved toggle key selector (#41)

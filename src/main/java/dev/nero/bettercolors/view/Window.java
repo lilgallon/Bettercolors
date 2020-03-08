@@ -196,12 +196,15 @@ public class Window extends JFrame{
             int[] version_dif = Bettercolors.compareVersions(Reference.VERSION, last_version);
             if(version_dif != null) {
                 int total_dif = 0;
-                for (int i : version_dif) {
-                    total_dif += i;
+                for (int i = 0; i < 4; i ++) {
+                    if (version_dif[i] != 0) {
+                        total_dif = version_dif[i];
+                        break;
+                    }
                 }
-                if(total_dif < 1){
+                if(total_dif > 1){
                     update.setForeground(new Color(0, 70, 100));
-                    addText(-total_dif + " updates available !", Color.ORANGE, true);
+                    addText(total_dif + " updates available !", Color.ORANGE, true);
                 }else if(total_dif == 1){
                     update.setForeground(new Color(0, 70, 100));
                     addText("One update available !", Color.ORANGE, true);
@@ -424,7 +427,7 @@ public class Window extends JFrame{
         config_panel.setLayout(new BorderLayout());
 
         final String selected_file_prefix = "Selected config : ";
-        JLabel selected_file = new JLabel(selected_file_prefix + SettingsUtils.SETTINGS_FILENAME);
+        JLabel selected_file = new JLabel(selected_file_prefix + SettingsUtils.SETTINGS_FILENAME.replaceFirst("bc_", ""));
         config_panel.add(selected_file, "North");
 
         DefaultListModel<String> filenames = SettingsUtils.getAllSettingsFilenames();
@@ -439,13 +442,26 @@ public class Window extends JFrame{
         JButton select_button = new JButton("Load");
         select_button.addActionListener(e -> {
             SettingsUtils.SETTINGS_FILENAME = list.getSelectedValue();
-            selected_file.setText(selected_file_prefix + SettingsUtils.SETTINGS_FILENAME);
+            selected_file.setText(selected_file_prefix + SettingsUtils.SETTINGS_FILENAME.replaceFirst("bc_", ""));
+
+            // Update selected settings file
+            Map<String, String> option = new HashMap<>();
+            option.put("settings_file", SettingsUtils.SETTINGS_FILENAME);
+            Filer filer = new Filer("_bc_settingsfile");
+            filer.write(option, false);
+
             // Load configuration
             Map<String, String> options = SettingsUtils.getOptions();
             for(Module module : MODULES){
                 module.setOptions(options);
                 module.setActivated(Boolean.parseBoolean(options.get(module.getClass().getSimpleName())));
             }
+
+            // Update the toggle key and the HUD
+            Bettercolors.TOGGLE_KEY = Integer.parseInt(options.get(Bettercolors.TOGGLE_KEY_OPTION));
+            Bettercolors.TOGGLE_KEY_NAME = "code: " + Bettercolors.TOGGLE_KEY;
+            keybind.setText("Change the key to toggle the GUI [" + Bettercolors.TOGGLE_KEY_NAME + "]");
+
             addText(LOG_PREFIX + "Loaded \"" + SettingsUtils.SETTINGS_FILENAME + "\".", true);
             synchronizeComponents();
         });

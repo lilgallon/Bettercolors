@@ -1,5 +1,6 @@
 package dev.nero.bettercolors.main;
 
+import dev.nero.bettercolors.io.Filer;
 import dev.nero.bettercolors.io.SettingsUtils;
 import dev.nero.bettercolors.modules.*;
 import dev.nero.bettercolors.modules.options.Option;
@@ -26,6 +27,7 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -75,6 +77,17 @@ public class Bettercolors {
     }
 
     private void initMod(){
+
+        // Find selected settings file
+        // Write if empty
+        Map<String, String> option = new HashMap<>();
+        option.put("settings_file", SettingsUtils.SETTINGS_FILENAME);
+        Filer filer = new Filer("_bc_settingsfile");
+        filer.write(option, true);
+        // Load setting
+        String settings_file = filer.read("settings_file");
+        SettingsUtils.SETTINGS_FILENAME = settings_file;
+
         // Settings management
         Map<String, String> options = SettingsUtils.getOptions();
         ArrayList<ArrayList<Option>> modules_options = new ArrayList<>();
@@ -97,7 +110,11 @@ public class Bettercolors {
         try {
             String gui_toggle_key = SettingsUtils.getOption(TOGGLE_KEY_OPTION);
             Bettercolors.TOGGLE_KEY = Integer.parseInt(gui_toggle_key);
-        } catch (Exception ignored) { } // We are here because the setting does not exist yet (the user never updated the GUI toggle key)
+        } catch (Exception ignored) {
+            // We are here because the setting does not exist yet (the user never updated the GUI toggle key)
+            SettingsUtils.setOption(Bettercolors.TOGGLE_KEY_OPTION, Integer.toString(Bettercolors.TOGGLE_KEY));
+        }
+        Bettercolors.TOGGLE_KEY_NAME = "code: " + Bettercolors.TOGGLE_KEY;
 
         Window.defaultLookAndFeel = UIManager.getLookAndFeel();
 

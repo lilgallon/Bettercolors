@@ -9,6 +9,11 @@ import dev.nero.bettercolors.modules.options.Option;
 import dev.nero.bettercolors.modules.options.ToggleOption;
 import dev.nero.bettercolors.modules.options.ValueOption;
 import dev.nero.bettercolors.utils.VKtoGLFW;
+import mdlaf.MaterialLookAndFeel;
+import mdlaf.themes.JMarsDarkTheme;
+import mdlaf.themes.MaterialLiteTheme;
+import mdlaf.themes.MaterialOceanicTheme;
+import mdlaf.themes.MaterialTheme;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -36,12 +41,21 @@ public class Window extends JFrame{
     private final int WIDTH = 450;
     private final int HEIGHT = 600;
 
+    public static LookAndFeel defaultLookAndFeel;
+    public final static String THEME_DEFAULT = "default";
+    public final static String THEME_MATERIAL_LIGHT = "light";
+    public final static String THEME_MATERIAL_OCEANIC = "oceanic";
+    public final static String THEME_MATERIAL_GOLD = "gold";
+    public static String selectedTheme = THEME_DEFAULT;
+
     private Queue<Message> waitingMessages;
 
     public Window(String title, ArrayList<Module> modules, String[] versionInfo) {
         super(title);
 
-        waitingMessages = new LinkedList<>();
+        int width = 500;
+        int height = 700;
+        setPreferredSize(new Dimension(width, height));
 
         setBounds((int)Toolkit.getDefaultToolkit().getScreenSize().getWidth()/2-WIDTH/2,
                 (int)Toolkit.getDefaultToolkit().getScreenSize().getHeight()/2-HEIGHT/2,
@@ -61,6 +75,29 @@ public class Window extends JFrame{
         CHECKBOXES_ACTIVATION = new ArrayList<>();
         CHECKBOXES_MODULES = new ArrayList<>();
         SLIDERS_MODULES = new HashMap<>();
+
+        waitingMessages = new LinkedList<>();
+
+        // Toolbar
+        JMenuBar toolbar = new JMenuBar();
+        JMenu themes = new JMenu("Themes");
+        JMenuItem themeDefault = new JMenuItem("Default");
+        JMenuItem themeLight = new JMenuItem("Material Light");
+        JMenuItem themeDark = new JMenuItem("Material Oceanic");
+        JMenuItem themeDark2 = new JMenuItem("Material Gold");
+        themeDefault.addActionListener((event) -> this.changeTheme(null, Window.THEME_DEFAULT));
+        themeLight.addActionListener((event) -> this.changeTheme(new MaterialLiteTheme(), Window.THEME_MATERIAL_LIGHT));
+        themeDark.addActionListener((event) -> this.changeTheme(new MaterialOceanicTheme(), Window.THEME_MATERIAL_OCEANIC));
+        themeDark2.addActionListener((event) -> {
+            this.changeTheme(new JMarsDarkTheme(), Window.THEME_MATERIAL_GOLD);
+            this._console.setBackground(Color.DARK_GRAY);
+        });
+        themes.add(themeDefault);
+        themes.add(themeLight);
+        themes.add(themeDark);
+        themes.add(themeDark2);
+        toolbar.add(themes);
+        setJMenuBar(toolbar);
 
         // Header
         // JPanel header_layout = new JPanel();
@@ -86,6 +123,48 @@ public class Window extends JFrame{
         repaint();
     }
 
+    private void changeTheme(MaterialTheme theme, String themeId) {
+        try {
+            // null means not material theme
+            if (theme != null) {
+                if (!(UIManager.getLookAndFeel() instanceof MaterialLookAndFeel)) {
+                    UIManager.setLookAndFeel(new MaterialLookAndFeel());
+                }
+                MaterialLookAndFeel.changeTheme(theme);
+            } else {
+                UIManager.setLookAndFeel(defaultLookAndFeel);
+            }
+
+            Window.selectedTheme = themeId;
+            SettingsUtils.setOption(Bettercolors.THEME_OPTION, themeId);
+
+            SwingUtilities.updateComponentTreeUI(this);
+
+            Font consoleFont = new Font("Lucida Console", Font.PLAIN, 14);
+            try {
+                consoleFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResource("/fonts/Cascadia.ttf").openStream());
+                GraphicsEnvironment genv = GraphicsEnvironment.getLocalGraphicsEnvironment();
+                genv.registerFont(consoleFont);
+                consoleFont = consoleFont.deriveFont(14f);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            _console.setFont(consoleFont);
+            _console.setBackground(new Color(0, 30, 50));
+
+            if (Window.selectedTheme.equalsIgnoreCase(THEME_MATERIAL_GOLD)) {
+                _console.setBackground(Color.DARK_GRAY);
+            } else {
+                _console.setBackground(new Color(0,30,50));
+            }
+
+            JOptionPane.showMessageDialog(this, "You should restart your game to apply the new theme completely");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     /*
     private void setupHeader(JPanel header_layout){
         // READY TO GET IMPLEMENTED IF NEEDED
@@ -97,12 +176,13 @@ public class Window extends JFrame{
         String changelog = versionInfo[1];
 
         JLabel credits = new JLabel(" Bettercolors " + Reference.VERSION + " for MC " + Reference.ACCEPTED_VERSIONS.replace("[", "").replace("]", "") + " by N3RO. ");
+        credits.setFont(new Font(credits.getFont().getFontName(), Font.PLAIN, 12));
         JLabel update = new JLabel();
 
         if(last_version.equalsIgnoreCase(Reference.VERSION)){
             update.setForeground(new Color(0, 100, 0 ));
             update.setText("Mod up-to-date ! :)");
-            addText("You are using the last version ! ;) " + last_version + ".", Color.GREEN, true);
+            addText("You are using the last version ! ;) " + last_version, Color.GREEN, true);
         }else if(last_version.equalsIgnoreCase(Bettercolors.INTERNET_PROBLEM)){
             update.setForeground(new Color(200, 100, 0));
             update.setText(Bettercolors.INTERNET_PROBLEM);
@@ -139,6 +219,7 @@ public class Window extends JFrame{
                 Font font = update.getFont();
                 Map<TextAttribute, Object> attributes = new HashMap<>(font.getAttributes());
                 attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+                attributes.put(TextAttribute.SIZE, 10);
                 update.setFont(font.deriveFont(attributes));
                 update.setCursor(new Cursor(Cursor.HAND_CURSOR));
                 update.addMouseListener(new MouseAdapter() {
@@ -210,6 +291,7 @@ public class Window extends JFrame{
 
     private void setupModulesOptions(JPanel modules_related_layout){
         JTabbedPane tabbedPane = new JTabbedPane();
+        tabbedPane.setPreferredSize(new Dimension(100, 350));
 
         // Modules' related tabs
         for(Module module : MODULES){
@@ -218,6 +300,8 @@ public class Window extends JFrame{
             JPanel module_options_panel = new JPanel();
             module_options_panel.setLayout(new BorderLayout());
             module_options_panel.setBorder(new EmptyBorder(10, 10, 10, 10));
+
+            JPanel content = new JPanel(new BorderLayout());
 
             ArrayList<ToggleOption> toggle_options = Option.getToggleOptions(module.getOptions());
             if(toggle_options != null) {
@@ -251,9 +335,11 @@ public class Window extends JFrame{
                     slider.setMinimum(value_option.getMin());
                     slider.setMaximum(value_option.getMax());
                     slider.setValue(value_option.getVal());
-                    slider.setMinorTickSpacing(value_option.getMinorTickSpacing());
-                    slider.setMajorTickSpacing(value_option.getMajorTickSpacing());
-                    slider.setPaintTicks(true);
+                    slider.setMaximumSize(new Dimension(100, 10));
+                    slider.setMinimumSize(new Dimension(100, 5));
+                    if (Window.selectedTheme.equalsIgnoreCase(Window.THEME_MATERIAL_GOLD)) {
+                        slider.setForeground(Color.ORANGE);
+                    }
                     slider.addChangeListener(e -> {
                         value_option.setVal(slider.getValue());
                         label.setText(value_option.getName() + " [" + value_option.getVal() + "]");
@@ -266,13 +352,21 @@ public class Window extends JFrame{
 
                 module_options_panel.add(sliders_grid, "Center");
             }
+
+            content.add(module_options_panel);
+
+            JScrollPane scrollPane = new JScrollPane(module_options_panel,
+                    ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+                    ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+            content.add(scrollPane);
+
             try {
                 ImageIcon icon = new ImageIcon(Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("images/" + module.getSymbol())));
-                tabbedPane.addTab(module.getName(), icon, module_options_panel);
+                tabbedPane.addTab(module.getName(), icon, content);
             } catch (Exception e) {
                 e.printStackTrace();
                 addText("Failed to load images/" + module.getSymbol(), Color.RED, true);
-                tabbedPane.addTab(module.getName(), module_options_panel);
+                tabbedPane.addTab(module.getName(), content);
             }
         }
         // --
@@ -421,6 +515,7 @@ public class Window extends JFrame{
         JPanel panel = new JPanel ();
         panel.setBorder ( new TitledBorder ( new EtchedBorder (), "Console" ) );
         panel.setLayout(new GridLayout(1,1));
+        panel.setPreferredSize(new Dimension(100, 200));
 
         // TextArea & ScrollPane init
         _console = new JTextPane();
@@ -431,9 +526,24 @@ public class Window extends JFrame{
 
         // TextArea custom
         //info_box.setWrapStyleWord(true);
+
+        Font consoleFont = new Font("Lucida Console", Font.PLAIN, 14);
+        try {
+            consoleFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResource("/fonts/Cascadia.ttf").openStream());
+            GraphicsEnvironment genv = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            genv.registerFont(consoleFont);
+            consoleFont = consoleFont.deriveFont(14f);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         _console.setEditable(false);
-        _console.setFont(new Font("Lucida Console", Font.PLAIN, 14));
-        _console.setBackground(new Color(0,30,50));
+        _console.setFont(consoleFont);
+        if (Window.selectedTheme.equalsIgnoreCase(Window.THEME_MATERIAL_GOLD)) {
+            _console.setBackground(Color.DARK_GRAY);
+        } else {
+            _console.setBackground(new Color(0, 30, 50));
+        }
         _console.setForeground(Color.WHITE);
         String welcome_message = "";
         welcome_message += "x~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~x\n";
@@ -443,7 +553,7 @@ public class Window extends JFrame{
         welcome_message += "| _.-'     '._   github.com/N3ROO   _.'     '-._ |\n";
         welcome_message += "|  Aknowledgements: shorebre4k & patricktelling  |\n";
         welcome_message += "x~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~x\n";
-        _console.setText(welcome_message);
+        addText(welcome_message, true);
 
         while(!waitingMessages.isEmpty()){
             Message message = waitingMessages.poll();
@@ -466,8 +576,8 @@ public class Window extends JFrame{
         StyleContext sc = StyleContext.getDefaultStyleContext();
         AttributeSet attribute_set = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Foreground, c);
 
-        attribute_set = sc.addAttribute(attribute_set, StyleConstants.FontFamily, "Lucida Console");
-        attribute_set = sc.addAttribute(attribute_set, StyleConstants.Alignment, StyleConstants.ALIGN_JUSTIFIED);
+        sc.addAttribute(attribute_set, StyleConstants.Alignment, StyleConstants.ALIGN_JUSTIFIED);
+        sc.addAttribute(attribute_set, TextAttribute.LIGATURES, TextAttribute.LIGATURES_ON);
 
         int len = tp.getDocument().getLength();
 

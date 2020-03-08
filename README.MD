@@ -12,14 +12,25 @@
 </p>
 
 <p align="center">
-    <a href="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC1.8.9/badge.svg"><img alt="Build Status" src="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC1.8.9/badge.svg" /></a>
-    <a href="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC1.13.2/badge.svg"><img alt="Build Status" src="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC1.13.2/badge.svg" /></a>
-    <a href="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC1.14.4/badge.svg"><img alt="Build Status" src="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC1.14.4/badge.svg" /></a>
+    <a href="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC_1.8.9/badge.svg"><img alt="Build Status" src="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC_1.8.9/badge.svg" /></a>
+    <a href="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC_1.12.2/badge.svg"><img alt="Build Status" src="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC_1.12.2/badge.svg" /></a>
+    <a href="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC_1.13.2/badge.svg"><img alt="Build Status" src="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC_1.13.2/badge.svg" /></a>
+    <a href="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC_1.14.4/badge.svg"><img alt="Build Status" src="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC_1.14.4/badge.svg" /></a>
 </p>
 
 A silent "hack" built within the forge API. It bypasses powerful anticheats (forge mods and servers) to help you improve your gameplay.
 
-![preview](.github/screenshot.png)
+<p align="center">
+    <img alt="features" src="https://raw.githubusercontent.com/N3ROO/Bettercolors/MC_1.8.9/.github/features_main_crop500.png" />
+</p>
+
+## Last update
+
+*New themes, fixes and improvements.*
+
+<p align="center">
+    <img alt="themes" src="https://raw.githubusercontent.com/N3ROO/Bettercolors/MC_1.8.9/.github/new_themes_crop500.png" />
+</p>
 
 ## Disclaimer
 
@@ -34,6 +45,8 @@ I made this project to learn Java in a funny way. I started 2 years ago but the 
 🖱️ **Click assistance :**  A human-like click assistance that sends REAL clicks, to help you click faster. It can bypass forge CPS counter mods by toggling packets.
 
 📟 **External interface :** A clean external interface to configure the mod outside the minecraft client, so you can record without any problem !
+
+🎨 **Theme chooser:** 4 Themes are waiting for you: Default, Material Light, Material Oceanic and Material Gold.
 
 📋 **Console :** Curious ? There is a console showing everything happening in the mod. 
 
@@ -128,7 +141,7 @@ It is easier to set up forge with [Eclipse](https://www.eclipse.org/neon/). Othe
 
 - And if you use IntelliJ IDEA (2018.x.x) **recommended**:
     - Open IntelliJ IDEA, and open the "build.gradle" file as a project
-    - A window will show up, change nothing but "create separate module per source set" that needs to be **disabled**, then click ok (make sure that the Gradle JVM is java < 11)
+    - A window will show up, change nothing but "create separate module per source set" that needs to be **disabled**, then click ok (make sure that the Gradle JVM is java < 11). If the dialog does not show, then, go to `.idea/gradle.xml` and write `<option name="resolveModulePerSourceSet" value="false" />` in `<GradleProjectSettings>`.
     - Wait for IntelliJ to start and to process with gradle (it took me 6 minutes with a good computer)
     - Open a terminal and type `gradlew genIntellijRuns` (it took me 2 minutes)
     - Next to the "run" button, select "ADD CONFIGURATION" and select runClient (in Application tab). Then, in "Use classpath of module:", select `dev.nero.bettercolors.main.Bettercolors`. Click ok. Now you can run the client. (the first run takes time, you have to wait a bit).
@@ -140,7 +153,11 @@ Now it should be done (please refer to [FORGE-INSTRUCTIONS.txt](FORGE-INSTRUCTIO
 
 ### 3. Build the .jar
 
-Open a terminal and write `.\gradlew build`. The jar built is located in build/lib/.
+I could not make the build working properly with an external library, so here is what you need to do:
+- Open a terminal and write `.\gradlew build`.
+- Open `build/libs/bettercolors-6.x.x.jar` with winrar (or something like this)
+- Go to `META-INF/libraries/material-ui-swing-x.x.x_x`
+- Copy all these files into `bettercolors-6.x.x.jar`
 
 ### 4. Contributing
 

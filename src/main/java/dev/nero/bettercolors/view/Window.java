@@ -214,10 +214,11 @@ public class Window extends JFrame{
                 int total_dif = 0;
                 for (int i = 0; i < 4; i ++) {
                     if (version_dif[i] != 0) {
-                        total_dif = version_dif[i];
+                        total_dif = - version_dif[i];
                         break;
                     }
                 }
+
                 if(total_dif > 1){
                     update.setForeground(new Color(0, 70, 100));
                     addText(total_dif + " updates available !", Color.ORANGE, true);
@@ -226,7 +227,7 @@ public class Window extends JFrame{
                     addText("One update available !", Color.ORANGE, true);
                 }else{
                     update.setForeground(new Color(150, 70, 0));
-                    addText("You are using a dev version (dif=" + total_dif + ").", Color.ORANGE, true);
+                    addText("You are using a dev version (dif=" + - total_dif + ").", Color.ORANGE, true);
                     addText("Be careful ! It is used for testing.", Color.ORANGE, true);
                 }
                 addText("Last stable version : " + last_version + ".", Color.ORANGE, true);
@@ -235,7 +236,7 @@ public class Window extends JFrame{
                 Font font = update.getFont();
                 Map<TextAttribute, Object> attributes = new HashMap<>(font.getAttributes());
                 attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
-                attributes.put(TextAttribute.SIZE, 10);
+                //attributes.put(TextAttribute.SIZE, 12);
                 update.setFont(font.deriveFont(attributes));
                 update.setCursor(new Cursor(Cursor.HAND_CURSOR));
                 update.addMouseListener(new MouseAdapter() {

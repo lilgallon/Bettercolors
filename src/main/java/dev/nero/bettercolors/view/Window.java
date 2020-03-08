@@ -116,12 +116,15 @@ public class Window extends JFrame{
             int[] version_dif = Bettercolors.compareVersions(Reference.VERSION, last_version);
             if(version_dif != null) {
                 int total_dif = 0;
-                for (int i : version_dif) {
-                    total_dif += i;
+                for (int i = 0; i < 4; i ++) {
+                    if (version_dif[i] != 0) {
+                        total_dif = version_dif[i];
+                        break;
+                    }
                 }
-                if(total_dif < 1){
+                if(total_dif > 1){
                     update.setForeground(new Color(0, 70, 100));
-                    addText(-total_dif + " updates available !", Color.ORANGE, true);
+                    addText(total_dif + " updates available !", Color.ORANGE, true);
                 }else if(total_dif == 1){
                     update.setForeground(new Color(0, 70, 100));
                     addText("One update available !", Color.ORANGE, true);

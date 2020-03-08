@@ -150,6 +150,8 @@ folder instead of the bettercolors folder.
 
 **V6.1.0 MC_1.14.4**
 
+- Loading settings now automatically update the toggle key (#41)
+- Improved toggle key selector (#41)
 - Only bettercolors' settings files are now shown in the settings selector (#40)
 - The selected settings file is now saved and loaded during startup
 - Fixed non-bettercolors settings file being shown in the settings tab

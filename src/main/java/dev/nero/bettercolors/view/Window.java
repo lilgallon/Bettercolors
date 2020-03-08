@@ -362,6 +362,12 @@ public class Window extends JFrame{
                 module.setOptions(options);
                 module.setActivated(Boolean.parseBoolean(options.get(module.getClass().getSimpleName())));
             }
+
+            // Update the toggle key and the HUD
+            Bettercolors.TOGGLE_KEY = Integer.parseInt(options.get(Bettercolors.TOGGLE_KEY_OPTION));
+            Bettercolors.TOGGLE_KEY_NAME = "code: " + Bettercolors.TOGGLE_KEY;
+            keybind.setText("Change the key to toggle the GUI [" + Bettercolors.TOGGLE_KEY_NAME + "]");
+
             addText(LOG_PREFIX + "Loaded \"" + SettingsUtils.SETTINGS_FILENAME + "\".", true);
             synchronizeComponents();
         });

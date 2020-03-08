@@ -150,3 +150,7 @@ move your settings files to the config/ folder instead of the bettercolors/ fold
 - Only bettercolors' settings files are now shown in the settings selector (#40)
 - Loading settings now automatically update the toggle key (#41)
 - Improved toggle key selector (#41)
+
+**V6.1.0 MC1.12.2**
+
+It contains the same thing as the V6.1.0 for MC1.8.9, but it works with Minecraft 1.12.2

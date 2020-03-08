@@ -6,7 +6,7 @@ import dev.nero.bettercolors.modules.options.ValueOption;
 import dev.nero.bettercolors.utils.MathUtils;
 import dev.nero.bettercolors.utils.TimeHelper;
 import net.minecraft.entity.Entity;
-import net.minecraft.network.play.client.C02PacketUseEntity;
+import net.minecraft.util.EnumHand;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -84,7 +84,7 @@ public class ClickAssistance extends Module {
 
     @Override
     public void onUpdate() {
-        if(MC.thePlayer != null){
+        if(MC.player != null){
 
             if(_activation_timer.isStopped()) {
                 // If the click assist is not activated, we check if the user made the actions to activate it
@@ -147,11 +147,11 @@ public class ClickAssistance extends Module {
         int rand = MathUtils.random(0, 100);
         if(rand <= chance){
             if( (only_on_entity || packets) && target != null){
-                if (MC.thePlayer.getDistanceToEntity(target) <= MC.playerController.getBlockReachDistance() &&
+                if (MC.player.getDistance(target) <= MC.playerController.getBlockReachDistance() &&
                         (team_filter && !isInSameTeam(target))) {
                     if (packets) {
-                        MC.thePlayer.sendQueue.addToSendQueue(new C02PacketUseEntity(target, C02PacketUseEntity.Action.ATTACK));
-                        MC.thePlayer.swingItem();
+                        MC.playerController.attackEntity(MC.player, target);
+                        MC.player.swingArm(EnumHand.MAIN_HAND);
                     } else {
                         click();
                     }

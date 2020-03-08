@@ -9,7 +9,7 @@ import com.google.common.collect.Lists;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -110,7 +110,7 @@ public class AimAssistance extends Module {
 
     @Override
     public void onUpdate() {
-        if(MC.thePlayer != null){
+        if(MC.player != null){
             if(_activation_timer.isStopped()) {
                 // If the aim assist is not activated, we check if the user made the actions to activate it
                 if (isKeyState(KEY.ATTACK, KEY_STATE.JUST_PRESSED) && !_post_activation_timer.isStopped()) {
@@ -177,9 +177,9 @@ public class AimAssistance extends Module {
 
         List<? extends Entity> entities;
         if(((ToggleOption) _options.get(I_USE_ON_MOBS)).isActivated()){
-            entities = MC.theWorld.loadedEntityList;
+            entities = MC.world.loadedEntityList;
         }else{
-            entities = MC.theWorld.playerEntities;
+            entities = MC.world.playerEntities;
         }
 
         if(entities == null) return;
@@ -191,7 +191,7 @@ public class AimAssistance extends Module {
             if(entity instanceof EntityLivingBase){
                 if(entity instanceof EntityPlayerSP)
                     continue;
-                if(MC.thePlayer.getDistanceToEntity(entity) <= range && MC.thePlayer.canEntityBeSeen(entity))
+                if(MC.player.getDistance(entity) <= range && MC.player.canEntityBeSeen(entity))
                     attackable_entities.add((EntityLivingBase) entity);
             }
         }
@@ -209,7 +209,7 @@ public class AimAssistance extends Module {
             // Calculate distances
             float distYaw = MathHelper.abs(getDiffFrom(entity)[0]);
             float distPitch = MathHelper.abs(getDiffFrom(entity)[1]);
-            float distDirect = MathHelper.sqrt_float(distYaw*distYaw + distPitch*distPitch);
+            float distDirect = MathHelper.sqrt(distYaw*distYaw + distPitch*distPitch);
 
             if(distDirect < minDistDirect) {
                 target = entity;
@@ -240,17 +240,17 @@ public class AimAssistance extends Module {
      * @return the [x, y] difference from the player aim to the target.
      */
     private float[] getDiffFrom(EntityLivingBase entity){
-        final double diffX = entity.posX - MC.thePlayer.posX;
-        final double diffZ = entity.posZ - MC.thePlayer.posZ;
-        double diffY = entity.posY + entity.getEyeHeight() - (MC.thePlayer.posY + MC.thePlayer.getEyeHeight());
+        final double diffX = entity.posX - MC.player.posX;
+        final double diffZ = entity.posZ - MC.player.posZ;
+        double diffY = entity.posY + entity.getEyeHeight() - (MC.player.posY + MC.player.getEyeHeight());
 
-        final double dist = MathHelper.sqrt_double(diffX * diffX + diffZ * diffZ);
+        final double dist = MathHelper.sqrt(diffX * diffX + diffZ * diffZ);
 
         final float yaw = (float) ((Math.atan2(diffZ, diffX) * 180.0D / Math.PI) - 90.0F ) + shift_x;
         final float pitch = (float) - (Math.atan2(diffY, dist) * 180.0D / Math.PI) 		   + shift_y;
 
-        float distYaw = MathHelper.wrapAngleTo180_float(yaw - MC.thePlayer.rotationYaw);
-        float distPitch = MathHelper.wrapAngleTo180_float(pitch - MC.thePlayer.rotationPitch);
+        float distYaw = MathHelper.wrapDegrees(yaw - MC.player.rotationYaw);
+        float distPitch = MathHelper.wrapDegrees(pitch - MC.player.rotationPitch);
 
         return new float[]{distYaw, distPitch};
     }
@@ -262,8 +262,8 @@ public class AimAssistance extends Module {
         final float[] rotations = getRotationsNeeded(entity);
 
         if (rotations != null) {
-            MC.thePlayer.rotationYaw = rotations[0];
-            MC.thePlayer.rotationPitch = rotations[1];
+            MC.player.rotationYaw = rotations[0];
+            MC.player.rotationPitch = rotations[1];
         }
 
         log_info("Aiming at entity " + entity.getName() + ".");
@@ -283,24 +283,24 @@ public class AimAssistance extends Module {
         float step_x = ((ValueOption) _options.get(I_STEP_X)).getVal();
         float step_y = ((ValueOption) _options.get(I_STEP_Y)).getVal();
 
-        final double diffX = entity.posX - MC.thePlayer.posX;
-        final double diffZ = entity.posZ - MC.thePlayer.posZ;
-        double diffY = entity.posY + entity.getEyeHeight() - (MC.thePlayer.posY + MC.thePlayer.getEyeHeight());
+        final double diffX = entity.posX - MC.player.posX;
+        final double diffZ = entity.posZ - MC.player.posZ;
+        double diffY = entity.posY + entity.getEyeHeight() - (MC.player.posY + MC.player.getEyeHeight());
 
-        final double dist = MathHelper.sqrt_double(diffX * diffX + diffZ * diffZ);
+        final double dist = MathHelper.sqrt(diffX * diffX + diffZ * diffZ);
         final float yaw = (float) ((Math.atan2(diffZ, diffX) * 180.0D / Math.PI) - 90.0F ) + shift_x;
         final float pitch = (float) -(Math.atan2(diffY, dist) * 180.0D / Math.PI) 		   + shift_y;
 
-        if(MathHelper.abs(MathHelper.wrapAngleTo180_float(yaw - MC.thePlayer.rotationYaw)) <=+ radius_x
-                && MathHelper.abs(MathHelper.wrapAngleTo180_float(pitch - MC.thePlayer.rotationPitch)) <= radius_y){
+        if(MathHelper.abs(MathHelper.wrapDegrees(yaw - MC.player.rotationYaw)) <=+ radius_x
+                && MathHelper.abs(MathHelper.wrapDegrees(pitch - MC.player.rotationPitch)) <= radius_y){
             float yawFinal, pitchFinal;
 
-            yawFinal = ((MathHelper.wrapAngleTo180_float(yaw - MC.thePlayer.rotationYaw)) * step_x) / 100;
-            pitchFinal = ((MathHelper.wrapAngleTo180_float(pitch - MC.thePlayer.rotationPitch)) * step_y) / 100;
+            yawFinal = ((MathHelper.wrapDegrees(yaw - MC.player.rotationYaw)) * step_x) / 100;
+            pitchFinal = ((MathHelper.wrapDegrees(pitch - MC.player.rotationPitch)) * step_y) / 100;
 
-            return new float[] { MC.thePlayer.rotationYaw + yawFinal, MC.thePlayer.rotationPitch + pitchFinal};
+            return new float[] { MC.player.rotationYaw + yawFinal, MC.player.rotationPitch + pitchFinal};
         }else{
-            return new float[] { MC.thePlayer.rotationYaw, MC.thePlayer.rotationPitch};
+            return new float[] { MC.player.rotationYaw, MC.player.rotationPitch};
         }
     }
 }

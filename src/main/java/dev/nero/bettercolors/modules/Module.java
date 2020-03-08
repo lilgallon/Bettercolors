@@ -98,7 +98,7 @@ public abstract class Module {
         try {
             // Check friends / teammate
             target_tag = exportTag((EntityPlayer) entity);
-            if (exportTag(MC.thePlayer).equalsIgnoreCase(target_tag)) {
+            if (exportTag(MC.player).equalsIgnoreCase(target_tag)) {
                 same_team = true;
             }
 
@@ -125,10 +125,10 @@ public abstract class Module {
      * @return true if the user is in a Gui (he can't move).
      */
     boolean isInGui(){
-        if(MC.thePlayer == null) return true;
-        return (MC.thePlayer.isPlayerSleeping() ||
-                MC.thePlayer.isDead ||
-                !(MC.thePlayer.openContainer instanceof ContainerPlayer) ||
+        if(MC.player == null) return true;
+        return (MC.player.isPlayerSleeping() ||
+                MC.player.isDead ||
+                !(MC.player.openContainer instanceof ContainerPlayer) ||
                 !MC.inGameHasFocus);
     }
 

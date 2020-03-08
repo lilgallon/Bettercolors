@@ -4,6 +4,7 @@ import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.Enchantments;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 
@@ -21,7 +22,7 @@ public class AutoSword extends Module {
 
     @Override
     public void onUpdate() {
-        if(MC.thePlayer != null){
+        if(MC.player != null){
 
             boolean has_clicked_on_living_entity = false;
             try {
@@ -35,15 +36,14 @@ public class AutoSword extends Module {
                 float max_damage = -1;
                 int best_item = -1;
                 for(int slot = 0; slot < 9 ; slot ++){
-                    ItemStack stack = MC.thePlayer.inventory.mainInventory[slot];
-                    if(stack == null) continue;
+                    ItemStack stack = MC.player.inventory.mainInventory.get(slot);
                     if(stack.getItem() instanceof ItemSword){
                         ItemSword sword = (ItemSword) stack.getItem();
                         float damage = sword.getMaxDamage();
                         if(sword.hasEffect(stack)){
                             // The damage calculation is not correct here, but we just need to find the item with the most
                             // powerful enchantment, so we don't care.
-                            damage += EnchantmentHelper.getEnchantmentLevel(Enchantment.sharpness.effectId, stack);
+                            damage += EnchantmentHelper.getEnchantmentLevel(Enchantments.SHARPNESS, stack);
                         }
                         if(damage >= max_damage){
                             best_item = slot;
@@ -52,9 +52,9 @@ public class AutoSword extends Module {
                     }
                 }
                 // We give the best sword to the player
-                if(best_item != -1 && MC.thePlayer.inventory.currentItem != best_item){
-                    log_info("Better sword found (" +  MC.thePlayer.inventory.mainInventory[best_item].getDisplayName() + ").");
-                    MC.thePlayer.inventory.currentItem = best_item;
+                if(best_item != -1 && MC.player.inventory.currentItem != best_item){
+                    log_info("Better sword found (" +  MC.player.inventory.mainInventory.get(best_item).getDisplayName() + ").");
+                    MC.player.inventory.currentItem = best_item;
                 }
             }
         }

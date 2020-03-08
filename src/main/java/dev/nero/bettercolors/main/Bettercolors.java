@@ -5,6 +5,11 @@ import dev.nero.bettercolors.modules.*;
 import dev.nero.bettercolors.modules.options.Option;
 import dev.nero.bettercolors.modules.options.ToggleOption;
 import dev.nero.bettercolors.view.Window;
+import mdlaf.MaterialLookAndFeel;
+import mdlaf.themes.JMarsDarkTheme;
+import mdlaf.themes.MaterialLiteTheme;
+import mdlaf.themes.MaterialOceanicTheme;
+import mdlaf.themes.MaterialTheme;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -14,6 +19,7 @@ import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.lwjgl.glfw.GLFW;
 
+import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -34,6 +40,8 @@ public class Bettercolors {
     public final static String TOGGLE_KEY_OPTION = "toggle_key";
     public static String TOGGLE_KEY_NAME = "insert code: 260";
     public static int TOGGLE_KEY = GLFW.GLFW_KEY_INSERT;
+
+    public final static String THEME_OPTION = "theme";
 
     private final static ArrayList<Option> DEFAULT_ACTIVATION_STATUS;
     static{
@@ -89,6 +97,38 @@ public class Bettercolors {
         try {
             String gui_toggle_key = SettingsUtils.getOption(TOGGLE_KEY_OPTION);
             Bettercolors.TOGGLE_KEY = Integer.parseInt(gui_toggle_key);
+        } catch (Exception ignored) { } // We are here because the setting does not exist yet (the user never updated the GUI toggle key)
+
+        Window.defaultLookAndFeel = UIManager.getLookAndFeel();
+
+        try {
+            String theme = SettingsUtils.getOption(THEME_OPTION);
+
+            try {
+                switch (theme) {
+                    case Window.THEME_DEFAULT:
+                        UIManager.setLookAndFeel(Window.defaultLookAndFeel);
+                        Window.selectedTheme = Window.THEME_DEFAULT;
+                        break;
+                    case Window.THEME_MATERIAL_LIGHT:
+                        UIManager.setLookAndFeel(new MaterialLookAndFeel());
+                        MaterialLookAndFeel.changeTheme(new MaterialLiteTheme());
+                        Window.selectedTheme = Window.THEME_MATERIAL_LIGHT;
+                        break;
+                    case Window.THEME_MATERIAL_OCEANIC:
+                        UIManager.setLookAndFeel(new MaterialLookAndFeel());
+                        MaterialLookAndFeel.changeTheme(new MaterialOceanicTheme());
+                        Window.selectedTheme = Window.THEME_MATERIAL_OCEANIC;
+                        break;
+                    case Window.THEME_MATERIAL_GOLD:
+                        UIManager.setLookAndFeel(new MaterialLookAndFeel());
+                        MaterialLookAndFeel.changeTheme(new JMarsDarkTheme());
+                        Window.selectedTheme = Window.THEME_MATERIAL_GOLD;
+                        break;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         } catch (Exception ignored) { } // We are here because the setting does not exist yet (the user never updated the GUI toggle key)
 
         // AbstractWindow initialisation

@@ -73,7 +73,13 @@ repositories {
     }
 }
 
+configurations {
+    inJar
+}
+configurations.compile.extendsFrom(configurations.inJar)
+
 dependencies {
+    inJar 'io.github.vincenzopalazzo:material-ui-swing:1.1.1_beta'
     // Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed
     // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
@@ -101,6 +107,9 @@ dependencies {
 
 // Example for how to get properties into the manifest for reading by the runtime..
 jar {
+    from(configurations.inJar) {
+        into 'META-INF/libraries'
+    }
     manifest {
         attributes([
                 "Specification-Title": "bettercolors",
@@ -109,7 +118,8 @@ jar {
                 "Implementation-Title": project.name,
                 "Implementation-Version": "${version}",
                 "Implementation-Vendor" :"",
-                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+                'ContainedDeps': 'material-ui-swing-1.1.1_beta.jar'
         ])
     }
 }

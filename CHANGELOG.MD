@@ -137,7 +137,7 @@ Exactly the same version as V6.0.0 MC_1.13, but for Minecraft 1.14.4
 - Fixed "missing forge files" during build due to forge's package layout change (#27) - thanks @patricktelling
 - Changed modid to make sure that bettercolors is not recognizable (#28) - thanks @patricktelling
 
-**V6.1.0 MC_1.14.4**
+**V6.1.0-b1 MC_1.14.4**
 
 This update changes the settings directory. So if you want to keep your custom settings, move your settings files to the config/
 folder instead of the bettercolors folder. 
@@ -147,3 +147,9 @@ folder instead of the bettercolors folder.
 - Increased the size of the console (100 -> 200)
 - Added an option to change the toggle key (insert by default) (#15)
 - Changed settings directory to config/ instead of bettercoolors/ (#36)
+
+**V6.1.0 MC_1.14.4**
+
+- Added 3 new themes: Material Light, Material Oceanic, Material Gold (and the Default one)
+- Changed console font to Cascadia (with ligatures & emojis)
+- Fixed window size to match different themes

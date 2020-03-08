@@ -137,7 +137,7 @@ Exactly the same version as V6.0.0 MC_1.13, but for Minecraft 1.14.4
 - Fixed "missing forge files" during build due to forge's package layout change (#27) - thanks @patricktelling
 - Changed modid to make sure that bettercolors is not recognizable (#28) - thanks @patricktelling
 
-**V6.1.0 MC_1.14.4**
+**V6.1.0-b1 MC_1.14.4**
 
 This update changes the settings directory. So if you want to keep your custom settings, move your settings files to the config/
 folder instead of the bettercolors folder. 
@@ -147,3 +147,8 @@ folder instead of the bettercolors folder.
 - Increased the size of the console (100 -> 200)
 - Added an option to change the toggle key (insert by default) (#15)
 - Changed settings directory to config/ instead of bettercoolors/ (#36)
+
+**V6.1.0 MC_1.14.4**
+
+- Loading settings now automatically update the toggle key (#41)
+- Improved toggle key selector (#41)

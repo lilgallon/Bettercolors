@@ -89,7 +89,11 @@ public class Bettercolors {
         try {
             String gui_toggle_key = SettingsUtils.getOption(TOGGLE_KEY_OPTION);
             Bettercolors.TOGGLE_KEY = Integer.parseInt(gui_toggle_key);
-        } catch (Exception ignored) { } // We are here because the setting does not exist yet (the user never updated the GUI toggle key)
+        } catch (Exception ignored) {
+            // We are here because the setting does not exist yet (the user never updated the GUI toggle key)
+            SettingsUtils.setOption(Bettercolors.TOGGLE_KEY_OPTION, Integer.toString(Bettercolors.TOGGLE_KEY));
+        }
+        Bettercolors.TOGGLE_KEY_NAME = "code: " + Bettercolors.TOGGLE_KEY;
 
         // AbstractWindow initialisation
         _window = new Window("Bettercolors " + Reference.VERSION, _modules, getVersionInformation());

@@ -150,6 +150,9 @@ folder instead of the bettercolors folder.
 
 **V6.1.0 MC_1.14.4**
 
+This update is backwards compatible with V6.1.0-b1 MC_1.14.4. The settings files are compatible with any Minecraft version.
+-> You can use the same settings file for MC1.8.9 as MC1.14.4 for example.
+
 - Added 3 new themes: Material Light, Material Oceanic, Material Gold (in addition to the Default one)
 - Added 'report a bug' menu item
 - Moved update checker to the menu (instead of the footer)

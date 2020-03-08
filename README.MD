@@ -3,7 +3,7 @@
 </h3>
 
 <p align="center">
-    <a href="https://img.shields.io/badge/forge_dev-1.8.9-11.15.1.1722-green.svg"><img alt="Forge dev version: 1.8.9 11.15.1.1722" src="https://img.shields.io/badge/forge_dev-1.8.9_11.15.1.1722-green.svg"/></a>
+    <a href="https://img.shields.io/badge/forge_dev-1.8.9-11.15.1.1722-green.svg"><img alt="Forge dev version: 1.12.2 14.23.5.2768" src="https://img.shields.io/badge/forge_dev-1.12.2_14.23.5.2768-green.svg"/></a>
     <a href="https://img.shields.io/github/release/n3roo/bettercolors.svg"><img alt="Release" src="https://img.shields.io/github/release/n3roo/bettercolors.svg"/></a>
     <a href="https://img.shields.io/github/downloads/n3roo/bettercolors/total.svg"><img alt="Downloads" src="https://img.shields.io/github/downloads/n3roo/bettercolors/total.svg"/></a>
     <a href="https://img.shields.io/github/issues/n3roo/bettercolors.svg"><img alt="Open issues" src="https://img.shields.io/github/issues/n3roo/bettercolors.svg"/></a>
@@ -13,6 +13,7 @@
 
 <p align="center">
     <a href="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC1.8.9/badge.svg"><img alt="Build Status" src="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC1.8.9/badge.svg" /></a>
+	    <a href="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC1.13.2/badge.svg"><img alt="Build Status" src="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC1.12.2/badge.svg" /></a>
     <a href="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC1.13.2/badge.svg"><img alt="Build Status" src="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC1.13.2/badge.svg" /></a>
     <a href="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC1.14.4/badge.svg"><img alt="Build Status" src="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC1.14.4/badge.svg" /></a>
 </p>
@@ -142,7 +143,8 @@ It is easier to set up forge with [Eclipse](https://www.eclipse.org/neon/). Othe
 
 - And if you use IntelliJ IDEA :
     - Open IntelliJ IDEA, and open the "build.gradle" file as a project
-    - A window will show up, change nothing but "create separate module per source set" that needs to be **UNchecked**
+    - A window will show up, change nothing but "create separate module per source set" that needs to be **UNchecked**. If the dialog does not show, then,
+    go to `.idea/gradle.xml` and write `<option name="resolveModulePerSourceSet" value="false" />` in `<GradleProjectSettings>`.
     - Wait for IntelliJ to process with gradle
     - Open a terminal and type `.\gradlew wrapper --gradle-version 3.4`
     - Now, in intelliJ, if gradlew shows up and says "Gradle projects need to be imported", then click on "import changes", and wait for the process to finish

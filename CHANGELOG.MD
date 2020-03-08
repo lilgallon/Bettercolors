@@ -153,3 +153,4 @@ folder instead of the bettercolors folder.
 - Only bettercolors' settings files are now shown in the settings selector (#40)
 - The selected settings file is now saved and loaded during startup
 - Fixed non-bettercolors settings file being shown in the settings tab
+- Fixed wrong version difference computation (#39)

@@ -251,9 +251,9 @@ public class AimAssistance extends Module {
      * @return the [x, y] difference from the player aim to the target.
      */
     private float[] getDiffFrom(LivingEntity entity){
-        final double diffX = entity.posX - MC.player.posX;
-        final double diffZ = entity.posZ - MC.player.posZ;
-        double diffY = entity.posY + entity.getEyeHeight() - (MC.player.posY + MC.player.getEyeHeight());
+        final double diffX = entity.getPosX() - MC.player.getPosX();
+        final double diffZ = entity.getPosZ() - MC.player.getPosZ();
+        double diffY = entity.getPosY() + entity.getEyeHeight() - (MC.player.getPosY() + MC.player.getEyeHeight());
 
         final double dist = MathHelper.sqrt(diffX * diffX + diffZ * diffZ);
 
@@ -295,9 +295,9 @@ public class AimAssistance extends Module {
         float step_x = ((ValueOption) _options.get(I_STEP_X)).getVal();
         float step_y = ((ValueOption) _options.get(I_STEP_Y)).getVal();
 
-        final double diffX = entity.posX - MC.player.posX;
-        final double diffZ = entity.posZ - MC.player.posZ;
-        double diffY = entity.posY + entity.getEyeHeight() - (MC.player.posY + MC.player.getEyeHeight());
+        final double diffX = entity.getPosX() - MC.player.getPosX();
+        final double diffZ = entity.getPosZ() - MC.player.getPosZ();
+        double diffY = entity.getPosY() + entity.getEyeHeight() - (MC.player.getPosY() + MC.player.getEyeHeight());
 
         final double dist = MathHelper.sqrt(diffX * diffX + diffZ * diffZ);
         final float yaw = (float) ((Math.atan2(diffZ, diffX) * 180.0D / Math.PI) - 90.0F ) + shift_x;

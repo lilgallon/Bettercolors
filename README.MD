@@ -3,7 +3,7 @@
 </h3>
  
 <p align="center">
-    <a href="https://img.shields.io/badge/forge_dev-1.14.4_28.1.0-green.svg"><img alt="Forge dev version: 1.14.4-28.1.0" src="https://img.shields.io/badge/forge_dev-1.14.4_28.1.0-green.svg"/></a>
+    <a href="https://img.shields.io/badge/forge_dev-1.15.2_31.1.18-green.svg"><img alt="Forge dev version: 1.15.2-31.1.18" src="https://img.shields.io/badge/forge_dev-1.15.2_31.1.18-green.svg"/></a>
     <a href="https://img.shields.io/github/release/n3roo/bettercolors.svg"><img alt="Release" src="https://img.shields.io/github/release/n3roo/bettercolors.svg"/></a>
     <a href="https://img.shields.io/github/downloads/n3roo/bettercolors/total.svg"><img alt="Downloads" src="https://img.shields.io/github/downloads/n3roo/bettercolors/total.svg"/></a>
     <a href="https://img.shields.io/github/issues/n3roo/bettercolors.svg"><img alt="Open issues" src="https://img.shields.io/github/issues/n3roo/bettercolors.svg"/></a>
@@ -16,6 +16,7 @@
     <a href="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC1.12.2/badge.svg"><img alt="Build Status" src="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC1.12.2/badge.svg" /></a>
     <a href="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC1.13.2/badge.svg"><img alt="Build Status" src="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC1.13.2/badge.svg" /></a>
     <a href="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC1.14.4/badge.svg"><img alt="Build Status" src="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC1.14.4/badge.svg" /></a>
+    <a href="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC1.15.2/badge.svg"><img alt="Build Status" src="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC1.15.2/badge.svg" /></a>
 </p>
 
 A silent "hack" built within the forge API. It bypasses powerful anticheats (forge mods and servers) to help you improve your gameplay.
@@ -143,8 +144,10 @@ It is easier to set up forge with [Eclipse](https://www.eclipse.org/neon/). Othe
     - Open IntelliJ IDEA, and open the "build.gradle" file as a project
     - A window will show up, change nothing but "create separate module per source set" that needs to be **disabled**, then click ok (make sure that the Gradle JVM is java < 11). If the dialog does not show, then, go to `.idea/gradle.xml` and write `<option name="resolveModulePerSourceSet" value="false" />` in `<GradleProjectSettings>`.
     - Wait for IntelliJ to start and to process with gradle (it took me 6 minutes with a good computer)
+    - Make sure that gradlew daemon is not running by typing `gradlew --stop`
     - Open a terminal and type `gradlew genIntellijRuns` (it took me 2 minutes)
     - Next to the "run" button, select "ADD CONFIGURATION" and select runClient (in Application tab). Then, in "Use classpath of module:", select `dev.nero.bettercolors.main.Bettercolors`. Click ok. Now you can run the client. (the first run takes time, you have to wait a bit).
+    - If it does not work, try to run `gradlew clean`, and then redo everything from step 3
 
 When you make a change in build.gradle, make sure to run `gradlew clean`.
 If your JAVA_HOME points to a java version below 8 or above 11, use this command: `gradlew -Dorg.gradle.java.home="path/to/javaSDK >8 & <11"` instead of simply `gradlew`.

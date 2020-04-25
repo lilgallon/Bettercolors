@@ -13,9 +13,12 @@
 
 <p align="center">
     <a href="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC1.8.9/badge.svg"><img alt="Build Status" src="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC1.8.9/badge.svg" /></a>
+    <a href="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC1.12.2/badge.svg"><img alt="Build Status" src="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC1.12.2/badge.svg" /></a>
     <a href="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC1.13.2/badge.svg"><img alt="Build Status" src="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC1.13.2/badge.svg" /></a>
     <a href="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC1.14.4/badge.svg"><img alt="Build Status" src="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC1.14.4/badge.svg" /></a>
+    <a href="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC1.15.2/badge.svg"><img alt="Build Status" src="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC1.15.2/badge.svg" /></a>
 </p>
+
 
 A silent "hack" built within the forge API. It bypasses powerful anticheats (forge mods and servers) to help you improve your gameplay.
 
@@ -128,30 +131,32 @@ This section show you how to get a working development environment.
 
 ### 1. Download your favorite IDE
 
-It is easier to set up forge with [Eclipse](https://www.eclipse.org/neon/). Otherwise, you can use [IntelliJ](https://www.jetbrains.com/idea/) that is way better java IDE than Ecplise.
+I did not try setting up forge with [Eclipse](https://www.eclipse.org/neon/). I encourage you to use [IntelliJ](https://www.jetbrains.com/idea/) that is way better java IDE than Ecplise (that also has a free community edition).
 
 ### 2. Set up forge & IDE
 
 - Clone this project `git clone <link>`
 - Go in the project directory
 
-- Now if you use eclipse :
+- Now if you use eclipse (this should be enough, I'll be happy to accept a pull request with better explanations):
     - Open a terminal and type `.\gradlew setupDecompWorkspace`
     - Open a terminal and type `.\gradlew eclipse`
     - Open eclipse and switch your workspace to eclipse/
 
-- And if you use IntelliJ IDEA :
+- And if you use [IntelliJ IDEA](https://www.jetbrains.com/idea/download/):
     - Open IntelliJ IDEA, and open the "build.gradle" file as a project
-    - A window will show up, change nothing but "create separate module per source set" that needs to be **UNchecked**
-    - Wait for IntelliJ to process with gradle
-    - Open a terminal and type `.\gradlew wrapper --gradle-version 3.4`
-    - Now, in intelliJ, if gradlew shows up and says "Gradle projects need to be imported", then click on "import changes", and wait for the process to finish
-    - Open the gradle tab (on the right), right click on "setupDecompWorkspace" (in Tasks/forgegradle), and click on "create bettercolors [setup...]", now in vm option, add "-Xmx4g -Xms4g", click apply, and then click on run (at the top left of IntelliJ window)
-    - In the same tab, execute "genIntellijRuns"
-	- Finally, at the top, click on "Minecraft Client" and select "edit configurations". In "Use classpath of module" select "dev.nero.bettercolors.main.Bettercolors".
-	- Now you should be able to launch minecraft through intelliJ (if it does not wok, make sure that you use Java JDK 8<->10)
+    - A window will show up, change nothing but "create separate module per source set" that needs to be **disabled**, then click ok (make sure that the Gradle JVM is java < 11). If the dialog does not show, then, go to `.idea/gradle.xml` and write `<option name="resolveModulePerSourceSet" value="false" />` in `<GradleProjectSettings>`. **This is important**, otherwise the minecraft & forge libs may not be mapped correctly.
+    - Wait for IntelliJ to start and to download gradle stuff (it can be long, be patient)
+    - Open a terminal and type `gradlew --stop` to make sure that gradlew daemon is not running (it may cause issue later)
+    - Open the gradle tab (on the right, in the IntelliJ window), right click on "setupDecompWorkspace" (in Tasks/forgegradle), and click on "create bettercolors [setup...]", now in vm option, add "-Xmx4g -Xms4g", click apply, and then click on run (at the top left of IntelliJ window)
+    - Open a terminal and type `gradlew genIntellijRuns`
+    - Next to the "run" button, select "ADD CONFIGURATION" and select runClient (in Application tab). Then, in "Use classpath of module:", select `dev.nero.bettercolors.main.Bettercolors`. Click ok. Now you can run the client. (the first run takes time, you have to wait a bit).
+    - If it does not work, try to run `gradlew clean`, and then redo everything from step 3
 
-Now it should be done (please refer to [FORGE-INSTRUCTIONS.txt](FORGE-INSTRUCTIONS.txt) or this [youtube video](https://www.youtube.com/watch?v=G2aPT36kf60) if you have any problem)
+When you make a change in build.gradle, make sure to run `gradlew clean`.
+If your JAVA_HOME points to a java version below 8 or above 11, replace `gradlew` by `gradlew -Dorg.gradle.java.home="path/to/javaSDK >8 & <11"`.
+
+Now it should be done. Please refer to [FORGE-INSTRUCTIONS.txt](FORGE-INSTRUCTIONS.txt) if you have any problem (my explanations are more detailed than the official ones).
 
 ### 3. Build the .jar
 

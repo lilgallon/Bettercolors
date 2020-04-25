@@ -127,29 +127,32 @@ This section show you how to get a working development environment.
 
 ### 1. Download your favorite IDE
 
-It is easier to set up forge with [Eclipse](https://www.eclipse.org/neon/). Otherwise, you can use [IntelliJ](https://www.jetbrains.com/idea/) that is way better java IDE than Ecplise.
+I did not try setting up forge with [Eclipse](https://www.eclipse.org/neon/). I encourage you to use [IntelliJ](https://www.jetbrains.com/idea/) that is way better java IDE than Ecplise (that also has a free community edition).
 
 ### 2. Set up forge & IDE
 
 - Clone this project `git clone <link>`
 - Go in the project directory
 
-- Now if you use eclipse:
+- Now if you use eclipse (this should be enough, I'll be happy to accept a pull request with better explanations):
     - Open a terminal and type `.\gradlew setupDecompWorkspace`
     - Open a terminal and type `.\gradlew eclipse`
     - Open eclipse and switch your workspace to eclipse/
 
-- And if you use IntelliJ IDEA (2018.x.x) **recommended**:
+- And if you use [IntelliJ IDEA](https://www.jetbrains.com/idea/download/):
     - Open IntelliJ IDEA, and open the "build.gradle" file as a project
-    - A window will show up, change nothing but "create separate module per source set" that needs to be **disabled**, then click ok (make sure that the Gradle JVM is java < 11). If the dialog does not show, then, go to `.idea/gradle.xml` and write `<option name="resolveModulePerSourceSet" value="false" />` in `<GradleProjectSettings>`.
-    - Wait for IntelliJ to start and to process with gradle (it took me 6 minutes with a good computer)
-    - Open a terminal and type `gradlew genIntellijRuns` (it took me 2 minutes)
+    - A window will show up, change nothing but "create separate module per source set" that needs to be **disabled**, then click ok (make sure that the Gradle JVM is java < 11). If the dialog does not show, then, go to `.idea/gradle.xml` and write `<option name="resolveModulePerSourceSet" value="false" />` in `<GradleProjectSettings>`. **This is important**, otherwise the minecraft & forge libs may not be mapped correctly.
+    - Wait for IntelliJ to start and to download gradle stuff (it can be long, be patient)
+    - Open a terminal and type `gradlew --stop` to make sure that gradlew daemon is not running (it may cause issue later)
+    - Open the gradle tab (on the right, in the IntelliJ window), right click on "setupDecompWorkspace" (in Tasks/forgegradle), and click on "create bettercolors [setup...]", now in vm option, add "-Xmx4g -Xms4g", click apply, and then click on run (at the top left of IntelliJ window)
+    - Open a terminal and type `gradlew genIntellijRuns`
     - Next to the "run" button, select "ADD CONFIGURATION" and select runClient (in Application tab). Then, in "Use classpath of module:", select `dev.nero.bettercolors.main.Bettercolors`. Click ok. Now you can run the client. (the first run takes time, you have to wait a bit).
+    - If it does not work, try to run `gradlew clean`, and then redo everything from step 3
 
 When you make a change in build.gradle, make sure to run `gradlew clean`.
-If your JAVA_HOME points to a java version below 8 or above 11, use this command: `gradlew -Dorg.gradle.java.home="path/to/javaSDK >8 & <11"` instead of simply `gradlew`.
+If your JAVA_HOME points to a java version below 8 or above 11, replace `gradlew` by `gradlew -Dorg.gradle.java.home="path/to/javaSDK >8 & <11"`.
 
-Now it should be done (please refer to [FORGE-INSTRUCTIONS.txt](FORGE-INSTRUCTIONS.txt) or this [youtube video](https://www.youtube.com/watch?v=G2aPT36kf60) if you have any problem). The steps were updated recently (08/03/2019).
+Now it should be done. Please refer to [FORGE-INSTRUCTIONS.txt](FORGE-INSTRUCTIONS.txt) if you have any problem (my explanations are more detailed than the official ones).
 
 ### 3. Build the .jar
 

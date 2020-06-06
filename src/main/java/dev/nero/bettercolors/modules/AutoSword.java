@@ -15,8 +15,8 @@ public class AutoSword extends Module {
      * @param is_activated the initial state.
      * @param symbol the picture name.
      */
-    public AutoSword(String name, int toggle_key, boolean is_activated, String symbol) {
-        super(name, toggle_key, is_activated, symbol, "[ASw]");
+    public AutoSword(int toggle_key, boolean is_activated) {
+        super("Auto sword", toggle_key, is_activated, "sword_symbol.png", "[ASw]");
     }
 
     @Override

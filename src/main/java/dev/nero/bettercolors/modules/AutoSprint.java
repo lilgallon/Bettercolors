@@ -8,8 +8,8 @@ public class AutoSprint extends Module{
      * @param is_activated the initial state.
      * @param symbol the picture name.
      */
-    public AutoSprint(String name, int toggle_key, boolean is_activated, String symbol) {
-        super(name, toggle_key, is_activated, symbol, "[ASp]");
+    public AutoSprint(int toggle_key, boolean is_activated) {
+        super("Auto sprint", toggle_key, is_activated, "sprint_symbol.png", "[ASp]");
     }
 
     @Override

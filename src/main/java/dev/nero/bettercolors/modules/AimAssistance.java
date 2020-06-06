@@ -86,9 +86,9 @@ public class AimAssistance extends Module {
      * @param options the options for the mod.
      * @param symbol the picture name.
      */
-    public AimAssistance(String name, int toggle_key, boolean is_activated, Map<String, String> options, String symbol) {
+    public AimAssistance(int toggle_key, boolean is_activated, Map<String, String> options) {
 
-        super(name, toggle_key, is_activated, symbol, "[AA]");
+        super("Aim assistance", toggle_key, is_activated, "aim_symbol.png", "[AA]");
 
         _options = DEFAULT_OPTIONS;
         ((ToggleOption) _options.get(I_STOP_ON_RIGHT_CLICK)).setActivated(Boolean.parseBoolean(options.get(_options.get(I_STOP_ON_RIGHT_CLICK).getCompleteName())));

@@ -61,9 +61,9 @@ public class ClickAssistance extends Module {
      * @param options the options for the mod.
      * @param symbol the picture name.
      */
-    public ClickAssistance(String name, int toggle_key, boolean is_activated, Map<String, String> options, String symbol) {
+    public ClickAssistance(int toggle_key, boolean is_activated, Map<String, String> options) {
 
-        super(name, toggle_key, is_activated, symbol, "[CA]");
+        super("Click assistance", toggle_key, is_activated, "click_symbol.png", "[CA]");
 
         _options = DEFAULT_OPTIONS;
         ((ToggleOption) _options.get(I_PACKETS)).setActivated(Boolean.parseBoolean(options.get(_options.get(I_PACKETS).getCompleteName())));

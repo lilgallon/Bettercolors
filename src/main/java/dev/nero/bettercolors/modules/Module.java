@@ -60,6 +60,7 @@ public abstract class Module {
      * It toggles the module.
      */
     public void toggle(){
+        // TODO: reset the key handler
         _is_activated = !_is_activated;
     }
 
@@ -143,6 +144,7 @@ public abstract class Module {
      * It updates the module
      */
     public void update(){
+        updateKeyHandler();
         onUpdate();
     }
 

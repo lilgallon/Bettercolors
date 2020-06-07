@@ -16,8 +16,6 @@
 
 package dev.nero.bettercolors.version;
 
-import dev.nero.bettercolors.main.Reference;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -26,7 +24,6 @@ import java.net.URL;
 import java.util.stream.Collectors;
 
 public class Version {
-
 
     // Used to delimit the mod version from the MC version
     // A version is written this way: x.y.z-MCa.b.c (ex: 6.0.0-MC1.8.9)
@@ -44,6 +41,16 @@ public class Version {
 
     // The changelog of that version
     private String changelog;
+
+    // Used to compare versions
+    public enum VersionDiff {
+        // If the current version is greater than the latest available version, it means that it's a development version
+        DEVELOPMENT,
+        // If the current version is the same as the latest one, then the version is updated
+        UPDATED,
+        // If the current version is older than the latest one, then the version is outdated
+        OUTDATED
+    }
 
     /**
      * A version is written this way:
@@ -118,7 +125,7 @@ public class Version {
             }
 
             if(!found) {
-                throw new VersionException("No version found");
+                throw new VersionException("No version found", VersionException.Error.NO_VERSION);
             } else {
                 // Remove the minecraft version from the mod version (6.0.0-MC1.15.2 -> 6.0.0)
                 latestVersion = latestVersion.replace(MC_PREFIX + mcVersion, "");
@@ -149,21 +156,46 @@ public class Version {
                 }
             }
         } catch (MalformedURLException e){
-            throw new VersionException("Url issue");
+            throw new VersionException("Url issue", VersionException.Error.URL_ISSUE);
         } catch (IOException e){
-            throw new VersionException("No internet connection");
+            throw new VersionException("No internet connection", VersionException.Error.NO_INTERNET);
         }
+    }
+
+    public VersionDiff compareWith(Version version) {
+        // TODO
+        return VersionDiff.DEVELOPMENT;
+    }
+
+    public String getChangelog() {
+        return this.changelog;
     }
 
     @Override
     public boolean equals(Object obj) {
-        // TODO
-        return super.equals(obj);
+        if (obj instanceof Version) {
+            Version o = (Version) obj;
+            return (
+                    o.majorRev == this.majorRev &&
+                    o.minorRev == this.minorRev &&
+                    o.bugRev == this.bugRev &&
+                    o.betaRev == this.betaRev
+            );
+        } else {
+            return false;
+        }
     }
 
     @Override
     public String toString() {
-        // TODO
-        return super.toString();
+        if (this.betaRev != 0) {
+            return (
+                    this.majorRev + "." + this.minorRev + "." + this.bugRev + "-b" + this.betaRev
+            );
+        } else {
+            return (
+                    this.majorRev + "." + this.minorRev + "." + this.bugRev
+            );
+        }
     }
 }

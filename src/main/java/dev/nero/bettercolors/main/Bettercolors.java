@@ -21,6 +21,7 @@ import dev.nero.bettercolors.io.SettingsUtils;
 import dev.nero.bettercolors.modules.*;
 import dev.nero.bettercolors.modules.options.Option;
 import dev.nero.bettercolors.modules.options.ToggleOption;
+import dev.nero.bettercolors.version.Version;
 import dev.nero.bettercolors.view.Window;
 import mdlaf.MaterialLookAndFeel;
 import mdlaf.themes.JMarsDarkTheme;
@@ -224,7 +225,16 @@ public class Bettercolors {
         }
 
         // We have everything, we can finally create the GUI
-        this.window = new Window("Bettercolors " + Reference.VERSION, this.modules, getVersionInformation());
+        this.window = new Window(
+                "Bettercolors " + Reference.VERSION,
+                this.modules,
+                new Version(
+                        Reference.MAIN_MC_VERSION,
+                        Integer.parseInt(Reference.VERSION.split(".")[0]),
+                        Integer.parseInt(Reference.VERSION.split(".")[1]),
+                        Integer.parseInt(Reference.VERSION.split(".")[2]),
+                        "")
+        );
     }
 
     /**

@@ -9,6 +9,7 @@ import dev.nero.bettercolors.modules.options.Option;
 import dev.nero.bettercolors.modules.options.ToggleOption;
 import dev.nero.bettercolors.modules.options.ValueOption;
 import dev.nero.bettercolors.utils.VKtoGLFW;
+import dev.nero.bettercolors.version.Version;
 import mdlaf.MaterialLookAndFeel;
 import mdlaf.themes.JMarsDarkTheme;
 import mdlaf.themes.MaterialLiteTheme;
@@ -52,7 +53,7 @@ public class Window extends JFrame{
 
     private Queue<Message> waitingMessages;
 
-    public Window(String title, ArrayList<Module> modules, String[] versionInfo) {
+    public Window(String title, ArrayList<Module> modules, Version version) {
         super(title);
 
         int width = 500;
@@ -130,7 +131,7 @@ public class Window extends JFrame{
         // Footer
         JPanel footer_layout = new JPanel();
         footer_layout.setLayout(new BorderLayout());
-        setupFooter(footer_layout, versionInfo);
+        setupFooter(footer_layout, version);
 
         // getContentPane().add(header_layout, "North");
         getContentPane().add(modules_related_layout, "Center");
@@ -187,7 +188,8 @@ public class Window extends JFrame{
     }
     */
 
-    private void setupFooter(JPanel footer_layout, String[] versionInfo){
+    private void setupFooter(JPanel footer_layout, Version version){
+        /*
         String last_version = versionInfo[0];
         String changelog = versionInfo[1];
 
@@ -277,7 +279,11 @@ public class Window extends JFrame{
                     addText(line, true);
                 }
             }
-        }
+        }*/
+
+        JLabel credits = new JLabel(" Bettercolors " + Reference.VERSION + " for MC " + Reference.MAIN_MC_VERSION + " by N3RO. ");
+        credits.setFont(new Font(credits.getFont().getFontName(), Font.PLAIN, 12));
+        JLabel update = new JLabel("TODO");
 
         footer_layout.add(credits, "West");
 

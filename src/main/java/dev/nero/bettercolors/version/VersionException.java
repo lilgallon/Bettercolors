@@ -19,7 +19,16 @@ package dev.nero.bettercolors.version;
 
 public class VersionException extends Exception {
 
-    public VersionException(String message) {
+    public enum Error { URL_ISSUE, NO_INTERNET, NO_VERSION }
+
+    private final Error code;
+
+    public VersionException(String message, Error code) {
         super(message);
+        this.code = code;
+    }
+
+    public Error getCode() {
+        return this.code;
     }
 }

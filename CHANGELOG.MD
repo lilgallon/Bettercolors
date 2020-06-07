@@ -177,6 +177,7 @@ This update is backwards compatible with V6.1.0-b1 MC_1.14.4. The settings files
     - Filer.java
     - SettingsUtils.java
     - TimeHelper.java
+    - VKtoGLFW.java
 - Gui:
     - Improved stability (small changes to code design)
     - Improved font loading (console)

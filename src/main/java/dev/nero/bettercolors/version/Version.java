@@ -132,7 +132,7 @@ public class Version {
                 // Split the latest version this way: 6.0.0-b1 -> [6.0.0, 1] or 6.0.0 -> [6.0.0]
                 String[] latestVersionSplit = latestVersion.split("-b");
                 // Split the main part of the version this way: 6.1.0 -> [6, 1, 0]
-                String[] majMinBugVersion = latestVersionSplit[0].split(".");
+                String[] majMinBugVersion = latestVersionSplit[0].split("\\.");
 
                 if (latestVersionSplit.length == 2) {
                     // Means that it is a beta version
@@ -151,7 +151,7 @@ public class Version {
                             Integer.parseInt(majMinBugVersion[0]),
                             Integer.parseInt(majMinBugVersion[1]),
                             Integer.parseInt(majMinBugVersion[2]),
-                            bodies[i]
+                            bodies[i+1]
                     );
                 }
             }
@@ -163,12 +163,36 @@ public class Version {
     }
 
     public VersionDiff compareWith(Version version) {
-        // TODO
-        return VersionDiff.DEVELOPMENT;
-    }
 
-    public String getChangelog() {
-        return this.changelog;
+        if (this.majorRev < version.getMajorRev()) {
+            return VersionDiff.OUTDATED;
+        } else if (this.majorRev > version.getMajorRev()) {
+            return VersionDiff.DEVELOPMENT;
+        } else {
+            if (this.minorRev < version.getMinorRev()) {
+                return VersionDiff.OUTDATED;
+            } else if (this.minorRev > version.getMinorRev()) {
+                return VersionDiff.DEVELOPMENT;
+            } else {
+                if (this.bugRev < version.getBugRev()) {
+                    return VersionDiff.OUTDATED;
+                } else if (this.bugRev > version.getBugRev()){
+                    return VersionDiff.DEVELOPMENT;
+                } else {
+                    if (this.betaRev == 0 && version.getBetaRev() != 0) {
+                        return VersionDiff.DEVELOPMENT;
+                    } else if (this.betaRev != 0 && version.getBetaRev() == 0) {
+                        return VersionDiff.OUTDATED;
+                    } else if (this.betaRev < version.getBetaRev()) {
+                        return VersionDiff.OUTDATED;
+                    } else if (this.betaRev > version.getBetaRev()) {
+                        return VersionDiff.DEVELOPMENT;
+                    } else {
+                        return VersionDiff.UPDATED;
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -176,6 +200,7 @@ public class Version {
         if (obj instanceof Version) {
             Version o = (Version) obj;
             return (
+                    o.mcVersion.equals(this.mcVersion) &&
                     o.majorRev == this.majorRev &&
                     o.minorRev == this.minorRev &&
                     o.bugRev == this.bugRev &&
@@ -197,5 +222,29 @@ public class Version {
                     this.majorRev + "." + this.minorRev + "." + this.bugRev
             );
         }
+    }
+
+    public String getMcVersion() {
+        return mcVersion;
+    }
+
+    public int getMajorRev() {
+        return majorRev;
+    }
+
+    public int getMinorRev() {
+        return minorRev;
+    }
+
+    public int getBugRev() {
+        return bugRev;
+    }
+
+    public int getBetaRev() {
+        return betaRev;
+    }
+
+    public String getChangelog() {
+        return this.changelog;
     }
 }

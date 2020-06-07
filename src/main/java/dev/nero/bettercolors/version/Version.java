@@ -102,7 +102,6 @@ public class Version {
             BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
             String json = in.lines().collect(Collectors.joining());
             in.close();
-
             // Now that we have all the data in the json variable, we need to find the latest version of the mod for the
             // given minecraft version
 
@@ -142,7 +141,7 @@ public class Version {
                             Integer.parseInt(majMinBugVersion[1]),
                             Integer.parseInt(majMinBugVersion[2]),
                             Integer.parseInt(latestVersionSplit[1]),
-                            bodies[i]
+                            bodies[i].split("\"")[1]
                     );
                 } else {
                     // It is not a beta version
@@ -151,7 +150,7 @@ public class Version {
                             Integer.parseInt(majMinBugVersion[0]),
                             Integer.parseInt(majMinBugVersion[1]),
                             Integer.parseInt(majMinBugVersion[2]),
-                            bodies[i+1]
+                            bodies[i].split("\"")[1]
                     );
                 }
             }

@@ -43,17 +43,6 @@ import java.util.Map;
 @Mod(Reference.MOD_ID)
 public class Bettercolors {
 
-    public final static String ISSUE_TRACKER = "https://github.com/N3ROO/Bettercolors/issues";
-    public final static String DOWNLOAD_URL = "https://github.com/N3ROO/Bettercolors/releases/latest";
-
-    public final static String FILE_WITH_CURRENT_SETTINGS_USED = "_bc_settingsfile";
-
-    public final static String TOGGLE_KEY_OPTION = "toggle_key";
-    public static String TOGGLE_KEY_NAME = "insert code: 260";
-    public static int TOGGLE_KEY = GLFW.GLFW_KEY_INSERT;
-
-    public final static String THEME_OPTION = "theme";
-
     private final static ArrayList<Option> DEFAULT_ACTIVATION_STATUS;
     static{
         DEFAULT_ACTIVATION_STATUS = new ArrayList<>();
@@ -109,14 +98,12 @@ public class Bettercolors {
         // If the file does not exist, it means that it is the first time that we run the mod. In that case, we create
         // the file that contains the settings filename that is used by the user. The parameter only_absents=true means
         // that we will only write if the option is not in the file.
-        Filer filer = new Filer(FILE_WITH_CURRENT_SETTINGS_USED);
+        Filer filer = new Filer(SettingsUtils.FILE_WITH_CURRENT_SETTINGS_USED);
         filer.write(option, true);
 
         // Now that we are sure that the file containing the settings file used by the user exists, we can load it.
-        String settings_file = filer.read("settings_file");
-
         // We update the settings utils static variable to the current used settings file
-        SettingsUtils.SETTINGS_FILENAME = settings_file;
+        SettingsUtils.SETTINGS_FILENAME = filer.read("settings_file");
 
         // Alright, now that we know what settings file to read, we can read it. We will load and store everything in
         // the options variable.
@@ -175,19 +162,19 @@ public class Bettercolors {
         // But we need to know what key is used to initialize the GUI. We will try to read it, if we can't, it means
         // that it is not in the settings file. In that case, we need to append that to the settings file.
         try {
-            Bettercolors.TOGGLE_KEY = Integer.parseInt(SettingsUtils.getOption(TOGGLE_KEY_OPTION));
+            Window.TOGGLE_KEY = Integer.parseInt(SettingsUtils.getOption(Window.TOGGLE_KEY_OPTION));
         } catch (Exception ignored) {
-            SettingsUtils.setOption(Bettercolors.TOGGLE_KEY_OPTION, Integer.toString(Bettercolors.TOGGLE_KEY));
+            SettingsUtils.setOption(Window.TOGGLE_KEY_OPTION, Integer.toString(Window.TOGGLE_KEY));
         }
         // This variable will be shown in the GUI to say what key is currently used to toggle it
-        Bettercolors.TOGGLE_KEY_NAME = "code: " + Bettercolors.TOGGLE_KEY;
+        Window.TOGGLE_KEY_NAME = "code: " + Window.TOGGLE_KEY;
 
         // We are almost done. We need to initialize everything related to the theme here.
         // We load the default swing theme first, and we store it in "defaultLookAndFeel".
         Window.defaultLookAndFeel = UIManager.getLookAndFeel();
         try {
             // It finds the selected theme, and it loads it
-            String theme = SettingsUtils.getOption(THEME_OPTION);
+            String theme = SettingsUtils.getOption(Window.THEME_OPTION);
 
             try {
                 switch (theme) {
@@ -230,9 +217,9 @@ public class Bettercolors {
                 this.modules,
                 new Version(
                         Reference.MAIN_MC_VERSION,
-                        Integer.parseInt(Reference.VERSION.split(".")[0]),
-                        Integer.parseInt(Reference.VERSION.split(".")[1]),
-                        Integer.parseInt(Reference.VERSION.split(".")[2]),
+                        Integer.parseInt(Reference.VERSION.split("\\.")[0]),
+                        Integer.parseInt(Reference.VERSION.split("\\.")[1]),
+                        Integer.parseInt(Reference.VERSION.split("\\.")[2]),
                         "")
         );
     }
@@ -263,7 +250,7 @@ public class Bettercolors {
         }
 
         // Same thing for the GUI. If the key pressed is the one of the GUI, then we toggle the GUI.
-        if(event.getKey() == TOGGLE_KEY && event.getAction() == GLFW.GLFW_RELEASE){
+        if(event.getKey() == Window.TOGGLE_KEY && event.getAction() == GLFW.GLFW_RELEASE){
             this.window.toggle();
         }
     }

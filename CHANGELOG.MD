@@ -165,7 +165,23 @@ This update is backwards compatible with V6.1.0-b1 MC_1.14.4. The settings files
 - Loading settings now automatically update the toggle key (#41)
 - Improved toggle key selector (#41)
 
+**V6.1.0 MC_1.15.2**
+- Same thing as 1.14.4, but for 1.15.2
+
 **V6.1.1 MC_1.15.2**
+
+*Developer notes:*
 - Reformatted:
     - Bettercolors.java
-- Re-written version checker
+    - Window.java
+- Gui:
+    - Improved stability (small changes to code design)
+    - Improved font loading (console)
+- Miscellaneous:
+    - Added the ability to run tests with JUnit 5 (see VersionTest for an example)
+    - Re-coded the version checker
+   
+*User notes:*
+- Improved overall stability
+- Gui:
+    - Changed the font from Cascadia to CascadiaCode 2005.15

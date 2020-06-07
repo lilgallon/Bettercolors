@@ -12,6 +12,7 @@ import java.util.Map;
 
 public class SettingsUtils {
 
+    public final static String FILE_WITH_CURRENT_SETTINGS_USED = "_bc_settingsfile";
     public static String SETTINGS_FILENAME = "default";
 
     /**

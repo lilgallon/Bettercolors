@@ -1,3 +1,19 @@
+/*
+ * Copyright 2018-2020 Bettercolors Contributors (https://github.com/N3ROO/Bettercolors)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package dev.nero.bettercolors.modules;
 
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -10,10 +26,8 @@ import net.minecraft.item.SwordItem;
 public class AutoSword extends Module {
 
     /**
-     * @param name the name.
-     * @param toggle_key the toggle key (-1 -> none).
-     * @param is_activated the initial state.
-     * @param symbol the picture name.
+     * @param toggle_key the toggle key (-1 -> none)
+     * @param is_activated the initial state
      */
     public AutoSword(int toggle_key, boolean is_activated) {
         super("Auto sword", toggle_key, is_activated, "sword_symbol.png", "[ASw]");
@@ -28,21 +42,28 @@ public class AutoSword extends Module {
                 Entity mouseOverEntity = MC.pointedEntity;
                 if ((mouseOverEntity instanceof LivingEntity))
                     has_clicked_on_living_entity = true;
-            } catch (Exception ignored) {}
+            } catch (Exception ignored) {
+                // Happens sometimes in MC1.8.9, did not test if it happens on 1.15.2 as well
+                // When we try to get what the player is pointing at, and it's a ladder, it crashes for example
+            }
 
-            if(isKeyState(KEY.ATTACK, KEY_STATE.JUST_PRESSED) && has_clicked_on_living_entity){
+            if(isKeyState(Key.ATTACK, KeyState.JUST_PRESSED) && has_clicked_on_living_entity){
                 // We find the best sword
                 float max_damage = -1;
                 int best_item = -1;
+
+                // We look for every slot of the hotbar, and we take the best item
                 for(int slot = 0; slot < 9 ; slot ++){
                     ItemStack stack = MC.player.inventory.mainInventory.get(slot);
                     if(stack.getItem() instanceof SwordItem){
                         SwordItem sword = (SwordItem) stack.getItem();
                         float damage = sword.getAttackDamage();
+
+                        // It's not the best algorithm, but that's enough for most of the cases
                         if(sword.hasEffect(stack)){
                             damage += EnchantmentHelper.getEnchantmentLevel(Enchantments.SHARPNESS, stack);
-                            System.out.println(damage);
                         }
+
                         if(damage >= max_damage){
                             best_item = slot;
                             max_damage = damage;
@@ -51,7 +72,15 @@ public class AutoSword extends Module {
                 }
                 // We give the best sword to the player
                 if(best_item != -1 && MC.player.inventory.currentItem != best_item){
-                    log_info("Better sword found (" +  MC.player.inventory.mainInventory.get(best_item).getDisplayName().getFormattedText() + ").");
+                    log_info(
+                            "Better sword found (" +
+                                    MC.player.inventory
+                                            .mainInventory
+                                            .get(best_item)
+                                            .getDisplayName()
+                                            .getFormattedText()
+                                    + ")."
+                    );
                     MC.player.inventory.currentItem = best_item;
                 }
             }

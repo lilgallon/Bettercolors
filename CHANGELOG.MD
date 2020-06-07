@@ -178,9 +178,13 @@ This update is backwards compatible with V6.1.0-b1 MC_1.14.4. The settings files
 - Miscellaneous:
     - Added the ability to run tests with JUnit 5 (see VersionTest for an example)
     - Re-coded the version checker
+- Aim Assistance:
+    - Re-written some functions to be easier to understand
    
 *User notes:*
 - Improved overall stability
 - Gui:
     - Changed the font from Cascadia to CascadiaCode 2005.15
+- Aim Assistance:
+    - Fixed range (was maxed at 10)
     

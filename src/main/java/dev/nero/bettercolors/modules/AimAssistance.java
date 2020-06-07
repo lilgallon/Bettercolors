@@ -20,8 +20,10 @@ import java.util.Map;
 
 public class AimAssistance extends Module {
 
+    // Prefix for AimAssistance (logging and settings)
     private static final String PREFIX = "AA";
 
+    // Options name
     private static final String STOP_ON_RIGHT_CLICK = "Stop_on_right_click";
     private static final String USE_ON_MOBS = "Use_on_mobs";
     private static final String TEAM_FILTER = "Team_filter";
@@ -36,6 +38,7 @@ public class AimAssistance extends Module {
     private static final String CLICKS_TO_ACTIVATE = "Clicks_to_activate";
     private static final String TIME_TO_ACTIVATE = "Time_to_activate";
 
+    // Options index
     private static final int I_STOP_ON_RIGHT_CLICK = 0;
     private static final int I_USE_ON_MOBS = 1;
     private static final int I_TEAM_FILTER = 2;
@@ -50,6 +53,7 @@ public class AimAssistance extends Module {
     private static final int I_CLICKS_TO_ACTIVATE = 11;
     private static final int I_TIME_TO_ACTIVATE = 12;
 
+    // Default options loading
     private static final ArrayList<Option> DEFAULT_OPTIONS;
     static{
         DEFAULT_OPTIONS = new ArrayList<>();
@@ -70,87 +74,142 @@ public class AimAssistance extends Module {
         DEFAULT_OPTIONS.add(new ValueOption(PREFIX, TIME_TO_ACTIVATE, 700, 0, 10000, 200, 1000));
     }
 
-    private TimeHelper _post_activation_timer;
-    private int _post_activation_click_counter;
+    private TimeHelper postActivationTimer;
+    private int postActivationClickCounter;
 
-    private TimeHelper _activation_timer;
-    private TimeHelper _refresh_rate_timer;
+    private TimeHelper activationTimer;
+    private TimeHelper refreshRateTimer;
 
-    private float shift_x = 0;
-    private float shift_y = 0;
+    private float shiftX = 0;
+    private float shiftY = 0;
 
     /**
-     * @param name the name.
-     * @param toggle_key the toggle key (-1 -> none).
-     * @param is_activated the initial state.
-     * @param options the options for the mod.
-     * @param symbol the picture name.
+     * @param toggle_key the toggle key (-1 -> none)
+     * @param is_activated the initial state
+     * @param options the options for the mod
      */
     public AimAssistance(int toggle_key, boolean is_activated, Map<String, String> options) {
 
         super("Aim assistance", toggle_key, is_activated, "aim_symbol.png", "[AA]");
 
-        _options = DEFAULT_OPTIONS;
-        ((ToggleOption) _options.get(I_STOP_ON_RIGHT_CLICK)).setActivated(Boolean.parseBoolean(options.get(_options.get(I_STOP_ON_RIGHT_CLICK).getCompleteName())));
-        ((ToggleOption) _options.get(I_USE_ON_MOBS)).setActivated(Boolean.parseBoolean(options.get(_options.get(I_USE_ON_MOBS).getCompleteName())));
-        ((ToggleOption) _options.get(I_TEAM_FILTER)).setActivated(Boolean.parseBoolean(options.get(_options.get(I_TEAM_FILTER).getCompleteName())));
-        ((ValueOption) _options.get(I_REFRESH_RATE)).setVal(Integer.parseInt(options.get(_options.get(I_REFRESH_RATE).getCompleteName())));
-        ((ValueOption) _options.get(I_STEP_X)).setVal(Integer.parseInt(options.get(_options.get(I_STEP_X).getCompleteName())));
-        ((ValueOption) _options.get(I_STEP_Y)).setVal(Integer.parseInt(options.get(_options.get(I_STEP_Y).getCompleteName())));
-        ((ValueOption) _options.get(I_RANGE)).setVal(Integer.parseInt(options.get(_options.get(I_RANGE).getCompleteName())));
-        ((ValueOption) _options.get(I_RADIUS_X)).setVal(Integer.parseInt(options.get(_options.get(I_RADIUS_X).getCompleteName())));
-        ((ValueOption) _options.get(I_RADIUS_Y)).setVal(Integer.parseInt(options.get(_options.get(I_RADIUS_Y).getCompleteName())));
-        ((ValueOption) _options.get(I_DURATION)).setVal(Integer.parseInt(options.get(_options.get(I_DURATION).getCompleteName())));
-        ((ValueOption) _options.get(I_CLICKS_TO_ACTIVATE)).setVal(Integer.parseInt(options.get(_options.get(I_CLICKS_TO_ACTIVATE).getCompleteName())));
-        ((ValueOption) _options.get(I_TIME_TO_ACTIVATE)).setVal(Integer.parseInt(options.get(_options.get(I_TIME_TO_ACTIVATE).getCompleteName())));
+        this.options = DEFAULT_OPTIONS;
 
-        _post_activation_timer = new TimeHelper();
-        _post_activation_click_counter = 0;
+        ((ToggleOption)
+            this.options.get(I_STOP_ON_RIGHT_CLICK))
+            .setActivated(Boolean.parseBoolean(
+                    options.get(this.options.get(I_STOP_ON_RIGHT_CLICK).getCompleteName()))
+        );
+        
+        ((ToggleOption)
+            this.options.get(I_USE_ON_MOBS))
+            .setActivated(Boolean.parseBoolean(
+                    options.get(this.options.get(I_USE_ON_MOBS).getCompleteName()))
+        );
 
-        _activation_timer = new TimeHelper();
-        _refresh_rate_timer = new TimeHelper();
+        ((ToggleOption)
+            this.options.get(I_TEAM_FILTER))
+            .setActivated(Boolean.parseBoolean(
+                    options.get(this.options.get(I_TEAM_FILTER).getCompleteName()))
+        );
+
+        ((ValueOption)
+            this.options.get(I_REFRESH_RATE))
+            .setVal(Integer.parseInt(options.get(this.options.get(I_REFRESH_RATE).getCompleteName()))
+        );
+
+        ((ValueOption)
+            this.options.get(I_STEP_X))
+            .setVal(Integer.parseInt(options.get(this.options.get(I_STEP_X).getCompleteName()))
+        );
+
+        ((ValueOption)
+            this.options.get(I_STEP_Y))
+            .setVal(Integer.parseInt(options.get(this.options.get(I_STEP_Y).getCompleteName()))
+        );
+
+        ((ValueOption)
+            this.options.get(I_RANGE))
+            .setVal(Integer.parseInt(options.get(this.options.get(I_RANGE).getCompleteName()))
+        );
+
+        ((ValueOption)
+            this.options.get(I_RADIUS_X))
+            .setVal(Integer.parseInt(options.get(this.options.get(I_RADIUS_X).getCompleteName()))
+        );
+
+        ((ValueOption)
+            this.options.get(I_RADIUS_Y))
+            .setVal(Integer.parseInt(options.get(this.options.get(I_RADIUS_Y).getCompleteName()))
+        );
+
+        ((ValueOption)
+            this.options.get(I_DURATION))
+            .setVal(Integer.parseInt(options.get(this.options.get(I_DURATION).getCompleteName()))
+        );
+
+        ((ValueOption)
+            this.options.get(I_CLICKS_TO_ACTIVATE))
+            .setVal(Integer.parseInt(options.get(this.options.get(I_CLICKS_TO_ACTIVATE).getCompleteName()))
+        );
+
+        ((ValueOption)
+            this.options.get(I_TIME_TO_ACTIVATE))
+            .setVal(Integer.parseInt(options.get(this.options.get(I_TIME_TO_ACTIVATE).getCompleteName()))
+        );
+
+        postActivationTimer = new TimeHelper();
+        postActivationClickCounter = 0;
+
+        activationTimer = new TimeHelper();
+        refreshRateTimer = new TimeHelper();
     }
 
     @Override
     public void onUpdate() {
         if(MC.player != null){
-            if(_activation_timer.isStopped()) {
+            if(activationTimer.isStopped()) {
                 // If the aim assist is not activated, we check if the user made the actions to activate it
-                if (isKeyState(KEY.ATTACK, KEY_STATE.JUST_PRESSED) && !_post_activation_timer.isStopped()) {
-                    _post_activation_click_counter++;
-                } else if (isKeyState(KEY.ATTACK, KEY_STATE.JUST_PRESSED) && _post_activation_timer.isStopped()) {
+                if (isKeyState(Key.ATTACK, KeyState.JUST_PRESSED) && !postActivationTimer.isStopped()) {
+                    postActivationClickCounter++;
+                } else if (isKeyState(Key.ATTACK, KeyState.JUST_PRESSED) && postActivationTimer.isStopped()) {
                     // Attack pressed just pressed and timer stopped
-                    _post_activation_timer.start();
-                    _post_activation_click_counter = 1;
+                    postActivationTimer.start();
+                    postActivationClickCounter = 1;
                 }
 
-                int post_activation_duration = ((ValueOption) _options.get(I_TIME_TO_ACTIVATE)).getVal();
-                int post_activation_clicks = ((ValueOption) _options.get(I_CLICKS_TO_ACTIVATE)).getVal();
-                if(_post_activation_timer.isDelayComplete(post_activation_duration)
-                        && _post_activation_click_counter >= post_activation_clicks){
-                    _post_activation_timer.stop();
-                    _activation_timer.start();
-                    _refresh_rate_timer.start();
+                int postActivationDuration = ((ValueOption) this.options.get(I_TIME_TO_ACTIVATE)).getVal();
+                int postActivationClicks = ((ValueOption) this.options.get(I_CLICKS_TO_ACTIVATE)).getVal();
+                if (postActivationTimer.isDelayComplete(postActivationDuration)
+                        && postActivationClickCounter >= postActivationClicks) {
+
+                    // The user clicked enough times in the given time, so the aim assistance turns on
+                    postActivationTimer.stop();
+                    activationTimer.start();
+                    refreshRateTimer.start();
                     log_info("Aim assistance started.");
-                }else if(_post_activation_timer.isDelayComplete(post_activation_duration)
-                            && _post_activation_click_counter < post_activation_clicks){
-                    _post_activation_timer.stop();
+                } else if(postActivationTimer.isDelayComplete(postActivationDuration)
+                            && postActivationClickCounter < postActivationClicks) {
+                    // The user did not click enough times in the given time, so the aim assistance turns on
+                    postActivationTimer.stop();
                 }
             }
 
-            if(!_activation_timer.isStopped() &&
-                    ( (isKeyState(KEY.USE, KEY_STATE.JUST_PRESSED) && ((ToggleOption) _options.get(I_STOP_ON_RIGHT_CLICK)).isActivated())
-                            || _activation_timer.isDelayComplete(((ValueOption) _options.get(I_DURATION)).getVal()) || isInGui())){
-                _activation_timer.stop();
-                _refresh_rate_timer.stop();
+            boolean rightClick = isKeyState(Key.USE, KeyState.JUST_PRESSED);
+            boolean stopOnRightClick = ((ToggleOption) this.options.get(I_STOP_ON_RIGHT_CLICK)).isActivated();
+            boolean timerDone = activationTimer.isDelayComplete(((ValueOption) this.options.get(I_DURATION)).getVal());
+
+            if(!activationTimer.isStopped() && (rightClick && stopOnRightClick) || timerDone || isInGui()){
+                activationTimer.stop();
+                refreshRateTimer.stop();
                 log_info("Aim assistance stopped.");
             }
 
-            if(!_activation_timer.isStopped()){
-                int refresh_rate = ((ValueOption) _options.get(I_REFRESH_RATE)).getVal();
-                if(_refresh_rate_timer.isDelayComplete(refresh_rate)){
-                    useAimAssist(isKeyState(KEY.ATTACK, KEY_STATE.JUST_PRESSED));
-                    _refresh_rate_timer.reset();
+            // If the AimAssistance is turned on, then, help the user to aim
+            if(!activationTimer.isStopped()){
+                int refreshRate = ((ValueOption) this.options.get(I_REFRESH_RATE)).getVal();
+                if(refreshRateTimer.isDelayComplete(refreshRate)){
+                    useAimAssist(isKeyState(Key.ATTACK, KeyState.JUST_PRESSED));
+                    refreshRateTimer.reset();
                 }
             }
         }
@@ -162,109 +221,102 @@ public class AimAssistance extends Module {
 
     /**
      * It calls all the functions to create the aim assistance.
-     * @param is_attack_key_pressed if set to true, it will recalculate the random shifts with the target.
+     * @param attackKeyPressed if set to true, it will recalculate the random shifts with the target.
      */
-    private void useAimAssist(boolean is_attack_key_pressed){
+    private void useAimAssist(boolean attackKeyPressed){
 
         // Random shift from the target (so it looks human)
         // -> Can be an option for a future update !
-        if(is_attack_key_pressed){
+        if(attackKeyPressed){
             // Generate new shifts
-            int shift_x_max = 7;
-            int shift_x_min = -7;
-            shift_x = MathUtils.random(shift_x_min, shift_x_max);
-            int shift_y_max = 10;
-            int shift_y_min = -10;
-            shift_y = MathUtils.random(shift_y_min, shift_y_max);
+            int shiftXMax = 7;
+            int shiftXMin = -7;
+            shiftX = MathUtils.random(shiftXMin, shiftXMax);
+
+            int shiftYMax = 10;
+            int shiftYMin = -10;
+            shiftY = MathUtils.random(shiftYMin, shiftYMax);
         }
+
+        int range = ((ValueOption) this.options.get(I_RANGE)).getVal();
 
         BlockPos playerPos = MC.player.getPosition();
         int playerX = playerPos.getX();
         int playerY = playerPos.getY();
         int playerZ = playerPos.getZ();
-        AxisAlignedBB area =
-                new AxisAlignedBB(playerX - 10, playerY - 10, playerZ - 10,
-                        playerX + 10, playerY + 10, playerZ + 10);
+        // The area that will be scanned to find entities
+        AxisAlignedBB area = new AxisAlignedBB(
+                playerX - range,
+                playerY - range,
+                playerZ - range,
+                playerX + range,
+                playerY + range,
+                playerZ + range
+        );
 
+        // Create the entities list by taking mobs (or not) into account
         List<LivingEntity> entities;
-        if(((ToggleOption) _options.get(I_USE_ON_MOBS)).isActivated()){
+        if(((ToggleOption) this.options.get(I_USE_ON_MOBS)).isActivated()){
             entities = MC.world.getEntitiesWithinAABB(LivingEntity.class, area);
         }else{
             entities = MC.world.getEntitiesWithinAABB(PlayerEntity.class, area);
         }
 
-        if(entities.size() == 0) return;
-
-        // We retrieve all the entity that the user can aim at
-        int range = ((ValueOption) _options.get(I_RANGE)).getVal();
+        // We retrieve all the entities that the user can aim at
         List<LivingEntity> attackableEntities = Lists.newArrayList();
         for(Entity entity : entities){
             if(entity instanceof LivingEntity){
-                if(entity instanceof ClientPlayerEntity)
+                if(entity instanceof ClientPlayerEntity) // If the entity is the player itself
                     continue;
+                // The area is a 3D square of range * range around the player. But it does not mean that everything
+                // inside of it is at or below <range> distance. If an entity is at the corner, then the distance from
+                // the player is sqrt(range^2 * 3), which is 17.32 for 10 for example.
+                // That's why we need to verify that the entity is within the given range
                 if(MC.player.getDistance(entity) <= range && MC.player.canEntityBeSeen(entity))
                     attackableEntities.add((LivingEntity) entity);
             }
         }
 
+        // If we can't find any entity, then we stop
         if(attackableEntities.size() == 0) return;
 
-        // Now we chose the entity to attack (we take the closest one)
+        // Now we chose the entity to attack: we take the closest one to the player's fov (defined by distYaw
+        // and distPitch)
         LivingEntity target = null;
-        float minDistDirect = Float.MAX_VALUE;
+        float minDist = Float.MAX_VALUE;
 
-        boolean team_filter = ((ToggleOption) _options.get(I_TEAM_FILTER)).isActivated();
+        boolean team_filter = ((ToggleOption) this.options.get(I_TEAM_FILTER)).isActivated();
         for(LivingEntity entity : attackableEntities){
             if(team_filter && isInSameTeam(entity)) continue;
 
-            // Calculate distances
-            float distYaw = MathHelper.abs(getDiffFrom(entity)[0]);
-            float distPitch = MathHelper.abs(getDiffFrom(entity)[1]);
-            float distDirect = MathHelper.sqrt(distYaw*distYaw + distPitch*distPitch);
+            // Calculate fov
+            float[] yawPitch = getYawPitchBetween(entity, MC.player);
+            float distYaw = MathHelper.abs(MathHelper.wrapDegrees(yawPitch[0] - MC.player.rotationYaw));
+            float distPitch = MathHelper.abs(MathHelper.wrapDegrees(yawPitch[1] - MC.player.rotationPitch));
+            float dist = MathHelper.sqrt(distYaw*distYaw + distPitch*distPitch);
 
-            if(distDirect < minDistDirect) {
+            // Take the one that is the closer to the fov (closest to the player aim)
+            if(dist < minDist) {
                 target = entity;
-                minDistDirect = distDirect;
+                minDist = dist;
             }
         }
 
         if(target == null) return;
 
-        boolean has_reached_a_living_entity = false;
-        if(((ToggleOption) _options.get(I_STOP_WHEN_REACHED)).isActivated()) {
+        // If the option is toggled, we stop the aim assistance when the aim has reached the targeted entity
+        boolean hasReachedALivingEntity = false;
+        if(((ToggleOption) this.options.get(I_STOP_WHEN_REACHED)).isActivated()) {
             try {
                 Entity mouseOverEntity = MC.pointedEntity;
                 if ((mouseOverEntity instanceof LivingEntity))
-                    has_reached_a_living_entity = true;
-            } catch (Exception ignored) {
-            }
+                    hasReachedALivingEntity = true;
+            } catch (Exception ignored) { }
         }
 
-        if(!has_reached_a_living_entity){
+        if(!hasReachedALivingEntity){
             aimEntity(target);
         }
-
-    }
-
-    /**
-     * @param entity the target to aim.
-     * @return the [x, y] difference from the player aim to the target.
-     */
-    private float[] getDiffFrom(LivingEntity entity){
-        final double diffX = entity.getPosX() - MC.player.getPosX();
-        final double diffZ = entity.getPosZ() - MC.player.getPosZ();
-        double diffY = entity.getPosY() + entity.getEyeHeight() - (MC.player.getPosY() + MC.player.getEyeHeight());
-
-        final double dist = MathHelper.sqrt(diffX * diffX + diffZ * diffZ);
-
-        final float yaw = (float) ((Math.atan2(diffZ, diffX) * 180.0D / Math.PI) - 90.0F ) + shift_x;
-        final float pitch = (float) - (Math.atan2(diffY, dist) * 180.0D / Math.PI) 		   + shift_y;
-
-        // TODO: check if it's right (it was wrapAngleTo180_float)
-        float distYaw = MathHelper.wrapDegrees(yaw - MC.player.rotationYaw);
-        float distPitch = MathHelper.wrapDegrees(pitch - MC.player.rotationPitch);
-
-        return new float[]{distYaw, distPitch};
     }
 
     /**
@@ -273,12 +325,32 @@ public class AimAssistance extends Module {
     private synchronized void aimEntity(LivingEntity entity) {
         final float[] rotations = getRotationsNeeded(entity);
 
-        if (rotations != null) {
+        // MC.player is always null, because we call this function only if MC.player is not null, at least, we get rid
+        // of the warning
+        if (rotations != null && MC.player != null) {
             MC.player.rotationYaw = rotations[0];
             MC.player.rotationPitch = rotations[1];
         }
 
         log_info("Aiming at entity " + entity.getName().getFormattedText() + ".");
+    }
+
+    /**
+     * @param entityA an entity
+     * @param entityB an other one
+     * @return the [yaw, pitch] difference between the two entities
+     */
+    private float[] getYawPitchBetween(LivingEntity entityA, LivingEntity entityB) {
+        double diffX = entityA.getPosX() - entityB.getPosX();
+        double diffZ = entityA.getPosZ() - entityB.getPosZ();
+        double diffY = entityA.getPosY() + entityA.getEyeHeight() - (entityB.getPosY() + entityB.getEyeHeight());
+
+        double dist = MathHelper.sqrt(diffX * diffX + diffZ * diffZ);
+
+        float yaw = (float) ((Math.atan2(diffZ, diffX) * 180.0D / Math.PI) - 90.0F ) + shiftX;
+        float pitch = (float) - (Math.atan2(diffY, dist) * 180.0D / Math.PI) + shiftY;
+
+        return new float[] { yaw, pitch };
     }
 
     /**
@@ -290,28 +362,39 @@ public class AimAssistance extends Module {
             return null;
         }
 
-        float radius_x = ((ValueOption) _options.get(I_RADIUS_X)).getVal();
-        float radius_y = ((ValueOption) _options.get(I_RADIUS_Y)).getVal();
-        float step_x = ((ValueOption) _options.get(I_STEP_X)).getVal();
-        float step_y = ((ValueOption) _options.get(I_STEP_Y)).getVal();
+        // Settings about the FOV
+        float radiusX = ((ValueOption) this.options.get(I_RADIUS_X)).getVal();
+        float radiusY = ((ValueOption) this.options.get(I_RADIUS_Y)).getVal();
 
-        final double diffX = entity.getPosX() - MC.player.getPosX();
-        final double diffZ = entity.getPosZ() - MC.player.getPosZ();
-        double diffY = entity.getPosY() + entity.getEyeHeight() - (MC.player.getPosY() + MC.player.getEyeHeight());
+        // Settings about the force of the aim assistance
+        float stepX = ((ValueOption) this.options.get(I_STEP_X)).getVal();
+        float stepY = ((ValueOption) this.options.get(I_STEP_Y)).getVal();
 
-        final double dist = MathHelper.sqrt(diffX * diffX + diffZ * diffZ);
-        final float yaw = (float) ((Math.atan2(diffZ, diffX) * 180.0D / Math.PI) - 90.0F ) + shift_x;
-        final float pitch = (float) -(Math.atan2(diffY, dist) * 180.0D / Math.PI) 		   + shift_y;
+        // We calculate the yaw/pitch difference between the entity and the player
+        float[] yawPitch = getYawPitchBetween(entity, MC.player);
 
-        if(MathHelper.abs(MathHelper.wrapDegrees(yaw - MC.player.rotationYaw)) <=+ radius_x
-                && MathHelper.abs(MathHelper.wrapDegrees(pitch - MC.player.rotationPitch)) <= radius_y){
+        // We make sure that it's absolute, because the sign may change if we invert entity and MC.player
+        float yaw = MathHelper.abs(yawPitch[0]);
+        float pitch = MathHelper.abs(yawPitch[1]);
+
+        // We check if the entity is within the FOV of the player
+        // yaw and pitch are absolute, not relative to anything. We fix that by calling wrapDegrees and substracting
+        // the yaw & pitch to the player's rotation. Now, the yaw, and the pitch are relative to the player's view
+        // So we can compare that with the given fov: radiusX, and radiusY (which are both in degrees)
+        boolean inFovX = MathHelper.abs(MathHelper.wrapDegrees(yaw - MC.player.rotationYaw)) <= radiusX;
+        boolean inFovY = MathHelper.abs(MathHelper.wrapDegrees(pitch - MC.player.rotationPitch)) <= radiusY;
+
+        // If the targeted entity is within the fov, then, we will compute the step in yaw / pitch of the player's view
+        // to get closer to the targeted entity. We will use the given stepX and stepY to compute that. Dividing by 100
+        // reduces that step. Without that, we would need to show very low values to the user in the GUI, which is not
+        // user-friendly. That way, instead of showing 0.05, we show 5.
+        if(inFovX && inFovY) {
             float yawFinal, pitchFinal;
-
-            yawFinal = ((MathHelper.wrapDegrees(yaw - MC.player.rotationYaw)) * step_x) / 100;
-            pitchFinal = ((MathHelper.wrapDegrees(pitch - MC.player.rotationPitch)) * step_y) / 100;
+            yawFinal = ((MathHelper.wrapDegrees(yaw - MC.player.rotationYaw)) * stepX) / 100;
+            pitchFinal = ((MathHelper.wrapDegrees(pitch - MC.player.rotationPitch)) * stepY) / 100;
 
             return new float[] { MC.player.rotationYaw + yawFinal, MC.player.rotationPitch + pitchFinal};
-        }else{
+        } else {
             return new float[] { MC.player.rotationYaw, MC.player.rotationPitch};
         }
     }

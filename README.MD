@@ -25,14 +25,6 @@ A silent "hack" built within the forge API. It bypasses powerful anticheats (for
     <img alt="features" src="https://raw.githubusercontent.com/N3ROO/Bettercolors/MC_1.8.9/.github/features_main_crop500.png" />
 </p>
 
-## Last update
-
-*New themes, fixes and improvements.*
-
-<p align="center">
-    <img alt="themes" src="https://raw.githubusercontent.com/N3ROO/Bettercolors/MC_1.8.9/.github/new_themes_crop500.png" />
-</p>
-
 ## Disclaimer
 
 I made this project to learn Java in a funny way. I started 2 years ago but the other repositories are, and will stay private. Only this repository will stay public because it can be used by newbies to improve their aim and their click rate without giving them a huge advantage. This has been made for educational purposes.

@@ -164,3 +164,8 @@ This update is backwards compatible with V6.1.0-b1 MC_1.14.4. The settings files
 - Only bettercolors' settings files are now shown in the settings selector (#40)
 - Loading settings now automatically update the toggle key (#41)
 - Improved toggle key selector (#41)
+
+**V6.1.1 MC_1.15.2**
+- Reformatted:
+    - Bettercolors.java
+- Re-written version checker

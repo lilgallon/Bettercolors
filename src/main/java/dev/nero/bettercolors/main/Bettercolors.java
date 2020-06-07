@@ -31,28 +31,18 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.lwjgl.glfw.GLFW;
 
 import javax.swing.*;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Mod(Reference.MOD_ID)
 public class Bettercolors {
 
     public final static String ISSUE_TRACKER = "https://github.com/N3ROO/Bettercolors/issues";
-    public final static String URL_PROBLEM = "Url problem (please contact developer).";
-    public final static String INTERNET_PROBLEM = "No internet connection. :(";
-    public final static String NO_VERSION_FOUND = "No version found.";
     public final static String DOWNLOAD_URL = "https://github.com/N3ROO/Bettercolors/releases/latest";
 
     public final static String FILE_WITH_CURRENT_SETTINGS_USED = "_bc_settingsfile";
@@ -283,50 +273,6 @@ public class Bettercolors {
             }
         }
 	}
-
-    /**
-     * @return the last version tag from the github release page (without the MC version in it).
-     */
-	private String[] getVersionInformation(){
-        final String MC_PREFIX = "-MC";
-        String last_version = "";
-        String changelog = "";
-
-        try{
-            // Retrieve JSON
-            URL url = new URL("https://api.github.com/repos/n3roo/bettercolors/releases");
-            BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
-            String json = in.lines().collect(Collectors.joining());
-            in.close();
-
-            // Get last version from JSON
-            String[] tags = json.split("\"tag_name\"");
-            String[] bodies = json.split("\"body\"");
-
-            int i = 0;
-            boolean found = false;
-            while(i < tags.length && !found){
-                last_version = tags[i].split("\"")[1];
-                if(last_version.endsWith(MC_PREFIX + Reference.MAIN_MC_VERSION)){
-                    found = true;
-                }else{
-                    i ++;
-                }
-            }
-
-            if(!found){
-                return new String[]{NO_VERSION_FOUND, ""};
-            }else{
-                last_version = last_version.replace(MC_PREFIX + Reference.MAIN_MC_VERSION, "");
-            }
-        } catch (MalformedURLException e){
-            return new String[]{URL_PROBLEM, ""};
-        } catch (IOException e){
-            return new String[]{INTERNET_PROBLEM, ""};
-        }
-
-        return new String[]{last_version, changelog};
-    }
 
     /**
      * It compares the two given versions, and return the difference :

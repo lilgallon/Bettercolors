@@ -171,14 +171,7 @@ This update is backwards compatible with V6.1.0-b1 MC_1.14.4. The settings files
 **V6.1.1 MC_1.15.2**
 
 *Developer notes:*
-- Reformatted:
-    - Bettercolors.java
-    - Window.java
-    - Filer.java
-    - SettingsUtils.java
-    - TimeHelper.java
-    - VKtoGLFW.java
-    - MathUtils.java
+- Reformatted every single java file
 - Gui:
     - Improved stability (small changes to code design)
     - Improved font loading (console)

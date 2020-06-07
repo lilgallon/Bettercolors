@@ -175,6 +175,7 @@ This update is backwards compatible with V6.1.0-b1 MC_1.14.4. The settings files
     - Bettercolors.java
     - Window.java
     - Filer.java
+    - SettingsUtils.java
 - Gui:
     - Improved stability (small changes to code design)
     - Improved font loading (console)
@@ -186,3 +187,4 @@ This update is backwards compatible with V6.1.0-b1 MC_1.14.4. The settings files
 - Improved overall stability
 - Gui:
     - Changed the font from Cascadia to CascadiaCode 2005.15
+    

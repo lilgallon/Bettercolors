@@ -1,3 +1,19 @@
+/*
+ * Copyright 2018-2020 Bettercolors Contributors (https://github.com/N3ROO/Bettercolors)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package dev.nero.bettercolors.io;
 
 import dev.nero.bettercolors.modules.options.Option;
@@ -12,6 +28,10 @@ import java.util.Map;
 
 public class SettingsUtils {
 
+    // The filename where we store the settings file that is selected by the user
+    public final static String FILE_WITH_CURRENT_SETTINGS_USED = "_bc_settingsfile";
+
+    // The settings file used. It will be used by SettingsUtils when using the functions
     public static String SETTINGS_FILENAME = "default";
 
     /**
@@ -80,6 +100,7 @@ public class SettingsUtils {
                 filenames.addElement(name);
             }
         }
+
         return filenames;
     }
 }

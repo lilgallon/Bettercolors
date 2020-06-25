@@ -1,3 +1,19 @@
+/*
+ * Copyright 2018-2020 Bettercolors Contributors (https://github.com/N3ROO/Bettercolors)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package dev.nero.bettercolors.modules.options;
 
 import dev.nero.bettercolors.io.SettingsUtils;
@@ -8,11 +24,11 @@ public class ValueOption extends Option {
     private final int MAX;
     private final int MINOR_TICK_SPC;
     private final int MAJOR_TICK_SPC;
-    private int _val;
+    private int val;
 
     /**
-     * @param prefix prefix of the option (module name for example) -> used to prevent conflict if some modules have the
-     *               same option name.
+     * @param prefix prefix of the option (module name for example) -> used to prevent conflict if some modules have
+     *               the same option name.
      * @param name the name.
      * @param val the initial value.
      * @param min the minimum value.
@@ -22,7 +38,7 @@ public class ValueOption extends Option {
      */
     public ValueOption(String prefix, String name, int val, int min, int max, int minor_tick_spc, int major_tick_spc) {
         super(prefix, name);
-        _val = val;
+        this.val = val;
         MIN = min;
         MAX = max;
         MINOR_TICK_SPC = minor_tick_spc;
@@ -31,7 +47,7 @@ public class ValueOption extends Option {
 
     public int getMin() { return MIN; }
     public int getMax() { return MAX; }
-    public int getVal() { return _val; }
+    public int getVal() { return val; }
     public int getMajorTickSpacing(){ return MAJOR_TICK_SPC; }
     public int getMinorTickSpacing(){ return MINOR_TICK_SPC; }
 
@@ -41,13 +57,11 @@ public class ValueOption extends Option {
      */
     public void setVal(int val){
         if(val > MAX) {
-            throw new IllegalArgumentException("The value " + val +
-                    " is bigger than its max : " + MAX);
+            throw new IllegalArgumentException("The value " + val + " is bigger than its max : " + MAX);
         }else if(val < MIN){
-            throw new IllegalArgumentException("The value " + val +
-                    " is lower than its min : " + MIN);
+            throw new IllegalArgumentException("The value " + val + " is lower than its min : " + MIN);
         }else{
-            _val = val;
+            this.val = val;
             saveOption();
         }
     }
@@ -57,6 +71,6 @@ public class ValueOption extends Option {
      */
     @Override
     void saveOption() {
-        SettingsUtils.setOption(PREFIX + "_" + NAME, Integer.toString(_val));
+        SettingsUtils.setOption(PREFIX + "_" + NAME, Integer.toString(val));
     }
 }

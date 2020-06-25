@@ -15,25 +15,20 @@
  */
 
 
-package dev.nero.bettercolors.modules;
+package dev.nero.bettercolors.version;
 
-public class AutoSprint extends Module{
+public class VersionException extends Exception {
 
-    /**
-     * @param toggle_key the toggle key (-1 -> none).
-     * @param is_activated the initial state.
-     */
-    public AutoSprint(int toggle_key, boolean is_activated) {
-        super("Auto sprint", toggle_key, is_activated, "sprint_symbol.png", "[ASp]");
+    public enum Error { URL_ISSUE, NO_INTERNET, NO_VERSION }
+
+    private final Error code;
+
+    public VersionException(String message, Error code) {
+        super(message);
+        this.code = code;
     }
 
-    @Override
-    public void onUpdate() {
-        if(MC.player != null){
-            if(MC.player.moveForward > 0 && !MC.player.isSprinting()){
-                log_info("Forcing player to run");
-                MC.player.setSprinting(true);
-            }
-        }
+    public Error getCode() {
+        return this.code;
     }
 }

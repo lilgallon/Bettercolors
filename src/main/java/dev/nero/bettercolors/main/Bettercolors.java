@@ -1,3 +1,19 @@
+/*
+ * Copyright 2018-2020 Bettercolors Contributors (https://github.com/N3ROO/Bettercolors)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package dev.nero.bettercolors.main;
 
 import dev.nero.bettercolors.io.Filer;
@@ -5,6 +21,7 @@ import dev.nero.bettercolors.io.SettingsUtils;
 import dev.nero.bettercolors.modules.*;
 import dev.nero.bettercolors.modules.options.Option;
 import dev.nero.bettercolors.modules.options.ToggleOption;
+import dev.nero.bettercolors.version.Version;
 import dev.nero.bettercolors.view.Window;
 import mdlaf.MaterialLookAndFeel;
 import mdlaf.themes.JMarsDarkTheme;
@@ -15,35 +32,16 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.lwjgl.glfw.GLFW;
 
 import javax.swing.*;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Mod(Reference.MOD_ID)
 public class Bettercolors {
-
-    public final static String ISSUE_TRACKER = "https://github.com/N3ROO/Bettercolors/issues";
-    public final static String URL_PROBLEM = "Url problem (please contact developer).";
-    public final static String INTERNET_PROBLEM = "No internet connection. :(";
-    public final static String NO_VERSION_FOUND = "No version found.";
-    public final static String DOWNLOAD_URL = "https://github.com/N3ROO/Bettercolors/releases/latest";
-
-    public final static String TOGGLE_KEY_OPTION = "toggle_key";
-    public static String TOGGLE_KEY_NAME = "insert code: 260";
-    public static int TOGGLE_KEY = GLFW.GLFW_KEY_INSERT;
-
-    public final static String THEME_OPTION = "theme";
 
     private final static ArrayList<Option> DEFAULT_ACTIVATION_STATUS;
     static{
@@ -54,213 +52,225 @@ public class Bettercolors {
         DEFAULT_ACTIVATION_STATUS.add(new ToggleOption("", AutoSword.class.getSimpleName(), true));
     }
 
-    private ArrayList<Module> _modules;
-    private final String WINDOW = "windowGUI";
-    private Window _window;
+    private ArrayList<Module> modules;
+    private Window window;
 
+    /**
+     * Called when forge needs to init our mod. This is the first "function" called. It is actually called the
+     * "constructor"
+     */
     public Bettercolors(){
-        // Forge event registering
+        // Forge event registering. We're saying that we have 2 functions that need to be called when a specific event
+        // occurs. Each one of those functions are forge events. But we need to use an annotation (@SubscribeEvent) to
+        // say that this function will be used by forge.
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onKey);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onClientTickEvent);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::clientTick);
         MinecraftForge.EVENT_BUS.register(this);
 
-        // This new forge version does not like swing ;(
+        // This new forge version does not like swing. This is a workaround to make it working. Headless mode means that
+        // swing will avoid using GUI components if there is no display.
         System.setProperty("java.awt.headless", "false");
 
-        // Antialiasing font
+        // It tells swing (the "library" that handles the GUI) to use antialiasing to render fonts so that it looks
+        // smooth
         System.setProperty("awt.useSystemAAFontSettings","on");
         System.setProperty("swing.aatext", "true");
 
-        // Mod init
-        initMod();
+        // Now that we initialized all the technical stuff, we can initialize our mod.
+        this.initializeMod();
+
+        // Everything is done. Now, the rest of the code will be run once that one of the above event is ran by forge
+        // itself.
     }
 
-    private void initMod(){
-
-        // Find selected settings file
-        // Write if empty
+    /**
+     * It initializes everything related to the mod
+     */
+    private void initializeMod(){
+        // We need to load the settings of the current user. First, we need to figure out what settings file the user
+        // is currently using
         Map<String, String> option = new HashMap<>();
-        option.put("settings_file", SettingsUtils.SETTINGS_FILENAME);
-        Filer filer = new Filer("_bc_settingsfile");
-        filer.write(option, true);
-        // Load setting
-        String settings_file = filer.read("settings_file");
-        SettingsUtils.SETTINGS_FILENAME = settings_file;
 
-        // Settings management
+        // We need to store what settings file is used by the user. That option is called "settings_file", and the
+        // default settings file used is called "default" (see: SettingsUtils.SETTINGS_FILENAME)
+        option.put("settings_file", SettingsUtils.SETTINGS_FILENAME);
+
+        // If the file does not exist, it means that it is the first time that we run the mod. In that case, we create
+        // the file that contains the settings filename that is used by the user. The parameter only_absents=true means
+        // that we will only write if the option is not in the file.
+        Filer filer = new Filer(SettingsUtils.FILE_WITH_CURRENT_SETTINGS_USED);
+        filer.write(option, true);
+
+        // Now that we are sure that the file containing the settings file used by the user exists, we can load it.
+        // We update the settings utils static variable to the current used settings file
+        SettingsUtils.SETTINGS_FILENAME = filer.read("settings_file");
+
+        // Alright, now that we know what settings file to read, we can read it. We will load and store everything in
+        // the options variable.
         Map<String, String> options = SettingsUtils.getOptions();
-        ArrayList<ArrayList<Option>> modules_options = new ArrayList<>();
-        modules_options.add(AimAssistance.getDefaultOptions());
-        modules_options.add(ClickAssistance.getDefaultOptions());
-        modules_options.add(DEFAULT_ACTIVATION_STATUS);
-        // There is no settings file, we need to create it, otherwise we only add the settings that are not already
-        // in the settings file (can happen after updating the mod to a newer version)
-        SettingsUtils.setOptions(modules_options, options != null);
+
+        // If we could not read the options (settings), it means that the file does not exist. In that case, we will
+        // create a new file with all the default parameter of each module.
+        if (options == null) {
+            // There is a lot of options, so we will use an array to update everything at once.
+            ArrayList<ArrayList<Option>> modules_options = new ArrayList<>();
+            modules_options.add(AimAssistance.getDefaultOptions());
+            modules_options.add(ClickAssistance.getDefaultOptions());
+            modules_options.add(DEFAULT_ACTIVATION_STATUS);
+            // false means that it will override what's written in that file if it exists. If it does not exist, it will
+            // simply create it with the given options.
+            SettingsUtils.setOptions(modules_options, false);
+        }
+
+        // Now that we are sure that all the options have been loaded, we will send them to our modules while
+        // initializing them.
         options = SettingsUtils.getOptions();
 
-        // Mods initialisation
-        _modules = new ArrayList<>();
-        _modules.add(new AimAssistance("Aim assistance", GLFW.GLFW_KEY_HOME, Boolean.parseBoolean(options.get(AimAssistance.class.getSimpleName())), options, "aim_symbol.png"));
-        _modules.add(new ClickAssistance("Click assistance", GLFW.GLFW_KEY_PAGE_UP, Boolean.parseBoolean(options.get(ClickAssistance.class.getSimpleName())), options, "click_symbol.png"));
-        _modules.add(new AutoSprint("Auto sprint", -1, Boolean.parseBoolean(options.get(AutoSprint.class.getSimpleName())), "sprint_symbol.png"));
-        _modules.add(new AutoSword("Auto sword", -1, Boolean.parseBoolean(options.get(AutoSword.class.getSimpleName())), "sword_symbol.png"));
+        // We currently have 4 modules
+        this.modules = new ArrayList<>();
+        this.modules.add(
+                new AimAssistance(
+                    GLFW.GLFW_KEY_HOME,                                                     // Key used to toggle it
+                    Boolean.parseBoolean(options.get(AimAssistance.class.getSimpleName())), // Is it turned on?
+                    options                                                                 // Settings
+                )
+        );
 
-        // Gui toggle key
+        this.modules.add(
+                new ClickAssistance(
+                    GLFW.GLFW_KEY_PAGE_UP,                                                    // Key used to toggle it
+                    Boolean.parseBoolean(options.get(ClickAssistance.class.getSimpleName())), // Is it turned on?
+                    options                                                                   // Settings
+                )
+        );
+
+        this.modules.add(
+                new AutoSprint(
+                    -1,                                                        // Key used to toggle it
+                    Boolean.parseBoolean(options.get(AutoSprint.class.getSimpleName())) // Is it turned on?
+                )
+        );
+
+        this.modules.add(
+                new AutoSword(
+                        -1,                                                       // Key used to toggle it
+                        Boolean.parseBoolean(options.get(AutoSword.class.getSimpleName())) // Is it turned on?
+                )
+        );
+
+        // Now that the modules are created, we need to initialize the GUI
+        // But we need to know what key is used to initialize the GUI. We will try to read it, if we can't, it means
+        // that it is not in the settings file. In that case, we need to append that to the settings file.
         try {
-            String gui_toggle_key = SettingsUtils.getOption(TOGGLE_KEY_OPTION);
-            Bettercolors.TOGGLE_KEY = Integer.parseInt(gui_toggle_key);
+            Window.TOGGLE_KEY = Integer.parseInt(SettingsUtils.getOption(Window.TOGGLE_KEY_OPTION));
         } catch (Exception ignored) {
-            // We are here because the setting does not exist yet (the user never updated the GUI toggle key)
-            SettingsUtils.setOption(Bettercolors.TOGGLE_KEY_OPTION, Integer.toString(Bettercolors.TOGGLE_KEY));
+            SettingsUtils.setOption(Window.TOGGLE_KEY_OPTION, Integer.toString(Window.TOGGLE_KEY));
         }
-        Bettercolors.TOGGLE_KEY_NAME = "code: " + Bettercolors.TOGGLE_KEY;
+        // This variable will be shown in the GUI to say what key is currently used to toggle it
+        Window.TOGGLE_KEY_NAME = "code: " + Window.TOGGLE_KEY;
 
+        // We are almost done. We need to initialize everything related to the theme here.
+        // We load the default swing theme first, and we store it in "defaultLookAndFeel".
         Window.defaultLookAndFeel = UIManager.getLookAndFeel();
-
         try {
-            String theme = SettingsUtils.getOption(THEME_OPTION);
+            // It finds the selected theme, and it loads it
+            String theme = SettingsUtils.getOption(Window.THEME_OPTION);
 
-            try {
-                switch (theme) {
-                    case Window.THEME_DEFAULT:
-                        UIManager.setLookAndFeel(Window.defaultLookAndFeel);
-                        Window.selectedTheme = Window.THEME_DEFAULT;
-                        break;
-                    case Window.THEME_MATERIAL_LIGHT:
-                        UIManager.setLookAndFeel(new MaterialLookAndFeel());
-                        MaterialLookAndFeel.changeTheme(new MaterialLiteTheme());
-                        Window.selectedTheme = Window.THEME_MATERIAL_LIGHT;
-                        break;
-                    case Window.THEME_MATERIAL_OCEANIC:
-                        UIManager.setLookAndFeel(new MaterialLookAndFeel());
-                        MaterialLookAndFeel.changeTheme(new MaterialOceanicTheme());
-                        Window.selectedTheme = Window.THEME_MATERIAL_OCEANIC;
-                        break;
-                    case Window.THEME_MATERIAL_GOLD:
-                        UIManager.setLookAndFeel(new MaterialLookAndFeel());
-                        MaterialLookAndFeel.changeTheme(new JMarsDarkTheme());
-                        Window.selectedTheme = Window.THEME_MATERIAL_GOLD;
-                        break;
+            // Theme is null on the first launch
+            if (theme != null) {
+                try {
+                    switch (theme) {
+                        case Window.THEME_DEFAULT:
+                            UIManager.setLookAndFeel(Window.defaultLookAndFeel);
+                            Window.selectedTheme = Window.THEME_DEFAULT;
+                            break;
+
+                        case Window.THEME_MATERIAL_LIGHT:
+                            UIManager.setLookAndFeel(new MaterialLookAndFeel());
+                            MaterialLookAndFeel.changeTheme(new MaterialLiteTheme());
+                            Window.selectedTheme = Window.THEME_MATERIAL_LIGHT;
+                            break;
+
+                        case Window.THEME_MATERIAL_OCEANIC:
+                            UIManager.setLookAndFeel(new MaterialLookAndFeel());
+                            MaterialLookAndFeel.changeTheme(new MaterialOceanicTheme());
+                            Window.selectedTheme = Window.THEME_MATERIAL_OCEANIC;
+                            break;
+
+                        case Window.THEME_MATERIAL_GOLD:
+                            UIManager.setLookAndFeel(new MaterialLookAndFeel());
+                            MaterialLookAndFeel.changeTheme(new JMarsDarkTheme());
+                            Window.selectedTheme = Window.THEME_MATERIAL_GOLD;
+                            break;
+                    }
+                } catch (Exception e) {
+                    // Probably an issue with the library used. It should not happen.
+                    e.printStackTrace();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
             }
-        } catch (Exception ignored) { } // We are here because the setting does not exist yet (the user never updated the GUI toggle key)
+        } catch (Exception ignored) {
+            // We are here because the option does not exist yet (the user never updated the GUI toggle key)
+            // We won't do anything here because the theme will be added to the settings file only when the user selects
+            // a theme.
+        }
 
-        // AbstractWindow initialisation
-        _window = new Window("Bettercolors " + Reference.VERSION, _modules, getVersionInformation());
+        // We have everything, we can finally create the GUI
+        this.window = new Window(
+                "Bettercolors " + Reference.VERSION,
+                this.modules,
+                new Version(
+                        Reference.MAIN_MC_VERSION,
+                        Integer.parseInt(Reference.VERSION.split("\\.")[0]),
+                        Integer.parseInt(Reference.VERSION.split("\\.")[1]),
+                        Integer.parseInt(Reference.VERSION.split("\\.")[2]),
+                        "")
+        );
     }
 
+    /**
+     * Called when a key is pressed.
+     * @param event event details (containing the key pressed)
+     */
     @SubscribeEvent
     public void onKey(final InputEvent.KeyInputEvent event) {
-
-        for(Module mod : _modules){
+        // When a key is pressed, we need to verify is the key is used by one of the modules. If so, we need to toggle
+        // them.
+        for(Module mod : this.modules){
+            // If the mod has a toggle key
             if(mod.getToggleKey() != -1) {
+                // Then if the key pressed is the key used to toggle the module
                 if (event.getKey() == mod.getToggleKey() && event.getAction() == GLFW.GLFW_RELEASE) {
+                    // Then we toggle it
                     mod.toggle();
-                    _window.synchronizeComponents();
+
+                    // We also need to synchronize the GUI to show that the od has been toggled (on or off)
+                    this.window.synchronizeComponents();
+
+                    // We also update the settings file to specify if the module is turned on or not
                     SettingsUtils.setOption(mod.getClass().getSimpleName(), Boolean.toString(mod.isActivated()));
                 }
             }
         }
 
-        if(event.getKey() == TOGGLE_KEY && event.getAction() == GLFW.GLFW_RELEASE){
-            _window.toggle();
+        // Same thing for the GUI. If the key pressed is the one of the GUI, then we toggle the GUI.
+        if(event.getKey() == Window.TOGGLE_KEY && event.getAction() == GLFW.GLFW_RELEASE){
+            this.window.toggle();
         }
     }
 
-	@SubscribeEvent
-    public void onClientTickEvent(ClientTickEvent event){
-
-	}
-
+    /**
+     * A function called at every tick. It is different than onClientTickEvent (that is the one that forge wants us to
+     * use) because it is called way more than onClientTickEvent. It is mandatory for us because without it we can't
+     * have a smooth aim assistance.
+     * @param event the event details (we don't need it)
+     */
     @SubscribeEvent
     public void clientTick(final TickEvent event){
-        for(Module mod : _modules){
-            mod.updateKeyHandler();
+        // We need to update each module that is turned on
+        for(Module mod : this.modules){
             if(mod.isActivated()){
                 mod.update();
             }
         }
 	}
-
-    /**
-     * @return the last version tag from the github release page (without the MC version in it).
-     */
-	private String[] getVersionInformation(){
-        final String MC_PREFIX = "-MC";
-        String last_version = "";
-        String changelog = "";
-
-        try{
-            // Retrieve JSON
-            URL url = new URL("https://api.github.com/repos/n3roo/bettercolors/releases");
-            BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
-            String json = in.lines().collect(Collectors.joining());
-            in.close();
-
-            // Get last version from JSON
-            String[] tags = json.split("\"tag_name\"");
-            String[] bodies = json.split("\"body\"");
-
-            int i = 0;
-            boolean found = false;
-            while(i < tags.length && !found){
-                last_version = tags[i].split("\"")[1];
-                if(last_version.endsWith(MC_PREFIX + Reference.MAIN_MC_VERSION)){
-                    found = true;
-                }else{
-                    i ++;
-                }
-            }
-
-            if(!found){
-                return new String[]{NO_VERSION_FOUND, ""};
-            }else{
-                last_version = last_version.replace(MC_PREFIX + Reference.MAIN_MC_VERSION, "");
-            }
-        } catch (MalformedURLException e){
-            return new String[]{URL_PROBLEM, ""};
-        } catch (IOException e){
-            return new String[]{INTERNET_PROBLEM, ""};
-        }
-
-        return new String[]{last_version, changelog};
-    }
-
-    /**
-     * It compares the two given versions, and return the difference :
-     * int[a, b, c, d]
-     * - a is the major version dif,
-     * - b is the minor version dif,
-     * - c is the patch version dif,
-     * - d is the beta version dif.
-     * If error, returns null.
-     * @param current_version current version
-     * @param last_version last version
-     * @return the version difference
-     */
-    public static int[] compareVersions(String current_version, String last_version){
-        int[] diff = {0, 0, 0, 0};
-
-        String[] current_version_split = current_version.split("\\.");
-        String[] last_version_split = last_version.split("\\.");
-
-        if(current_version_split.length == 3 && last_version_split.length == 3) {
-            diff[0] = Integer.parseInt(last_version_split[0]) -  Integer.parseInt(current_version_split[0]);
-            diff[1] = Integer.parseInt(last_version_split[1]) -  Integer.parseInt(current_version_split[1]);
-            diff[2] = Integer.parseInt(last_version_split[2].split("-")[0]) -  Integer.parseInt(current_version_split[2].split("-")[0]);
-
-            int current_beta_number = current_version_split[2].split("-").length == 2 ? Integer.parseInt(current_version_split[2].split("-")[1].replace("b", "")) : 0;
-            int last_beta_number = last_version_split[2].split("-").length == 2 ? Integer.parseInt(last_version_split[2].split("-")[1].replace("b", "")) : 0;
-            diff[3] = last_beta_number - current_beta_number;
-        } else {
-            System.out.println("Error when comparing versions : expected a version format maj.min.patch(-bnumber), but received :");
-            System.out.println("[" + current_version + "] and [" + last_version + "]");
-            diff = null;
-        }
-
-        return diff;
-    }
 }

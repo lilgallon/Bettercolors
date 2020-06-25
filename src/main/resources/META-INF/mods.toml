@@ -34,14 +34,14 @@ authors="nero!" #optional
 modId="mcp" #mandatory
 
 # The version number of the mod
-version="6.1.0" #mandatory
+version="6.1.1" #mandatory
 
 # A display name for the mod
 displayName="Bettercolors" #mandatory
 
 # The description text for the mod (multi line!) (#mandatory)
 description='''
-It smooths Minecraft colors to play more pleasantly
+Adjusts game's colors.
 '''
 
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.

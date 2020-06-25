@@ -1,3 +1,19 @@
+/*
+ * Copyright 2018-2020 Bettercolors Contributors (https://github.com/N3ROO/Bettercolors)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package dev.nero.bettercolors.modules;
 
 import dev.nero.bettercolors.modules.options.Option;
@@ -14,8 +30,10 @@ import java.util.Map;
 
 public class ClickAssistance extends Module {
 
+    // Prefix for AimAssistance (logging and settings)
     private static final String PREFIX = "CA";
 
+    // Options name
     private static final String PACKETS = "Packets";
     private static final String ONLY_ON_ENTITY = "Only_on_entity";
     private static final String TEAM_FILTER = "Team_filter";
@@ -24,6 +42,8 @@ public class ClickAssistance extends Module {
     private static final String DURATION = "Duration";
     private static final String CLICKS_TO_ACTIVATE = "Clicks_to_activate";
     private static final String TIME_TO_ACTIVATE = "Time_to_activate";
+
+    // Options index
     private static final int I_PACKETS = 0;
     private static final int I_ONLY_ON_ENTITY = 1;
     private static final int I_TEAM_FILTER = 2;
@@ -33,6 +53,7 @@ public class ClickAssistance extends Module {
     private static final int I_CLICKS_TO_ACTIVATE = 6;
     private static final int I_TIME_TO_ACTIVATE = 7;
 
+    // Default options loading
     private static final ArrayList<Option> DEFAULT_OPTIONS;
     static{
         DEFAULT_OPTIONS = new ArrayList<>();
@@ -48,81 +69,112 @@ public class ClickAssistance extends Module {
         DEFAULT_OPTIONS.add(new ValueOption(PREFIX, TIME_TO_ACTIVATE, 1000, 0, 10000, 200, 1000));
     }
 
-    private TimeHelper _post_activation_timer;
-    private int _post_activation_click_counter;
+    private TimeHelper postActivationTimer;
+    private int postActivationClickCounter;
 
-    private TimeHelper _activation_timer;
-    private TimeHelper _click_timer;
+    private TimeHelper activationTimer;
+    private TimeHelper clickTimer;
 
     /**
-     * @param name the name.
      * @param toggle_key the toggle key (-1 -> none).
-     * @param is_activated the initial state.
-     * @param options the options for the mod.
-     * @param symbol the picture name.
+     * @param is_activated the initial state
+     * @param options the options for the mod
      */
-    public ClickAssistance(String name, int toggle_key, boolean is_activated, Map<String, String> options, String symbol) {
+    public ClickAssistance(int toggle_key, boolean is_activated, Map<String, String> options) {
 
-        super(name, toggle_key, is_activated, symbol, "[CA]");
+        super("Click assistance", toggle_key, is_activated, "click_symbol.png", "[CA]");
 
-        _options = DEFAULT_OPTIONS;
-        ((ToggleOption) _options.get(I_PACKETS)).setActivated(Boolean.parseBoolean(options.get(_options.get(I_PACKETS).getCompleteName())));
-        ((ToggleOption) _options.get(I_ONLY_ON_ENTITY)).setActivated(Boolean.parseBoolean(options.get(_options.get(I_ONLY_ON_ENTITY).getCompleteName())));
-        ((ToggleOption) _options.get(I_TEAM_FILTER)).setActivated(Boolean.parseBoolean(options.get(_options.get(I_TEAM_FILTER).getCompleteName())));
-        ((ValueOption) _options.get(I_ADDITIONAL_CLICKS)).setVal(Integer.parseInt(options.get(_options.get(I_ADDITIONAL_CLICKS).getCompleteName())));
-        ((ValueOption) _options.get(I_CHANCE)).setVal(Integer.parseInt(options.get(_options.get(I_CHANCE).getCompleteName())));
-        ((ValueOption) _options.get(I_DURATION)).setVal(Integer.parseInt(options.get(_options.get(I_DURATION).getCompleteName())));
-        ((ValueOption) _options.get(I_CLICKS_TO_ACTIVATE)).setVal(Integer.parseInt(options.get(_options.get(I_CLICKS_TO_ACTIVATE).getCompleteName())));
-        ((ValueOption) _options.get(I_TIME_TO_ACTIVATE)).setVal(Integer.parseInt(options.get(_options.get(I_TIME_TO_ACTIVATE).getCompleteName())));
+        this.options = DEFAULT_OPTIONS;
+        ((ToggleOption)
+            this.options.get(I_PACKETS))
+            .setActivated(Boolean.parseBoolean(options.get(this.options.get(I_PACKETS).getCompleteName()))
+        );
 
-        _post_activation_timer = new TimeHelper();
-        _post_activation_click_counter = 0;
+        ((ToggleOption)
+            this.options.get(I_ONLY_ON_ENTITY))
+            .setActivated(Boolean.parseBoolean(options.get(this.options.get(I_ONLY_ON_ENTITY).getCompleteName()))
+        );
 
-        _activation_timer = new TimeHelper();
-        _click_timer = new TimeHelper();
+        ((ToggleOption)
+            this.options.get(I_TEAM_FILTER))
+            .setActivated(Boolean.parseBoolean(options.get(this.options.get(I_TEAM_FILTER).getCompleteName()))
+        );
+
+        ((ValueOption)
+            this.options.get(I_ADDITIONAL_CLICKS))
+            .setVal(Integer.parseInt(options.get(this.options.get(I_ADDITIONAL_CLICKS).getCompleteName()))
+        );
+
+        ((ValueOption)
+            this.options.get(I_CHANCE))
+            .setVal(Integer.parseInt(options.get(this.options.get(I_CHANCE).getCompleteName()))
+        );
+
+        ((ValueOption)
+            this.options.get(I_DURATION))
+            .setVal(Integer.parseInt(options.get(this.options.get(I_DURATION).getCompleteName()))
+        );
+
+        ((ValueOption)
+            this.options.get(I_CLICKS_TO_ACTIVATE))
+            .setVal(Integer.parseInt(options.get(this.options.get(I_CLICKS_TO_ACTIVATE).getCompleteName()))
+        );
+        
+        ((ValueOption)
+            this.options.get(I_TIME_TO_ACTIVATE))
+            .setVal(Integer.parseInt(options.get(this.options.get(I_TIME_TO_ACTIVATE).getCompleteName()))
+        );
+
+        postActivationTimer = new TimeHelper();
+        postActivationClickCounter = 0;
+
+        activationTimer = new TimeHelper();
+        clickTimer = new TimeHelper();
     }
 
     @Override
     public void onUpdate() {
         if(MC.player != null){
-
-            if(_activation_timer.isStopped()) {
+            if(activationTimer.isStopped()) {
                 // If the click assist is not activated, we check if the user made the actions to activate it
-                if (isKeyState(KEY.ATTACK, KEY_STATE.JUST_PRESSED) && _post_activation_timer.isStopped()) {
+                if (isKeyState(Key.ATTACK, KeyState.JUST_PRESSED) && postActivationTimer.isStopped()) {
                     // Attack pressed just pressed and timer stopped
-                    _post_activation_timer.start();
-                    _post_activation_click_counter = 1;
-                } else if (isKeyState(KEY.ATTACK, KEY_STATE.JUST_PRESSED) && !_post_activation_timer.isStopped()) {
-                    _post_activation_click_counter++;
+                    postActivationTimer.start();
+                    postActivationClickCounter = 1;
+                } else if (isKeyState(Key.ATTACK, KeyState.JUST_PRESSED) && !postActivationTimer.isStopped()) {
+                    postActivationClickCounter++;
                 }
 
-                int post_activation_duration = ((ValueOption) _options.get(I_TIME_TO_ACTIVATE)).getVal();
-                int post_activation_clicks = ((ValueOption) _options.get(I_CLICKS_TO_ACTIVATE)).getVal();
-                if(_post_activation_timer.isDelayComplete(post_activation_duration)
-                        && _post_activation_click_counter >= post_activation_clicks){
-                    _post_activation_timer.stop();
-                    _activation_timer.start();
-                    _click_timer.start();
+                int post_activation_duration = ((ValueOption) this.options.get(I_TIME_TO_ACTIVATE)).getVal();
+                int post_activation_clicks = ((ValueOption) this.options.get(I_CLICKS_TO_ACTIVATE)).getVal();
+                if (postActivationTimer.isDelayComplete(post_activation_duration)
+                        && postActivationClickCounter >= post_activation_clicks) {
+                    // The user clicked enough times in the given time, so the click assistance turns on
+                    postActivationTimer.stop();
+                    activationTimer.start();
+                    clickTimer.start();
                     log_info("Click assistance started.");
-                }else if(_post_activation_timer.isDelayComplete(post_activation_duration)
-                        && _post_activation_click_counter < post_activation_clicks){
-                    _post_activation_timer.stop();
+                }else if (postActivationTimer.isDelayComplete(post_activation_duration)
+                        && postActivationClickCounter < post_activation_clicks) {
+                    // The user did not click enough times in the given time, so the click assistance turns off
+                    postActivationTimer.stop();
                 }
             }
 
-            if(!_activation_timer.isStopped() &&
-                    ( _activation_timer.isDelayComplete(((ValueOption) _options.get(I_DURATION)).getVal()) || isInGui())){
-                _activation_timer.stop();
-                _click_timer.stop();
+            boolean timerDone = activationTimer.isDelayComplete(((ValueOption) this.options.get(I_DURATION)).getVal());
+
+            if(!activationTimer.isStopped() && (timerDone || isInGui())){
+                activationTimer.stop();
+                clickTimer.stop();
                 log_info("Click assistance stopped.");
             }
 
-            if(!_activation_timer.isStopped()){
-                int cps = ((ValueOption) _options.get(I_ADDITIONAL_CLICKS)).getVal();
+            if(!activationTimer.isStopped()){
+                int cps = ((ValueOption) this.options.get(I_ADDITIONAL_CLICKS)).getVal();
                 if(cps != 0) {
-                    if (_click_timer.isDelayComplete(1000 / cps)) {
+                    if (clickTimer.isDelayComplete(1000 / cps)) {
                         useClickAssist();
-                        _click_timer.reset();
+                        clickTimer.reset();
                     }
                 }
             }
@@ -134,10 +186,10 @@ public class ClickAssistance extends Module {
     }
 
     private void useClickAssist(){
-        boolean packets = ((ToggleOption) _options.get(I_PACKETS)).isActivated();
-        boolean team_filter = ((ToggleOption) _options.get(I_TEAM_FILTER)).isActivated();
-        boolean only_on_entity = ((ToggleOption) _options.get(I_ONLY_ON_ENTITY)).isActivated();
-        int chance = ((ValueOption) _options.get(I_CHANCE)).getVal();
+        boolean packets = ((ToggleOption) this.options.get(I_PACKETS)).isActivated();
+        boolean teamFilter = ((ToggleOption) this.options.get(I_TEAM_FILTER)).isActivated();
+        boolean onlyOnEntity = ((ToggleOption) this.options.get(I_ONLY_ON_ENTITY)).isActivated();
+        int chance = ((ValueOption) this.options.get(I_CHANCE)).getVal();
 
         Entity target = null;
         try{
@@ -146,17 +198,20 @@ public class ClickAssistance extends Module {
 
         int rand = MathUtils.random(0, 100);
         if(rand <= chance){
-            if( (only_on_entity || packets) && target != null){
-                if (MC.player.getDistance(target) <= MC.playerController.getBlockReachDistance() &&
-                        (team_filter && !isInSameTeam(target))) {
+            // If we care about being aiming at an entity, or if we use packets, we must make sure that the user is
+            // aiming at an entity that is close enough
+            if( (onlyOnEntity || packets) && target != null){
+                boolean reachable = MC.player.getDistance(target) <= MC.playerController.getBlockReachDistance();
+                if (reachable && (teamFilter && !isInSameTeam(target))) {
                     if (packets) {
+                        // We basically do what the minecraft client does when attacking an entity
                         MC.playerController.attackEntity(MC.player, target);
                         MC.player.swingArm(Hand.MAIN_HAND);
                     } else {
                         click();
                     }
                 }
-            }else if(!only_on_entity && !packets){
+            } else if (!onlyOnEntity && !packets) {
                 click();
             }
         }
@@ -167,13 +222,13 @@ public class ClickAssistance extends Module {
      */
     private void click(){
         Robot bot;
-        try{
+        try {
             bot = new Robot();
             bot.mouseRelease(16);
             bot.mousePress(16);
             bot.mouseRelease(16);
-        } catch (AWTException e){
-            log_error("Tried to click the mouse but a problem happened.");
+        } catch (AWTException e) {
+            log_error("Tried to click the mouse but a problem happened");
         }
     }
 }

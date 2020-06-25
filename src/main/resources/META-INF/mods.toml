@@ -41,7 +41,7 @@ displayName="Bettercolors" #mandatory
 
 # The description text for the mod (multi line!) (#mandatory)
 description='''
-It smooths Minecraft colors to play more pleasantly
+Adjusts game's colors.
 '''
 
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.

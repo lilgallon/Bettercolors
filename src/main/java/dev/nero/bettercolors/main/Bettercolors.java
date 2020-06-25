@@ -176,34 +176,37 @@ public class Bettercolors {
             // It finds the selected theme, and it loads it
             String theme = SettingsUtils.getOption(Window.THEME_OPTION);
 
-            try {
-                switch (theme) {
-                    case Window.THEME_DEFAULT:
-                        UIManager.setLookAndFeel(Window.defaultLookAndFeel);
-                        Window.selectedTheme = Window.THEME_DEFAULT;
-                        break;
+            // Theme is null on the first launch
+            if (theme != null) {
+                try {
+                    switch (theme) {
+                        case Window.THEME_DEFAULT:
+                            UIManager.setLookAndFeel(Window.defaultLookAndFeel);
+                            Window.selectedTheme = Window.THEME_DEFAULT;
+                            break;
 
-                    case Window.THEME_MATERIAL_LIGHT:
-                        UIManager.setLookAndFeel(new MaterialLookAndFeel());
-                        MaterialLookAndFeel.changeTheme(new MaterialLiteTheme());
-                        Window.selectedTheme = Window.THEME_MATERIAL_LIGHT;
-                        break;
+                        case Window.THEME_MATERIAL_LIGHT:
+                            UIManager.setLookAndFeel(new MaterialLookAndFeel());
+                            MaterialLookAndFeel.changeTheme(new MaterialLiteTheme());
+                            Window.selectedTheme = Window.THEME_MATERIAL_LIGHT;
+                            break;
 
-                    case Window.THEME_MATERIAL_OCEANIC:
-                        UIManager.setLookAndFeel(new MaterialLookAndFeel());
-                        MaterialLookAndFeel.changeTheme(new MaterialOceanicTheme());
-                        Window.selectedTheme = Window.THEME_MATERIAL_OCEANIC;
-                        break;
+                        case Window.THEME_MATERIAL_OCEANIC:
+                            UIManager.setLookAndFeel(new MaterialLookAndFeel());
+                            MaterialLookAndFeel.changeTheme(new MaterialOceanicTheme());
+                            Window.selectedTheme = Window.THEME_MATERIAL_OCEANIC;
+                            break;
 
-                    case Window.THEME_MATERIAL_GOLD:
-                        UIManager.setLookAndFeel(new MaterialLookAndFeel());
-                        MaterialLookAndFeel.changeTheme(new JMarsDarkTheme());
-                        Window.selectedTheme = Window.THEME_MATERIAL_GOLD;
-                        break;
+                        case Window.THEME_MATERIAL_GOLD:
+                            UIManager.setLookAndFeel(new MaterialLookAndFeel());
+                            MaterialLookAndFeel.changeTheme(new JMarsDarkTheme());
+                            Window.selectedTheme = Window.THEME_MATERIAL_GOLD;
+                            break;
+                    }
+                } catch (Exception e) {
+                    // Probably an issue with the library used. It should not happen.
+                    e.printStackTrace();
                 }
-            } catch (Exception e) {
-                // Probably an issue with the library used. It should not happen.
-                e.printStackTrace();
             }
         } catch (Exception ignored) {
             // We are here because the option does not exist yet (the user never updated the GUI toggle key)

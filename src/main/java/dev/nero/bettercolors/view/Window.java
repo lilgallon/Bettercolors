@@ -380,8 +380,8 @@ public class Window extends JFrame{
                 case NO_VERSION:
                     update.setForeground(new Color(100, 0, 0));
                     update.setText("No version found");
-                    addText("No version found, it should not happen", Color.RED, true);
-                    addText("The API may have changed, you can open an issue to github", Color.RED, true);
+                    addText("No version found, was bettercolors released for MC " + Reference.MAIN_MC_VERSION + "?", Color.RED, true);
+                    addText("If yes, then the API may have changed, you can open an issue to github", Color.RED, true);
                     break;
             }
         }

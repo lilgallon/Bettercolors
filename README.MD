@@ -3,7 +3,7 @@
 </h3>
  
 <p align="center">
-    <a href="https://img.shields.io/badge/forge_dev-1.15.2_31.1.18-green.svg"><img alt="Forge dev version: 1.15.2-31.1.18" src="https://img.shields.io/badge/forge_dev-1.15.2_31.1.18-green.svg"/></a>
+    <a href="https://img.shields.io/badge/forge_dev-1.16.1_32.0.25-orange.svg"><img alt="Forge dev version: 1.16.1_32.0.25" src="https://img.shields.io/badge/forge_dev-1.15.2_31.1.18-green.svg"/></a>
     <a href="https://img.shields.io/github/release/n3roo/bettercolors.svg"><img alt="Release" src="https://img.shields.io/github/release/n3roo/bettercolors.svg"/></a>
     <a href="https://img.shields.io/github/downloads/n3roo/bettercolors/total.svg"><img alt="Downloads" src="https://img.shields.io/github/downloads/n3roo/bettercolors/total.svg"/></a>
     <a href="https://img.shields.io/github/issues/n3roo/bettercolors.svg"><img alt="Open issues" src="https://img.shields.io/github/issues/n3roo/bettercolors.svg"/></a>
@@ -17,6 +17,7 @@
     <a href="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC1.13.2/badge.svg"><img alt="Build Status" src="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC1.13.2/badge.svg" /></a>
     <a href="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC1.14.4/badge.svg"><img alt="Build Status" src="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC1.14.4/badge.svg" /></a>
     <a href="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC1.15.2/badge.svg"><img alt="Build Status" src="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC1.15.2/badge.svg" /></a>
+    <a href="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC1.16.1/badge.svg"><img alt="Build Status" src="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC1.16.1/badge.svg" /></a>
 </p>
 
 A silent "hack" built within the forge API. It bypasses powerful anticheats (forge mods and servers) to help you improve your gameplay.

@@ -188,3 +188,6 @@ This update is backwards compatible with V6.1.0-b1 MC_1.14.4. The settings files
 - Aim Assistance:
     - Fixed range (was maxed at 10)
     
+**V6.1.2 MC_1.16.1**
+- Updated mod to work with MC1.16.1
+- Fixed aim assistance from MC1.15.2_V6.1.1

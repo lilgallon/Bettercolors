@@ -139,7 +139,7 @@ public abstract class Module {
     private String exportTag(PlayerEntity e){
         String tag;
         try{
-            tag = e.getDisplayName().getFormattedText().split(e.getName().getString())[0].replace(" ","");
+            tag = e.getDisplayName().getString().split(e.getName().getString())[0].replace(" ","");
             tag = tag.replace("§","");
         }catch(Exception exc){
             tag = "";

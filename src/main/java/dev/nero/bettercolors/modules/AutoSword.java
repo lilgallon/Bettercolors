@@ -78,7 +78,7 @@ public class AutoSword extends Module {
                                             .mainInventory
                                             .get(best_item)
                                             .getDisplayName()
-                                            .getFormattedText()
+                                            .getString()
                                     + ")."
                     );
                     MC.player.inventory.currentItem = best_item;

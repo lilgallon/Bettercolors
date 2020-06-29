@@ -240,10 +240,9 @@ public class AimAssistance extends Module {
 
         int range = ((ValueOption) this.options.get(I_RANGE)).getVal();
 
-        BlockPos playerPos = MC.player.getPosition();
-        int playerX = playerPos.getX();
-        int playerY = playerPos.getY();
-        int playerZ = playerPos.getZ();
+        int playerX = (int) MC.player.getPosX();
+        int playerY = (int) MC.player.getPosY();
+        int playerZ = (int) MC.player.getPosZ();
         // The area that will be scanned to find entities
         AxisAlignedBB area = new AxisAlignedBB(
                 playerX - range,
@@ -332,7 +331,7 @@ public class AimAssistance extends Module {
             MC.player.rotationPitch = rotations[1];
         }
 
-        log_info("Aiming at entity " + entity.getName().getFormattedText() + ".");
+        log_info("Aiming at entity " + entity.getName().getString() + ".");
     }
 
     /**
@@ -374,8 +373,10 @@ public class AimAssistance extends Module {
         float[] yawPitch = getYawPitchBetween(entity, MC.player);
 
         // We make sure that it's absolute, because the sign may change if we invert entity and MC.player
-        float yaw = MathHelper.abs(yawPitch[0]);
-        float pitch = MathHelper.abs(yawPitch[1]);
+        //float yaw = MathHelper.abs(yawPitch[0]);
+        //float pitch = MathHelper.abs(yawPitch[1]);
+        float yaw = yawPitch[0];
+        float pitch = yawPitch[1];
 
         // We check if the entity is within the FOV of the player
         // yaw and pitch are absolute, not relative to anything. We fix that by calling wrapDegrees and substracting

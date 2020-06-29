@@ -372,10 +372,8 @@ public class AimAssistance extends Module {
 
         // We calculate the yaw/pitch difference between the entity and the player
         float[] yawPitch = getYawPitchBetween(entity, MC.player);
-
-        // We make sure that it's absolute, because the sign may change if we invert entity and MC.player
-        float yaw = MathHelper.abs(yawPitch[0]);
-        float pitch = MathHelper.abs(yawPitch[1]);
+        float yaw = yawPitch[0];
+        float pitch = yawPitch[1];
 
         // We check if the entity is within the FOV of the player
         // yaw and pitch are absolute, not relative to anything. We fix that by calling wrapDegrees and substracting

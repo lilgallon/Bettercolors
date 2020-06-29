@@ -187,4 +187,7 @@ This update is backwards compatible with V6.1.0-b1 MC_1.14.4. The settings files
     - Changed the font from Cascadia to CascadiaCode 2005.15
 - Aim Assistance:
     - Fixed range (was maxed at 10)
-    
+
+**V6.1.2 MC_1.15.2**
+
+- Fixed aim assistance

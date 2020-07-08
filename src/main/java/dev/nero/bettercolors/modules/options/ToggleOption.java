@@ -20,7 +20,7 @@ import dev.nero.bettercolors.io.SettingsUtils;
 
 public class ToggleOption extends Option {
 
-    private boolean _activated;
+    private boolean activated;
 
     /**
      * @param prefix prefix of the option (module name for example) -> used to prevent conflict if some modules have the
@@ -30,7 +30,7 @@ public class ToggleOption extends Option {
      */
     public ToggleOption(String prefix, String name, boolean activated) {
         super(prefix, name);
-        _activated = activated;
+        this.activated = activated;
     }
 
     /**
@@ -38,7 +38,7 @@ public class ToggleOption extends Option {
      * @param activated the new state of this option.
      */
     public void setActivated(boolean activated){
-        _activated = activated;
+        this.activated = activated;
         saveOption();
     }
 
@@ -46,7 +46,7 @@ public class ToggleOption extends Option {
      * It changes the state of this option according to its current state. IT TOGGLES IT LOL!
      */
     public void toggle(){
-        _activated = !_activated;
+        activated = !activated;
         saveOption();
     }
 
@@ -54,7 +54,7 @@ public class ToggleOption extends Option {
      * @return the state of the option : activated or not.
      */
     public boolean isActivated(){
-        return _activated;
+        return activated;
     }
 
     /**
@@ -62,6 +62,6 @@ public class ToggleOption extends Option {
      */
     @Override
     void saveOption(){
-        SettingsUtils.setOption(PREFIX + "_" + NAME, Boolean.toString(_activated));
+        SettingsUtils.setOption(PREFIX + "_" + NAME, Boolean.toString(activated));
     }
 }

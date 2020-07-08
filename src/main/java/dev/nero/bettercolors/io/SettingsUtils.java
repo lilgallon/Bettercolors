@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package dev.nero.bettercolors.io;
 
 import dev.nero.bettercolors.modules.options.Option;
@@ -27,6 +28,10 @@ import java.util.Map;
 
 public class SettingsUtils {
 
+    // The filename where we store the settings file that is selected by the user
+    public final static String FILE_WITH_CURRENT_SETTINGS_USED = "_bc_settingsfile";
+
+    // The settings file used. It will be used by SettingsUtils when using the functions
     public static String SETTINGS_FILENAME = "default";
 
     /**
@@ -90,9 +95,12 @@ public class SettingsUtils {
         if(files == null) return filenames;
         for(File file : files){
             if(file.isFile() && file.getName().endsWith(".properties") && file.getName().startsWith("bc_")){
-                filenames.addElement(file.getName().replace(".properties", "").replaceFirst("bc_", ""));
+                String name = file.getName().replaceFirst("bc_", "");
+                name = name.replace(".properties", "");
+                filenames.addElement(name);
             }
         }
+
         return filenames;
     }
 }

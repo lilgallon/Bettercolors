@@ -26,13 +26,11 @@ import net.minecraft.item.ItemSword;
 public class AutoSword extends Module {
 
     /**
-     * @param name the name.
-     * @param toggle_key the toggle key (-1 -> none).
-     * @param is_activated the initial state.
-     * @param symbol the picture name.
+     * @param toggle_key the toggle key (-1 -> none)
+     * @param is_activated the initial state
      */
-    public AutoSword(String name, int toggle_key, boolean is_activated, String symbol) {
-        super(name, toggle_key, is_activated, symbol, "[ASw]");
+    public AutoSword(int toggle_key, boolean is_activated) {
+        super("Auto sword", toggle_key, is_activated, "sword_symbol.png", "[ASw]");
     }
 
     @Override
@@ -44,12 +42,17 @@ public class AutoSword extends Module {
                 Entity mouseOverEntity = MC.objectMouseOver.entityHit;
                 if ((mouseOverEntity instanceof EntityLivingBase))
                     has_clicked_on_living_entity = true;
-            } catch (Exception ignored) {}
+            } catch (Exception ignored) {
+                // Happens sometimes in MC1.8.9, did not test if it happens on 1.15.2 as well
+                // When we try to get what the player is pointing at, and it's a ladder, it crashes for example
+            }
 
-            if(isKeyState(KEY.ATTACK, KEY_STATE.JUST_PRESSED) && has_clicked_on_living_entity){
+            if(isKeyState(Key.ATTACK, KeyState.JUST_PRESSED) && has_clicked_on_living_entity){
                 // We find the best sword
                 float max_damage = -1;
                 int best_item = -1;
+
+                // We look for every slot of the hotbar, and we take the best item
                 for(int slot = 0; slot < 9 ; slot ++){
                     ItemStack stack = MC.thePlayer.inventory.mainInventory[slot];
                     if(stack == null) continue;
@@ -61,6 +64,7 @@ public class AutoSword extends Module {
                             // powerful enchantment, so we don't care.
                             damage += EnchantmentHelper.getEnchantmentLevel(Enchantment.sharpness.effectId, stack);
                         }
+
                         if(damage >= max_damage){
                             best_item = slot;
                             max_damage = damage;

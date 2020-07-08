@@ -21,6 +21,7 @@ import dev.nero.bettercolors.io.SettingsUtils;
 import dev.nero.bettercolors.modules.*;
 import dev.nero.bettercolors.modules.options.Option;
 import dev.nero.bettercolors.modules.options.ToggleOption;
+import dev.nero.bettercolors.version.Version;
 import dev.nero.bettercolors.view.Window;
 import mdlaf.MaterialLookAndFeel;
 import mdlaf.themes.JMarsDarkTheme;
@@ -54,18 +55,6 @@ import java.util.stream.Collectors;
 
 public class Bettercolors {
 
-    public final static String URL_PROBLEM = "Url problem (please contact developer).";
-    public final static String INTERNET_PROBLEM = "No internet connection. :(";
-    public final static String UNRELEASED = "Preview version (not released yet).";
-    public final static String EMPTY_PAGE = "Github release page has an issue.";
-    public final static String DOWNLOAD_URL = "https://github.com/N3ROO/Bettercolors/releases/latest";
-    public final static String ISSUE_TRACKER = "https://github.com/N3ROO/Bettercolors/issues/new";
-
-    public final static String TOGGLE_KEY_OPTION = "toggle_key";
-    public final static String THEME_OPTION = "theme";
-    public static String TOGGLE_KEY_NAME = "insert code: 260";
-    public static int TOGGLE_KEY = Keyboard.KEY_INSERT;
-
     private final static ArrayList<Option> DEFAULT_ACTIVATION_STATUS;
     static{
         DEFAULT_ACTIVATION_STATUS = new ArrayList<>();
@@ -75,75 +64,144 @@ public class Bettercolors {
         DEFAULT_ACTIVATION_STATUS.add(new ToggleOption("", AutoSword.class.getSimpleName(), true));
     }
 
-    private ArrayList<Module> _modules;
-    private Map<String, Boolean> _key_down;
-    private final String WINDOW = "windowGUI";
-    private Window _window;
+    private ArrayList<Module> modules;
+    private Window window;
 
+    // Used to manage key events
+    private Map<String, Boolean> keysManager;
+    private final String WINDOW = "windowGUI";
+
+    /**
+     * Called when forge needs to init our mod. This is the first "function" called.
+     */
     @EventHandler
 	public void Init(FMLInitializationEvent event)
 	{
-	    // Registers the rest
+        // Forge event registering. We will use annotations to tell forge that we have some functions that need to be
+        // called in specific contexts. This code says that forge has to look into this class to find these functions.
 		MinecraftForge.EVENT_BUS.register(this);
-		// Registers tick event
+		// This is a workaround to make the function clientTick work
         FMLCommonHandler.instance().bus().register(this);
 
-        // Antialiasing font
+        // It tells swing (the "library" that handles the GUI) to use antialiasing to render fonts so that it looks
+        // smooth
         System.setProperty("awt.useSystemAAFontSettings","on");
         System.setProperty("swing.aatext", "true");
 
-        // Find selected settings file
-        // Write if empty
+        // Now that we initialized all the technical stuff, we can initialize our mod.
+        this.initializeMod();
+
+        // Everything is done. Now, the rest of the code will be run once that one of the above event is ran by forge
+        // itself.
+	}
+
+    /**
+     * It initializes everything related to the mod
+     */
+    private void initializeMod(){
+        // We need to load the settings of the current user. First, we need to figure out what settings file the user
+        // is currently using
         Map<String, String> option = new HashMap<>();
+
+        // We need to store what settings file is used by the user. That option is called "settings_file", and the
+        // default settings file used is called "default" (see: SettingsUtils.SETTINGS_FILENAME)
         option.put("settings_file", SettingsUtils.SETTINGS_FILENAME);
+
+        // If the file does not exist, it means that it is the first time that we run the mod. In that case, we create
+        // the file that contains the settings filename that is used by the user. The parameter only_absents=true means
+        // that we will only write if the option is not in the file.
         Filer filer = new Filer("_bc_settingsfile");
         filer.write(option, true);
-        // Load setting
-        String settings_file = filer.read("settings_file");
-        SettingsUtils.SETTINGS_FILENAME = settings_file;
 
-        // Settings management
+        // Now that we are sure that the file containing the settings file used by the user exists, we can load it.
+        // We update the settings utils static variable to the current used settings file
+        SettingsUtils.SETTINGS_FILENAME = filer.read("settings_file");
+
+        // Alright, now that we know what settings file to read, we can read it. We will load and store everything in
+        // the options variable.
         Map<String, String> options = SettingsUtils.getOptions();
-        ArrayList<ArrayList<Option>> modules_options = new ArrayList<>();
-        modules_options.add(AimAssistance.getDefaultOptions());
-        modules_options.add(ClickAssistance.getDefaultOptions());
-        modules_options.add(DEFAULT_ACTIVATION_STATUS);
-        // There is no settings file, we need to create it, otherwise we only add the settings that are not already
-        // in the settings file (can happen after updating the mod to a newer version)
-        SettingsUtils.setOptions(modules_options, options != null);
+
+        // If we could not read the options (settings), it means that the file does not exist. In that case, we will
+        // create a new file with all the default parameter of each module.
+        if (options == null) {
+            ArrayList<ArrayList<Option>> modules_options = new ArrayList<>();
+            modules_options.add(AimAssistance.getDefaultOptions());
+            modules_options.add(ClickAssistance.getDefaultOptions());
+            modules_options.add(DEFAULT_ACTIVATION_STATUS);
+            // false means that it will override what's written in that file if it exists. If it does not exist, it will
+            // simply create it with the given options.
+            SettingsUtils.setOptions(modules_options, false);
+        }
+
+        // Now that we are sure that all the options have been loaded, we will send them to our modules while
+        // initializing them.
         options = SettingsUtils.getOptions();
 
-		// Mods initialisation
+        // Mods initialisation
         int KEY_HOME = Keyboard.KEY_HOME;
         int KEY_PAGE_UP = 201;
-		_modules = new ArrayList<>();
-		_modules.add(new AimAssistance("Aim assistance", KEY_HOME, Boolean.parseBoolean(options.get(AimAssistance.class.getSimpleName())), options, "aim_symbol.png"));
-        _modules.add(new ClickAssistance("Click assistance", KEY_PAGE_UP, Boolean.parseBoolean(options.get(ClickAssistance.class.getSimpleName())), options, "click_symbol.png"));
-		_modules.add(new AutoSprint("Auto sprint", -1, Boolean.parseBoolean(options.get(AutoSprint.class.getSimpleName())), "sprint_symbol.png"));
-		_modules.add(new AutoSword("Auto sword", -1, Boolean.parseBoolean(options.get(AutoSword.class.getSimpleName())), "sword_symbol.png"));
 
-        // Gui toggle key
+        this.modules = new ArrayList<>();
+        this.modules.add(
+                new AimAssistance(
+                        KEY_HOME,                                                      // Key used to toggle it
+                        Boolean.parseBoolean(options.get(AimAssistance.class.getSimpleName())), // Is it turned on?
+                        options                                                                 // Settings
+                )
+        );
+
+        this.modules.add(
+                new ClickAssistance(
+                        KEY_PAGE_UP, // 201 = page up
+                        Boolean.parseBoolean(options.get(ClickAssistance.class.getSimpleName())),
+                        options
+                )
+        );
+
+        this.modules.add(
+                new AutoSprint(
+                        -1,
+                        Boolean.parseBoolean(options.get(AutoSprint.class.getSimpleName()))
+                )
+        );
+
+        this.modules.add(
+                new AutoSword(
+                        -1,
+                        Boolean.parseBoolean(options.get(AutoSword.class.getSimpleName()))
+                )
+        );
+
+        // Now that the modules are created, we need to initialize the GUI
+        // But we need to know what key is used to initialize the GUI. We will try to read it, if we can't, it means
+        // that it is not in the settings file. In that case, we need to append that to the settings file.
+
         try {
-            String gui_toggle_key = SettingsUtils.getOption(TOGGLE_KEY_OPTION);
-            Bettercolors.TOGGLE_KEY = Integer.parseInt(gui_toggle_key);
-            if (Keyboard.getKeyName(Bettercolors.TOGGLE_KEY).equals("")) {
-               Bettercolors.TOGGLE_KEY_NAME =  "code: " + Integer.toString(Bettercolors.TOGGLE_KEY);
-            } else {
-              Bettercolors.TOGGLE_KEY_NAME = Keyboard.getKeyName(Bettercolors.TOGGLE_KEY) + " code: " + Integer.toString(Bettercolors.TOGGLE_KEY);
-            }
-        } catch (Exception ignored) { } // We are here because the setting does not exist yet (the user never updated the GUI toggle key)
-
-        // KeyEvent
-        _key_down = new HashMap<>();
-        for(Module module : _modules){
-            _key_down.put(module.getClass().getSimpleName(), false);
+            Window.TOGGLE_KEY = Integer.parseInt(SettingsUtils.getOption(Window.TOGGLE_KEY_OPTION));
+        } catch (Exception ignored) {
+            // We are here because the setting does not exist yet (the user never updated the GUI toggle key)
+            SettingsUtils.setOption(Window.TOGGLE_KEY_OPTION, Integer.toString(Window.TOGGLE_KEY));
         }
-        _key_down.put(WINDOW, false);
 
+        // This variable will be shown in the GUI to say what key is currently used to toggle it
+        if (Keyboard.getKeyName(Window.TOGGLE_KEY).equals("")) {
+            Window.TOGGLE_KEY_NAME =  "code: " + Window.TOGGLE_KEY;
+        } else {
+            Window.TOGGLE_KEY_NAME = Keyboard.getKeyName(Window.TOGGLE_KEY) + " code: " + Window.TOGGLE_KEY;
+        }
+
+        // Used to keep tracks of key events
+        this.keysManager = new HashMap<>();
+        for(Module module : this.modules){
+            this.keysManager.put(module.getClass().getSimpleName(), false);
+        }
+        this.keysManager.put(WINDOW, false);
+
+        // We are almost done. We need to initialize everything related to the theme here.
+        // We load the default swing theme first, and we store it in "defaultLookAndFeel".
         Window.defaultLookAndFeel = UIManager.getLookAndFeel();
-
         try {
-            String theme = SettingsUtils.getOption(THEME_OPTION);
+            String theme = SettingsUtils.getOption(Window.THEME_OPTION);
 
             if (theme != null) {
                 try {
@@ -169,129 +227,61 @@ public class Bettercolors {
                             break;
                     }
                 } catch (Exception e) {
+                    // Probably an issue with the library used. It should not happen.
+                    System.out.println("The following error may be coming from the library used to theme the GUI");
                     e.printStackTrace();
                 }
             }
-        } catch (Exception ignored) { } // We are here because the setting does not exist yet (the user never updated the GUI toggle key)
+        } catch (Exception ignored) {
+            // We are here because the option does not exist yet (the user never updated the GUI toggle key)
+            // We won't do anything here because the theme will be added to the settings file only when the user selects
+            // a theme.
+        }
 
-		// AbstractWindow initialisation
-        _window = new Window("Bettercolors " + Reference.VERSION, _modules, getVersionInformation());
-	}
+        // We have everything, we can finally create the GUI
+        this.window = new Window(
+                "Bettercolors " + Reference.VERSION,
+                this.modules,
+                new Version(
+                        Reference.MAIN_MC_VERSION,
+                        Integer.parseInt(Reference.VERSION.split("\\.")[0]),
+                        Integer.parseInt(Reference.VERSION.split("\\.")[1]),
+                        Integer.parseInt(Reference.VERSION.split("\\.")[2]),
+                        "")
+        );
+    }
 
 	@SubscribeEvent
 	public void onClientTickEvent(ClientTickEvent event){
-        for(Module mod : _modules){
+        for(Module mod : this.modules){
             mod.updateKeyHandler();
             if(mod.getToggleKey() != -1) {
                 if (Keyboard.isKeyDown(mod.getToggleKey())) {
-                    _key_down.replace(mod.getClass().getSimpleName(), true);
-                } else if (_key_down.get(mod.getClass().getSimpleName())) {
+                    this.keysManager.replace(mod.getClass().getSimpleName(), true);
+                } else if (this.keysManager.get(mod.getClass().getSimpleName())) {
                     // KEY RELEASED !
                     mod.toggle();
-                    _window.synchronizeComponents();
+                    this.window.synchronizeComponents();
                     SettingsUtils.setOption(mod.getClass().getSimpleName(), Boolean.toString(mod.isActivated()));
-                    _key_down.replace(mod.getClass().getSimpleName(), false);
+                    this.keysManager.replace(mod.getClass().getSimpleName(), false);
                 }
             }
         }
 
-        if(Keyboard.isKeyDown(TOGGLE_KEY)){
-            _key_down.replace(WINDOW, true);
-        }else if(_key_down.get(WINDOW)){
-            _key_down.replace(WINDOW, false);
-            _window.toggle();
+        if(Keyboard.isKeyDown(Window.TOGGLE_KEY)){
+            this.keysManager.replace(WINDOW, true);
+        }else if(this.keysManager.get(WINDOW)){
+            this.keysManager.replace(WINDOW, false);
+            this.window.toggle();
         }
 	}
 
 	@SubscribeEvent
 	public void clientTick(final TickEvent event){
-        for(Module mod : _modules){
+        for(Module mod : this.modules){
             if(mod.isActivated()){
                 mod.update();
             }
         }
 	}
-
-    /**
-     * @return the last version tag from the github release page and the changelog associated.
-     */
-	private String[] getVersionInformation(){
-        final String MC_PREFIX = "-MC";
-        String last_version = "";
-        String changelog = "";
-
-        try{
-            // Retrieve JSON
-            URL url = new URL("https://api.github.com/repos/n3roo/bettercolors/releases");
-            BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
-            String json = in.lines().collect(Collectors.joining());
-            in.close();
-
-            // Get last version from JSON
-            String[] tags = json.split("\"tag_name\"");
-            String[] bodies = json.split("\"body\"");
-
-            int i = 0;
-            boolean found = false;
-            while(i < tags.length && !found){
-                last_version = tags[i].split("\"")[1];
-                if(last_version.endsWith(MC_PREFIX + Reference.MAIN_MC_VERSION)){
-                    found = true;
-                    changelog = bodies[i].split("\"")[1];
-                }else{
-                    i ++;
-                }
-            }
-
-            if(!found){
-                return new String[]{UNRELEASED, ""};
-            }else{
-                last_version = last_version.replace(MC_PREFIX + Reference.MAIN_MC_VERSION, "");
-                changelog = changelog.replace("\\r", "");
-            }
-        } catch (MalformedURLException e) {
-            return new String[]{URL_PROBLEM, ""};
-        } catch (IOException e) {
-            return new String[]{INTERNET_PROBLEM, ""};
-        } catch (Exception e) {
-            return new String[]{EMPTY_PAGE, ""};
-        }
-
-        return new String[]{last_version, changelog};
-    }
-
-    /**
-     * It compares the two given versions, and return the difference :
-     * int[a, b, c, d]
-     * - a is the major version dif,
-     * - b is the minor version dif,
-     * - c is the patch version dif,
-     * - d is the beta version dif.
-     * If error, returns null.
-     * @param current_version current version
-     * @param last_version last version
-     * @return the version difference
-     */
-    public static int[] compareVersions(String current_version, String last_version){
-        int[] diff = {0, 0, 0, 0};
-
-        String[] current_version_split = current_version.split("\\.");
-        String[] last_version_split = last_version.split("\\.");
-
-        if(current_version_split.length == 3 && last_version_split.length == 3) {
-            diff[0] = Integer.parseInt(last_version_split[0]) -  Integer.parseInt(current_version_split[0]);
-            diff[1] = Integer.parseInt(last_version_split[1]) -  Integer.parseInt(current_version_split[1]);
-            diff[2] = Integer.parseInt(last_version_split[2].split("-")[0]) -  Integer.parseInt(current_version_split[2].split("-")[0]);
-
-            int current_beta_number = current_version_split[2].split("-").length == 2 ? Integer.parseInt(current_version_split[2].split("-")[1].replace("b", "")) : 0;
-            int last_beta_number = last_version_split[2].split("-").length == 2 ? Integer.parseInt(last_version_split[2].split("-")[1].replace("b", "")) : 0;
-            diff[3] = last_beta_number - current_beta_number;
-        } else {
-            System.out.println("Error when comparing versions : expected a version format maj.min.patch(-bnumber), but received :");
-            System.out.println("[" + current_version + "] and [" + last_version + "]");
-            diff = null;
-        }
-
-        return diff;
-    }
 }

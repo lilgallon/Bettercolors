@@ -14,25 +14,24 @@
  * limitations under the License.
  */
 
+
 package dev.nero.bettercolors.modules;
 
 public class AutoSprint extends Module{
 
     /**
-     * @param name the name.
      * @param toggle_key the toggle key (-1 -> none).
      * @param is_activated the initial state.
-     * @param symbol the picture name.
      */
-    public AutoSprint(String name, int toggle_key, boolean is_activated, String symbol) {
-        super(name, toggle_key, is_activated, symbol, "[ASp]");
+    public AutoSprint(int toggle_key, boolean is_activated) {
+        super("Auto sprint", toggle_key, is_activated, "sprint_symbol.png", "[ASp]");
     }
 
     @Override
     public void onUpdate() {
         if(MC.thePlayer != null){
             if(MC.thePlayer.moveForward > 0 && !MC.thePlayer.isSprinting()){
-                log_info("forcing player to run.");
+                log_info("Forcing player to run");
                 MC.thePlayer.setSprinting(true);
             }
         }

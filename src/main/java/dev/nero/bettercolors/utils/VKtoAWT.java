@@ -28,9 +28,9 @@ public class VKtoAWT {
      * No difference between left/right for CTRL and SHIFT. So right is returned by default.
      *
      * @param code java.awt.event.KeyEvent code
-     * @return corrresponding org.lwjgl.input.Keyboard, or -1 if undefined, and -2 if not supported
+     * @return corresponding org.lwjgl.input.Keyboard, or -1 if undefined, and -2 if not supported
      */
-    public static int convertVKSwingtoAWT(int code) {
+    public static int convertVKSwingToAWT(int code) {
         switch (code) {
             case KeyEvent.CHAR_UNDEFINED:
                 return -1;

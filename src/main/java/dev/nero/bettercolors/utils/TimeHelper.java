@@ -20,30 +20,39 @@ public class TimeHelper {
 	private long lastMS = 0L;
 	private boolean stopped;
 
+	/**
+	 * The timer is stopped by default.
+	 */
 	public TimeHelper(){
 		stopped = true;
 	}
 
-    /**
-     * It stops and reset the timer.
-     */
+	/**
+	 * It stops and reset the timer.
+	 */
 	public void stop(){
 		stopped = true;
 		reset();
 	}
 
-    /**
-     * It starts and reset the timer.
-     */
+	/**
+	 * It starts and reset the timer.
+	 */
 	public void start(){
 		stopped = false;
 		reset();
 	}
 
-    public void reset(){
-	    this.lastMS = getCurrentMS();
-    }
+	/**
+	 * It resets the timer to 0
+	 */
+	public void reset(){
+		this.lastMS = getCurrentMS();
+	}
 
+	/**
+	 * @return true whether the timer is stopped or not
+	 */
 	public boolean isStopped(){
 		return stopped;
 	}
@@ -53,12 +62,15 @@ public class TimeHelper {
 	 * @return true if the delay has been reached and the timer is not stopped.
 	 */
 	public boolean isDelayComplete(long delay) {
-	    if(stopped) return false;
+		if(stopped) return false;
 		if(System.nanoTime() / 1000000L - lastMS >= delay) {
 			return true;
 		}else return delay <= 0;
 	}
 
+	/**
+	 * @return current system milliseconds
+	 */
 	private long getCurrentMS(){
 		return System.nanoTime() / 1000000L;
 	}

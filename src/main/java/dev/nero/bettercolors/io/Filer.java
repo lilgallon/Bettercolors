@@ -32,9 +32,11 @@ public class Filer {
         if(!filename.endsWith(".properties")){
             filename += ".properties";
         }
-        if(!filename.startsWith("bc_") && !filename.startsWith("_")) {
+
+        if(!filename.startsWith("bc_") && !filename.startsWith("_bc")) {
             filename = "bc_" + filename;
         }
+
         FILENAME = filename;
     }
 
@@ -47,14 +49,14 @@ public class Filer {
     public void write(Map<String, String> options_to_write, boolean only_absents){
         Map<String, String> options = readAll();
         if(options != null) {
-            if(only_absents){
+            if(only_absents) {
                 for(Map.Entry<String, String> option : options_to_write.entrySet()){
                     options.putIfAbsent(option.getKey(), option.getValue());
                 }
-            }else {
+            } else {
                 options.putAll(options_to_write);
             }
-        }else {
+        } else {
             options = options_to_write;
         }
 
@@ -83,7 +85,7 @@ public class Filer {
      * @param key the key of the property
      * @return the specific value associated to the key
      */
-    public String read(String key){
+    public String read(String key) {
         Properties prop = new Properties();
 
         String value;
@@ -110,7 +112,7 @@ public class Filer {
     /**
      * @return all the properties with their values.
      */
-    Map<String, String> readAll(){
+    Map<String, String> readAll() {
         Properties prop = new Properties();
 
         Map<String, String> values = new HashMap<>();

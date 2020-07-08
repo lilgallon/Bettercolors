@@ -9,6 +9,8 @@ import com.google.common.collect.Lists;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 
 import java.util.ArrayList;
@@ -235,31 +237,40 @@ public class AimAssistance extends Module {
             shiftY = MathUtils.random(shiftYMin, shiftYMax);
         }
 
+        shiftX = 0;
+        shiftY = 0;
+
         int range = ((ValueOption) this.options.get(I_RANGE)).getVal();
 
-        // Create the entities list by taking mobs (or not) into account
-        List<? extends Entity> entities;
-        if(((ToggleOption) this.options.get(I_USE_ON_MOBS)).isActivated()){
-            entities = MC.theWorld.loadedEntityList;
-        }else{
-            entities = MC.theWorld.playerEntities;
-        }
+        // The area that will be scanned to find entities
+        AxisAlignedBB area = new AxisAlignedBB(
+                MC.thePlayer.posX - range,
+                MC.thePlayer.posY - range,
+                MC.thePlayer.posZ - range,
+                MC.thePlayer.posX + range,
+                MC.thePlayer.posY + range,
+                MC.thePlayer.posZ + range
+        );
 
-        if (entities == null) return;
+        // Create the entities list by taking mobs (or not) into account
+        List<? extends EntityLivingBase> entities;
+        if(((ToggleOption) this.options.get(I_USE_ON_MOBS)).isActivated()){
+            entities = MC.theWorld.getEntitiesWithinAABB(EntityLivingBase.class, area);
+        }else{
+            entities = MC.theWorld.getEntitiesWithinAABB(EntityPlayer.class, area);
+        }
 
         // We retrieve all the entities that the user can aim at
         List<EntityLivingBase> attackableEntities = Lists.newArrayList();
-        for(Entity entity : entities){
-            if(entity instanceof EntityLivingBase){
-                if(entity instanceof EntityPlayerSP) // If the entity is the player itself
-                    continue;
-                // The area is a 3D square of range * range around the player. But it does not mean that everything
-                // inside of it is at or below <range> distance. If an entity is at the corner, then the distance from
-                // the player is sqrt(range^2 * 3), which is 17.32 for 10 for example.
-                // That's why we need to verify that the entity is within the given range
-                if(MC.thePlayer.getDistanceToEntity(entity) <= range && MC.thePlayer.canEntityBeSeen(entity))
-                    attackableEntities.add((EntityLivingBase) entity);
-            }
+        for(EntityLivingBase entity : entities){
+            if(entity instanceof EntityPlayerSP) // If the entity is the player itself
+                continue;
+            // The area is a 3D square of range * range around the player. But it does not mean that everything
+            // inside of it is at or below <range> distance. If an entity is at the corner, then the distance from
+            // the player is sqrt(range^2 * 3), which is 17.32 for 10 for example.
+            // That's why we need to verify that the entity is within the given range
+            if(MC.thePlayer.getDistanceToEntity(entity) <= range && MC.thePlayer.canEntityBeSeen(entity))
+                attackableEntities.add(entity);
         }
 
         // If we can't find any entity, then we stop
@@ -330,10 +341,9 @@ public class AimAssistance extends Module {
      * @return the [yaw, pitch] difference between the two entities
      */
     private float[] getYawPitchBetween(EntityLivingBase entityA, EntityLivingBase entityB) {
-        double diffX = entityA.getPosition().getX() - entityB.getPosition().getX();
-        double diffZ = entityA.getPosition().getZ() - entityB.getPosition().getZ();
-        double diffY = entityA.getPosition().getY() + entityA.getEyeHeight() -
-                        (entityB.getPosition().getY() + entityB.getEyeHeight());
+        double diffX = entityA.posX - entityB.posX;
+        double diffZ = entityA.posZ - entityB.posZ;
+        double diffY = entityA.posY + entityA.getEyeHeight() - (entityB.posY + entityB.getEyeHeight());
 
         double dist = MathHelper.sqrt_double(diffX * diffX + diffZ * diffZ);
 

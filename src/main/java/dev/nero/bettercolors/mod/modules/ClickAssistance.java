@@ -14,19 +14,24 @@
  * limitations under the License.
  */
 
-package dev.nero.bettercolors.modules;
+package dev.nero.bettercolors.mod.modules;
 
-import dev.nero.bettercolors.modules.options.Option;
-import dev.nero.bettercolors.modules.options.ToggleOption;
-import dev.nero.bettercolors.modules.options.ValueOption;
-import dev.nero.bettercolors.utils.MathUtils;
-import dev.nero.bettercolors.utils.TimeHelper;
+import dev.nero.bettercolors.engine.module.Module;
+import dev.nero.bettercolors.engine.option.Option;
+import dev.nero.bettercolors.engine.option.ToggleOption;
+import dev.nero.bettercolors.engine.option.ValueOption;
+import dev.nero.bettercolors.engine.utils.MathUtils;
+import dev.nero.bettercolors.engine.utils.TimeHelper;
+import dev.nero.bettercolors.mod.wrapper.Wrapper;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.play.client.C02PacketUseEntity;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Map;
+
+import static dev.nero.bettercolors.mod.wrapper.Wrapper.MC;
+import static dev.nero.bettercolors.mod.wrapper.Wrapper.isInGui;
 
 public class ClickAssistance extends Module {
 
@@ -80,7 +85,7 @@ public class ClickAssistance extends Module {
      * @param is_activated the initial state
      * @param options the options for the mod
      */
-    public ClickAssistance(int toggle_key, boolean is_activated, Map<String, String> options) {
+    public ClickAssistance(Integer toggle_key, Boolean is_activated, Map<String, String> options) {
 
         super("Click assistance", toggle_key, is_activated, "click_symbol.png", "[CA]");
 
@@ -153,7 +158,7 @@ public class ClickAssistance extends Module {
                     postActivationTimer.stop();
                     activationTimer.start();
                     clickTimer.start();
-                    log_info("Click assistance started.");
+                    logInfo("Click assistance started.");
                 }else if (postActivationTimer.isDelayComplete(post_activation_duration)
                         && postActivationClickCounter < post_activation_clicks) {
                     // The user did not click enough times in the given time, so the click assistance turns off
@@ -166,7 +171,7 @@ public class ClickAssistance extends Module {
             if(!activationTimer.isStopped() && (timerDone || isInGui())){
                 activationTimer.stop();
                 clickTimer.stop();
-                log_info("Click assistance stopped.");
+                logInfo("Click assistance stopped.");
             }
 
             if(!activationTimer.isStopped()){
@@ -202,7 +207,7 @@ public class ClickAssistance extends Module {
             // aiming at an entity that is close enough
             if( (onlyOnEntity || packets) && target != null){
                 boolean reachable = MC.thePlayer.getDistanceToEntity(target) <= MC.playerController.getBlockReachDistance();
-                if (reachable && (teamFilter && !isInSameTeam(target))) {
+                if (reachable && (teamFilter && !Wrapper.isInSameTeam(target))) {
                     if (packets) {
                         // We basically do what the minecraft client does when attacking an entity
                         MC.thePlayer.sendQueue.addToSendQueue(new C02PacketUseEntity(target, C02PacketUseEntity.Action.ATTACK));
@@ -228,7 +233,7 @@ public class ClickAssistance extends Module {
             bot.mousePress(16);
             bot.mouseRelease(16);
         } catch (AWTException e) {
-            log_error("Tried to click the mouse but a problem happened");
+            logError("Tried to click the mouse but a problem happened");
         }
     }
 }

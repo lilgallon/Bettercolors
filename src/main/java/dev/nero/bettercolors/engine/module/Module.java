@@ -1,5 +1,7 @@
 /*
- * Copyright 2018-2020 Bettercolors Contributors (https://github.com/N3ROO/Bettercolors)
+ * Copyright 2018-2020
+ * - Bettercolors Contributors (https://github.com/N3ROO/Bettercolors) and
+ * - Bettercolors Engine Contributors (https://github.com/N3ROO/BettercolorsEngine)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,16 +16,13 @@
  * limitations under the License.
  */
 
-package dev.nero.bettercolors.modules;
+package dev.nero.bettercolors.engine.module;
 
-import dev.nero.bettercolors.modules.options.Option;
-import dev.nero.bettercolors.modules.options.ToggleOption;
-import dev.nero.bettercolors.modules.options.ValueOption;
-import dev.nero.bettercolors.view.Window;
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.ContainerPlayer;
+import dev.nero.bettercolors.engine.BettercolorsEngine;
+import dev.nero.bettercolors.engine.option.Option;
+import dev.nero.bettercolors.engine.option.ToggleOption;
+import dev.nero.bettercolors.engine.option.ValueOption;
+import dev.nero.bettercolors.engine.view.Window;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -35,16 +34,15 @@ public abstract class Module {
     // Utility
     private final String LOG_PREFIX;
     private String lastLogMessage;
-    final static Minecraft MC = Minecraft.getMinecraft();
 
     // Keys utility
     private final Map<Key, KeyState> KEY_HANDLER;
-    enum Key { ATTACK, USE }
-    enum KeyState { JUST_PRESSED, BEING_PRESSED, JUST_RELEASED, IDLE }
+    protected enum Key { ATTACK, USE }
+    protected enum KeyState { JUST_PRESSED, BEING_PRESSED, JUST_RELEASED, IDLE }
 
     // Module details
     private final String name;
-    ArrayList<Option> options;
+    protected ArrayList<Option> options;
     private final String symbol;
 
     // Module status
@@ -58,7 +56,7 @@ public abstract class Module {
      * @param symbol the picture name.
      * @param log_prefix the prefix for console logging.
      */
-    Module(String name, int toggleKey, boolean isActivated, String symbol, String log_prefix){
+    protected Module(String name, Integer toggleKey, Boolean isActivated, String symbol, String log_prefix){
         this.name = name;
         this.isActivated = isActivated;
         this.TOGGLE_KEY = toggleKey;
@@ -92,7 +90,7 @@ public abstract class Module {
      * It sends an information message to the window's console.
      * @param msg the message to send.
      */
-    void log_info(String msg){
+    protected void logInfo(String msg){
         if(!msg.equalsIgnoreCase(lastLogMessage)) {
             lastLogMessage = msg;
             Window.instance.addText(LOG_PREFIX + " " + msg, true);
@@ -103,7 +101,7 @@ public abstract class Module {
      * It sends an error message to the window's console.
      * @param msg the message to send.
      */
-    void log_error(String msg){
+    protected void logError(String msg){
         if(!msg.equalsIgnoreCase(lastLogMessage)) {
             lastLogMessage = msg;
             Window.instance.addText(LOG_PREFIX + " " + msg, Color.RED, true);
@@ -111,58 +109,11 @@ public abstract class Module {
     }
 
     /**
-     * @param entity the entity (can be anything).
-     * @return true if the given entity is in the same team as the player.
-     */
-    boolean isInSameTeam(Entity entity){
-        if(!(entity instanceof EntityPlayer))
-            return false;
-
-        boolean same_team = false;
-        String target_tag;
-        try {
-            // Check friends / teammate
-            target_tag = exportTag((EntityPlayer) entity);
-            if (exportTag(MC.thePlayer).equalsIgnoreCase(target_tag)) {
-                same_team = true;
-            }
-
-        } catch (Exception ignored) { }
-        return same_team;
-    }
-
-    /**
-     * @param e entity.
-     * @return the team tag of the entity.
-     */
-    private String exportTag(EntityPlayer e){
-        String tag;
-        try{
-            tag = e.getDisplayName().getUnformattedText().split(e.getName())[0].replace(" ","");
-            tag = tag.replace("§","");
-        }catch(Exception exc){
-            tag = "";
-        }
-        return tag;
-    }
-
-    /**
-     * @return true if the user is in a Gui (he can't move).
-     */
-    boolean isInGui(){
-        if(MC.thePlayer == null) return true;
-        return (MC.thePlayer.isPlayerSleeping() ||
-                MC.thePlayer.isDead ||
-                !(MC.thePlayer.openContainer instanceof ContainerPlayer) ||
-                !MC.inGameHasFocus);
-    }
-
-    /**
      * @param Key the Key to check the state.
      * @param state the state of the Key.
      * @return true if the [Key] is currently at the state [state].
      */
-    boolean isKeyState(Key Key, KeyState state){
+    protected boolean isKeyState(Key Key, KeyState state){
         return KEY_HANDLER.get(Key) == state;
     }
 
@@ -178,23 +129,23 @@ public abstract class Module {
      * It updates the Key handler
      */
     public void updateKeyHandler(){
-        if(MC.gameSettings.keyBindAttack.isKeyDown() && KEY_HANDLER.get(Key.ATTACK) == KeyState.IDLE){
+        if(BettercolorsEngine.MC.gameSettings.keyBindAttack.isKeyDown() && KEY_HANDLER.get(Key.ATTACK) == KeyState.IDLE){
             KEY_HANDLER.replace(Key.ATTACK, KeyState.JUST_PRESSED);
-        }else if(MC.gameSettings.keyBindAttack.isKeyDown() && KEY_HANDLER.get(Key.ATTACK) == KeyState.JUST_PRESSED) {
+        }else if(BettercolorsEngine.MC.gameSettings.keyBindAttack.isKeyDown() && KEY_HANDLER.get(Key.ATTACK) == KeyState.JUST_PRESSED) {
             KEY_HANDLER.replace(Key.ATTACK, KeyState.BEING_PRESSED);
-        }else if(!MC.gameSettings.keyBindAttack.isKeyDown() && (KEY_HANDLER.get(Key.ATTACK) == KeyState.JUST_PRESSED || KEY_HANDLER.get(Key.ATTACK) == KeyState.BEING_PRESSED)){
+        }else if(!BettercolorsEngine.MC.gameSettings.keyBindAttack.isKeyDown() && (KEY_HANDLER.get(Key.ATTACK) == KeyState.JUST_PRESSED || KEY_HANDLER.get(Key.ATTACK) == KeyState.BEING_PRESSED)){
             KEY_HANDLER.replace(Key.ATTACK, KeyState.JUST_RELEASED);
-        } else if(!MC.gameSettings.keyBindAttack.isKeyDown() && KEY_HANDLER.get(Key.ATTACK) == KeyState.JUST_RELEASED){
+        } else if(!BettercolorsEngine.MC.gameSettings.keyBindAttack.isKeyDown() && KEY_HANDLER.get(Key.ATTACK) == KeyState.JUST_RELEASED){
             KEY_HANDLER.replace(Key.ATTACK, KeyState.IDLE);
         }
 
-        if(MC.gameSettings.keyBindUseItem.isKeyDown() && KEY_HANDLER.get(Key.USE) == KeyState.IDLE){
+        if(BettercolorsEngine.MC.gameSettings.keyBindUseItem.isKeyDown() && KEY_HANDLER.get(Key.USE) == KeyState.IDLE){
             KEY_HANDLER.replace(Key.USE, KeyState.JUST_PRESSED);
-        }else if(MC.gameSettings.keyBindUseItem.isKeyDown() && KEY_HANDLER.get(Key.USE) == KeyState.JUST_PRESSED) {
+        }else if(BettercolorsEngine.MC.gameSettings.keyBindUseItem.isKeyDown() && KEY_HANDLER.get(Key.USE) == KeyState.JUST_PRESSED) {
             KEY_HANDLER.replace(Key.USE, KeyState.BEING_PRESSED);
-        }else if(!MC.gameSettings.keyBindUseItem.isKeyDown() && (KEY_HANDLER.get(Key.USE) == KeyState.JUST_PRESSED || KEY_HANDLER.get(Key.USE) == KeyState.BEING_PRESSED)){
+        }else if(!BettercolorsEngine.MC.gameSettings.keyBindUseItem.isKeyDown() && (KEY_HANDLER.get(Key.USE) == KeyState.JUST_PRESSED || KEY_HANDLER.get(Key.USE) == KeyState.BEING_PRESSED)){
             KEY_HANDLER.replace(Key.USE, KeyState.JUST_RELEASED);
-        }else if(!MC.gameSettings.keyBindUseItem.isKeyDown() && KEY_HANDLER.get(Key.USE) == KeyState.JUST_RELEASED){
+        }else if(!BettercolorsEngine.MC.gameSettings.keyBindUseItem.isKeyDown() && KEY_HANDLER.get(Key.USE) == KeyState.JUST_RELEASED){
             KEY_HANDLER.replace(Key.USE, KeyState.IDLE);
         }
     }
@@ -223,7 +174,18 @@ public abstract class Module {
     /**
      * Used in children to run the module.
      */
-    abstract void onUpdate();
+    protected void onUpdate() { }
+
+    /**
+     * Used in children to execute some code when they're turning on and off.
+     * Only called when toggle() is called by the engine.
+     * @param toggle true if turned on, false otherwise
+     */
+    protected void onToggle(boolean toggle) {}
+
+    protected static ArrayList<Option> getDefaultOptions() {
+        return new ArrayList<>();
+    }
 
     // Setters
     public void setActivated(boolean activated){ isActivated = activated; }

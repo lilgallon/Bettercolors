@@ -1,5 +1,7 @@
 /*
- * Copyright 2018-2020 Bettercolors Contributors (https://github.com/N3ROO/Bettercolors)
+ * Copyright 2018-2020
+ * - Bettercolors Contributors (https://github.com/N3ROO/Bettercolors) and
+ * - Bettercolors Engine Contributors (https://github.com/N3ROO/BettercolorsEngine)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +16,7 @@
  * limitations under the License.
  */
 
-package dev.nero.bettercolors.modules.options;
+package dev.nero.bettercolors.engine.option;
 
 import java.util.ArrayList;
 

@@ -1,5 +1,7 @@
 /*
- * Copyright 2018-2020 Bettercolors Contributors (https://github.com/N3ROO/Bettercolors)
+ * Copyright 2018-2020
+ * - Bettercolors Contributors (https://github.com/N3ROO/Bettercolors) and
+ * - Bettercolors Engine Contributors (https://github.com/N3ROO/BettercolorsEngine)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +16,7 @@
  * limitations under the License.
  */
 
-package dev.nero.bettercolors.version;
+package dev.nero.bettercolors.engine.version;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -50,6 +52,21 @@ public class Version {
         UPDATED,
         // If the current version is older than the latest one, then the version is outdated
         OUTDATED
+    }
+
+    /**
+     * Use this constructor if you intend to use this class with MC versions (1.12.2, 1.8.9, ...)
+     * @param majorRev major revision number
+     * @param minorRev minor revision number
+     * @param bugRev bug revision number
+     */
+    public Version(int majorRev, int minorRev, int bugRev) {
+        this.mcVersion = "";
+        this.majorRev = majorRev;
+        this.minorRev = minorRev;
+        this.bugRev = bugRev;
+        this.betaRev = 0;
+        this.changelog = "";
     }
 
     /**

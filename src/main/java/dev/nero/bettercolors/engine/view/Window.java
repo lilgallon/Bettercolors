@@ -1,5 +1,7 @@
 /*
- * Copyright 2018-2020 Bettercolors Contributors (https://github.com/N3ROO/Bettercolors)
+ * Copyright 2018-2020
+ * - Bettercolors Contributors (https://github.com/N3ROO/Bettercolors) and
+ * - Bettercolors Engine Contributors (https://github.com/N3ROO/BettercolorsEngine)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,24 +16,24 @@
  * limitations under the License.
  */
 
-package dev.nero.bettercolors.view;
+package dev.nero.bettercolors.engine.view;
 
-import dev.nero.bettercolors.io.Filer;
-import dev.nero.bettercolors.io.SettingsUtils;
-import dev.nero.bettercolors.main.Reference;
-import dev.nero.bettercolors.modules.Module;
-import dev.nero.bettercolors.modules.options.Option;
-import dev.nero.bettercolors.modules.options.ToggleOption;
-import dev.nero.bettercolors.modules.options.ValueOption;
-import dev.nero.bettercolors.utils.VKtoAWT;
-import dev.nero.bettercolors.version.Version;
-import dev.nero.bettercolors.version.VersionException;
+import dev.nero.bettercolors.engine.BettercolorsEngine;
+import dev.nero.bettercolors.engine.io.Filer;
+import dev.nero.bettercolors.engine.io.SettingsUtils;
+import dev.nero.bettercolors.engine.module.Module;
+import dev.nero.bettercolors.engine.option.Option;
+import dev.nero.bettercolors.engine.option.ToggleOption;
+import dev.nero.bettercolors.engine.option.ValueOption;
+import dev.nero.bettercolors.engine.utils.Keymap;
+import dev.nero.bettercolors.engine.version.Version;
+import dev.nero.bettercolors.engine.version.VersionException;
+import dev.nero.bettercolors.engine.Reference;
 import mdlaf.MaterialLookAndFeel;
 import mdlaf.themes.JMarsDarkTheme;
 import mdlaf.themes.MaterialLiteTheme;
 import mdlaf.themes.MaterialOceanicTheme;
 import mdlaf.themes.MaterialTheme;
-import org.lwjgl.input.Keyboard;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -56,8 +58,8 @@ public class Window extends JFrame{
 
     // Used to display / change the key used to toggle the GUI
     public final static String TOGGLE_KEY_OPTION = "toggle_key";
-    public static String TOGGLE_KEY_NAME = "insert code: 210";
-    public static int TOGGLE_KEY = Keyboard.KEY_INSERT;
+    public static String TOGGLE_KEY_NAME;
+    public static int TOGGLE_KEY;
 
     // Modules that will be displayed in the GUI
     private final ArrayList<Module> MODULES;
@@ -291,7 +293,7 @@ public class Window extends JFrame{
         report.addActionListener(
                 (event) -> {
                     try {
-                        Desktop.getDesktop().browse(new URI(Reference.ISSUE_TRACKER));
+                        Desktop.getDesktop().browse(new URI(Reference.ISSUES_TRACKER_URL));
                     } catch (IOException | URISyntaxException e) {
                         e.printStackTrace();
                     }
@@ -304,7 +306,7 @@ public class Window extends JFrame{
         JLabel update = new JLabel();
 
         try {
-            Version latest = Version.getLatestVersion(Reference.MAIN_MC_VERSION);
+            Version latest = Version.getLatestVersion(Reference.MC_VERSION);
             Version.VersionDiff diff = version.compareWith(latest);
             switch (diff) {
                 case DEVELOPMENT:
@@ -379,7 +381,7 @@ public class Window extends JFrame{
                 case NO_VERSION:
                     update.setForeground(new Color(100, 0, 0));
                     update.setText("No version found");
-                    addText("No version found, was bettercolors released for MC " + Reference.MAIN_MC_VERSION + "?", Color.RED, true);
+                    addText("No version found, was bettercolors released for MC " + Reference.MC_VERSION + "?", Color.RED, true);
                     addText("If yes, then the API may have changed, you can open an issue to github", Color.RED, true);
                     break;
             }
@@ -600,7 +602,8 @@ public class Window extends JFrame{
                 @Override
                 public void keyPressed(KeyEvent e) {
                     if(dialog.isVisible()) {
-                        int code = VKtoAWT.convertVKSwingToAWT(e.getKeyCode());
+                        int code = Keymap.map(e.getKeyCode(), Reference.FORGE_API == BettercolorsEngine.FORGE.NEW);
+
                         if (code == -2) {
                             JOptionPane.showMessageDialog(Window.instance, "This key is not supported, please use an other one");
                         } else {
@@ -767,13 +770,9 @@ public class Window extends JFrame{
 
         // First message to be shown
         String welcome_message = "";
-        welcome_message += "x~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~x\n";
-        welcome_message += "|                                                |\n";
-        welcome_message += "|       .-``'.    Bettercolors 6    .'''-.       |\n";
-        welcome_message += "|     .`   .`~     Made by N3RO     ~`.   '.     |\n";
-        welcome_message += "| _.-'     '._   github.com/N3ROO   _.'     '-._ |\n";
-        welcome_message += "|  Aknowledgements: shorebre4k & patricktelling  |\n";
-        welcome_message += "x~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~x\n";
+        welcome_message += "Powered by Bettercolors Engine " + Reference.ENGINE_VERSION + ".\n";
+        welcome_message += "Source: https://github.com/N3ROO/BettercolorsEngine\n";
+        welcome_message += "Thanks: shorebre4k\n";
         addText(welcome_message, true);
 
         // Write the messages if there were any pending
@@ -793,7 +792,7 @@ public class Window extends JFrame{
      */
     private void setupFooter(JPanel footerPanel){
         JLabel credits = new JLabel(
-                " Bettercolors " + Reference.VERSION + " for MC " + Reference.MAIN_MC_VERSION
+                " Bettercolors " + Reference.MOD_VERSION + " for MC " + Reference.MC_VERSION
         );
         credits.setFont(new Font(credits.getFont().getFontName(), Font.PLAIN, 12));
         footerPanel.add(credits, "West");

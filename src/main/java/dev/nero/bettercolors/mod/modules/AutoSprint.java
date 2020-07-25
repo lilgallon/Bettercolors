@@ -15,15 +15,19 @@
  */
 
 
-package dev.nero.bettercolors.modules;
+package dev.nero.bettercolors.mod.modules;
 
-public class AutoSprint extends Module{
+import dev.nero.bettercolors.engine.module.Module;
+
+import static dev.nero.bettercolors.mod.wrapper.Wrapper.MC;
+
+public class AutoSprint extends Module {
 
     /**
      * @param toggle_key the toggle key (-1 -> none).
      * @param is_activated the initial state.
      */
-    public AutoSprint(int toggle_key, boolean is_activated) {
+    public AutoSprint(Integer toggle_key, Boolean is_activated) {
         super("Auto sprint", toggle_key, is_activated, "sprint_symbol.png", "[ASp]");
     }
 
@@ -31,7 +35,7 @@ public class AutoSprint extends Module{
     public void onUpdate() {
         if(MC.thePlayer != null){
             if(MC.thePlayer.moveForward > 0 && !MC.thePlayer.isSprinting()){
-                log_info("Forcing player to run");
+                logInfo("Forcing player to run");
                 MC.thePlayer.setSprinting(true);
             }
         }

@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package dev.nero.bettercolors.modules;
+package dev.nero.bettercolors.mod.modules;
 
+import dev.nero.bettercolors.engine.module.Module;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -23,13 +24,15 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 
+import static dev.nero.bettercolors.mod.wrapper.Wrapper.MC;
+
 public class AutoSword extends Module {
 
     /**
      * @param toggle_key the toggle key (-1 -> none)
      * @param is_activated the initial state
      */
-    public AutoSword(int toggle_key, boolean is_activated) {
+    public AutoSword(Integer toggle_key, Boolean is_activated) {
         super("Auto sword", toggle_key, is_activated, "sword_symbol.png", "[ASw]");
     }
 
@@ -73,7 +76,7 @@ public class AutoSword extends Module {
                 }
                 // We give the best sword to the player
                 if(best_item != -1 && MC.thePlayer.inventory.currentItem != best_item){
-                    log_info("Better sword found (" +  MC.thePlayer.inventory.mainInventory[best_item].getDisplayName() + ").");
+                    logInfo("Better sword found (" +  MC.thePlayer.inventory.mainInventory[best_item].getDisplayName() + ").");
                     MC.thePlayer.inventory.currentItem = best_item;
                 }
             }

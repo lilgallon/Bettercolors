@@ -1,11 +1,13 @@
-package dev.nero.bettercolors.modules;
+package dev.nero.bettercolors.mod.modules;
 
-import dev.nero.bettercolors.modules.options.Option;
-import dev.nero.bettercolors.modules.options.ToggleOption;
-import dev.nero.bettercolors.modules.options.ValueOption;
-import dev.nero.bettercolors.utils.MathUtils;
-import dev.nero.bettercolors.utils.TimeHelper;
+import dev.nero.bettercolors.engine.module.Module;
+import dev.nero.bettercolors.engine.option.Option;
+import dev.nero.bettercolors.engine.option.ToggleOption;
+import dev.nero.bettercolors.engine.option.ValueOption;
+import dev.nero.bettercolors.engine.utils.MathUtils;
+import dev.nero.bettercolors.engine.utils.TimeHelper;
 import com.google.common.collect.Lists;
+import dev.nero.bettercolors.mod.wrapper.Wrapper;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -16,6 +18,9 @@ import net.minecraft.util.MathHelper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static dev.nero.bettercolors.mod.wrapper.Wrapper.MC;
+import static dev.nero.bettercolors.mod.wrapper.Wrapper.isInGui;
 
 public class AimAssistance extends Module {
 
@@ -87,7 +92,7 @@ public class AimAssistance extends Module {
      * @param is_activated the initial state
      * @param options the options for the mod
      */
-    public AimAssistance(int toggle_key, boolean is_activated, Map<String, String> options) {
+    public AimAssistance(Integer toggle_key, Boolean is_activated, Map<String, String> options) {
 
         super("Aim assistance", toggle_key, is_activated, "aim_symbol.png", "[AA]");
 
@@ -185,7 +190,7 @@ public class AimAssistance extends Module {
                     postActivationTimer.stop();
                     activationTimer.start();
                     refreshRateTimer.start();
-                    log_info("Aim assistance started.");
+                    logInfo("Aim assistance started.");
                 } else if(postActivationTimer.isDelayComplete(postActivationDuration)
                         && postActivationClickCounter < postActivationClicks) {
                     // The user did not click enough times in the given time, so the aim assistance turns on
@@ -200,7 +205,7 @@ public class AimAssistance extends Module {
             if(!activationTimer.isStopped() && (rightClick && stopOnRightClick) || timerDone || isInGui()){
                 activationTimer.stop();
                 refreshRateTimer.stop();
-                log_info("Aim assistance stopped.");
+                logInfo("Aim assistance stopped.");
             }
 
             // If the AimAssistance is turned on, then, help the user to aim
@@ -283,7 +288,7 @@ public class AimAssistance extends Module {
 
         boolean team_filter = ((ToggleOption) this.options.get(I_TEAM_FILTER)).isActivated();
         for(EntityLivingBase entity : attackableEntities){
-            if(team_filter && isInSameTeam(entity)) continue;
+            if(team_filter && Wrapper.isInSameTeam(entity)) continue;
 
             // Calculate fov
             float[] yawPitch = getYawPitchBetween(entity, MC.thePlayer);
@@ -332,7 +337,7 @@ public class AimAssistance extends Module {
             MC.thePlayer.rotationPitch = rotations[1];
         }
 
-        log_info("Aiming at entity " + entity.getName() + ".");
+        logInfo("Aiming at entity " + entity.getName() + ".");
     }
 
     /**

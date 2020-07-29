@@ -100,7 +100,7 @@ public class Bettercolors {
 	@SubscribeEvent
     public void onKeyEvent(InputEvent.KeyInputEvent event) {
         // We only care about those keys
-        engine.keyEvent(Keyboard.KEY_INSERT, Keyboard.isKeyDown(Keyboard.KEY_INSERT));
+        engine.keyEvent(Window.TOGGLE_KEY, Keyboard.isKeyDown(Window.TOGGLE_KEY));
         engine.keyEvent(Keyboard.KEY_HOME, Keyboard.isKeyDown(Keyboard.KEY_HOME));
         engine.keyEvent(Keyboard.KEY_PRIOR, Keyboard.isKeyDown(Keyboard.KEY_PRIOR));
 

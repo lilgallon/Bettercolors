@@ -18,19 +18,19 @@ package dev.nero.bettercolors.mod;
 
 import dev.nero.bettercolors.engine.BettercolorsEngine;
 import dev.nero.bettercolors.engine.module.*;
-import dev.nero.bettercolors.mod.modules.AimAssistance;
-import dev.nero.bettercolors.mod.modules.AutoSprint;
-import dev.nero.bettercolors.mod.modules.AutoSword;
-import dev.nero.bettercolors.mod.modules.ClickAssistance;
+import dev.nero.bettercolors.mod.hijacks.PlayerControllerMPHijack;
+import dev.nero.bettercolors.mod.modules.*;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import org.lwjgl.input.Keyboard;
 
 import java.util.HashMap;
@@ -66,9 +66,10 @@ public class Bettercolors {
         // Now we need to send some information about our mod to the engine
         HashMap<Class<? extends Module>, BettercolorsEngine.IntAndBoolean> modules = new HashMap<>();
         modules.put(AimAssistance.class, new BettercolorsEngine.IntAndBoolean(Keyboard.KEY_HOME, true));
-        modules.put(ClickAssistance.class, new BettercolorsEngine.IntAndBoolean(201, false)); // 201 = page up
+        modules.put(ClickAssistance.class, new BettercolorsEngine.IntAndBoolean(Keyboard.KEY_PRIOR, false)); //pageup
         modules.put(AutoSprint.class, new BettercolorsEngine.IntAndBoolean(-1, true));
         modules.put(AutoSword.class, new BettercolorsEngine.IntAndBoolean(-1, true));
+        modules.put(Reach.class, new BettercolorsEngine.IntAndBoolean(-1, true));
 
         engine.init(
                 Reference.MOD_VERSION,
@@ -88,11 +89,26 @@ public class Bettercolors {
 	}
 
 	@SubscribeEvent
-	public void clientTickEvent(ClientTickEvent event){
-        while (Keyboard.next()) {
-            engine.keyEvent(Keyboard.getEventKey(), Keyboard.getEventKeyState());
+    public void worldLoadEvent(WorldEvent.Load event) {
+        if (event.world instanceof WorldClient) {
+            if (!(BettercolorsEngine.MC.playerController instanceof PlayerControllerMPHijack)) {
+                BettercolorsEngine.MC.playerController = PlayerControllerMPHijack.hijack(BettercolorsEngine.MC.playerController);
+            }
         }
-	}
+    }
+
+	@SubscribeEvent
+    public void onKeyEvent(InputEvent.KeyInputEvent event) {
+        // We only care about those keys
+        engine.keyEvent(Keyboard.KEY_INSERT, Keyboard.isKeyDown(Keyboard.KEY_INSERT));
+        engine.keyEvent(Keyboard.KEY_HOME, Keyboard.isKeyDown(Keyboard.KEY_HOME));
+        engine.keyEvent(Keyboard.KEY_PRIOR, Keyboard.isKeyDown(Keyboard.KEY_PRIOR));
+
+        // We can't use the following code because it will mess with Minecraft's key events handling
+        // while (Keyboard.next()) {
+        //     engine.keyEvent(Keyboard.getEventKey(), Keyboard.getEventKeyState());
+        // }
+    }
 
 	@SubscribeEvent
 	public void tickEvent(final TickEvent event){

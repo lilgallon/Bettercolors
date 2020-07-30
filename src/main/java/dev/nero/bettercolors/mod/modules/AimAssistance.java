@@ -70,14 +70,15 @@ public class AimAssistance extends Module {
         DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, STOP_WHEN_REACHED, false));
 
         DEFAULT_OPTIONS.add(new ValueOption(PREFIX, REFRESH_RATE, 2, 0, 10, 1, 5));
-        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, STEP_X, 5, 0, 20, 1, 5));
-        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, STEP_Y, 5, 0, 20, 1, 5));
-        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, RANGE, 5, 0, 10, 1, 5));
-        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, RADIUS_X, 60, 0, 180, 5, 25));
-        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, RADIUS_Y, 30, 0, 90, 3, 15));
+        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, RANGE, 5, 1, 20, 1, 5));
+        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, RADIUS_X, 60, 1, 180, 5, 25));
+        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, RADIUS_Y, 30, 1, 90, 3, 15));
         DEFAULT_OPTIONS.add(new ValueOption(PREFIX, DURATION, 2000, 0, 10000, 200, 1000));
         DEFAULT_OPTIONS.add(new ValueOption(PREFIX, CLICKS_TO_ACTIVATE, 2, 0, 20, 1, 5));
         DEFAULT_OPTIONS.add(new ValueOption(PREFIX, TIME_TO_ACTIVATE, 700, 0, 10000, 200, 1000));
+
+        DEFAULT_OPTIONS.add(new ValueFloatOption(PREFIX, STEP_X, 0.05f, 0.01f, 0.2f, 0.01f, 0.1f));
+        DEFAULT_OPTIONS.add(new ValueFloatOption(PREFIX, STEP_Y, 0.05f, 0.01f, 0.2f, 0.01f, 0.1f));
     }
 
     private TimeHelper postActivationTimer;
@@ -354,13 +355,11 @@ public class AimAssistance extends Module {
                 <= radiusY;
 
         // If the targeted entity is within the fov, then, we will compute the step in yaw / pitch of the player's view
-        // to get closer to the targeted entity. We will use the given stepX and stepY to compute that. Dividing by 100
-        // reduces that step. Without that, we would need to show very low values to the user in the GUI, which is not
-        // user-friendly. That way, instead of showing 0.05, we show 5.
+        // to get closer to the targeted entity. We will use the given stepX and stepY to compute that.
         if(inFovX && inFovY) {
             float yawFinal, pitchFinal;
-            yawFinal = ((MathHelper.wrapAngleTo180_float(yaw - MC.thePlayer.rotationYaw)) * stepX) / 100;
-            pitchFinal = ((MathHelper.wrapAngleTo180_float(pitch - MC.thePlayer.rotationPitch)) * stepY) / 100;
+            yawFinal = ((MathHelper.wrapAngleTo180_float(yaw - MC.thePlayer.rotationYaw)) * stepX);
+            pitchFinal = ((MathHelper.wrapAngleTo180_float(pitch - MC.thePlayer.rotationPitch)) * stepY);
 
             return new float[] { MC.thePlayer.rotationYaw + yawFinal, MC.thePlayer.rotationPitch + pitchFinal};
         } else {

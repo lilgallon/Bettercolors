@@ -3,28 +3,32 @@
 </h3>
 
 <p align="center">
+    <a href="https://img.shields.io/github/workflow/status/N3ROO/Bettercolors/Build%20MC1.8.9?label=1.8.9"><img alt="Build Status" src="https://img.shields.io/github/workflow/status/N3ROO/Bettercolors/Build%20MC1.8.9?label=1.8.9" /></a>
+    <a href="https://img.shields.io/github/workflow/status/N3ROO/Bettercolors/Build%20MC1.12.2?label=1.12.2"><img alt="Build Status" src="https://img.shields.io/github/workflow/status/N3ROO/Bettercolors/Build%20MC1.12.2?label=1.12.2" /></a>
+    <a href="https://img.shields.io/github/workflow/status/N3ROO/Bettercolors/Build%20MC1.13.2?label=1.13.2"><img alt="Build Status" src="https://img.shields.io/github/workflow/status/N3ROO/Bettercolors/Build%20MC1.13.2?label=1.13.2" /></a>
+    <a href="https://img.shields.io/github/workflow/status/N3ROO/Bettercolors/Build%20MC1.14.4?label=1.14.4"><img alt="Build Status" src="https://img.shields.io/github/workflow/status/N3ROO/Bettercolors/Build%20MC1.14.4?label=1.14.4" /></a>
+    <a href="https://img.shields.io/github/workflow/status/N3ROO/Bettercolors/Build%20MC1.15.2?label=1.15.2"><img alt="Build Status" src="https://img.shields.io/github/workflow/status/N3ROO/Bettercolors/Build%20MC1.15.2?label=1.15.2" /></a>
+    <a href="https://img.shields.io/github/workflow/status/N3ROO/Bettercolors/Build%20MC1.16.1?label=1.16.1"><img alt="Build Status" src="https://img.shields.io/github/workflow/status/N3ROO/Bettercolors/Build%20MC1.16.1?label=1.16.1" /></a>
+</p>
+
+
+<p align="center">
     <a href="https://img.shields.io/badge/forge_dev-1.8.9-11.15.1.1722-green.svg"><img alt="Forge dev version: 1.8.9 11.15.1.1722" src="https://img.shields.io/badge/forge_dev-1.8.9_11.15.1.1722-green.svg"/></a>
     <a href="https://img.shields.io/github/downloads/n3roo/bettercolors/total.svg"><img alt="Downloads" src="https://img.shields.io/github/downloads/n3roo/bettercolors/total.svg"/></a>
     <a href="https://img.shields.io/github/issues/n3roo/bettercolors.svg"><img alt="Open issues" src="https://img.shields.io/github/issues/n3roo/bettercolors.svg"/></a>
-    <a href="https://img.shields.io/github/issues-closed-raw/n3roo/bettercolors.svg"><img alt="Closed issues" src="https://img.shields.io/github/issues-closed-raw/n3roo/bettercolors.svg"/></a>
-    <a href="https://img.shields.io/github/issues-pr-closed/n3roo/bettercolors.svg"><img alt="Closed pull requests" src="https://img.shields.io/github/issues-pr-closed/n3roo/bettercolors.svg"/></a>
 </p>
-
-<p align="center">
-    <a href="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC1.8.9/badge.svg"><img alt="Build Status" src="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC1.8.9/badge.svg" /></a>
-    <a href="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC1.12.2/badge.svg"><img alt="Build Status" src="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC1.12.2/badge.svg" /></a>
-    <a href="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC1.13.2/badge.svg"><img alt="Build Status" src="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC1.13.2/badge.svg" /></a>
-    <a href="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC1.14.4/badge.svg"><img alt="Build Status" src="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC1.14.4/badge.svg" /></a>
-    <a href="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC1.15.2/badge.svg"><img alt="Build Status" src="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC1.15.2/badge.svg" /></a>
-    <a href="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC1.16.1/badge.svg"><img alt="Build Status" src="https://github.com/N3ROO/Bettercolors/workflows/Build%20MC1.16.1/badge.svg" /></a>
-</p>
-
 
 A silent "hack" built within the forge API. It bypasses powerful anticheats (forge mods and servers) to help you improve your gameplay.
 
 <p align="center">
-    <img alt="features" src="https://raw.githubusercontent.com/N3ROO/Bettercolors/MC_1.8.9/.github/features_main_crop500.png" />
+    <img alt="screenshot" src=".github/screenshot_default.png" />
+    <img alt="resizing" src=".github/window_resize.gif" />
 </p>
+
+
+💥 **LAST UPDATE**: [Reach](https://github.com/N3ROO/Bettercolors/wiki/2.-Features), and a lot of [new things]((https://github.com/N3ROO/Bettercolors/wiki/4.-Updates-&-Support-roadmap))! 💥
+
+
 
 ## Disclaimer
 

@@ -40,7 +40,7 @@ public class AutoSword extends Module {
 
     @Override
     public void onUpdate() {
-        if(Wrapper.thePlayer != null){
+        if(Wrapper.MC.player != null){
 
             boolean has_clicked_on_living_entity = false;
             try {
@@ -59,7 +59,7 @@ public class AutoSword extends Module {
 
                 // We look for every slot of the hotbar, and we take the best item
                 for(int slot = 0; slot < 9 ; slot ++){
-                    ItemStack stack = Wrapper.thePlayer.inventory.mainInventory.get(slot);
+                    ItemStack stack = Wrapper.MC.player.inventory.mainInventory.get(slot);
                     if(stack.getItem() instanceof SwordItem){
                         SwordItem sword = (SwordItem) stack.getItem();
                         float damage = sword.getAttackDamage();
@@ -76,17 +76,17 @@ public class AutoSword extends Module {
                     }
                 }
                 // We give the best sword to the player
-                if(best_item != -1 && Wrapper.thePlayer.inventory.currentItem != best_item){
+                if(best_item != -1 && Wrapper.MC.player.inventory.currentItem != best_item){
                     logInfo(
                             "Better sword found (" +
-                                    Wrapper.thePlayer.inventory
+                                    Wrapper.MC.player.inventory
                                             .mainInventory
                                             .get(best_item)
                                             .getDisplayName()
                                             .getString()
                                     + ")."
                     );
-                    Wrapper.thePlayer.inventory.currentItem = best_item;
+                    Wrapper.MC.player.inventory.currentItem = best_item;
                 }
             }
         }

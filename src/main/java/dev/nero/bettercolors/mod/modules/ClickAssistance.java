@@ -131,7 +131,7 @@ public class ClickAssistance extends Module {
 
     @Override
     public void onUpdate() {
-        if(Wrapper.thePlayer != null){
+        if(Wrapper.MC.player != null){
             if(activationTimer.isStopped()) {
                 // If the click assist is not activated, we check if the user made the actions to activate it
                 if (isKeyState(Key.ATTACK, KeyState.JUST_PRESSED) && postActivationTimer.isStopped()) {
@@ -198,12 +198,12 @@ public class ClickAssistance extends Module {
             // If we care about being aiming at an entity, or if we use packets, we must make sure that the user is
             // aiming at an entity that is close enough
             if( (onlyOnEntity || packets) && target != null){
-                boolean reachable = Wrapper.thePlayer.getDistance(target) <= Wrapper.MC.playerController.getBlockReachDistance();
+                boolean reachable = Wrapper.MC.player.getDistance(target) <= Wrapper.MC.playerController.getBlockReachDistance();
                 if (reachable && (teamFilter && !Wrapper.isInSameTeam(target)) && !Friends.isFriend(target.getName().getString())) {
                     if (packets) {
                         // We basically do what the minecraft client does when attacking an entity
-                        Wrapper.MC.playerController.attackEntity(Wrapper.thePlayer, target);
-                        Wrapper.thePlayer.swingArm(Hand.MAIN_HAND);
+                        Wrapper.MC.playerController.attackEntity(Wrapper.MC.player, target);
+                        Wrapper.MC.player.swingArm(Hand.MAIN_HAND);
                     } else {
                         click();
                     }

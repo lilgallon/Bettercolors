@@ -20,7 +20,7 @@ package dev.nero.bettercolors.engine.option;
 
 import java.util.ArrayList;
 
-public abstract class Option{
+public abstract class Option implements Cloneable {
 
     final String PREFIX;
     final String NAME;
@@ -47,16 +47,16 @@ public abstract class Option{
     }
 
     /**
-     * That is an utility method that returns ONLY the ValueOption instances from the options variable. In brief, it
-     * filters the ValueOption objects.
+     * That is an utility method that returns ONLY the ValueOption AND ValueFloatOption instances from the options
+     * arraylist.
      * @param options an array containing objects that extend the option class.
      * @return an array containing all the ValueOption instances of the given array.
      */
-    public static ArrayList<ValueOption> getValueOptions(ArrayList<Option> options){
-        ArrayList<ValueOption> valueOptions = new ArrayList<>();
+    public static ArrayList<Option> getValueOptions(ArrayList<Option> options){
+        ArrayList<Option> valueOptions = new ArrayList<>();
         for (Option option : options) {
-            if (option instanceof  ValueOption) {
-                valueOptions.add((ValueOption) option);
+            if (option instanceof ValueOption || option instanceof ValueFloatOption) {
+                valueOptions.add(option);
             }
         }
         return valueOptions;
@@ -117,4 +117,7 @@ public abstract class Option{
         }
         return obj == this;
     }
+
+    @Override
+    public abstract Object clone();
 }

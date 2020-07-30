@@ -21,10 +21,11 @@ package dev.nero.bettercolors.engine.module;
 import dev.nero.bettercolors.engine.BettercolorsEngine;
 import dev.nero.bettercolors.engine.option.Option;
 import dev.nero.bettercolors.engine.option.ToggleOption;
+import dev.nero.bettercolors.engine.option.ValueFloatOption;
 import dev.nero.bettercolors.engine.option.ValueOption;
+import dev.nero.bettercolors.engine.view.LogLevel;
 import dev.nero.bettercolors.engine.view.Window;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -93,7 +94,7 @@ public abstract class Module {
     protected void logInfo(String msg){
         if(!msg.equalsIgnoreCase(lastLogMessage)) {
             lastLogMessage = msg;
-            Window.instance.addText(LOG_PREFIX + " " + msg, true);
+            Window.LOG(LogLevel.INFO, LOG_PREFIX + " " + msg);
         }
     }
 
@@ -104,7 +105,7 @@ public abstract class Module {
     protected void logError(String msg){
         if(!msg.equalsIgnoreCase(lastLogMessage)) {
             lastLogMessage = msg;
-            Window.instance.addText(LOG_PREFIX + " " + msg, Color.RED, true);
+            Window.LOG(LogLevel.ERROR, LOG_PREFIX + " " + msg);
         }
     }
 
@@ -164,8 +165,10 @@ public abstract class Module {
             if(index != -1){
                 if(this.options.get(index) instanceof ToggleOption){
                     ((ToggleOption) this.options.get(index)).setActivated(Boolean.parseBoolean(optionValue));
-                }else{
+                } else if (this.options.get(index) instanceof ValueOption){
                     ((ValueOption) this.options.get(index)).setVal(Integer.parseInt(optionValue));
+                }  else if (this.options.get(index) instanceof ValueFloatOption){
+                    ((ValueFloatOption) this.options.get(index)).setVal(Float.parseFloat(optionValue));
                 }
             }
         }

@@ -20,11 +20,14 @@ package dev.nero.bettercolors.engine.view;
 
 import dev.nero.bettercolors.engine.BettercolorsEngine;
 import dev.nero.bettercolors.engine.io.Filer;
+import dev.nero.bettercolors.engine.io.PropertiesFiler;
 import dev.nero.bettercolors.engine.io.SettingsUtils;
 import dev.nero.bettercolors.engine.module.Module;
 import dev.nero.bettercolors.engine.option.Option;
 import dev.nero.bettercolors.engine.option.ToggleOption;
+import dev.nero.bettercolors.engine.option.ValueFloatOption;
 import dev.nero.bettercolors.engine.option.ValueOption;
+import dev.nero.bettercolors.engine.utils.Friends;
 import dev.nero.bettercolors.engine.utils.Keymap;
 import dev.nero.bettercolors.engine.version.Version;
 import dev.nero.bettercolors.engine.version.VersionException;
@@ -50,7 +53,7 @@ import java.util.*;
 public class Window extends JFrame{
 
     // Used to access the window from outside the class. It is used to add text in the console
-    public static Window instance;
+    private static Window instance;
 
     // Preferred size for the GUI
     private final int WIDTH = 500;
@@ -73,10 +76,11 @@ public class Window extends JFrame{
     private Font consoleFont;
     private int textCounter = 0;
     private JScrollPane scroll;
-    private Queue<Message> waitingMessages;
+    private static Queue<Message> waitingMessages = new LinkedList<>();
 
     // Gui components that will be used by other components
     private JTextPane console;
+    private JList<String> friendList;
 
     // Theme-related attributes
     public static LookAndFeel defaultLookAndFeel;
@@ -86,9 +90,6 @@ public class Window extends JFrame{
     public final static String THEME_MATERIAL_GOLD = "gold";
     public static String selectedTheme = THEME_DEFAULT;
     public final static String THEME_OPTION = "theme";
-
-    // If a message comes from this class, we need to append this prefix to the message
-    private final String LOG_PREFIX = "[Gui] ";
 
     /**
      * Creates the GUI
@@ -122,7 +123,7 @@ public class Window extends JFrame{
             );
         } catch (Exception e) {
             e.printStackTrace();
-            addText(LOG_PREFIX + "Failed to load images/bettercolors_symbol.png", Color.RED, true);
+            WARN("Failed to load images/bettercolors_symbol.png");
         }
 
         // It is possible to resize the GUI
@@ -140,10 +141,6 @@ public class Window extends JFrame{
         this.CHECKBOXES_MODULES = new ArrayList<>();
         this.SLIDERS_MODULES = new HashMap<>();
 
-        // This array contains the messages that need to be displayed to the console while the console is still not
-        // initialized
-        this.waitingMessages = new LinkedList<>();
-
         // We want to use a custom font for the console. We will initialize it here
         // Here is the default font if we can't load the one that we want
         consoleFont = new Font("Lucida Console", Font.PLAIN, 14);
@@ -156,7 +153,7 @@ public class Window extends JFrame{
             gEnv.registerFont(consoleFont);
             consoleFont = consoleFont.deriveFont(14f);
         } catch (Exception e) {
-            this.addText(LOG_PREFIX + "Could not load the CascadiaCode font", Color.ORANGE, true);
+            WARN("Could not load the CascadiaCode font");
             e.printStackTrace();
         }
 
@@ -171,9 +168,9 @@ public class Window extends JFrame{
         this.setupMenuBar(version);
 
         // Header (ready if needed)
-        // JPanel header_layout = new JPanel();
-        // header_layout.setLayout(new BorderLayout());
-        // setupHeader(header_layout);
+        // JPanel headerLayour = new JPanel();
+        // headerLayour.setLayout(new BorderLayout());
+        // setupHeader(headerLayour);
 
         // Modules & console
         JPanel mainPanel = new JPanel();
@@ -188,7 +185,7 @@ public class Window extends JFrame{
         setupFooter(footerPanel); // Creates the footer with the version status
 
         // Now we can add the layouts to the window
-        // getContentPane().add(header_layout, "North");
+        // getContentPane().add(headerLayour, "North");
         getContentPane().add(mainPanel, "Center");
         getContentPane().add(footerPanel, "South");
 
@@ -288,7 +285,7 @@ public class Window extends JFrame{
         menuBar.add(themes);
 
         // We want an other menu for the user to report a bug
-        JMenu report_menu = new JMenu("Found a bug?");
+        JMenu reportMenu = new JMenu("Found a bug?");
         JMenuItem report = new JMenuItem("Report it");
         report.addActionListener(
                 (event) -> {
@@ -299,11 +296,13 @@ public class Window extends JFrame{
                     }
                 }
         );
-        report_menu.add(report);
-        menuBar.add(report_menu);
+        reportMenu.add(report);
+        menuBar.add(reportMenu);
 
         // Last thing that we need is to show if the current version is the last one
         JLabel update = new JLabel();
+
+        addText("", true);
 
         try {
             Version latest = Version.getLatestVersion(Reference.MC_VERSION);
@@ -312,11 +311,11 @@ public class Window extends JFrame{
                 case DEVELOPMENT:
                     update.setForeground(new Color(150, 70, 0));
                     update.setText("Development build");
-                    addText("You are using a development build", Color.ORANGE, true);
+                    WARN("You are using a development build");
                     break;
                 case UPDATED:
                     update.setText("No update available");
-                    addText("You are using the last version", Color.GREEN, true);
+                    INFO("[+] You are using the last version");
                     break;
                 case OUTDATED:
                     update.setForeground(new Color(0, 70, 100));
@@ -335,15 +334,14 @@ public class Window extends JFrame{
                             try {
                                 Desktop.getDesktop().browse(new URI(Reference.DOWNLOAD_URL));
                             } catch (URISyntaxException | IOException ex) {
-                                addText("Error while trying to go to the download page", Color.RED, true);
-                                addText("Here is the download page: " + Reference.DOWNLOAD_URL, Color.RED, true);
+                                ERROR("Error while trying to go to the download page");
+                                ERROR("Here is the download page: " + Reference.DOWNLOAD_URL);
                             }
                         }
                     });
 
                     // Show the changelog
-                    addText("", true);
-                    addText("", true);
+                    WARN("Update available! Changelog:");
                     String[] lines = latest.getChangelog().split("\\\\n");
                     for(String line : lines) {
                         String[] split = line.split("\\*\\*");
@@ -361,7 +359,6 @@ public class Window extends JFrame{
                         }
                     }
 
-                    addText("There is an update available", Color.ORANGE, true);
                     break;
             }
         } catch (VersionException e) {
@@ -369,20 +366,20 @@ public class Window extends JFrame{
                 case NO_INTERNET:
                     update.setForeground(new Color(100, 0, 0));
                     update.setText("Could not check the version");
-                    addText("Could not check the version", Color.RED, true);
-                    addText("If you are not connected to internet, it's normal", Color.RED, true);
+                    ERROR("Could not check the version");
+                    ERROR("If you are not connected to internet, it's normal");
                     break;
                 case URL_ISSUE:
                     update.setForeground(new Color(100, 0, 0));
                     update.setText("URL issue");
-                    addText("Could not read the URL to check for the version", Color.RED, true);
-                    addText("It should not happen, you can open an issue to github", Color.RED, true);
+                    ERROR("Could not read the URL to check for the version");
+                    ERROR("It should not happen, you can open an issue to github");
                     break;
                 case NO_VERSION:
                     update.setForeground(new Color(100, 0, 0));
                     update.setText("No version found");
-                    addText("No version found, was bettercolors released for MC " + Reference.MC_VERSION + "?", Color.RED, true);
-                    addText("If yes, then the API may have changed, you can open an issue to github", Color.RED, true);
+                    ERROR("No version found, was bettercolors released for MC " + Reference.MC_VERSION + "?");
+                    ERROR("If yes, then the API may have changed, you can open an issue to github");
                     break;
             }
         }
@@ -393,7 +390,7 @@ public class Window extends JFrame{
     }
 
     /*
-    private void setupHeader(JPanel header_layout){
+    private void setupHeader(JPanel headerLayour){
         // READY TO GET IMPLEMENTED IF NEEDED
     }
     */
@@ -447,7 +444,6 @@ public class Window extends JFrame{
     private void setupModulesOptions(JPanel modulesPanel){
         // As stated in the method's header, we will create a tab for each module. To do so, we will use a JTabbedPane
         JTabbedPane tabbedPane = new JTabbedPane();
-        tabbedPane.setPreferredSize(new Dimension(100, 350));
 
         for(Module module : MODULES){
             // If the module does not have any settings to customize, then it does not need a tab
@@ -466,7 +462,7 @@ public class Window extends JFrame{
             // is true or false (so we need checkboxes to render it)
             ArrayList<ToggleOption> toggleOptions = Option.getToggleOptions(module.getOptions());
             // Yes, there is a warning, because at the moment, all the modules have toggle options, so it is always true
-            if(toggleOptions != null) {
+            if(toggleOptions.size() > 0) {
                 // We will render checkboxes in a grid with a maximum of 2 columns per lines
                 JPanel checkboxesPanel = new JPanel();
                 checkboxesPanel.setLayout(new GridLayout((int) Math.ceil((double)toggleOptions.size() / 2d), 2));
@@ -494,26 +490,42 @@ public class Window extends JFrame{
 
             // We retrieve all the value options of the module in a specific array. A value option is an option that
             // is a value (so we need sliders to render it)
-            ArrayList<ValueOption> value_options = Option.getValueOptions(module.getOptions());
+            ArrayList<Option> valueOptions = Option.getValueOptions(module.getOptions());
             // Yes, there is a warning, because at the moment, all the modules have value options, so it is always true
-            if(value_options != null){
+            if(valueOptions.size() > 0){
                 // We will create a slider grid that contains one slider per line. The first column contains the text
                 // while the second one contains the actual slider
                 JPanel slidersPanel = new JPanel();
-                slidersPanel.setLayout(new GridLayout(value_options.size(), 2));
+                slidersPanel.setLayout(new GridLayout(valueOptions.size(), 2));
 
-                for(ValueOption value_option : value_options){
+                for(Option valueOption : valueOptions){
+                    boolean decimal;
+                    float value;
+                    float min;
+                    float max;
+
+                    if (valueOption instanceof ValueFloatOption) {
+                        decimal = true;
+                        value = ((ValueFloatOption) valueOption).getVal();
+                        min = ((ValueFloatOption) valueOption).getMin();
+                        max = ((ValueFloatOption) valueOption).getMax();
+                    } else {
+                        decimal = false;
+                        value = ((ValueOption) valueOption).getVal();
+                        min = ((ValueOption) valueOption).getMin();
+                        max = ((ValueOption) valueOption).getMax();
+                    }
+
                     // The label contains the value next to the its name
-                    final JLabel label = new JLabel(value_option.getName() + " [" + value_option.getVal() + "]");
+                    final JLabel label = new JLabel(valueOption.getName() + " [" + value + "]");
                     final JSlider slider = new JSlider();
 
-                    // Preferred size
-                    slider.setPreferredSize(new Dimension(WIDTH/2, 10));
-
                     // Slider value settings
-                    slider.setMinimum(value_option.getMin());
-                    slider.setMaximum(value_option.getMax());
-                    slider.setValue(value_option.getVal());
+                    // if decimal, multiply by 100 bc the sliders only support int. Then Divide by 100 to get the
+                    // decimal value.
+                    slider.setMinimum(decimal ? (int) (min * 100.0f) : (int) min);
+                    slider.setMaximum(decimal ? (int) (max * 100.0f) : (int) max);
+                    slider.setValue(decimal ? (int) (value * 100.0f) : (int) value);
 
                     // Max/min size
                     slider.setMaximumSize(new Dimension(100, 10));
@@ -526,10 +538,18 @@ public class Window extends JFrame{
 
                     // What happens when the user uses the slider
                     slider.addChangeListener(e -> {
+                        float newValue;
                         // Change the module's option
-                        value_option.setVal(slider.getValue());
+                        if (decimal) {
+                            newValue = (float) slider.getValue() / 100.0f;
+                            ((ValueFloatOption) valueOption).setVal(newValue);
+                        } else {
+                            newValue = slider.getValue();
+                            ((ValueOption) valueOption).setVal((int) newValue);
+                        }
+
                         // Update the label with the slider's new value
-                        label.setText(value_option.getName() + " [" + value_option.getVal() + "]");
+                        label.setText(valueOption.getName() + " [" + newValue + "]");
                         // Update the GUI
                         repaint();
                     });
@@ -561,15 +581,24 @@ public class Window extends JFrame{
                 tabbedPane.addTab(module.getName(), icon, content);
             } catch (Exception e) {
                 e.printStackTrace();
-                addText(LOG_PREFIX + "Failed to load images/" + module.getSymbol(), Color.RED, true);
+                WARN("Failed to load images/" + module.getSymbol());
                 tabbedPane.addTab(module.getName(), content);
             }
         }
 
         // Now that we have one tab for each module, we want to create a custom tab for settings management
-        JPanel settings_panel = new JPanel();
-        settings_panel.setBorder(new EmptyBorder(10, 10, 10, 10));
-        settings_panel.setLayout(new BorderLayout(0, 15));
+        createSettingsPanel(tabbedPane);
+
+        // We're almost done, we need the friend list now
+        createFriendList(tabbedPane);
+
+        modulesPanel.add(tabbedPane, "Center");
+    }
+
+    private void createSettingsPanel(JTabbedPane tabbedPane){
+        JPanel settingsPanel = new JPanel();
+        settingsPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+        settingsPanel.setLayout(new BorderLayout(0, 15));
 
         // Used to change the key to toggle the GUI
         JButton keybind = new JButton("Change the key to toggle the GUI [" + Window.TOGGLE_KEY_NAME + "]");
@@ -629,30 +658,30 @@ public class Window extends JFrame{
             // Don't forget to show the popup, otherwise it will be hidden
             dialog.setVisible(true);
         });
-        settings_panel.add(keybind, "North");
+        settingsPanel.add(keybind, "North");
 
         // Now that we have the button to change the key to toggle the GUI, we want to add a new panel to manage the
         // settings file
-        JPanel config_panel = new JPanel();
-        config_panel.setLayout(new BorderLayout());
+        JPanel configPanel = new JPanel();
+        configPanel.setLayout(new BorderLayout());
 
         // The label that will show which settings file is currently selected. Note that the bettercolors settings file
         // have the bc_ prefix. So we only want to show the files with the bc_ prefix.
-        final String selected_file_prefix = "Selected config : ";
-        JLabel selected_file = new JLabel(
+        final String selectedFilePrefix = "Selected config : ";
+        JLabel selectedFile = new JLabel(
                 // Remoe the bc_ prefix for a user-friendly interface lol
-                selected_file_prefix + SettingsUtils.SETTINGS_FILENAME.replaceFirst("bc_", "")
+                selectedFilePrefix + SettingsUtils.SETTINGS_FILENAME.replaceFirst("bc_", "")
         );
-        config_panel.add(selected_file, "North");
+        configPanel.add(selectedFile, "North");
 
         // Show all the available settings file in a list
         DefaultListModel<String> filenames = SettingsUtils.getAllSettingsFilenames();
         JList<String> list = new JList<>(filenames);
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         list.setSelectedIndex(filenames.indexOf(SettingsUtils.SETTINGS_FILENAME));
-        config_panel.add(new JScrollPane(list), "Center");
+        configPanel.add(new JScrollPane(list), "Center");
 
-        // Now we want the buttons to load, open and refresh
+        // Now we want the buttons to load, open, refresh and reset (to default)
         JPanel buttons = new JPanel();
         buttons.setLayout(new FlowLayout());
 
@@ -662,46 +691,32 @@ public class Window extends JFrame{
             // Get selected filename and update it in our SettingsUtils class
             SettingsUtils.SETTINGS_FILENAME = list.getSelectedValue();
             // Show that the one selected is now this one
-            selected_file.setText(
-                    selected_file_prefix + SettingsUtils.SETTINGS_FILENAME.replaceFirst("bc_", "")
+            selectedFile.setText(
+                    selectedFilePrefix + SettingsUtils.SETTINGS_FILENAME.replaceFirst("bc_", "")
             );
 
             // Update the selected settings file
             Map<String, String> option = new HashMap<>();
             option.put("settings_file", SettingsUtils.SETTINGS_FILENAME);
-            Filer filer = new Filer(SettingsUtils.FILE_WITH_CURRENT_SETTINGS_USED);
-            filer.write(option, false);
+            PropertiesFiler propertiesFiler = new PropertiesFiler(SettingsUtils.FILE_WITH_CURRENT_SETTINGS_USED);
+            propertiesFiler.write(option, false);
 
             // Load the settings (the code is designed for it to be very simple)
-            Map<String, String> options = SettingsUtils.getOptions();
-            for(Module module : MODULES){
-                module.setOptions(options);
-                module.setActivated(Boolean.parseBoolean(options.get(module.getClass().getSimpleName())));
-            }
-
-            // Update the toggle key and the HUD
-            Window.TOGGLE_KEY = Integer.parseInt(options.get(Window.TOGGLE_KEY_OPTION));
-            Window.TOGGLE_KEY_NAME = "code: " + Window.TOGGLE_KEY;
+            this.loadSettings();
             keybind.setText("Change the key to toggle the GUI [" + Window.TOGGLE_KEY_NAME + "]");
-
-            // Tell the user that we loaded the settings file
-            addText(LOG_PREFIX + "Loaded \"" + SettingsUtils.SETTINGS_FILENAME + "\".", true);
-
-            // Synchronize all the components of the GUI using the arrays that we created for the modules' components
-            synchronizeComponents();
         });
         buttons.add(select_button);
 
         // Open button: opens the directory where are stored the settings in the OS' default explorer
-        JButton open_button = new JButton("Open");
-        open_button.addActionListener(e -> {
+        JButton openButton = new JButton("Open");
+        openButton.addActionListener(e -> {
             try {
                 Desktop.getDesktop().open(Filer.getSettingsDirectory());
             } catch (IOException e1) {
-                addText(LOG_PREFIX + "unable to open the settings directory !", Color.RED, true);
+                ERROR("Unable to open the settings directory !");
             }
         });
-        buttons.add(open_button);
+        buttons.add(openButton);
 
         // Refresh the settings file (if the user added one in the meantime)
         JButton refresh_button = new JButton("Refresh");
@@ -711,15 +726,30 @@ public class Window extends JFrame{
             list.setModel(newList);
             list.setSelectedIndex(SettingsUtils.getAllSettingsFilenames().indexOf(SettingsUtils.SETTINGS_FILENAME));
             if(length_diff == 0){
-                addText(LOG_PREFIX + "No new files found.", true);
+                INFO("[+] No new files found");
             }else if(length_diff == 1){
-                addText(LOG_PREFIX + "Found " + length_diff + " new file.", true);
+                INFO("[+] Found " + length_diff + " new file");
             }else if(length_diff > 1){
-                addText(LOG_PREFIX + "Found " + length_diff + " new files.", true);
+                INFO("[+] Found " + length_diff + " new files");
             }
         });
         buttons.add(refresh_button);
-        config_panel.add(buttons, "South");
+
+        // Reset the current config file to default
+        JButton resetButton = new JButton("Reset");
+        resetButton.addActionListener(e -> {
+            INFO("[~] Resetting " + SettingsUtils.SETTINGS_FILENAME + "...");
+            // get default options
+            ArrayList<ArrayList<Option>> options = BettercolorsEngine.getInstance().getDefaultOptions();
+            // save them (and override what's currently in the config file)
+            SettingsUtils.setOptions(options, false);
+            // load them
+            this.loadSettings();
+            keybind.setText("Change the key to toggle the GUI [" + Window.TOGGLE_KEY_NAME + "]");
+        });
+        buttons.add(resetButton);
+
+        configPanel.add(buttons, "South");
 
         // Add a specific icon to the settings management tab
         try {
@@ -730,15 +760,65 @@ public class Window extends JFrame{
                                     .getResource("images/settings_symbol.png")
                     )
             );
-            tabbedPane.addTab("Settings", icon, settings_panel);
+            tabbedPane.addTab("Settings", icon, settingsPanel);
         } catch (Exception e) {
             e.printStackTrace();
-            addText(LOG_PREFIX + "Failed to load images/settings_symbol.png", Color.RED, true);
-            tabbedPane.addTab("Settings", settings_panel);
+            WARN("Failed to load images/settings_symbol.png");
+            tabbedPane.addTab("Settings", settingsPanel);
         }
 
-        settings_panel.add(config_panel, "Center");
-        modulesPanel.add(tabbedPane, "Center");
+        settingsPanel.add(configPanel, "Center");
+    }
+
+    private void createFriendList(JTabbedPane tabbedPane){
+        JPanel friendListPanel = new JPanel();
+        friendListPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+        friendListPanel.setLayout(new BorderLayout(0, 15));
+
+        // Label, input, button to add a new friend & button to remove selected friend
+        JPanel newFriendPanel = new JPanel(new BorderLayout());
+        JLabel newFriendLabel = new JLabel("New friend: ");
+        JTextField newFriendInput = new JTextField();
+        JPanel buttonsPanel = new JPanel();
+        JButton newFriendButton = new JButton("Add");
+        JButton deleteFriendButton = new JButton("Remove" + (Friends.getFriends().size() > 0 ? " " + Friends.getFriends().get(0) : ""));
+        JButton refreshButton = new JButton("Refresh");
+        newFriendPanel.add(newFriendLabel, "West");
+        newFriendPanel.add(newFriendInput, "Center");
+        newFriendPanel.add(newFriendButton, "East");
+        buttonsPanel.add(refreshButton, "West");
+        buttonsPanel.add(deleteFriendButton, "Center");
+        newFriendPanel.add(buttonsPanel, "South");
+        friendListPanel.add(newFriendPanel, "North");
+
+        // Friend list
+        friendList = new JList(Friends.getFriends().toArray());
+        friendList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        friendList.setSelectedIndex(0);
+        friendListPanel.add(new JScrollPane(friendList), "Center");
+        friendList.addListSelectionListener(e -> deleteFriendButton.setText("Remove " + friendList.getSelectedValue()));
+
+        // Listeners
+        newFriendButton.addActionListener(e -> Friends.addFriend(newFriendInput.getText()));
+        deleteFriendButton.addActionListener(e -> Friends.removeFriend(friendList.getSelectedValue()));
+        // also see Window#updateFriends()
+        refreshButton.addActionListener(e -> Friends.loadFriends());
+
+        // Icon & add it to the tabs
+        try {
+            ImageIcon icon = new ImageIcon(
+                    Objects.requireNonNull(
+                            Thread.currentThread()
+                                    .getContextClassLoader()
+                                    .getResource("images/sprint_symbol.png")
+                    )
+            );
+            tabbedPane.addTab("Friends", icon, friendListPanel);
+        } catch (Exception e) {
+            e.printStackTrace();
+            WARN("Failed to load images/sprint_symbol.png");
+            tabbedPane.addTab("Friends", friendListPanel);
+        }
     }
 
     /**
@@ -799,6 +879,36 @@ public class Window extends JFrame{
     }
 
     /**
+     * Loads the settings file and synchronizes EVERYTHING
+     */
+    private void loadSettings() {
+        Map<String, String> options = SettingsUtils.getOptions();
+        for(Module module : MODULES){
+            module.setOptions(options);
+            module.setActivated(Boolean.parseBoolean(options.get(module.getClass().getSimpleName())));
+        }
+
+        // Update the toggle key and the HUD
+        Window.TOGGLE_KEY = Integer.parseInt(options.get(Window.TOGGLE_KEY_OPTION));
+        Window.TOGGLE_KEY_NAME = "code: " + Window.TOGGLE_KEY;
+        BettercolorsEngine.VERBOSE = Boolean.parseBoolean(options.get(BettercolorsEngine.DEBUG_OPTION));
+
+        // Tell the user that we loaded the settings file
+        INFO( "[+] Loaded \"" + SettingsUtils.SETTINGS_FILENAME + "\"");
+
+        // Synchronize all the components of the GUI using the arrays that we created for the modules' components
+        synchronizeComponents();
+    }
+
+    /**
+     * Updates the friend list (only visually!!!). To get the friend list, use the Friends class.
+     */
+    public void updateFriends() {
+        String[] str = new String[Friends.getFriends().size()];
+        friendList.setListData(Friends.getFriends().toArray(str));
+    }
+
+    /**
      * Writes the message "msg" to the console "tp" with the color "c"
      * @param tp the console text pane
      * @param msg the message to write
@@ -822,10 +932,62 @@ public class Window extends JFrame{
     }
 
     /**
+     * Logs an information message to the console.
+     * No prefix added to the message. Conventions:
+     * - [+] For success
+     * - [~] For something in progress
+     * @param text text to log
+     */
+    public static void INFO(String text) {
+        LOG(LogLevel.INFO, text);
+    }
+
+    /**
+     * Logs a warning message to the console.
+     * [*] prefix will automatically be added. Use Window#LOG to log something without the prefix.
+     * @param text text to log
+     */
+    public static void WARN(String text) {
+        LOG(LogLevel.WARNING, "[*] " + text);
+    }
+
+    /**
+     * Logs an error message to the console.
+     * [!] prefix will automatically be added. Use Window#LOG to log something without the prefix.
+     * @param text text to log
+     */
+    public static void ERROR(String text) {
+        LOG(LogLevel.ERROR, "[!] " + text);
+    }
+
+    public static void LOG(LogLevel logLevel, String text) {
+        Color color;
+
+        switch (logLevel) {
+            case ERROR:
+                color = Color.RED;
+                break;
+            case WARNING:
+                color = Color.ORANGE;
+                break;
+            default:
+                color = Color.WHITE;
+        }
+
+        if (Window.getInstance() == null) {
+            Window.waitingMessages.add(new Message(text, color, true));
+        } else {
+            Window.getInstance().addText(text, color, true);
+        }
+    }
+
+    /**
      * Adds text to the console
      * @param text the text
      * @param new_line if it should create a new line
+     * @deprecated use Window#log instead, this will be private on the stable release (1.0.0)
      */
+    @Deprecated
     public void addText(String text, boolean new_line){
         addText(text, Color.WHITE, new_line);
     }
@@ -835,12 +997,16 @@ public class Window extends JFrame{
      * @param text the text
      * @param color color of the text
      * @param new_line if it should create a new line
+     * @deprecated use Window#log instead, this will be private on the stable release (1.0.0)
      */
+    @Deprecated
     public void addText(String text, Color color, boolean new_line){
+        // TODO: remove on 1.0.0 release
         if(this.console == null) {
             waitingMessages.add(new Message(text, color, new_line));
             return;
         }
+        // ---------------------------------
 
         this.textCounter ++;
         if(this.textCounter > 30) {
@@ -907,12 +1073,22 @@ public class Window extends JFrame{
         }
 
         for(Module module : MODULES){
-            ArrayList<ValueOption> value_options = Option.getValueOptions(module.getOptions());
-            for(ValueOption value_option : value_options){
+            ArrayList<Option> valueOptions = Option.getValueOptions(module.getOptions());
+            for(Option valueOption : valueOptions){
                 for(Map.Entry<JLabel, JSlider> entry : SLIDERS_MODULES.entrySet()){
-                    if(entry.getKey().getText().contains(value_option.getName())){
-                        entry.getKey().setText(value_option.getName() + " [" + value_option.getVal() + "]");
-                        entry.getValue().setValue(value_option.getVal());
+                    boolean decimal;
+                    float val;
+                    if (valueOption instanceof ValueFloatOption) {
+                        decimal = true;
+                        val = ((ValueFloatOption) valueOption).getVal();
+                    } else {
+                        decimal = false;
+                        val = ((ValueOption) valueOption).getVal();
+                    }
+
+                    if(entry.getKey().getText().contains(valueOption.getName())){
+                        entry.getKey().setText(valueOption.getName() + " [" + val + "]");
+                        entry.getValue().setValue(decimal ? (int) (val * 100f) : (int) val);
                         break; // :(
                     }
                 }
@@ -923,21 +1099,21 @@ public class Window extends JFrame{
     }
 
     /**
+     * Shows a dialog window with the given message
+     * @param message message to show
+     */
+    public void dialog(String message) {
+        JOptionPane.showMessageDialog(this, message);
+    }
+
+    /**
      * It hides / reveals the window.
      */
     public void toggle(){
         setVisible(!isVisible());
     }
 
-    class Message{
-        String text;
-        Color color;
-        Boolean newline;
-
-        Message(String text, Color color, Boolean newline){
-            this.text = text;
-            this.color = color;
-            this.newline = newline;
-        }
+    public static Window getInstance() {
+        return instance;
     }
 }

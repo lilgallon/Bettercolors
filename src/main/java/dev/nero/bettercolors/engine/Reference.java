@@ -21,7 +21,7 @@ package dev.nero.bettercolors.engine;
 import dev.nero.bettercolors.engine.version.Version;
 
 public class Reference {
-	public static String ENGINE_VERSION = "0.1";
+	public static String ENGINE_VERSION = "0.3.0";
 	public static BettercolorsEngine.FORGE FORGE_API;
 	public static String MC_VERSION;
 	public static Version MOD_VERSION;

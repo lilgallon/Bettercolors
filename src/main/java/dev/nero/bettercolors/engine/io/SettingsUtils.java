@@ -20,6 +20,7 @@ package dev.nero.bettercolors.engine.io;
 
 import dev.nero.bettercolors.engine.option.Option;
 import dev.nero.bettercolors.engine.option.ToggleOption;
+import dev.nero.bettercolors.engine.option.ValueFloatOption;
 import dev.nero.bettercolors.engine.option.ValueOption;
 
 import javax.swing.*;
@@ -49,11 +50,13 @@ public class SettingsUtils {
                     options.put(option.getCompleteName(), Integer.toString(((ValueOption) option).getVal()));
                 } else if (option instanceof ToggleOption) {
                     options.put(option.getCompleteName(), Boolean.toString(((ToggleOption) option).isActivated()));
+                } else if (option instanceof ValueFloatOption) {
+                    options.put(option.getCompleteName(), Float.toString(((ValueFloatOption) option).getVal()));
                 }
             }
         }
 
-        Filer settings = new Filer(SETTINGS_FILENAME);
+        PropertiesFiler settings = new PropertiesFiler(SETTINGS_FILENAME);
         settings.write(options, only_absents);
     }
 
@@ -61,7 +64,7 @@ public class SettingsUtils {
      * @return all the options in the configuration file.
      */
     public static Map<String, String> getOptions(){
-        Filer settings = new Filer(SETTINGS_FILENAME);
+        PropertiesFiler settings = new PropertiesFiler(SETTINGS_FILENAME);
         return settings.readAll();
     }
 
@@ -70,7 +73,7 @@ public class SettingsUtils {
      * @return the value of the option.
      */
     public static String getOption(String name){
-        Filer settings = new Filer(SETTINGS_FILENAME);
+        PropertiesFiler settings = new PropertiesFiler(SETTINGS_FILENAME);
         return settings.read(name);
     }
 
@@ -83,7 +86,7 @@ public class SettingsUtils {
         Map<String, String> options = new HashMap<>();
         options.put(option, value);
 
-        Filer settings = new Filer(SETTINGS_FILENAME);
+        PropertiesFiler settings = new PropertiesFiler(SETTINGS_FILENAME);
         settings.write(options, false);
     }
 

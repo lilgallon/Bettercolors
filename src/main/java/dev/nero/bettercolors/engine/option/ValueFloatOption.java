@@ -1,34 +1,18 @@
-/*
- * Copyright 2018-2020
- * - Bettercolors Contributors (https://github.com/N3ROO/Bettercolors) and
- * - Bettercolors Engine Contributors (https://github.com/N3ROO/BettercolorsEngine)
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package dev.nero.bettercolors.engine.option;
 
 import dev.nero.bettercolors.engine.io.SettingsUtils;
 
-public class ValueOption extends Option {
+public class ValueFloatOption extends Option{
 
-    private final int MIN;
-    private final int MAX;
-    private final int MINOR_TICK_SPC;
-    private final int MAJOR_TICK_SPC;
-    private int val;
+    private final float MIN;
+    private final float MAX;
+    private final float MINOR_TICK_SPC;
+    private final float MAJOR_TICK_SPC;
+    private float val;
 
     /**
+     * /!\ SUPPORTS 2 DECIMAL POINTS /!\
+     *
      * @param prefix prefix of the option (module name for example) -> used to prevent conflict if some modules have
      *               the same option name.
      * @param name the name.
@@ -38,7 +22,11 @@ public class ValueOption extends Option {
      * @param minor_tick_spc the minor tick spacing (for the slider).
      * @param major_tick_spc the major tick spacing (for the slider).
      */
-    public ValueOption(String prefix, String name, int val, int min, int max, int minor_tick_spc, int major_tick_spc) {
+    public ValueFloatOption(
+            String prefix, String name,
+            float val, float min, float max,
+            float minor_tick_spc, float major_tick_spc) {
+
         super(prefix, name);
         this.val = val;
         MIN = min;
@@ -47,17 +35,17 @@ public class ValueOption extends Option {
         MAJOR_TICK_SPC = major_tick_spc;
     }
 
-    public int getMin() { return MIN; }
-    public int getMax() { return MAX; }
-    public int getVal() { return val; }
-    public int getMajorTickSpacing(){ return MAJOR_TICK_SPC; }
-    public int getMinorTickSpacing(){ return MINOR_TICK_SPC; }
+    public float getMin() { return MIN; }
+    public float getMax() { return MAX; }
+    public float getVal() { return val; }
+    public float getMajorTickSpacing(){ return MAJOR_TICK_SPC; }
+    public float getMinorTickSpacing(){ return MINOR_TICK_SPC; }
 
     /**
      * It changes the current value of the option. This method test if the value is correct before updating it.
      * @param val the new value.
      */
-    public void setVal(int val){
+    public void setVal(float val){
         if(val > MAX) {
             throw new IllegalArgumentException("The value " + val + " is bigger than its max : " + MAX);
         }else if(val < MIN){
@@ -73,12 +61,12 @@ public class ValueOption extends Option {
      */
     @Override
     void saveOption() {
-        SettingsUtils.setOption(PREFIX + "_" + NAME, Integer.toString(val));
+        SettingsUtils.setOption(PREFIX + "_" + NAME, Float.toString(val));
     }
 
     @Override
     public Object clone() {
-        return new ValueOption(
+        return new ValueFloatOption(
                 this.PREFIX, this.NAME,
                 this.getVal(), this.getMin(), this.getMax(),
                 this.getMinorTickSpacing(), this.getMajorTickSpacing()

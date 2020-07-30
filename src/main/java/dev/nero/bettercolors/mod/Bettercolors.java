@@ -18,6 +18,7 @@ package dev.nero.bettercolors.mod;
 
 import dev.nero.bettercolors.engine.BettercolorsEngine;
 import dev.nero.bettercolors.engine.module.*;
+import dev.nero.bettercolors.engine.view.Window;
 import dev.nero.bettercolors.mod.hijacks.PlayerControllerMPHijack;
 import dev.nero.bettercolors.mod.modules.*;
 import net.minecraft.client.Minecraft;
@@ -97,12 +98,14 @@ public class Bettercolors {
         }
     }
 
-	@SubscribeEvent
-    public void onKeyEvent(InputEvent.KeyInputEvent event) {
+    @SubscribeEvent
+    public void onClientTick(TickEvent.ClientTickEvent event) {
         // We only care about those keys
         engine.keyEvent(Window.TOGGLE_KEY, Keyboard.isKeyDown(Window.TOGGLE_KEY));
         engine.keyEvent(Keyboard.KEY_HOME, Keyboard.isKeyDown(Keyboard.KEY_HOME));
         engine.keyEvent(Keyboard.KEY_PRIOR, Keyboard.isKeyDown(Keyboard.KEY_PRIOR));
+
+        // We use ClientTickEvent because KeyInputEvent only works in-game
 
         // We can't use the following code because it will mess with Minecraft's key events handling
         // while (Keyboard.next()) {

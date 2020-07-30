@@ -2,6 +2,8 @@ package dev.nero.bettercolors.mod.modules;
 
 import dev.nero.bettercolors.engine.module.Module;
 import dev.nero.bettercolors.engine.option.Option;
+import dev.nero.bettercolors.engine.option.ToggleOption;
+import dev.nero.bettercolors.engine.option.ValueFloatOption;
 import dev.nero.bettercolors.engine.option.ValueOption;
 
 import java.util.ArrayList;
@@ -23,27 +25,45 @@ public class Reach extends Module {
         DEFAULT_OPTIONS = new ArrayList<>();
 
         // 10 = 1 block, so 5 means 0.5 block
-        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, REACH_OPTION_LABEL, 5, 0, 20, 0, 1));
+        DEFAULT_OPTIONS.add(
+                new ValueFloatOption(PREFIX, REACH_OPTION_LABEL, 0.5f, 0.01f, 1.5f, 0.01f, 0.5f)
+        );
     }
 
     /**
      * @param toggleKey   the toggle Key (-1 -> none).
      * @param isActivated the initial state.
-     * @param options the options for the mod
+     * @param givenOptions the options for the mod
      */
-    public Reach(Integer toggleKey, Boolean isActivated, Map<String, String> options) {
-        super("Reach", toggleKey, isActivated, "click_symbol.png", "[" + PREFIX + "]");
+    public Reach(Integer toggleKey, Boolean isActivated, Map<String, String> givenOptions) {
+        super("Reach", toggleKey, isActivated, "sword_symbol.png", "[" + PREFIX + "]");
 
-        this.options = DEFAULT_OPTIONS;
+        this.options = new ArrayList<>();
 
-        ((ValueOption)
-            this.options.get(I_REACH_INCREMENT))
-            .setVal(Integer.parseInt(options.get(this.options.get(I_REACH_INCREMENT).getCompleteName()))
-        );
+        for (Option defaultOption : DEFAULT_OPTIONS) {
+            Option option = (Option) defaultOption.clone();
+            String name = defaultOption.getCompleteName();
+
+            if (option instanceof ToggleOption) {
+                ((ToggleOption) option).setActivated(
+                        Boolean.parseBoolean(givenOptions.get(name))
+                );
+            } else if (option instanceof ValueOption) {
+                ((ValueOption) option).setVal(
+                        Integer.parseInt(givenOptions.get(name))
+                );
+            } else if (option instanceof ValueFloatOption) {
+                ((ValueFloatOption) option).setVal(
+                        Float.parseFloat(givenOptions.get(name))
+                );
+            }
+
+            this.options.add(option);
+        }
     }
 
     public float getReachIncrement() {
-        return ((ValueOption) this.options.get(I_REACH_INCREMENT)).getVal() / 10.0f;
+        return ((ValueFloatOption) this.options.get(I_REACH_INCREMENT)).getVal();
     }
 
     public static ArrayList<Option> getDefaultOptions(){

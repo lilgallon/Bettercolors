@@ -66,4 +66,9 @@ public class ToggleOption extends Option {
     void saveOption(){
         SettingsUtils.setOption(PREFIX + "_" + NAME, Boolean.toString(activated));
     }
+
+    @Override
+    public Object clone() {
+        return new ToggleOption(this.PREFIX, this.NAME, this.activated);
+    }
 }

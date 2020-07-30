@@ -31,8 +31,6 @@ import net.minecraft.inventory.container.PlayerContainer;
 public class Wrapper {
 
     public final static Minecraft MC = Minecraft.getInstance();
-    public final static ClientPlayerEntity thePlayer = Minecraft.getInstance().player;
-    public final static ClientWorld theWorld = Minecraft.getInstance().world;
 
     public final static Class<PlayerEntity> playerEntityClass = PlayerEntity.class;
 
@@ -55,10 +53,10 @@ public class Wrapper {
      * @return true if the user is in a Gui (he can't move).
      */
     public static boolean isInGui(){
-        if(Wrapper.thePlayer == null) return true;
-        return (Wrapper.thePlayer.isSleeping() ||
-                Wrapper.thePlayer.isShowDeathScreen() ||
-                !(Wrapper.thePlayer.openContainer instanceof PlayerContainer) ||
+        if(Wrapper.MC.player == null) return true;
+        return (Wrapper.MC.player.isSleeping() ||
+                Wrapper.MC.player.isShowDeathScreen() ||
+                !(Wrapper.MC.player.openContainer instanceof PlayerContainer) ||
                 !MC.isGameFocused());
     }
 
@@ -75,7 +73,7 @@ public class Wrapper {
         try {
             // Check friends / teammate
             target_tag = Wrapper.exportTag(Wrapper.playerEntityClass.cast(entity.getClass()));
-            if (Wrapper.exportTag(Wrapper.thePlayer).equalsIgnoreCase(target_tag)) {
+            if (Wrapper.exportTag(Wrapper.MC.player).equalsIgnoreCase(target_tag)) {
                 same_team = true;
             }
 

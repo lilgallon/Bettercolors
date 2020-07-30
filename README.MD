@@ -20,11 +20,7 @@
 
 A silent "hack" built within the forge API. It bypasses powerful anticheats (forge mods and servers) to help you improve your gameplay.
 
-<p align="center">
-    <img alt="screenshot" src=".github/screenshot_default.png" />
-    <img alt="resizing" src=".github/window_resize.gif" />
-</p>
-
+![illustration](.github/illustration.gif)
 
 💥 **LAST UPDATE**: [Reach](https://github.com/N3ROO/Bettercolors/wiki/2.-Features), and a lot of [new things]((https://github.com/N3ROO/Bettercolors/wiki/4.-Updates-&-Support-roadmap))! 💥
 

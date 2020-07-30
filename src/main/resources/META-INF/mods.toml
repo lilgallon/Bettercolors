@@ -19,7 +19,7 @@ issueTrackerURL="https://github.com/N3ROO/Bettercolors/issues?q=is%3Aissue" #opt
 displayURL="https://github.com/N3ROO/Bettercolors/" #optional
 
 # A file name (in the root of the mod JAR) containing a logo for display
-logoFile="header.png" #optional
+logoFile="bettercolors.png" #optional
 
 # A text field displayed in the mod UI
 #credits="Thanks for this example mod goes to Java" #optional
@@ -41,7 +41,9 @@ displayName="Bettercolors" #mandatory
 
 # The description text for the mod (multi line!) (#mandatory)
 description='''
-Adjusts game's colors.
+
+Adjusts game's colors
+
 '''
 
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.

@@ -478,15 +478,6 @@ public class BettercolorsEngine {
                     if (defaultOptions.size() != 0) {
                         // System.out.println("Got default options for " + moduleClass.getSimpleName());
                         options.add(defaultOptions);
-                    } else {
-                        Window.WARN("Could not get default options for " + moduleClass.getSimpleName());
-
-                        if (VERBOSE)
-                            System.out.println(
-                                    "If you are the developer you should implement a static method called "
-                                            + "getDefaultOptions which returns an ArrayList<Option>. Return an empty one"
-                                            + "if the module hasn't any option"
-                            );
                     }
                 } catch (IllegalAccessException e) {
                     Window.ERROR(
@@ -504,6 +495,13 @@ public class BettercolorsEngine {
                         "Could not find the method getDefaultOptions associated to class " +
                                 moduleClass.getSimpleName()
                 );
+
+                if (VERBOSE)
+                    System.out.println(
+                            "If you are the developer you should implement a static method called "
+                                    + "getDefaultOptions which returns an ArrayList<Option>. Return an empty one"
+                                    + "if the module hasn't any option"
+                    );
             }
 
             // We also need to add the option that says if the module is activated or not by default

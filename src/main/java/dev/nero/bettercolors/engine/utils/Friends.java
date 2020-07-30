@@ -57,7 +57,13 @@ public class Friends {
      */
     public static void loadFriends() {
         RawFiler friendsFiler = new RawFiler("friends");
-        Friends.friends = friendsFiler.readAll();
+
+        ArrayList<String> readFriends = friendsFiler.readAll();
+        if (readFriends == null) {
+            friendsFiler.write("", false);
+        } else {
+            Friends.friends = readFriends;
+        }
 
         if (Window.getInstance() != null) {
             Window.getInstance().updateFriends();

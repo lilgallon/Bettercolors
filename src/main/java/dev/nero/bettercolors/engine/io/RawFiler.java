@@ -1,5 +1,7 @@
 package dev.nero.bettercolors.engine.io;
 
+import dev.nero.bettercolors.engine.BettercolorsEngine;
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -68,8 +70,10 @@ public class RawFiler extends Filer {
         try {
             return new ArrayList<>(Files.readAllLines(Paths.get(getCompeletePath()), StandardCharsets.UTF_8));
         } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("Failed to read file " + getCompeletePath());
+            if (BettercolorsEngine.VERBOSE) {
+                e.printStackTrace();
+                System.out.println("Failed to read file " + getCompeletePath());
+            }
             return null;
         }
     }

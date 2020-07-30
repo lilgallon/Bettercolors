@@ -78,6 +78,7 @@ public abstract class Module {
      */
     public void toggle(){
         isActivated = !isActivated;
+        this.onToggle(isActivated);
 
         if (!isActivated) {
             // Reset Key handler

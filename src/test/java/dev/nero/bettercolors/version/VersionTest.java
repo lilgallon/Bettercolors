@@ -79,7 +79,7 @@ public class VersionTest {
             Version latest = Version.getLatestVersion("1.15.2");
             Assertions.assertEquals(
                     latest,
-                    new Version("1.15.2", 6, 1, 1, 0, "ignored")
+                    new Version("1.15.2", 6, 1, 2, 0, "ignored")
             );
         } catch (VersionException e) {
             e.printStackTrace();

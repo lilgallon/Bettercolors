@@ -2,6 +2,9 @@ package dev.nero.bettercolors.mod.hijacks;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
+import dev.nero.bettercolors.engine.BettercolorsEngine;
+import dev.nero.bettercolors.engine.module.Module;
+import dev.nero.bettercolors.mod.modules.Reach;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.resources.IResourceManager;
@@ -32,8 +35,25 @@ public class EntityRendererHijack extends EntityRenderer {
         this.mc = mcIn;
     }
 
+    private float getBlockReachDistance() {
+        float increment = 0.0f;
+        Module reach = BettercolorsEngine.getInstance().getModule("Reach");
+
+        if (reach.isActivated()) {
+            increment = ((Reach) reach).getReachIncrement();
+        }
+
+        // That's basically the code from playerController
+        float defaultReach = this.mc.playerController.getCurrentGameType().isCreative() ? 5.0F : 4.5F;
+        // end
+
+        return defaultReach + increment;
+    }
+
     @Override
     public void getMouseOver(float partialTicks) {
+        // Code copied from EntityRenderer#getMouseOver
+
         Entity entity = this.mc.getRenderViewEntity();
 
         if (entity != null)
@@ -42,7 +62,7 @@ public class EntityRendererHijack extends EntityRenderer {
             {
                 this.mc.mcProfiler.startSection("pick");
                 this.mc.pointedEntity = null;
-                double d0 = (double)this.mc.playerController.getBlockReachDistance();
+                double d0 = (double) this.getBlockReachDistance();
                 this.mc.objectMouseOver = entity.rayTrace(d0, partialTicks);
                 double d1 = d0;
                 Vec3 vec3 = entity.getPositionEyes(partialTicks);

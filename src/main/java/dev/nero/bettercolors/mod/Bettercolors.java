@@ -20,7 +20,6 @@ import dev.nero.bettercolors.engine.BettercolorsEngine;
 import dev.nero.bettercolors.engine.module.*;
 import dev.nero.bettercolors.engine.view.Window;
 import dev.nero.bettercolors.mod.hijacks.EntityRendererHijack;
-import dev.nero.bettercolors.mod.hijacks.PlayerControllerMPHijack;
 import dev.nero.bettercolors.mod.modules.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
@@ -80,7 +79,7 @@ public class Bettercolors {
                 Minecraft.getMinecraft()
         );
 
-        engine.getWindow().addText("Bettercolors " + Reference.MOD_VERSION + " loaded", true);
+        Window.INFO("[+] Bettercolors " + Reference.MOD_VERSION + " loaded");
 
         // Everything is done. Now, the rest of the code will be run once that one of the above event is ran by forge
         // itself.
@@ -89,8 +88,7 @@ public class Bettercolors {
 	@SubscribeEvent
     public void worldLoadEvent(WorldEvent.Load event) {
         if (event.world instanceof WorldClient) {
-            if (!(BettercolorsEngine.MC.playerController instanceof PlayerControllerMPHijack)) {
-                BettercolorsEngine.MC.playerController = PlayerControllerMPHijack.hijack(BettercolorsEngine.MC.playerController);
+            if (!(BettercolorsEngine.MC.entityRenderer instanceof EntityRendererHijack)) {
                 BettercolorsEngine.MC.entityRenderer = EntityRendererHijack.hijack(BettercolorsEngine.MC.entityRenderer);
             }
         }

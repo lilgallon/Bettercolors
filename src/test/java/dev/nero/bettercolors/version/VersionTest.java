@@ -1,5 +1,6 @@
 package dev.nero.bettercolors.version;
 
+import dev.nero.bettercolors.engine.version.Version;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
 

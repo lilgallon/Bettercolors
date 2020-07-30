@@ -5,6 +5,7 @@ import dev.nero.bettercolors.engine.option.Option;
 import dev.nero.bettercolors.engine.option.ToggleOption;
 import dev.nero.bettercolors.engine.option.ValueFloatOption;
 import dev.nero.bettercolors.engine.option.ValueOption;
+import dev.nero.bettercolors.engine.utils.Friends;
 import dev.nero.bettercolors.engine.utils.MathUtils;
 import dev.nero.bettercolors.engine.utils.TimeHelper;
 import com.google.common.collect.Lists;
@@ -247,7 +248,7 @@ public class AimAssistance extends Module {
 
         boolean team_filter = ((ToggleOption) this.options.get(I_TEAM_FILTER)).isActivated();
         for(EntityLivingBase entity : attackableEntities){
-            if(team_filter && Wrapper.isInSameTeam(entity)) continue;
+            if((team_filter && Wrapper.isInSameTeam(entity)) || Friends.isFriend(entity.getName())) continue;
 
             // Calculate fov
             float[] yawPitch = getYawPitchBetween(entity, MC.thePlayer);

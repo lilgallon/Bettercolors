@@ -21,6 +21,7 @@ import dev.nero.bettercolors.engine.option.Option;
 import dev.nero.bettercolors.engine.option.ToggleOption;
 import dev.nero.bettercolors.engine.option.ValueFloatOption;
 import dev.nero.bettercolors.engine.option.ValueOption;
+import dev.nero.bettercolors.engine.utils.Friends;
 import dev.nero.bettercolors.engine.utils.MathUtils;
 import dev.nero.bettercolors.engine.utils.TimeHelper;
 import dev.nero.bettercolors.engine.view.Window;
@@ -201,7 +202,7 @@ public class ClickAssistance extends Module {
             // aiming at an entity that is close enough
             if( (onlyOnEntity || packets) && target != null){
                 boolean reachable = MC.thePlayer.getDistanceToEntity(target) <= MC.playerController.getBlockReachDistance();
-                if (reachable && (teamFilter && !Wrapper.isInSameTeam(target))) {
+                if (reachable && (teamFilter && !Wrapper.isInSameTeam(target)) && !Friends.isFriend(target.getName())) {
                     if (packets) {
                         // We basically do what the minecraft client does when attacking an entity
                         MC.thePlayer.sendQueue.addToSendQueue(new C02PacketUseEntity(target, C02PacketUseEntity.Action.ATTACK));

@@ -25,20 +25,20 @@ public class PlayerControllerMPHijack extends PlayerControllerMP{
         NetHandlerPlayClient net = ReflectionHelper.getPrivateValue(
                 PlayerControllerMP.class,
                 playerControllerMP,
-                "netClientHandler"
+                "netClientHandler", "field_78774_b"
         );
         PlayerControllerMPHijack hijackedController = new PlayerControllerMPHijack(BettercolorsEngine.MC, net);
 
         // The GameType class has an access to the PlayerController class. So we need to update it with the hijacked one
         // Get the private value
         WorldSettings.GameType gameType = ReflectionHelper.getPrivateValue(PlayerControllerMP.class, playerControllerMP,
-                "currentGameType");
+                "currentGameType", "field_78779_k");
         // Update the private value
         ReflectionHelper.setPrivateValue(
                 PlayerControllerMP.class,
                 hijackedController,
                 gameType,
-                "currentGameType");
+                "currentGameType", "field_78779_k");
 
         return hijackedController;
     }

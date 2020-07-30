@@ -40,11 +40,8 @@ public class Bettercolors {
      * "constructor"
      */
     public Bettercolors(){
-        // Forge event registering. We're saying that we have 2 functions that need to be called when a specific event
-        // occurs. Each one of those functions are forge events. But we need to use an annotation (@SubscribeEvent) to
-        // say that this function will be used by forge.
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::keyInputEvent);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::renderTickEvent);
+        // We use the annotation @SubscribeEvent. So we just need to register this class, and forge will look at all the
+        // functions with that annotation, and will register those functions automatically
         MinecraftForge.EVENT_BUS.register(this);
 
         System.setProperty("java.awt.headless", "false");

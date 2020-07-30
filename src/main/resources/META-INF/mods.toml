@@ -12,6 +12,8 @@ loaderVersion="[13,)" #mandatory
 # A URL to query for updates for this mod. See the JSON update specification <here>
 #updateJSONURL="" #optional
 
+license="Apache-2.0 License"
+
 # A URL to refer people to when problems occur with this mod
 issueTrackerURL="https://github.com/N3ROO/Bettercolors/issues?q=is%3Aissue" #optional
 
@@ -40,11 +42,7 @@ version="7.0.0" #mandatory
 displayName="Bettercolors" #mandatory
 
 # The description text for the mod (multi line!) (#mandatory)
-description='''
-
-Adjusts game's colors
-
-'''
+description="Adjusts game's colors"
 
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
 [[dependencies.bettercolors]]

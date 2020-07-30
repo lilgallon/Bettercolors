@@ -10,7 +10,7 @@ buildscript {
 }
 apply plugin: 'net.minecraftforge.gradle'
 
-version = "6.1.2"
+version = "7.0.0-MC1.16.1"
 group= "dev.nero.bettercolors.main" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "bettercolors"
 

@@ -23,6 +23,7 @@ import dev.nero.bettercolors.engine.option.ValueFloatOption;
 import dev.nero.bettercolors.engine.option.ValueOption;
 import dev.nero.bettercolors.engine.utils.MathUtils;
 import dev.nero.bettercolors.engine.utils.TimeHelper;
+import dev.nero.bettercolors.engine.view.Window;
 import dev.nero.bettercolors.mod.wrapper.Wrapper;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.play.client.C02PacketUseEntity;
@@ -166,6 +167,16 @@ public class ClickAssistance extends Module {
                     }
                 }
             }
+        }
+    }
+
+    @Override
+    protected void onToggle(boolean toggle) {
+        if (toggle) {
+            Window.getInstance().dialog(
+                    "Don't abuse of the click assistance. It can get you banned with high values. Keep the values low" +
+                            "and you will be safe."
+            );
         }
     }
 

@@ -19,6 +19,7 @@ package dev.nero.bettercolors.mod;
 import dev.nero.bettercolors.engine.BettercolorsEngine;
 import dev.nero.bettercolors.engine.module.*;
 import dev.nero.bettercolors.engine.view.Window;
+import dev.nero.bettercolors.mod.hijacks.EntityRendererHijack;
 import dev.nero.bettercolors.mod.hijacks.PlayerControllerMPHijack;
 import dev.nero.bettercolors.mod.modules.*;
 import net.minecraft.client.Minecraft;
@@ -30,7 +31,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.lwjgl.input.Keyboard;
 
@@ -51,9 +51,6 @@ public class Bettercolors {
     @EventHandler
 	public void Init(FMLInitializationEvent event)
 	{
-        // TODO: TO REMOVE BEFORE PRODUCTION
-        engine.VERBOSE = true;
-
         // Forge event registering. We will use annotations to tell forge that we have some functions that need to be
         // called in specific contexts. This code says that forge has to look into this class to find these functions.
 		MinecraftForge.EVENT_BUS.register(this);
@@ -94,6 +91,7 @@ public class Bettercolors {
         if (event.world instanceof WorldClient) {
             if (!(BettercolorsEngine.MC.playerController instanceof PlayerControllerMPHijack)) {
                 BettercolorsEngine.MC.playerController = PlayerControllerMPHijack.hijack(BettercolorsEngine.MC.playerController);
+                BettercolorsEngine.MC.entityRenderer = EntityRendererHijack.hijack(BettercolorsEngine.MC.entityRenderer);
             }
         }
     }

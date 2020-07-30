@@ -8,10 +8,7 @@ import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.world.WorldSettings;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-@SideOnly(Side.CLIENT)
 public class PlayerControllerMPHijack extends PlayerControllerMP{
 
     /**
@@ -28,19 +25,20 @@ public class PlayerControllerMPHijack extends PlayerControllerMP{
         NetHandlerPlayClient net = ReflectionHelper.getPrivateValue(
                 PlayerControllerMP.class,
                 playerControllerMP,
-                "netClientHandler", "field_78774_b"
+                "netClientHandler"
         );
-
         PlayerControllerMPHijack hijackedController = new PlayerControllerMPHijack(BettercolorsEngine.MC, net);
 
+        // The GameType class has an access to the PlayerController class. So we need to update it with the hijacked one
+        // Get the private value
         WorldSettings.GameType gameType = ReflectionHelper.getPrivateValue(PlayerControllerMP.class, playerControllerMP,
-                "currentGameType", "field_78779_k");
-
+                "currentGameType");
+        // Update the private value
         ReflectionHelper.setPrivateValue(
                 PlayerControllerMP.class,
                 hijackedController,
                 gameType,
-                "currentGameType", "field_78779_k");
+                "currentGameType");
 
         return hijackedController;
     }

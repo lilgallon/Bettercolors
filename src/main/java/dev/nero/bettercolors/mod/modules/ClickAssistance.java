@@ -14,13 +14,15 @@
  * limitations under the License.
  */
 
-package dev.nero.bettercolors.modules;
+package dev.nero.bettercolors.mod.modules;
 
-import dev.nero.bettercolors.modules.options.Option;
-import dev.nero.bettercolors.modules.options.ToggleOption;
-import dev.nero.bettercolors.modules.options.ValueOption;
-import dev.nero.bettercolors.utils.MathUtils;
-import dev.nero.bettercolors.utils.TimeHelper;
+import dev.nero.bettercolors.engine.module.Module;
+import dev.nero.bettercolors.engine.option.Option;
+import dev.nero.bettercolors.engine.option.ToggleOption;
+import dev.nero.bettercolors.engine.option.ValueOption;
+import dev.nero.bettercolors.engine.utils.MathUtils;
+import dev.nero.bettercolors.engine.utils.TimeHelper;
+import dev.nero.bettercolors.mod.wrapper.Wrapper;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.Hand;
 
@@ -80,7 +82,7 @@ public class ClickAssistance extends Module {
      * @param is_activated the initial state
      * @param options the options for the mod
      */
-    public ClickAssistance(int toggle_key, boolean is_activated, Map<String, String> options) {
+    public ClickAssistance(Integer toggle_key, Boolean is_activated, Map<String, String> options) {
 
         super("Click assistance", toggle_key, is_activated, "click_symbol.png", "[CA]");
 
@@ -134,7 +136,7 @@ public class ClickAssistance extends Module {
 
     @Override
     public void onUpdate() {
-        if(MC.player != null){
+        if(Wrapper.thePlayer != null){
             if(activationTimer.isStopped()) {
                 // If the click assist is not activated, we check if the user made the actions to activate it
                 if (isKeyState(Key.ATTACK, KeyState.JUST_PRESSED) && postActivationTimer.isStopped()) {
@@ -153,7 +155,7 @@ public class ClickAssistance extends Module {
                     postActivationTimer.stop();
                     activationTimer.start();
                     clickTimer.start();
-                    log_info("Click assistance started.");
+                    logInfo("Click assistance started.");
                 }else if (postActivationTimer.isDelayComplete(post_activation_duration)
                         && postActivationClickCounter < post_activation_clicks) {
                     // The user did not click enough times in the given time, so the click assistance turns off
@@ -163,10 +165,10 @@ public class ClickAssistance extends Module {
 
             boolean timerDone = activationTimer.isDelayComplete(((ValueOption) this.options.get(I_DURATION)).getVal());
 
-            if(!activationTimer.isStopped() && (timerDone || isInGui())){
+            if(!activationTimer.isStopped() && (timerDone || Wrapper.isInGui())){
                 activationTimer.stop();
                 clickTimer.stop();
-                log_info("Click assistance stopped.");
+                logInfo("Click assistance stopped.");
             }
 
             if(!activationTimer.isStopped()){
@@ -193,7 +195,7 @@ public class ClickAssistance extends Module {
 
         Entity target = null;
         try{
-            target = MC.pointedEntity;
+            target = Wrapper.MC.pointedEntity;
         }catch (Exception ignored){}
 
         int rand = MathUtils.random(0, 100);
@@ -201,12 +203,12 @@ public class ClickAssistance extends Module {
             // If we care about being aiming at an entity, or if we use packets, we must make sure that the user is
             // aiming at an entity that is close enough
             if( (onlyOnEntity || packets) && target != null){
-                boolean reachable = MC.player.getDistance(target) <= MC.playerController.getBlockReachDistance();
-                if (reachable && (teamFilter && !isInSameTeam(target))) {
+                boolean reachable = Wrapper.thePlayer.getDistance(target) <= Wrapper.MC.playerController.getBlockReachDistance();
+                if (reachable && (teamFilter && !Wrapper.isInSameTeam(target))) {
                     if (packets) {
                         // We basically do what the minecraft client does when attacking an entity
-                        MC.playerController.attackEntity(MC.player, target);
-                        MC.player.swingArm(Hand.MAIN_HAND);
+                        Wrapper.MC.playerController.attackEntity(Wrapper.thePlayer, target);
+                        Wrapper.thePlayer.swingArm(Hand.MAIN_HAND);
                     } else {
                         click();
                     }
@@ -228,7 +230,7 @@ public class ClickAssistance extends Module {
             bot.mousePress(16);
             bot.mouseRelease(16);
         } catch (AWTException e) {
-            log_error("Tried to click the mouse but a problem happened");
+            logError("Tried to click the mouse but a problem happened");
         }
     }
 }

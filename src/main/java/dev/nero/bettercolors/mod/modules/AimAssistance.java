@@ -1,17 +1,18 @@
-package dev.nero.bettercolors.modules;
+package dev.nero.bettercolors.mod.modules;
 
-import dev.nero.bettercolors.modules.options.Option;
-import dev.nero.bettercolors.modules.options.ToggleOption;
-import dev.nero.bettercolors.modules.options.ValueOption;
-import dev.nero.bettercolors.utils.MathUtils;
-import dev.nero.bettercolors.utils.TimeHelper;
+import dev.nero.bettercolors.engine.module.Module;
+import dev.nero.bettercolors.engine.option.Option;
+import dev.nero.bettercolors.engine.option.ToggleOption;
+import dev.nero.bettercolors.engine.option.ValueOption;
+import dev.nero.bettercolors.engine.utils.MathUtils;
+import dev.nero.bettercolors.engine.utils.TimeHelper;
 import com.google.common.collect.Lists;
+import dev.nero.bettercolors.mod.wrapper.Wrapper;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 
 import java.util.ArrayList;
@@ -88,7 +89,7 @@ public class AimAssistance extends Module {
      * @param is_activated the initial state
      * @param options the options for the mod
      */
-    public AimAssistance(int toggle_key, boolean is_activated, Map<String, String> options) {
+    public AimAssistance(Integer toggle_key, Boolean is_activated, Map<String, String> options) {
 
         super("Aim assistance", toggle_key, is_activated, "aim_symbol.png", "[AA]");
 
@@ -166,7 +167,7 @@ public class AimAssistance extends Module {
 
     @Override
     public void onUpdate() {
-        if(MC.player != null){
+        if(Wrapper.thePlayer != null){
             if(activationTimer.isStopped()) {
                 // If the aim assist is not activated, we check if the user made the actions to activate it
                 if (isKeyState(Key.ATTACK, KeyState.JUST_PRESSED) && !postActivationTimer.isStopped()) {
@@ -186,7 +187,7 @@ public class AimAssistance extends Module {
                     postActivationTimer.stop();
                     activationTimer.start();
                     refreshRateTimer.start();
-                    log_info("Aim assistance started.");
+                    logInfo("Aim assistance started.");
                 } else if(postActivationTimer.isDelayComplete(postActivationDuration)
                             && postActivationClickCounter < postActivationClicks) {
                     // The user did not click enough times in the given time, so the aim assistance turns on
@@ -198,10 +199,10 @@ public class AimAssistance extends Module {
             boolean stopOnRightClick = ((ToggleOption) this.options.get(I_STOP_ON_RIGHT_CLICK)).isActivated();
             boolean timerDone = activationTimer.isDelayComplete(((ValueOption) this.options.get(I_DURATION)).getVal());
 
-            if(!activationTimer.isStopped() && (rightClick && stopOnRightClick) || timerDone || isInGui()){
+            if(!activationTimer.isStopped() && (rightClick && stopOnRightClick) || timerDone || Wrapper.isInGui()){
                 activationTimer.stop();
                 refreshRateTimer.stop();
-                log_info("Aim assistance stopped.");
+                logInfo("Aim assistance stopped.");
             }
 
             // If the AimAssistance is turned on, then, help the user to aim
@@ -240,9 +241,9 @@ public class AimAssistance extends Module {
 
         int range = ((ValueOption) this.options.get(I_RANGE)).getVal();
 
-        int playerX = (int) MC.player.getPosX();
-        int playerY = (int) MC.player.getPosY();
-        int playerZ = (int) MC.player.getPosZ();
+        int playerX = (int) Wrapper.thePlayer.getPosX();
+        int playerY = (int) Wrapper.thePlayer.getPosY();
+        int playerZ = (int) Wrapper.thePlayer.getPosZ();
         // The area that will be scanned to find entities
         AxisAlignedBB area = new AxisAlignedBB(
                 playerX - range,
@@ -256,9 +257,9 @@ public class AimAssistance extends Module {
         // Create the entities list by taking mobs (or not) into account
         List<LivingEntity> entities;
         if(((ToggleOption) this.options.get(I_USE_ON_MOBS)).isActivated()){
-            entities = MC.world.getEntitiesWithinAABB(LivingEntity.class, area);
+            entities = Wrapper.theWorld.getEntitiesWithinAABB(LivingEntity.class, area);
         }else{
-            entities = MC.world.getEntitiesWithinAABB(PlayerEntity.class, area);
+            entities = Wrapper.theWorld.getEntitiesWithinAABB(PlayerEntity.class, area);
         }
 
         // We retrieve all the entities that the user can aim at
@@ -271,7 +272,7 @@ public class AimAssistance extends Module {
                 // inside of it is at or below <range> distance. If an entity is at the corner, then the distance from
                 // the player is sqrt(range^2 * 3), which is 17.32 for 10 for example.
                 // That's why we need to verify that the entity is within the given range
-                if(MC.player.getDistance(entity) <= range && MC.player.canEntityBeSeen(entity))
+                if(Wrapper.thePlayer.getDistance(entity) <= range && Wrapper.thePlayer.canEntityBeSeen(entity))
                     attackableEntities.add((LivingEntity) entity);
             }
         }
@@ -286,12 +287,12 @@ public class AimAssistance extends Module {
 
         boolean team_filter = ((ToggleOption) this.options.get(I_TEAM_FILTER)).isActivated();
         for(LivingEntity entity : attackableEntities){
-            if(team_filter && isInSameTeam(entity)) continue;
+            if(team_filter && Wrapper.isInSameTeam(entity)) continue;
 
             // Calculate fov
-            float[] yawPitch = getYawPitchBetween(entity, MC.player);
-            float distYaw = MathHelper.abs(MathHelper.wrapDegrees(yawPitch[0] - MC.player.rotationYaw));
-            float distPitch = MathHelper.abs(MathHelper.wrapDegrees(yawPitch[1] - MC.player.rotationPitch));
+            float[] yawPitch = getYawPitchBetween(entity, Wrapper.thePlayer);
+            float distYaw = MathHelper.abs(MathHelper.wrapDegrees(yawPitch[0] - Wrapper.thePlayer.rotationYaw));
+            float distPitch = MathHelper.abs(MathHelper.wrapDegrees(yawPitch[1] - Wrapper.thePlayer.rotationPitch));
             float dist = MathHelper.sqrt(distYaw*distYaw + distPitch*distPitch);
 
             // Take the one that is the closer to the fov (closest to the player aim)
@@ -307,7 +308,7 @@ public class AimAssistance extends Module {
         boolean hasReachedALivingEntity = false;
         if(((ToggleOption) this.options.get(I_STOP_WHEN_REACHED)).isActivated()) {
             try {
-                Entity mouseOverEntity = MC.pointedEntity;
+                Entity mouseOverEntity = Wrapper.MC.pointedEntity;
                 if ((mouseOverEntity instanceof LivingEntity))
                     hasReachedALivingEntity = true;
             } catch (Exception ignored) { }
@@ -324,14 +325,14 @@ public class AimAssistance extends Module {
     private synchronized void aimEntity(LivingEntity entity) {
         final float[] rotations = getRotationsNeeded(entity);
 
-        // MC.player is always null, because we call this function only if MC.player is not null, at least, we get rid
+        // Wrapper.thePlayer is always null, because we call this function only if Wrapper.thePlayer is not null, at least, we get rid
         // of the warning
-        if (rotations != null && MC.player != null) {
-            MC.player.rotationYaw = rotations[0];
-            MC.player.rotationPitch = rotations[1];
+        if (rotations != null && Wrapper.thePlayer != null) {
+            Wrapper.thePlayer.rotationYaw = rotations[0];
+            Wrapper.thePlayer.rotationPitch = rotations[1];
         }
 
-        log_info("Aiming at entity " + entity.getName().getString() + ".");
+        logInfo("Aiming at entity " + entity.getName().getString() + ".");
     }
 
     /**
@@ -370,9 +371,9 @@ public class AimAssistance extends Module {
         float stepY = ((ValueOption) this.options.get(I_STEP_Y)).getVal();
 
         // We calculate the yaw/pitch difference between the entity and the player
-        float[] yawPitch = getYawPitchBetween(entity, MC.player);
+        float[] yawPitch = getYawPitchBetween(entity, Wrapper.thePlayer);
 
-        // We make sure that it's absolute, because the sign may change if we invert entity and MC.player
+        // We make sure that it's absolute, because the sign may change if we invert entity and Wrapper.thePlayer
         //float yaw = MathHelper.abs(yawPitch[0]);
         //float pitch = MathHelper.abs(yawPitch[1]);
         float yaw = yawPitch[0];
@@ -382,8 +383,8 @@ public class AimAssistance extends Module {
         // yaw and pitch are absolute, not relative to anything. We fix that by calling wrapDegrees and substracting
         // the yaw & pitch to the player's rotation. Now, the yaw, and the pitch are relative to the player's view
         // So we can compare that with the given fov: radiusX, and radiusY (which are both in degrees)
-        boolean inFovX = MathHelper.abs(MathHelper.wrapDegrees(yaw - MC.player.rotationYaw)) <= radiusX;
-        boolean inFovY = MathHelper.abs(MathHelper.wrapDegrees(pitch - MC.player.rotationPitch)) <= radiusY;
+        boolean inFovX = MathHelper.abs(MathHelper.wrapDegrees(yaw - Wrapper.thePlayer.rotationYaw)) <= radiusX;
+        boolean inFovY = MathHelper.abs(MathHelper.wrapDegrees(pitch - Wrapper.thePlayer.rotationPitch)) <= radiusY;
 
         // If the targeted entity is within the fov, then, we will compute the step in yaw / pitch of the player's view
         // to get closer to the targeted entity. We will use the given stepX and stepY to compute that. Dividing by 100
@@ -391,12 +392,12 @@ public class AimAssistance extends Module {
         // user-friendly. That way, instead of showing 0.05, we show 5.
         if(inFovX && inFovY) {
             float yawFinal, pitchFinal;
-            yawFinal = ((MathHelper.wrapDegrees(yaw - MC.player.rotationYaw)) * stepX) / 100;
-            pitchFinal = ((MathHelper.wrapDegrees(pitch - MC.player.rotationPitch)) * stepY) / 100;
+            yawFinal = ((MathHelper.wrapDegrees(yaw - Wrapper.thePlayer.rotationYaw)) * stepX) / 100;
+            pitchFinal = ((MathHelper.wrapDegrees(pitch - Wrapper.thePlayer.rotationPitch)) * stepY) / 100;
 
-            return new float[] { MC.player.rotationYaw + yawFinal, MC.player.rotationPitch + pitchFinal};
+            return new float[] { Wrapper.thePlayer.rotationYaw + yawFinal, Wrapper.thePlayer.rotationPitch + pitchFinal};
         } else {
-            return new float[] { MC.player.rotationYaw, MC.player.rotationPitch};
+            return new float[] { Wrapper.thePlayer.rotationYaw, Wrapper.thePlayer.rotationPitch};
         }
     }
 }

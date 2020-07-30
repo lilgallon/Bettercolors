@@ -1,5 +1,7 @@
 /*
- * Copyright 2018-2020 Bettercolors Contributors (https://github.com/N3ROO/Bettercolors)
+ * Copyright 2018-2020
+ * - Bettercolors Contributors (https://github.com/N3ROO/Bettercolors) and
+ * - Bettercolors Engine Contributors (https://github.com/N3ROO/BettercolorsEngine)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,30 +16,20 @@
  * limitations under the License.
  */
 
-package dev.nero.bettercolors.io;
+package dev.nero.bettercolors.engine.io;
 
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-public class Filer {
-
-    private final String FILENAME;
+public class PropertiesFiler extends Filer {
 
     /**
-     * @param filename name of the file to use (from the settings directory).
+     * @param filename name of the file to use (from the settings directory) and without the .properties extension
      */
-    public Filer(String filename){
-        if(!filename.endsWith(".properties")){
-            filename += ".properties";
-        }
-
-        if(!filename.startsWith("bc_") && !filename.startsWith("_bc")) {
-            filename = "bc_" + filename;
-        }
-
-        FILENAME = filename;
+    public PropertiesFiler(String filename){
+        super(filename + ".properties");
     }
 
     /**
@@ -135,23 +127,5 @@ public class Filer {
             return null;
         }
         return values;
-    }
-
-    /**
-     * @return the settings directory ("config" folder in the minecraft game directory).
-     */
-    public static File getSettingsDirectory() {
-        String settingsDir = System.getProperty("user.dir");
-        if(settingsDir == null) {
-            throw new IllegalStateException("user.dir==null");
-        }
-        File home = new File(settingsDir);
-        File settingsDirectory = new File(home, "config");
-        if(!settingsDirectory.exists()) {
-            if(!settingsDirectory.mkdir()) {
-                throw new IllegalStateException(settingsDirectory.toString());
-            }
-        }
-        return settingsDirectory;
     }
 }

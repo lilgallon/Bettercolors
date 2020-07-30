@@ -14,8 +14,11 @@
  * limitations under the License.
  */
 
-package dev.nero.bettercolors.modules;
+package dev.nero.bettercolors.mod.modules;
 
+import dev.nero.bettercolors.engine.module.Module;
+import dev.nero.bettercolors.engine.option.Option;
+import dev.nero.bettercolors.mod.wrapper.Wrapper;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
@@ -23,23 +26,25 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.SwordItem;
 
+import java.util.ArrayList;
+
 public class AutoSword extends Module {
 
     /**
      * @param toggle_key the toggle key (-1 -> none)
      * @param is_activated the initial state
      */
-    public AutoSword(int toggle_key, boolean is_activated) {
+    public AutoSword(Integer toggle_key, Boolean is_activated) {
         super("Auto sword", toggle_key, is_activated, "sword_symbol.png", "[ASw]");
     }
 
     @Override
     public void onUpdate() {
-        if(MC.player != null){
+        if(Wrapper.thePlayer != null){
 
             boolean has_clicked_on_living_entity = false;
             try {
-                Entity mouseOverEntity = MC.pointedEntity;
+                Entity mouseOverEntity = Wrapper.MC.pointedEntity;
                 if ((mouseOverEntity instanceof LivingEntity))
                     has_clicked_on_living_entity = true;
             } catch (Exception ignored) {
@@ -54,7 +59,7 @@ public class AutoSword extends Module {
 
                 // We look for every slot of the hotbar, and we take the best item
                 for(int slot = 0; slot < 9 ; slot ++){
-                    ItemStack stack = MC.player.inventory.mainInventory.get(slot);
+                    ItemStack stack = Wrapper.thePlayer.inventory.mainInventory.get(slot);
                     if(stack.getItem() instanceof SwordItem){
                         SwordItem sword = (SwordItem) stack.getItem();
                         float damage = sword.getAttackDamage();
@@ -71,19 +76,23 @@ public class AutoSword extends Module {
                     }
                 }
                 // We give the best sword to the player
-                if(best_item != -1 && MC.player.inventory.currentItem != best_item){
-                    log_info(
+                if(best_item != -1 && Wrapper.thePlayer.inventory.currentItem != best_item){
+                    logInfo(
                             "Better sword found (" +
-                                    MC.player.inventory
+                                    Wrapper.thePlayer.inventory
                                             .mainInventory
                                             .get(best_item)
                                             .getDisplayName()
                                             .getString()
                                     + ")."
                     );
-                    MC.player.inventory.currentItem = best_item;
+                    Wrapper.thePlayer.inventory.currentItem = best_item;
                 }
             }
         }
+    }
+
+    public static ArrayList<Option> getDefaultOptions(){
+        return new ArrayList<>();
     }
 }

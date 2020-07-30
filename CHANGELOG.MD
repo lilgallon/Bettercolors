@@ -191,3 +191,17 @@ This update is backwards compatible with V6.1.0-b1 MC_1.14.4. The settings files
 **V6.1.2 MC_1.16.1**
 - Updated mod to work with MC1.16.1
 - Fixed aim assistance from MC1.15.2_V6.1.1
+
+**V7.0.0 MC_1.16.1**
+
+You can use the same settings file as before.
+
+- Added **Reach** (#52)
+- Added a **Friendlist** (#14)
+- Added a button to reset the settings to default (#8)
+- Added warnings when turning on some modules
+- Added a "debug" option (false by default)
+- Updated themes (oceanic, dark and light)
+- Improved console messages
+- Improved config loader (config files are backwards compatible now)
+- Improved window's layout

@@ -19,7 +19,7 @@ issueTrackerURL="https://github.com/N3ROO/Bettercolors/issues?q=is%3Aissue" #opt
 displayURL="https://github.com/N3ROO/Bettercolors/" #optional
 
 # A file name (in the root of the mod JAR) containing a logo for display
-# logoFile="bettercolors.png" #optional
+logoFile="header.png" #optional
 
 # A text field displayed in the mod UI
 #credits="Thanks for this example mod goes to Java" #optional

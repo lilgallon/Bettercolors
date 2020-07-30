@@ -3,13 +3,13 @@
   "modid": "minecraft",
   "name": "Bettercolors",
   "description": "Better colors for minecraft",
-  "version": "6.1.2",
+  "version": "7.0.0",
   "mcversion": "1.8.9",
   "url": "",
   "updateUrl": "",
   "authorList": ["nero"],
   "credits": "@shorebre4k @patricktelling",
-  "logoFile": "images/bettercolors.png",
+  "logoFile": "images/header.png",
   "screenshots": [],
   "dependencies": []
 }

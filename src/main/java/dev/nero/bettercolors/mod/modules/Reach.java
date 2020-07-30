@@ -5,6 +5,7 @@ import dev.nero.bettercolors.engine.option.Option;
 import dev.nero.bettercolors.engine.option.ToggleOption;
 import dev.nero.bettercolors.engine.option.ValueFloatOption;
 import dev.nero.bettercolors.engine.option.ValueOption;
+import dev.nero.bettercolors.engine.view.Window;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -26,7 +27,7 @@ public class Reach extends Module {
 
         // 10 = 1 block, so 5 means 0.5 block
         DEFAULT_OPTIONS.add(
-                new ValueFloatOption(PREFIX, REACH_OPTION_LABEL, 0.5f, 0.01f, 1.5f, 0.01f, 0.5f)
+                new ValueFloatOption(PREFIX, REACH_OPTION_LABEL, 0.2f, 0.01f, 1.5f, 0.01f, 0.5f)
         );
     }
 
@@ -59,6 +60,13 @@ public class Reach extends Module {
             }
 
             this.options.add(option);
+        }
+    }
+
+    @Override
+    protected void onToggle(boolean toggle) {
+        if (toggle) {
+            Window.getInstance().dialog("Don't abuse of the extended reach. It can get you banned.");
         }
     }
 

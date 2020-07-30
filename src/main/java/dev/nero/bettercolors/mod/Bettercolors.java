@@ -70,7 +70,7 @@ public class Bettercolors {
         modules.put(ClickAssistance.class, new BettercolorsEngine.IntAndBoolean(Keyboard.KEY_PRIOR, false)); //pageup
         modules.put(AutoSprint.class, new BettercolorsEngine.IntAndBoolean(-1, true));
         modules.put(AutoSword.class, new BettercolorsEngine.IntAndBoolean(-1, true));
-        modules.put(Reach.class, new BettercolorsEngine.IntAndBoolean(-1, true));
+        modules.put(Reach.class, new BettercolorsEngine.IntAndBoolean(-1, false));
 
         engine.init(
                 Reference.MOD_VERSION,

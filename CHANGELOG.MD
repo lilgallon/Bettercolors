@@ -150,3 +150,19 @@ move your settings files to the config/ folder instead of the bettercolors/ fold
 - Only bettercolors' settings files are now shown in the settings selector (#40)
 - Loading settings now automatically update the toggle key (#41)
 - Improved toggle key selector (#41)
+
+**V7.0.0 MC1.8.9**
+
+You can use the same settings file as before.
+
+- Added **Reach** (#52)
+- Added a **Friendlist** (#14)
+- Added a button to reset the settings to default (#8)
+- Added warnings when turning on some modules
+- Added a "debug" option (false by default)
+- Updated themes (oceanic, dark and light)
+- Improved console messages
+- Improved config loader (config files are backwards compatible now)
+- Improved window's layout
+- Fixed aim assistance range that was limited at 10 blocks (#54)
+

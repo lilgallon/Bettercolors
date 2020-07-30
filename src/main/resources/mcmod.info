@@ -2,14 +2,14 @@
 {
   "modid": "minecraft",
   "name": "Bettercolors",
-  "description": "True colors in minecraft (improved for specific monitors).",
-  "version": "6.1.0",
+  "description": "Better colors for minecraft",
+  "version": "7.0.0",
   "mcversion": "1.8.9",
   "url": "",
   "updateUrl": "",
-  "authorList": ["N3RO (nero!)"],
+  "authorList": ["nero"],
   "credits": "@shorebre4k @patricktelling",
-  "logoFile": "images/bettercolors.png",
+  "logoFile": "images/header.png",
   "screenshots": [],
   "dependencies": []
 }

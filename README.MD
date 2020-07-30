@@ -56,8 +56,6 @@ The detailed documentation is accessible on the [wiki](https://github.com/N3ROO/
 - [Updates & support roadmap](https://github.com/N3ROO/Bettercolors/wiki/4.-Updates-&-Support-roadmap)
 - [How to contribute](https://github.com/N3ROO/Bettercolors/wiki/3.-Developer-section#contributing)
 
-
-
 ## Credits & Acknowledgements
 
 - [@N3ROO](https://github.com/N3ROO)  - *Main developer*

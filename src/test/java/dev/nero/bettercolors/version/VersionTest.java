@@ -75,6 +75,7 @@ public class VersionTest {
 
     @Test
     void getLatestVersion() {
+        /* This test should not be uncommented in production, bc it can fail if a new version is released
         try {
             Version latest = Version.getLatestVersion("1.15.2");
             Assertions.assertEquals(
@@ -84,6 +85,7 @@ public class VersionTest {
         } catch (VersionException e) {
             e.printStackTrace();
         }
+        */
 
         Assertions.assertThrows(VersionException.class, () -> Version.getLatestVersion("1.15"));
 

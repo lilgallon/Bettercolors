@@ -18,16 +18,24 @@ package dev.nero.bettercolors.mod;
 
 import dev.nero.bettercolors.engine.BettercolorsEngine;
 import dev.nero.bettercolors.engine.module.Module;
+import dev.nero.bettercolors.engine.view.Window;
+import dev.nero.bettercolors.mod.hijacks.GameRendererHijack;
 import dev.nero.bettercolors.mod.modules.*;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.lwjgl.glfw.GLFW;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.HashMap;
 
 @Mod(Reference.MOD_ID)
@@ -56,6 +64,7 @@ public class Bettercolors {
         modules.put(ClickAssistance.class, new BettercolorsEngine.IntAndBoolean(GLFW.GLFW_KEY_PAGE_UP, false));
         modules.put(AutoSprint.class, new BettercolorsEngine.IntAndBoolean(-1, true));
         modules.put(AutoSword.class, new BettercolorsEngine.IntAndBoolean(-1, true));
+        modules.put(Reach.class, new BettercolorsEngine.IntAndBoolean(-1, false));
 
         engine.init(
                 Reference.MOD_VERSION,
@@ -68,10 +77,38 @@ public class Bettercolors {
                 Minecraft.getInstance()
         );
 
-        engine.getWindow().addText("Bettercolors " + Reference.MOD_VERSION + " loaded", true);
+        Window.INFO("[+] Bettercolors " + Reference.MOD_VERSION + " loaded");
 
         // Everything is done. Now, the rest of the code will be run once that one of the above event is ran by forge
         // itself.
+    }
+
+    @SubscribeEvent
+    public void worldLoadEvent(WorldEvent.Load event) {
+        if (event.getWorld() instanceof ClientWorld) {
+            if (!(BettercolorsEngine.MC.gameRenderer instanceof GameRendererHijack)) {
+                // gameRenderer is final, but we want to update it ;( we will use reflection to do so
+
+                // First, we need to find the field
+                Field gameRendererField = ObfuscationReflectionHelper.findField( // TODO: find obf field
+                        Minecraft.class,
+                        "gameRenderer"
+                );
+
+                // Then disable "final" keyword
+                gameRendererField.setAccessible(true);
+
+                // Hijack it
+                try {
+                    gameRendererField.set(Minecraft.getInstance(), GameRendererHijack.hijack(BettercolorsEngine.MC.gameRenderer));
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+
+                // We did not do anything, did we?
+                gameRendererField.setAccessible(false);
+            }
+        }
     }
 
     /**

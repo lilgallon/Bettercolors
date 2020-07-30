@@ -17,12 +17,15 @@
 package dev.nero.bettercolors.mod.modules;
 
 import dev.nero.bettercolors.engine.module.Module;
+import dev.nero.bettercolors.engine.option.Option;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
+
+import java.util.ArrayList;
 
 import static dev.nero.bettercolors.mod.wrapper.Wrapper.MC;
 
@@ -81,5 +84,9 @@ public class AutoSword extends Module {
                 }
             }
         }
+    }
+
+    public static ArrayList<Option> getDefaultOptions(){
+        return new ArrayList<>();
     }
 }

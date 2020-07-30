@@ -18,6 +18,9 @@
 package dev.nero.bettercolors.mod.modules;
 
 import dev.nero.bettercolors.engine.module.Module;
+import dev.nero.bettercolors.engine.option.Option;
+
+import java.util.ArrayList;
 
 import static dev.nero.bettercolors.mod.wrapper.Wrapper.MC;
 
@@ -39,5 +42,9 @@ public class AutoSprint extends Module {
                 MC.thePlayer.setSprinting(true);
             }
         }
+    }
+
+    public static ArrayList<Option> getDefaultOptions(){
+        return new ArrayList<>();
     }
 }

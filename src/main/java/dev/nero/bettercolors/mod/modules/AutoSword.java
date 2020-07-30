@@ -31,11 +31,11 @@ import java.util.ArrayList;
 public class AutoSword extends Module {
 
     /**
-     * @param toggle_key the toggle key (-1 -> none)
-     * @param is_activated the initial state
+     * @param toggleKey the toggle key (-1 -> none)
+     * @param isActivated the initial state
      */
-    public AutoSword(Integer toggle_key, Boolean is_activated) {
-        super("Auto sword", toggle_key, is_activated, "sword_symbol.png", "[ASw]");
+    public AutoSword(Integer toggleKey, Boolean isActivated) {
+        super("Auto sword", toggleKey, isActivated, "sword_symbol.png", "[ASw]");
     }
 
     @Override

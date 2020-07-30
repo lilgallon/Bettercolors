@@ -25,11 +25,11 @@ import java.util.ArrayList;
 public class AutoSprint extends Module {
 
     /**
-     * @param toggle_key the toggle key (-1 -> none).
-     * @param is_activated the initial state.
+     * @param toggleKey the toggle key (-1 -> none).
+     * @param isActivated the initial state.
      */
-    public AutoSprint(Integer toggle_key, Boolean is_activated) {
-        super("Auto sprint", toggle_key, is_activated, "sprint_symbol.png", "[ASp]");
+    public AutoSprint(Integer toggleKey, Boolean isActivated) {
+        super("Auto sprint", toggleKey, isActivated, "sprint_symbol.png", "[ASp]");
     }
 
     @Override

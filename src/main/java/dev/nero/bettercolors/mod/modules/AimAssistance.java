@@ -3,6 +3,7 @@ package dev.nero.bettercolors.mod.modules;
 import dev.nero.bettercolors.engine.module.Module;
 import dev.nero.bettercolors.engine.option.Option;
 import dev.nero.bettercolors.engine.option.ToggleOption;
+import dev.nero.bettercolors.engine.option.ValueFloatOption;
 import dev.nero.bettercolors.engine.option.ValueOption;
 import dev.nero.bettercolors.engine.utils.MathUtils;
 import dev.nero.bettercolors.engine.utils.TimeHelper;
@@ -85,78 +86,36 @@ public class AimAssistance extends Module {
     private float shiftY = 0;
 
     /**
-     * @param toggle_key the toggle key (-1 -> none)
-     * @param is_activated the initial state
-     * @param options the options for the mod
+     * @param toggleKey the toggle key (-1 -> none)
+     * @param IsActivated the initial state
+     * @param givenOptions the options for the mod
      */
-    public AimAssistance(Integer toggle_key, Boolean is_activated, Map<String, String> options) {
+    public AimAssistance(Integer toggleKey, Boolean IsActivated, Map<String, String> givenOptions) {
 
-        super("Aim assistance", toggle_key, is_activated, "aim_symbol.png", "[AA]");
+        super("Aim assistance", toggleKey, IsActivated, "aim_symbol.png", "[AA]");
 
-        this.options = DEFAULT_OPTIONS;
+        this.options = new ArrayList<>();
 
-        ((ToggleOption)
-            this.options.get(I_STOP_ON_RIGHT_CLICK))
-            .setActivated(Boolean.parseBoolean(
-                    options.get(this.options.get(I_STOP_ON_RIGHT_CLICK).getCompleteName()))
-        );
-        
-        ((ToggleOption)
-            this.options.get(I_USE_ON_MOBS))
-            .setActivated(Boolean.parseBoolean(
-                    options.get(this.options.get(I_USE_ON_MOBS).getCompleteName()))
-        );
+        for (Option defaultOption : DEFAULT_OPTIONS) {
+            Option option = (Option) defaultOption.clone();
+            String name = defaultOption.getCompleteName();
 
-        ((ToggleOption)
-            this.options.get(I_TEAM_FILTER))
-            .setActivated(Boolean.parseBoolean(
-                    options.get(this.options.get(I_TEAM_FILTER).getCompleteName()))
-        );
+            if (option instanceof ToggleOption) {
+                ((ToggleOption) option).setActivated(
+                        Boolean.parseBoolean(givenOptions.get(name))
+                );
+            } else if (option instanceof ValueOption) {
+                ((ValueOption) option).setVal(
+                        Integer.parseInt(givenOptions.get(name))
+                );
+            } else if (option instanceof ValueFloatOption) {
+                ((ValueFloatOption) option).setVal(
+                        Float.parseFloat(givenOptions.get(name))
+                );
+            }
 
-        ((ValueOption)
-            this.options.get(I_REFRESH_RATE))
-            .setVal(Integer.parseInt(options.get(this.options.get(I_REFRESH_RATE).getCompleteName()))
-        );
-
-        ((ValueOption)
-            this.options.get(I_STEP_X))
-            .setVal(Integer.parseInt(options.get(this.options.get(I_STEP_X).getCompleteName()))
-        );
-
-        ((ValueOption)
-            this.options.get(I_STEP_Y))
-            .setVal(Integer.parseInt(options.get(this.options.get(I_STEP_Y).getCompleteName()))
-        );
-
-        ((ValueOption)
-            this.options.get(I_RANGE))
-            .setVal(Integer.parseInt(options.get(this.options.get(I_RANGE).getCompleteName()))
-        );
-
-        ((ValueOption)
-            this.options.get(I_RADIUS_X))
-            .setVal(Integer.parseInt(options.get(this.options.get(I_RADIUS_X).getCompleteName()))
-        );
-
-        ((ValueOption)
-            this.options.get(I_RADIUS_Y))
-            .setVal(Integer.parseInt(options.get(this.options.get(I_RADIUS_Y).getCompleteName()))
-        );
-
-        ((ValueOption)
-            this.options.get(I_DURATION))
-            .setVal(Integer.parseInt(options.get(this.options.get(I_DURATION).getCompleteName()))
-        );
-
-        ((ValueOption)
-            this.options.get(I_CLICKS_TO_ACTIVATE))
-            .setVal(Integer.parseInt(options.get(this.options.get(I_CLICKS_TO_ACTIVATE).getCompleteName()))
-        );
-
-        ((ValueOption)
-            this.options.get(I_TIME_TO_ACTIVATE))
-            .setVal(Integer.parseInt(options.get(this.options.get(I_TIME_TO_ACTIVATE).getCompleteName()))
-        );
+            this.options.add(option);
+        }
 
         postActivationTimer = new TimeHelper();
         postActivationClickCounter = 0;

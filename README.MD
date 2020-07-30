@@ -21,12 +21,17 @@
 A silent "hack" built within the forge API. It bypasses powerful anticheats (forge mods and servers) to help you improve your gameplay.
 
 <h3 align="center">
+  <b>Reach 💥 Aim Assistance 💥 Click Assistance 💥 Auto Sprint 💥 Auto Sword</b>
+  <br><br>
   <img src=".github/illustration.gif">
 </h3>
 
-💥 **LAST UPDATE**: [Reach](https://github.com/N3ROO/Bettercolors/wiki/2.-Features), and a lot of [new things]((https://github.com/N3ROO/Bettercolors/wiki/4.-Updates-&-Support-roadmap))! 💥
+## Last major changes
 
+- Added **Reach**
+- Added **Friend list**
 
+See [details](CHANGELOG.md)
 
 ## Disclaimer
 

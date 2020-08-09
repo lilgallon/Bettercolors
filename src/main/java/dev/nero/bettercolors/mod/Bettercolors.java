@@ -62,6 +62,7 @@ public class Bettercolors {
         modules.put(AutoSprint.class, new BettercolorsEngine.IntAndBoolean(-1, true));
         modules.put(AutoSword.class, new BettercolorsEngine.IntAndBoolean(-1, true));
         modules.put(Reach.class, new BettercolorsEngine.IntAndBoolean(-1, false));
+        modules.put(Triggerbot.class, new BettercolorsEngine.IntAndBoolean(-1, false));
 
         engine.init(
                 Reference.MOD_VERSION,

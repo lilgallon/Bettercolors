@@ -16,6 +16,7 @@
 
 package dev.nero.bettercolors.mod.modules;
 
+import dev.nero.bettercolors.engine.BettercolorsEngine;
 import dev.nero.bettercolors.engine.module.Module;
 import dev.nero.bettercolors.engine.option.Option;
 import dev.nero.bettercolors.engine.option.ToggleOption;
@@ -122,10 +123,17 @@ public class ClickAssistance extends Module {
     @Override
     protected void onToggle(boolean toggle) {
         if (toggle) {
-            Window.getInstance().dialog(
-                    "Don't abuse of the click assistance. It can get you banned with high values. Keep the values low" +
-                            "and you will be safe."
-            );
+            if (BettercolorsEngine.getInstance().getModule("Triggerbot").isActivated()) {
+                Window.getInstance().dialog("Click assistance can't be used along with triggerbot. Triggerbot will" +
+                        " be turned off.\n Also, Don't abuse of the click assistance. It can get you banned with" +
+                        " high values. Keep the values low and you will be safe.");
+                BettercolorsEngine.getInstance().toggleModule("Triggerbot", false);
+            } else {
+                Window.getInstance().dialog(
+                        "Don't abuse of the click assistance. It can get you banned with high values. Keep the " +
+                        " values low and you will be safe."
+                );
+            }
         }
     }
 
@@ -205,27 +213,26 @@ public class ClickAssistance extends Module {
                         Wrapper.MC.playerController.attackEntity(Wrapper.MC.player, target);
                         Wrapper.MC.player.swingArm(Hand.MAIN_HAND);
                     } else {
-                        click();
+                        try {
+                            Wrapper.click();
+                        } catch (AWTException e) {
+                            logError("Could not create a click");
+                            if (BettercolorsEngine.VERBOSE) {
+                                e.printStackTrace();
+                            }
+                        }
                     }
                 }
             } else if (!onlyOnEntity && !packets) {
-                click();
+                try {
+                    Wrapper.click();
+                } catch (AWTException e) {
+                    logError("Could not create a click");
+                    if (BettercolorsEngine.VERBOSE) {
+                        e.printStackTrace();
+                    }
+                }
             }
-        }
-    }
-
-    /**
-     * Human-like click (fake mouse click).
-     */
-    private void click(){
-        Robot bot;
-        try {
-            bot = new Robot();
-            bot.mouseRelease(16);
-            bot.mousePress(16);
-            bot.mouseRelease(16);
-        } catch (AWTException e) {
-            logError("Tried to click the mouse but a problem happened");
         }
     }
 }

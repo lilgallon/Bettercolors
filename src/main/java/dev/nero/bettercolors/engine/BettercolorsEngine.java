@@ -444,6 +444,25 @@ public class BettercolorsEngine {
     }
 
     /**
+     * It toggles the given module, synchronizes the window, and save the changes.
+     *
+     * @param name name of the module to toggle
+     * @param activated true means turn on, false, turn off
+     * @return true if succeed, false if the module could not be found
+     */
+    public boolean toggleModule(String name, boolean activated) {
+        Module module = getModule(name);
+        if (module != null) {
+            module.setActivated(activated);
+            this.window.synchronizeComponents();
+            SettingsUtils.setOption(module.getClass().getSimpleName(), Boolean.toString(module.isActivated()));
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * Make sure that BettercolorsEngine#init has been called before
      * @return all the loaded modules
      */

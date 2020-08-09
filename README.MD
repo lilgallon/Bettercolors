@@ -12,7 +12,7 @@
 </p>
 
 <p align="center">
-    <a href="https://img.shields.io/badge/forge_dev-1.16.1_32.0.98-green.svg"><img alt="Forge dev version: 1.16.1-32.0.98" src="https://img.shields.io/badge/forge_dev-1.16.1_32.0.98-green.svg"/></a>
+    <a href="https://img.shields.io/badge/forge_dev-1.16.1_32.0.98-green.svg"><img alt="Forge dev version: 1.16.1-32.0.107" src="https://img.shields.io/badge/forge_dev-1.16.1_32.0.98-green.svg"/></a>
     <a href="https://img.shields.io/github/downloads/n3roo/bettercolors/total.svg"><img alt="Downloads" src="https://img.shields.io/github/downloads/n3roo/bettercolors/total.svg"/></a>
     <a href="https://img.shields.io/github/issues/n3roo/bettercolors.svg"><img alt="Open issues" src="https://img.shields.io/github/issues/n3roo/bettercolors.svg"/></a>
 </p>

@@ -205,3 +205,14 @@ You can use the same settings file as before.
 - Improved console messages
 - Improved config loader (config files are backwards compatible now)
 - Improved window's layout
+
+**V7.1.0 MC_1.16.1**
+
+Built with forge 32.0.107. You can use the same settings file as before.
+
+- Added **triggerbot** (#58)
+    - "Use on mobs" option
+    - "Clicks per seconds (CPS)" option (it is random, but near the given CPS)
+    - It can't be used along with click assistance
+- Fixed a weird bug where all the modules would stop working (isShowingDeathScene is always true for some reason. Is that an issue with forge?)
+- Updated engine to 0.4.0 (preview). The only things that change for you are the themes

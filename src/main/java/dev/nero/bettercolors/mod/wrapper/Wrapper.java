@@ -25,6 +25,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.PlayerContainer;
 
+import java.awt.*;
+
 /**
  * Wrapper for Minecraft 1.16
  */
@@ -54,8 +56,8 @@ public class Wrapper {
      */
     public static boolean isInGui(){
         if(Wrapper.MC.player == null) return true;
+
         return (Wrapper.MC.player.isSleeping() ||
-                Wrapper.MC.player.isShowDeathScreen() ||
                 !(Wrapper.MC.player.openContainer instanceof PlayerContainer) ||
                 !MC.isGameFocused());
     }
@@ -79,5 +81,16 @@ public class Wrapper {
 
         } catch (Exception ignored) { }
         return same_team;
+    }
+
+    /**
+     * Human-like click (fake mouse click).
+     */
+    public static void click() throws AWTException{
+        Robot bot;
+        bot = new Robot();
+        bot.mouseRelease(16);
+        bot.mousePress(16);
+        bot.mouseRelease(16);
     }
 }

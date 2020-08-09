@@ -166,3 +166,11 @@ You can use the same settings file as before.
 - Improved window's layout
 - Fixed aim assistance range that was limited at 10 blocks (#54)
 
+**V7.1.0 MC_1.8.9**
+
+Built with forge 15.1.1722. You can use the same settings file as before.
+
+- Added triggerbot (#58)
+    - "Use on mobs" option
+    - "Clicks per seconds (CPS)" option (it is random, but near the given CPS) It can't be used along with click assistance
+- Updated engine to 0.4.0 (preview). The only things that change for you are the themes

@@ -25,6 +25,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ContainerPlayer;
 
+import java.awt.*;
+
 /**
  * Wrapper for Minecraft 1.16
  */
@@ -79,5 +81,16 @@ public class Wrapper {
 
         } catch (Exception ignored) { }
         return same_team;
+    }
+
+    /**
+     * Human-like click (fake mouse click).
+     */
+    public static void click() throws AWTException{
+        Robot bot;
+        bot = new Robot();
+        bot.mouseRelease(16);
+        bot.mousePress(16);
+        bot.mouseRelease(16);
     }
 }

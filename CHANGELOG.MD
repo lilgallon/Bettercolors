@@ -210,4 +210,8 @@ You can use the same settings file as before.
 
 You can use the same settings file as before.
 
-- todo
+- Added **triggerbot** (#58)
+    - "Use on mobs" option
+    - "Clicks per seconds (CPS)" option (it is random, but near the given CPS)
+    - It can't be used along with click assistance
+- Fixed a weird bug where all the modules would stop working (isShowingDeathScene is always true for some reason. Is that an issue with forge?)

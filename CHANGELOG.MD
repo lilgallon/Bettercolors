@@ -205,3 +205,9 @@ You can use the same settings file as before.
 - Improved console messages
 - Improved config loader (config files are backwards compatible now)
 - Improved window's layout
+
+**V7.1.0 MC_1.16.1**
+
+You can use the same settings file as before.
+
+- todo

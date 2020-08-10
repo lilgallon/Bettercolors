@@ -20,7 +20,7 @@
 A silent "hack" built within the forge API. It bypasses powerful anticheats (forge mods and servers) to help you improve your gameplay.
 
 <h3 align="center">
-  <b>Reach 💥 Aim Assistance 💥 Click Assistance 💥 Auto Sprint 💥 Auto Sword</b>
+  <b>Reach 💥 Aim Assistance 💥 Click Assistance 💥 Auto Sprint 💥 Auto Sword 💥 Triggerbot / Autoclick</b>
   <br><br>
   <img src=".github/illustration.gif">
 </h3>

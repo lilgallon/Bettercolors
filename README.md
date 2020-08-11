@@ -3,7 +3,7 @@
 </h3>
 
 <p align="center">
-    <a href="https://img.shields.io/github/workflow/status/N3ROO/Bettercolors/Build%20MC1.16.2_fabric?label=1.16.2_fabric"><img alt="Build Status" src="https://img.shields.io/github/workflow/status/N3ROO/Bettercolors/Build%20MC1.16.2_fabric?label=1.16.2 fabric" /></a>
+    <a href="https://img.shields.io/github/workflow/status/N3ROO/Bettercolors/Build%20MC1.16.2_fabric?label=1.16.2_fabric"><img alt="Build Status" src="https://img.shields.io/github/workflow/status/N3ROO/Bettercolors/Build%20MC1.16.2_fabric?label=1.16.2_fabric" /></a>
     <a href="https://img.shields.io/badge/fabric_loader-0.9.1_build_205-green.svg"><img alt="Forge dev version: fabric loader 0.9.1 build 205" src="https://img.shields.io/badge/fabric_loader-0.9.1_build_205-green.svg"/></a>
     <a href="https://img.shields.io/badge/fabric_0.17.1_build_394_1.16-green.svg"><img alt="Forge dev version: fabric 0.17.1 build 394-1.16" src="https://img.shields.io/badge/fabric-0.17.1_build_394_1.16-green.svg"/></a>
 </p>

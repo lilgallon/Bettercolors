@@ -20,6 +20,7 @@ public class Bettercolors implements ModInitializer {
 
     public static final String MODID = "mcp";
     private static BettercolorsEngine engine;
+    private static boolean failedBypass = false;
 
     @Override
     public void onInitialize() {
@@ -52,7 +53,7 @@ public class Bettercolors implements ModInitializer {
         Window.INFO("[+] Bettercolors " + Reference.MOD_VERSION + " loaded");
 
         ClientTickEvents.START_WORLD_TICK.register(start -> {
-            if (!(Wrapper.MC.gameRenderer instanceof GameRendererHijack)) {
+            if (!(Wrapper.MC.gameRenderer instanceof GameRendererHijack) && !failedBypass) {
                 Window.INFO("[+] Bypassing MC to enable reach...");
 
                 Field gameRendererField = null;
@@ -62,7 +63,7 @@ public class Bettercolors implements ModInitializer {
 
                     try {
                         // obf field https://minidigger.github.io/MiniMappingViewer/#/mojang/client/1.16.2-rc2
-                        gameRendererField = MinecraftClient.class.getField("h");
+                        gameRendererField = MinecraftClient.class.getField("field_1773");
                     } catch (NoSuchFieldException e2) {
                         System.out.println("Error 1:");
                         e1.printStackTrace();
@@ -71,6 +72,7 @@ public class Bettercolors implements ModInitializer {
                         e2.printStackTrace();
 
                         Window.ERROR("[-] Error while looking for gameRenderer");
+                        failedBypass = true;
                     }
                 }
 
@@ -81,6 +83,7 @@ public class Bettercolors implements ModInitializer {
                         gameRendererField.set(Wrapper.MC.getInstance(), GameRendererHijack.hijack(BettercolorsEngine.MC.gameRenderer));
                     } catch (IllegalAccessException e) {
                         Window.ERROR("[-] Error while hijacking gameRenderer");
+                        failedBypass = true;
                         e.printStackTrace();
                     }
 

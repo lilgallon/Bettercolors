@@ -19,6 +19,8 @@
 package dev.nero.bettercolors.core.wrapper;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 
@@ -53,9 +55,11 @@ public class Wrapper {
      */
     public static boolean isInGui(){
         if(Wrapper.MC.player == null) return true;
-        return (Wrapper.MC.player.isSleeping() ||
+        return Wrapper.MC.player.isSleeping() ||
                 Wrapper.MC.player.isDead() ||
-                !MC.isWindowFocused());
+                !MC.isWindowFocused() ||
+                MC.isPaused() ||
+                (MC.currentScreen instanceof HandledScreen);
     }
 
     /**

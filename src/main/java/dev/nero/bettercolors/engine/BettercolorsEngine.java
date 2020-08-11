@@ -346,7 +346,7 @@ public class BettercolorsEngine {
 
         // We have everything, we can finally create the GUI
         this.window = new Window(
-                "Bettercolors " + Reference.MOD_VERSION.toString(),
+                "Bettercolors " + Reference.MOD_VERSION.toString() + " (fabric)",
                 this.modules,
                 Reference.MOD_VERSION
         );

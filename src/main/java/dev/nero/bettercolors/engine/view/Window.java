@@ -872,7 +872,7 @@ public class Window extends JFrame{
      */
     private void setupFooter(JPanel footerPanel){
         JLabel credits = new JLabel(
-                " Bettercolors " + Reference.MOD_VERSION + " for MC " + Reference.MC_VERSION
+                " Bettercolors " + Reference.MOD_VERSION + " for MC " + Reference.MC_VERSION + " (fabric)"
         );
         credits.setFont(new Font(credits.getFont().getFontName(), Font.PLAIN, 12));
         footerPanel.add(credits, "West");

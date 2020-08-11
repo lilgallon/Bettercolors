@@ -1,8 +1,8 @@
-package dev.nero.bettercolors.mod.hijacks;
+package dev.nero.bettercolors.core.hijacks;
 
 import dev.nero.bettercolors.engine.BettercolorsEngine;
 import dev.nero.bettercolors.engine.module.Module;
-import dev.nero.bettercolors.mod.modules.Reach;
+import dev.nero.bettercolors.core.modules.Reach;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.RenderTypeBuffers;

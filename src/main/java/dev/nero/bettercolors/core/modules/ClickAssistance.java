@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package dev.nero.bettercolors.mod.modules;
+package dev.nero.bettercolors.core.modules;
 
 import dev.nero.bettercolors.engine.BettercolorsEngine;
 import dev.nero.bettercolors.engine.module.Module;
@@ -26,7 +26,7 @@ import dev.nero.bettercolors.engine.utils.Friends;
 import dev.nero.bettercolors.engine.utils.MathUtils;
 import dev.nero.bettercolors.engine.utils.TimeHelper;
 import dev.nero.bettercolors.engine.view.Window;
-import dev.nero.bettercolors.mod.wrapper.Wrapper;
+import dev.nero.bettercolors.core.wrapper.Wrapper;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.Hand;
 
@@ -213,25 +213,11 @@ public class ClickAssistance extends Module {
                         Wrapper.MC.playerController.attackEntity(Wrapper.MC.player, target);
                         Wrapper.MC.player.swingArm(Hand.MAIN_HAND);
                     } else {
-                        try {
-                            Wrapper.click();
-                        } catch (AWTException e) {
-                            logError("Could not create a click");
-                            if (BettercolorsEngine.VERBOSE) {
-                                e.printStackTrace();
-                            }
-                        }
+                        Wrapper.click();
                     }
                 }
             } else if (!onlyOnEntity && !packets) {
-                try {
-                    Wrapper.click();
-                } catch (AWTException e) {
-                    logError("Could not create a click");
-                    if (BettercolorsEngine.VERBOSE) {
-                        e.printStackTrace();
-                    }
-                }
+                Wrapper.click();
             }
         }
     }

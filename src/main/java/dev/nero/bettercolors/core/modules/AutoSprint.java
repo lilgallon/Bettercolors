@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package dev.nero.bettercolors.mod.modules;
+package dev.nero.bettercolors.core.modules;
 
 import dev.nero.bettercolors.engine.module.Module;
 import dev.nero.bettercolors.engine.option.Option;
-import dev.nero.bettercolors.mod.wrapper.Wrapper;
+import dev.nero.bettercolors.core.wrapper.Wrapper;
 
 import java.util.ArrayList;
 

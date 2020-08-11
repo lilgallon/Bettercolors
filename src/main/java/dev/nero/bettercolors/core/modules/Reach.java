@@ -1,4 +1,4 @@
-package dev.nero.bettercolors.mod.modules;
+package dev.nero.bettercolors.core.modules;
 
 import dev.nero.bettercolors.engine.module.Module;
 import dev.nero.bettercolors.engine.option.Option;

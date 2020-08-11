@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package dev.nero.bettercolors.mod;
+package dev.nero.bettercolors;
 
 import dev.nero.bettercolors.engine.BettercolorsEngine;
 import dev.nero.bettercolors.engine.module.Module;
 import dev.nero.bettercolors.engine.view.Window;
-import dev.nero.bettercolors.mod.hijacks.GameRendererHijack;
-import dev.nero.bettercolors.mod.modules.*;
+import dev.nero.bettercolors.core.hijacks.GameRendererHijack;
+import dev.nero.bettercolors.core.modules.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraftforge.client.event.InputEvent;
@@ -88,7 +88,7 @@ public class Bettercolors {
                 // gameRenderer is final, but we want to update it ;( we will use reflection to do so
 
                 // First, we need to find the field
-                Field gameRendererField = ObfuscationReflectionHelper.findField( // TODO: find obf field
+                Field gameRendererField = ObfuscationReflectionHelper.findField(
                         Minecraft.class,
                         "field_71460_t"
                         // The documentation says that we need to give the SRG name, and it will be automatically

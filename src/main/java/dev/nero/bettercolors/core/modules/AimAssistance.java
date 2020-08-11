@@ -1,4 +1,4 @@
-package dev.nero.bettercolors.mod.modules;
+package dev.nero.bettercolors.core.modules;
 
 import dev.nero.bettercolors.engine.module.Module;
 import dev.nero.bettercolors.engine.option.Option;
@@ -9,7 +9,7 @@ import dev.nero.bettercolors.engine.utils.Friends;
 import dev.nero.bettercolors.engine.utils.MathUtils;
 import dev.nero.bettercolors.engine.utils.TimeHelper;
 import com.google.common.collect.Lists;
-import dev.nero.bettercolors.mod.wrapper.Wrapper;
+import dev.nero.bettercolors.core.wrapper.Wrapper;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;

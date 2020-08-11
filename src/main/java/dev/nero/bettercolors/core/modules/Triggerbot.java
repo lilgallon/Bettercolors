@@ -1,7 +1,6 @@
-package dev.nero.bettercolors.mod.modules;
+package dev.nero.bettercolors.core.modules;
 
 import dev.nero.bettercolors.engine.BettercolorsEngine;
-import dev.nero.bettercolors.engine.io.SettingsUtils;
 import dev.nero.bettercolors.engine.module.Module;
 import dev.nero.bettercolors.engine.option.Option;
 import dev.nero.bettercolors.engine.option.ToggleOption;
@@ -10,7 +9,7 @@ import dev.nero.bettercolors.engine.option.ValueOption;
 import dev.nero.bettercolors.engine.utils.MathUtils;
 import dev.nero.bettercolors.engine.utils.TimeHelper;
 import dev.nero.bettercolors.engine.view.Window;
-import dev.nero.bettercolors.mod.wrapper.Wrapper;
+import dev.nero.bettercolors.core.wrapper.Wrapper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -26,11 +25,13 @@ public class Triggerbot extends Module {
 
     // Options name
     private static final String USE_ON_MOBS = "Use_on_mobs";
+    private static final String AUTO_CPS = "Auto_cps_sword_progress";
     private static final String CPS = "Clicks_per_seconds";
 
     // Options index
     private static final int I_USE_ON_MOBS = 0;
-    private static final int I_CPS = 1;
+    private static final int I_AUTO_CPS = 1;
+    private static final int I_CPS = 2;
 
     // Default options loading
     private static final ArrayList<Option> DEFAULT_OPTIONS;
@@ -38,6 +39,7 @@ public class Triggerbot extends Module {
         DEFAULT_OPTIONS = new ArrayList<>();
 
         DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, USE_ON_MOBS, false));
+        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, AUTO_CPS, false));
 
         DEFAULT_OPTIONS.add(new ValueFloatOption(PREFIX, CPS, 7, 1, 9, 0.1f, 0.5f));
     }
@@ -80,8 +82,10 @@ public class Triggerbot extends Module {
     @Override
     protected void onUpdate() {
         if (Wrapper.MC.player != null) {
-            if (!timeout.isDelayComplete((int) (1000f / getRandomCPS()))) return;
             if (Wrapper.isInGui()) return;
+
+            if (Wrapper.MC.player.getCooledAttackStrength(0) != 1.0 && autoCps()) return;
+            if (!timeout.isDelayComplete((int) (1000f / getRandomCPS())) && !autoCps()) return;
 
             Entity pointedEntity = Wrapper.MC.pointedEntity;
 
@@ -91,15 +95,8 @@ public class Triggerbot extends Module {
                 // Then check if the player sees it & not in same team
                 if (!pointedEntity.isInvisibleToPlayer(Wrapper.MC.player) && !Wrapper.isInSameTeam(pointedEntity)) {
                     // attack
-                    try {
-                        timeout.start();
-                        Wrapper.click();
-                    } catch (AWTException e) {
-                        logError("Could not create a click");
-                        if (BettercolorsEngine.VERBOSE) {
-                            e.printStackTrace();
-                        }
-                    }
+                    timeout.start();
+                    Wrapper.click();
                 }
             }
         }
@@ -123,6 +120,10 @@ public class Triggerbot extends Module {
 
     private boolean useOnMobs() {
         return ((ToggleOption) this.options.get(I_USE_ON_MOBS)).isActivated();
+    }
+
+    private boolean autoCps() {
+        return ((ToggleOption) this.options.get(I_AUTO_CPS)).isActivated();
     }
 
     private float getCPS() {

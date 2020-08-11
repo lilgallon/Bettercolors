@@ -216,3 +216,11 @@ Built with forge 32.0.107. You can use the same settings file as before.
     - It can't be used along with click assistance
 - Fixed a weird bug where all the modules would stop working (isShowingDeathScene is always true for some reason. Is that an issue with forge?)
 - Updated engine to 0.4.0 (preview). The only things that change for you are the themes
+
+**V7.2.0 MC_1.16.1**
+
+Built with forge 32.0.108. You can use the same settings file as before.
+
+- Added an option for the triggerbot to attack when it's fully charged ("auto cps")
+- Modules are now paused when using GUIs (it wasn't working sometimes)
+- Optimized click assistance & triggerbot

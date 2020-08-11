@@ -54,7 +54,7 @@ public class Bettercolors implements ModInitializer {
 
         ClientTickEvents.START_WORLD_TICK.register(start -> {
             if (!(Wrapper.MC.gameRenderer instanceof GameRendererHijack) && !failedBypass) {
-                Window.INFO("[-] Bypassing MC to enable reach...");
+                Window.INFO("[~] Bypassing MC to enable reach...");
 
                 Field gameRendererField = null;
                 try {

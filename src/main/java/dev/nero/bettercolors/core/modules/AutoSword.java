@@ -64,10 +64,10 @@ public class AutoSword extends Module {
                         SwordItem sword = (SwordItem) stack.getItem();
                         float damage = sword.getAttackDamage();
 
-                        // It's not the best algorithm, but that's enough for most of the cases
                         if (stack.hasEnchantments()) {
-                            damage = EnchantmentHelper.getAttackDamage(stack, EntityGroup.DEFAULT);
+                            damage += EnchantmentHelper.getAttackDamage(stack, EntityGroup.DEFAULT);
                         }
+
 
                         if(damage >= max_damage){
                             best_item = slot;

@@ -9,15 +9,16 @@
     <a href="https://img.shields.io/github/workflow/status/N3ROO/Bettercolors/Build%20MC1.14.4?label=1.14.4"><img alt="Build Status" src="https://img.shields.io/github/workflow/status/N3ROO/Bettercolors/Build%20MC1.14.4?label=1.14.4" /></a>
     <a href="https://img.shields.io/github/workflow/status/N3ROO/Bettercolors/Build%20MC1.15.2?label=1.15.2"><img alt="Build Status" src="https://img.shields.io/github/workflow/status/N3ROO/Bettercolors/Build%20MC1.15.2?label=1.15.2" /></a>
     <a href="https://img.shields.io/github/workflow/status/N3ROO/Bettercolors/Build%20MC1.16.1?label=1.16.1"><img alt="Build Status" src="https://img.shields.io/github/workflow/status/N3ROO/Bettercolors/Build%20MC1.16.1?label=1.16.1" /></a>
+    <a href="https://img.shields.io/github/workflow/status/N3ROO/Bettercolors/Build%20MC1.16.2_fabric?label=1.16.2%20fabric"><img alt="Build Status" src="https://img.shields.io/github/workflow/status/N3ROO/Bettercolors/Build%20MC1.16.2_fabric?label=1.16.2%20fabric"/></a>
 </p>
 
 <p align="center">
-    <a href="https://img.shields.io/badge/forge_dev-1.16.1_32.0.107-green.svg"><img alt="Forge dev version: 1.16.1-32.0.107" src="https://img.shields.io/badge/forge_dev-1.16.1_32.0.107-green.svg"/></a>
+    <a href="https://img.shields.io/badge/forge_dev-1.16.1_32.0.108-green.svg"><img alt="Forge dev version: 1.16.1-32.0.108" src="https://img.shields.io/badge/forge_dev-1.16.1_32.0.108-green.svg"/></a>
     <a href="https://img.shields.io/github/downloads/n3roo/bettercolors/total.svg"><img alt="Downloads" src="https://img.shields.io/github/downloads/n3roo/bettercolors/total.svg"/></a>
     <a href="https://img.shields.io/github/issues/n3roo/bettercolors.svg"><img alt="Open issues" src="https://img.shields.io/github/issues/n3roo/bettercolors.svg"/></a>
 </p>
 
-A silent "hack" built within the forge API. It bypasses powerful anticheats (forge mods and servers) to help you improve your gameplay.
+A silent "hack" built with forgeand fabric. It bypasses powerful anticheats to help you improve your gameplay.
 
 <h3 align="center">
   <b>Reach 💥 Aim Assistance 💥 Click Assistance 💥 Auto Sprint 💥 Auto Sword 💥 Triggerbot / Autoclick</b>

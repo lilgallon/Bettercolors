@@ -213,25 +213,11 @@ public class ClickAssistance extends Module {
                         Wrapper.MC.interactionManager.attackEntity(Wrapper.MC.player, target);
                         Wrapper.MC.player.swingHand(Hand.MAIN_HAND);
                     } else {
-                        try {
-                            Wrapper.click();
-                        } catch (AWTException e) {
-                            logError("Could not create a click");
-                            if (BettercolorsEngine.VERBOSE) {
-                                e.printStackTrace();
-                            }
-                        }
+                        Wrapper.click();
                     }
                 }
             } else if (!onlyOnEntity && !packets) {
-                try {
-                    Wrapper.click();
-                } catch (AWTException e) {
-                    logError("Could not create a click");
-                    if (BettercolorsEngine.VERBOSE) {
-                        e.printStackTrace();
-                    }
-                }
+                Wrapper.click();
             }
         }
     }

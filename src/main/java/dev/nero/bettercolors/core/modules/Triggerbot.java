@@ -1,6 +1,5 @@
 package dev.nero.bettercolors.core.modules;
 
-import dev.nero.bettercolors.core.mixin.CooldownAccessorMixin;
 import dev.nero.bettercolors.engine.BettercolorsEngine;
 import dev.nero.bettercolors.engine.module.Module;
 import dev.nero.bettercolors.engine.option.Option;
@@ -15,7 +14,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -85,8 +83,7 @@ public class Triggerbot extends Module {
         if (Wrapper.MC.player != null) {
             if (Wrapper.isInGui()) return;
 
-            boolean cooldownDone = ((CooldownAccessorMixin) Wrapper.MC).getAttackCooldown() == 0;
-            if (!cooldownDone && useOnMobs()) return;
+            if (Wrapper.MC.player.getAttackCooldownProgress(0) != 1.0 && autoCps()) return;
             if (!timeout.isDelayComplete((int) (1000f / getRandomCPS())) && !autoCps()) return;
 
             Entity pointedEntity = Wrapper.MC.targetedEntity;
@@ -97,15 +94,8 @@ public class Triggerbot extends Module {
                 // Then check if the player sees it & not in same team
                 if (Wrapper.MC.player.canSee(pointedEntity) && !Wrapper.isInSameTeam(pointedEntity)) {
                     // attack
-                    try {
-                        timeout.start();
-                        Wrapper.click();
-                    } catch (AWTException e) {
-                        logError("Could not create a click");
-                        if (BettercolorsEngine.VERBOSE) {
-                            e.printStackTrace();
-                        }
-                    }
+                    timeout.start();
+                    Wrapper.click();
                 }
             }
         }

@@ -54,7 +54,7 @@ public class Bettercolors implements ModInitializer {
 
         ClientTickEvents.START_WORLD_TICK.register(start -> {
             if (!(Wrapper.MC.gameRenderer instanceof GameRendererHijack) && !failedBypass) {
-                Window.INFO("[+] Bypassing MC to enable reach...");
+                Window.INFO("[-] Bypassing MC to enable reach...");
 
                 Field gameRendererField = null;
                 try {
@@ -71,7 +71,7 @@ public class Bettercolors implements ModInitializer {
                         System.out.println("Error 2:");
                         e2.printStackTrace();
 
-                        Window.ERROR("[-] Error while looking for gameRenderer");
+                        Window.ERROR("Error while looking for gameRenderer");
                         failedBypass = true;
                     }
                 }
@@ -82,7 +82,7 @@ public class Bettercolors implements ModInitializer {
                     try {
                         gameRendererField.set(Wrapper.MC.getInstance(), GameRendererHijack.hijack(BettercolorsEngine.MC.gameRenderer));
                     } catch (IllegalAccessException e) {
-                        Window.ERROR("[-] Error while hijacking gameRenderer");
+                        Window.ERROR("Error while hijacking gameRenderer");
                         failedBypass = true;
                         e.printStackTrace();
                     }

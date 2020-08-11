@@ -18,9 +18,10 @@
 
 package dev.nero.bettercolors.core.wrapper;
 
+import dev.nero.bettercolors.engine.utils.TimeHelper;
+import dev.nero.bettercolors.engine.view.Window;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 
@@ -32,8 +33,21 @@ import java.awt.*;
 public class Wrapper {
 
     public final static MinecraftClient MC = MinecraftClient.getInstance();
-
     public final static Class<PlayerEntity> playerEntityClass = PlayerEntity.class;
+
+    private final static TimeHelper delay = new TimeHelper();
+    private static Robot robot;
+
+    static {
+        try {
+            robot = new Robot();
+        } catch (AWTException e) {
+            e.printStackTrace();
+            Window.ERROR("Could not create robot to generate fake clicks");
+        }
+
+        delay.start();
+    }
 
     /**
      * @param e entity.
@@ -85,12 +99,17 @@ public class Wrapper {
 
     /**
      * Human-like click (fake mouse click).
+     *
+     * With a security (100 ms min between clicks) -> 10 CPS max allowed
      */
-    public static void click() throws AWTException{
-        Robot bot;
-        bot = new Robot();
-        bot.mouseRelease(16);
-        bot.mousePress(16);
-        bot.mouseRelease(16);
+    public static void click() {
+        if (delay.isDelayComplete(100)){
+            if (robot != null) {
+                robot.mouseRelease(16);
+                robot.mousePress(16);
+                robot.mouseRelease(16);
+            }
+            delay.reset();
+        }
     }
 }

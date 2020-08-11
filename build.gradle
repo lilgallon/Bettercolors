@@ -10,6 +10,11 @@ archivesBaseName = project.archives_base_name
 version = project.mod_version
 group = project.maven_group
 
+configurations {
+	inJar
+	compile.extendsFrom inJar
+}
+
 dependencies {
 	//to change the versions see the gradle.properties file
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
@@ -19,7 +24,7 @@ dependencies {
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-	modImplementation "io.github.vincenzopalazzo:material-ui-swing:1.1.1"
+	inJar "io.github.vincenzopalazzo:material-ui-swing:1.1.1"
 
 	// PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
 	// You may need to force-disable transitiveness on them.
@@ -55,6 +60,17 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 
 jar {
 	from "LICENSE"
+
+	into('/META-INF/libraries/') {
+		from configurations.inJar
+	}
+
+	manifest {
+		attributes([
+				'Main-Class': 'mdlaf.MaterialLookAndFeel',
+				'Class-Path': 'material-ui-swing-1.1.1.jar'
+		])
+	}
 }
 
 // configure the maven publication

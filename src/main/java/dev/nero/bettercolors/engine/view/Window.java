@@ -1110,7 +1110,7 @@ public class Window extends JFrame{
      * It hides / reveals the window.
      */
     public void toggle(){
-        setVisible(!isVisible());
+        SwingUtilities.invokeLater(() -> Window.getInstance().setVisible(!Window.getInstance().isVisible()));
     }
 
     public static Window getInstance() {

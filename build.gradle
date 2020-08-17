@@ -34,18 +34,14 @@ configurations {
 }
 
 dependencies {
-    inJar 'io.github.vincenzopalazzo:material-ui-swing:1.1.1_beta'
+    inJar "io.github.vincenzopalazzo:material-ui-swing:1.1.1"
 }
 
 jar {
-    into('META-INF/libraries') {
-        from configurations.inJar
-    }
-
-    manifest {
-        attributes(
-                'ContainedDeps': 'material-ui-swing-1.1.1_beta.jar'
-        )
+    from {
+        configurations.inJar.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
     }
 }
 

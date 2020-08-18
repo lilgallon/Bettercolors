@@ -33,9 +33,9 @@
 
 ## Last major changes
 
-- Added **Reach**
-- Added **Friend list**
-- Added **Triggerbot** (can be seen as an autoclicker)
+- (7.1.0) Added **Reach**
+- (7.1.0) Added **Friend list**
+- (7.2.0) Added **Triggerbot** (can be seen as an autoclicker)
 
 ## Incoming changes
 

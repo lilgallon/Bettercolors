@@ -1,30 +1,32 @@
 <h3 align="center">
   <img src=".github/header.png">
+  <a href="https://img.shields.io/github/downloads/n3roo/bettercolors/total.svg"><img alt="Downloads" src="https://img.shields.io/github/downloads/n3roo/bettercolors/total.svg"/></a>
+    <a href="https://img.shields.io/github/issues/n3roo/bettercolors.svg"><img alt="Open issues" src="https://img.shields.io/github/issues/n3roo/bettercolors.svg?label=issues%20or%20requests"/></a>
 </h3>
 
-<p align="center">
-    <a href="https://img.shields.io/github/workflow/status/N3ROO/Bettercolors/Build%20MC1.8.9?label=1.8.9"><img alt="Build Status" src="https://img.shields.io/github/workflow/status/N3ROO/Bettercolors/Build%20MC1.8.9?label=1.8.9" /></a>
-    <a href="https://img.shields.io/github/workflow/status/N3ROO/Bettercolors/Build%20MC1.12.2?label=1.12.2"><img alt="Build Status" src="https://img.shields.io/github/workflow/status/N3ROO/Bettercolors/Build%20MC1.12.2?label=1.12.2" /></a>
-    <a href="https://img.shields.io/github/workflow/status/N3ROO/Bettercolors/Build%20MC1.13.2?label=1.13.2"><img alt="Build Status" src="https://img.shields.io/github/workflow/status/N3ROO/Bettercolors/Build%20MC1.13.2?label=1.13.2" /></a>
-    <a href="https://img.shields.io/github/workflow/status/N3ROO/Bettercolors/Build%20MC1.14.4?label=1.14.4"><img alt="Build Status" src="https://img.shields.io/github/workflow/status/N3ROO/Bettercolors/Build%20MC1.14.4?label=1.14.4" /></a>
-    <a href="https://img.shields.io/github/workflow/status/N3ROO/Bettercolors/Build%20MC1.15.2?label=1.15.2"><img alt="Build Status" src="https://img.shields.io/github/workflow/status/N3ROO/Bettercolors/Build%20MC1.15.2?label=1.15.2" /></a>
-    <a href="https://img.shields.io/github/workflow/status/N3ROO/Bettercolors/Build%20MC1.16.1?label=1.16.1"><img alt="Build Status" src="https://img.shields.io/github/workflow/status/N3ROO/Bettercolors/Build%20MC1.16.1?label=1.16.1" /></a>
-    <a href="https://img.shields.io/github/workflow/status/N3ROO/Bettercolors/Build%20MC1.16.2_fabric?label=1.16.2%20fabric"><img alt="Build Status" src="https://img.shields.io/github/workflow/status/N3ROO/Bettercolors/Build%20MC1.16.2_fabric?label=1.16.2%20fabric"/></a>
-</p>
-
-<p align="center">
-    <a href="https://img.shields.io/badge/forge_dev-1.16.1_32.0.108-green.svg"><img alt="Forge dev version: 1.16.1-32.0.108" src="https://img.shields.io/badge/forge_dev-1.16.1_32.0.108-green.svg"/></a>
-    <a href="https://img.shields.io/github/downloads/n3roo/bettercolors/total.svg"><img alt="Downloads" src="https://img.shields.io/github/downloads/n3roo/bettercolors/total.svg"/></a>
-    <a href="https://img.shields.io/github/issues/n3roo/bettercolors.svg"><img alt="Open issues" src="https://img.shields.io/github/issues/n3roo/bettercolors.svg"/></a>
-</p>
-
-A silent "hack" built with forgeand fabric. It bypasses powerful anticheats to help you improve your gameplay.
-
 <h3 align="center">
-  <b>Reach 💥 Aim Assistance 💥 Click Assistance 💥 Auto Sprint 💥 Auto Sword 💥 Triggerbot / Autoclick</b>
+  A silent "hack" built with forgeand fabric. It bypasses powerful anticheats to help you improve your gameplay.
+  <br>
+  <b>Reach 💥 Aim Assistance 💥 Click Assistance 💥 Auto Sprint 💥 Auto Sword 💥 Triggerbot / Autoclick 💥 And more to come...</b>
   <br><br>
   <img src=".github/illustration.gif">
 </h3>
+
+## Versions
+*Click a version to see the code.*
+
+**Currently maintained:**
+- [![build](https://img.shields.io/github/workflow/status/N3ROO/Bettercolors/Build%20MC1.8.9?label=Bettercolors%20for%20MC1.8.9%20(forge))](https://github.com/N3ROO/Bettercolors/tree/MC_1.8.9)
+- [![build](https://img.shields.io/github/workflow/status/N3ROO/Bettercolors/Build%20MC1.16.2?label=Bettercolors%20for%20MC1.16.2%20(forge))](https://github.com/N3ROO/Bettercolors/tree/MC_1.16.2)
+- [![build](https://img.shields.io/github/workflow/status/N3ROO/Bettercolors/Build%20MC1.16.2_fabric?label=Bettercolors%20for%20MC1.16.2%20(fabric))](https://github.com/N3ROO/Bettercolors/tree/MC_1.16.2_fabric)
+
+**Not maintained anymore:**
+- [![build](https://img.shields.io/github/workflow/status/N3ROO/Bettercolors/Build%20MC1.12.2?label=Bettercolors%20for%20MC1.12.2%20(forge))](https://github.com/N3ROO/Bettercolors/tree/MC_1.12.2)
+- [![build](https://img.shields.io/github/workflow/status/N3ROO/Bettercolors/Build%20MC1.13.2?label=Bettercolors%20for%20MC1.13.2%20(forge))](https://github.com/N3ROO/Bettercolors/tree/MC_1.13.2)
+- [![build](https://img.shields.io/github/workflow/status/N3ROO/Bettercolors/Build%20MC1.14.4?label=Bettercolors%20for%20MC1.14.4%20(forge))](https://github.com/N3ROO/Bettercolors/tree/MC_1.14.4)
+- [![build](https://img.shields.io/github/workflow/status/N3ROO/Bettercolors/Build%20MC1.15.2?label=Bettercolors%20for%20MC1.15.2%20(forge))](https://github.com/N3ROO/Bettercolors/tree/MC_1.15.2)
+- [![build](https://img.shields.io/github/workflow/status/N3ROO/Bettercolors/Build%20MC1.16.1?label=Bettercolors%20for%20MC1.16.1%20(forge))](https://github.com/N3ROO/Bettercolors/tree/MC_1.16.1)
+
 
 ## Last major changes
 
@@ -32,13 +34,15 @@ A silent "hack" built with forgeand fabric. It bypasses powerful anticheats to h
 - Added **Friend list**
 - Added **Triggerbot** (can be seen as an autoclicker)
 
-See [details](CHANGELOG.md)
+## Incoming changes
+
+See the github [projects](https://github.com/N3ROO/Bettercolors/projects) page.
 
 ## Disclaimer
 
-I made this project to learn Java in a funny way. I started 2 years ago but the other repositories are, and will stay private. Only this repository will stay public because it can be used by newbies to improve their aim and their click rate without giving them a huge advantage. This has been made for educational purposes.
+I made this project to learn Java in a funny way. I started in 2017 but the other repositories are, and will stay private. Only this repository will stay public. This has been made for educational purposes.
 
-**Please make sure that the server you are playing on allows the use of this mod ! Use it at your own risk. I won't be responsible for anything you do wrong with this mod.**
+**Please make sure that the server you are playing on allows the use of this mod! Use it at your own risk. I won't be responsible for anything you do wrong with this mod.**
 
 ## About this mod
 

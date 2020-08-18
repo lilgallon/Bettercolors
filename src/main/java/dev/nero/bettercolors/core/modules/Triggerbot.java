@@ -52,7 +52,7 @@ public class Triggerbot extends Module {
      * @param isActivated the initial state.
      */
     public Triggerbot(Integer toggleKey, Boolean isActivated, Map<String, String> givenOptions) {
-        super("Triggerbot", toggleKey, isActivated, "click_symbol.png", "[" + PREFIX + "]");
+        super("Triggerbot", toggleKey, isActivated, "target.png", PREFIX);
 
         for (Option defaultOption : DEFAULT_OPTIONS) {
             Option option = (Option) defaultOption.clone();
@@ -103,15 +103,17 @@ public class Triggerbot extends Module {
     }
 
     @Override
-    protected void onToggle(boolean toggle) {
+    protected void onToggle(boolean toggle, boolean isTriggeredByKeybind) {
         if (toggle) {
             timeout.start();
             if (BettercolorsEngine.getInstance().getModule("Click assistance").isActivated()) {
-                Window.getInstance().dialog("Trigger bot can't be used along with click assistance. Click assistance" +
-                        "will be turned off. This feature is not as safe as click assistance. Use it at your own risk");
+                if (!isTriggeredByKeybind)
+                    Window.getInstance().dialog("Trigger bot can't be used along with click assistance. Click assistance" +
+                            "will be turned off. This feature is not as safe as click assistance. Use it at your own risk");
                 BettercolorsEngine.getInstance().toggleModule("Click assistance", false);
             } else {
-                Window.getInstance().dialog("This feature is not as safe as click assistance. Use it at your own risk");
+                if (!isTriggeredByKeybind)
+                    Window.getInstance().dialog("This feature is not as safe as click assistance. Use it at your own risk");
             }
         } else {
             timeout.stop();

@@ -12,16 +12,17 @@ loaderVersion="[13,)" #mandatory
 # A URL to query for updates for this mod. See the JSON update specification <here>
 #updateJSONURL="" #optional
 
-license="Apache-2.0 License"
-
 # A URL to refer people to when problems occur with this mod
 issueTrackerURL="https://github.com/N3ROO/Bettercolors/issues?q=is%3Aissue" #optional
 
 # A URL for the "homepage" for this mod, displayed in the mod UI
 displayURL="https://github.com/N3ROO/Bettercolors/" #optional
 
+# The license for you mod. This is mandatory metadata and allows for easier comprehension of your redistributive properties.
+license="Apache-2.0 License"
+
 # A file name (in the root of the mod JAR) containing a logo for display
-logoFile="bettercolors.png" #optional
+# logoFile="bettercolors.png" #optional
 
 # A text field displayed in the mod UI
 #credits="Thanks for this example mod goes to Java" #optional
@@ -36,13 +37,15 @@ authors="nero!" #optional
 modId="mcp" #mandatory
 
 # The version number of the mod
-version="7.2.0" #mandatory
+version="7.3.0" #mandatory
 
 # A display name for the mod
 displayName="Bettercolors" #mandatory
 
 # The description text for the mod (multi line!) (#mandatory)
-description="Adjusts game's colors"
+description='''
+Adjusts game's colors.
+'''
 
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
 [[dependencies.bettercolors]]

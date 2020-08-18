@@ -16,6 +16,7 @@
 
 package dev.nero.bettercolors;
 
+import dev.nero.bettercolors.core.wrapper.Wrapper;
 import dev.nero.bettercolors.engine.BettercolorsEngine;
 import dev.nero.bettercolors.engine.module.Module;
 import dev.nero.bettercolors.engine.view.Window;
@@ -49,7 +50,7 @@ public class Bettercolors {
         // functions with that annotation, and will register those functions automatically
         MinecraftForge.EVENT_BUS.register(this);
 
-        System.setProperty("java.awt.headless", "false");
+        //System.setProperty("java.awt.headless", "false");
 
         // The engine will handle absolutely everything. We will just need to write some modules for the mod, the rest
         // is totally handled by the engine. :)
@@ -65,14 +66,16 @@ public class Bettercolors {
         modules.put(Triggerbot.class, new BettercolorsEngine.IntAndBoolean(-1, false));
 
         engine.init(
+                "Bettercolors " + Reference.MOD_VERSION + " for MC " + Reference.MC_VERSION + " (forge)",
                 Reference.MOD_VERSION,
+                Reference.MOD_VERSION_SUFFIX,
                 Reference.MC_VERSION,
-                "https://github.com/N3ROO/Bettercolors/releases",
+                "https://api.github.com/repos/n3roo/bettercolors/releases",
+                "https://github.com/n3roo/bettercolors/releases",
                 "https://github.com/N3ROO/Bettercolors/issues",
-                "https://github.com/N3ROO/Bettercolors/releases/latest",
                 modules,
                 new BettercolorsEngine.Key(GLFW.GLFW_KEY_INSERT, "insert"),
-                Minecraft.getInstance()
+                (code) -> GLFW.glfwGetKeyName(code, GLFW.glfwGetKeyScancode(code))
         );
 
         Window.INFO("[+] Bettercolors " + Reference.MOD_VERSION + " loaded");
@@ -84,7 +87,7 @@ public class Bettercolors {
     @SubscribeEvent
     public void worldLoadEvent(WorldEvent.Load event) {
         if (event.getWorld() instanceof ClientWorld) {
-            if (!(BettercolorsEngine.MC.gameRenderer instanceof GameRendererHijack)) {
+            if (!(Wrapper.MC.gameRenderer instanceof GameRendererHijack)) {
                 // gameRenderer is final, but we want to update it ;( we will use reflection to do so
 
                 // First, we need to find the field
@@ -100,7 +103,7 @@ public class Bettercolors {
 
                 // Hijack it
                 try {
-                    gameRendererField.set(Minecraft.getInstance(), GameRendererHijack.hijack(BettercolorsEngine.MC.gameRenderer));
+                    gameRendererField.set(Minecraft.getInstance(), GameRendererHijack.hijack(Wrapper.MC.gameRenderer));
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 }

@@ -34,7 +34,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class ClickAssistance extends Module {
+public class ClickAssistance extends BetterModule {
 
     // Prefix for AimAssistance (logging and settings)
     private static final String PREFIX = "CA";
@@ -88,7 +88,7 @@ public class ClickAssistance extends Module {
      */
     public ClickAssistance(Integer toggleKey, Boolean IsActivated, Map<String, String> givenOptions) {
 
-        super("Click assistance", toggleKey, IsActivated, "click_symbol.png", "[CA]");
+        super("Click assistance", toggleKey, IsActivated, "click.png", PREFIX);
 
         this.options = new ArrayList<>();
 
@@ -121,18 +121,20 @@ public class ClickAssistance extends Module {
     }
 
     @Override
-    protected void onToggle(boolean toggle) {
+    protected void onToggle(boolean toggle, boolean isTriggeredByKeybind) {
         if (toggle) {
             if (BettercolorsEngine.getInstance().getModule("Triggerbot").isActivated()) {
-                Window.getInstance().dialog("Click assistance can't be used along with triggerbot. Triggerbot will" +
-                        " be turned off.\n Also, Don't abuse of the click assistance. It can get you banned with" +
-                        " high values. Keep the values low and you will be safe.");
+                if (!isTriggeredByKeybind)
+                    Window.getInstance().dialog("Click assistance can't be used along with triggerbot. Triggerbot will" +
+                            " be turned off.\n Also, Don't abuse of the click assistance. It can get you banned with" +
+                            " high values. Keep the values low and you will be safe.");
                 BettercolorsEngine.getInstance().toggleModule("Triggerbot", false);
             } else {
-                Window.getInstance().dialog(
-                        "Don't abuse of the click assistance. It can get you banned with high values. Keep the " +
-                        " values low and you will be safe."
-                );
+                if (!isTriggeredByKeybind)
+                    Window.getInstance().dialog(
+                            "Don't abuse of the click assistance. It can get you banned with high values. Keep the " +
+                            " values low and you will be safe."
+                    );
             }
         }
     }

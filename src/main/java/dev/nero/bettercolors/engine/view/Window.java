@@ -28,6 +28,7 @@ import dev.nero.bettercolors.engine.option.ToggleOption;
 import dev.nero.bettercolors.engine.option.ValueFloatOption;
 import dev.nero.bettercolors.engine.option.ValueOption;
 import dev.nero.bettercolors.engine.utils.Friends;
+import dev.nero.bettercolors.engine.utils.KeyName;
 import dev.nero.bettercolors.engine.utils.Keymap;
 import dev.nero.bettercolors.engine.version.Version;
 import dev.nero.bettercolors.engine.version.VersionException;
@@ -37,6 +38,7 @@ import mdlaf.themes.JMarsDarkTheme;
 import mdlaf.themes.MaterialLiteTheme;
 import mdlaf.themes.MaterialOceanicTheme;
 import mdlaf.themes.MaterialTheme;
+import org.lwjgl.glfw.GLFW;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -70,6 +72,7 @@ public class Window extends JFrame{
     // we will need to synchronize them at some point
     private final ArrayList<JCheckBox> CHECKBOXES_ACTIVATION;
     private final ArrayList<JCheckBox> CHECKBOXES_MODULES;
+    private final ArrayList<JButton> KEYBIND_BUTTONS;
     private final Map<JLabel, JSlider> SLIDERS_MODULES;
 
     // Used by the console
@@ -91,15 +94,21 @@ public class Window extends JFrame{
     public static String selectedTheme = THEME_DEFAULT;
     public final static String THEME_OPTION = "theme";
 
+    // Function used to get the key name
+    private KeyName keyNameFunc;
+
     /**
      * Creates the GUI
      * @param title window title
      * @param modules modules that will be shown in the GUI
      * @param version current version of the mod
+     * @param keyNameFunc a function that takes a key code and returns its string representation
      */
-    public Window(String title, ArrayList<Module> modules, Version version) {
+    public Window(String title, ArrayList<Module> modules, Version version, KeyName keyNameFunc) {
         // It calls the JFrame constructor
         super(title);
+
+        this.keyNameFunc = keyNameFunc;
 
         // The window will try to match these dimensions. If there is blank, it will wrap it to match the given
         // dimensions. Otherwise it will be bigger than that.
@@ -139,6 +148,7 @@ public class Window extends JFrame{
         this.MODULES = modules;
         this.CHECKBOXES_ACTIVATION = new ArrayList<>();
         this.CHECKBOXES_MODULES = new ArrayList<>();
+        this.KEYBIND_BUTTONS = new ArrayList<>();
         this.SLIDERS_MODULES = new HashMap<>();
 
         // We want to use a custom font for the console. We will initialize it here
@@ -302,8 +312,6 @@ public class Window extends JFrame{
         // Last thing that we need is to show if the current version is the last one
         JLabel update = new JLabel();
 
-        addText("", true);
-
         try {
             Version latest = Version.getLatestVersion(Reference.MC_VERSION);
             Version.VersionDiff diff = version.compareWith(latest);
@@ -332,10 +340,10 @@ public class Window extends JFrame{
                         public void mouseClicked(MouseEvent e) {
                             super.mouseClicked(e);
                             try {
-                                Desktop.getDesktop().browse(new URI(Reference.DOWNLOAD_URL));
+                                Desktop.getDesktop().browse(new URI(Reference.RELEASES_DOWNLOAD_URL));
                             } catch (URISyntaxException | IOException ex) {
                                 ERROR("Error while trying to go to the download page");
-                                ERROR("Here is the download page: " + Reference.DOWNLOAD_URL);
+                                ERROR("Here is the download page: " + Reference.RELEASES_DOWNLOAD_URL);
                             }
                         }
                     });
@@ -415,7 +423,7 @@ public class Window extends JFrame{
             // When clicked, we need to toggle the module and save its status to the settings file
             checkBox.addActionListener(e -> {
                 // Toggle the module
-                module.toggle();
+                module.toggle(false);
                 // Save the status
                 SettingsUtils.setOption(module.getClass().getSimpleName(), Boolean.toString(module.isActivated()));
                 // Makes sure that there is no desynchronization
@@ -586,6 +594,9 @@ public class Window extends JFrame{
             }
         }
 
+        // This tab will contain all the buttons to change the modules' toggle key
+        createTogglePanel(tabbedPane);
+
         // Now that we have one tab for each module, we want to create a custom tab for settings management
         createSettingsPanel(tabbedPane);
 
@@ -595,14 +606,14 @@ public class Window extends JFrame{
         modulesPanel.add(tabbedPane, "Center");
     }
 
-    private void createSettingsPanel(JTabbedPane tabbedPane){
-        JPanel settingsPanel = new JPanel();
-        settingsPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
-        settingsPanel.setLayout(new BorderLayout(0, 15));
+    private void createTogglePanel(JTabbedPane tabbedPane) {
+        JPanel togglePanel = new JPanel();
+        togglePanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+        togglePanel.setLayout(new FlowLayout());
 
         // Used to change the key to toggle the GUI
-        JButton keybind = new JButton("Change the key to toggle the GUI [" + Window.TOGGLE_KEY_NAME + "]");
-        keybind.addActionListener(e -> {
+        JButton keybindGui = new JButton("Gui toggle key: " + Window.TOGGLE_KEY_NAME);
+        keybindGui.addActionListener(e -> {
             // It creates a popup window
             JDialog dialog = new JDialog(Window.instance, "Message");
 
@@ -631,7 +642,7 @@ public class Window extends JFrame{
                 @Override
                 public void keyPressed(KeyEvent e) {
                     if(dialog.isVisible()) {
-                        int code = Keymap.map(e.getKeyCode(), Reference.FORGE_API == BettercolorsEngine.FORGE.NEW);
+                        int code = Keymap.map(e.getKeyCode(), Reference.MC_INPUTS_VERSION == BettercolorsEngine.MC_INPUTS.NEW);
 
                         if (code == -2) {
                             JOptionPane.showMessageDialog(Window.instance, "This key is not supported, please use an other one");
@@ -643,7 +654,7 @@ public class Window extends JFrame{
                             // Save the new key in the settings file
                             SettingsUtils.setOption(Window.TOGGLE_KEY_OPTION, Integer.toString(code));
                             // Change the label to show the new key used
-                            keybind.setText("Change the key to toggle the GUI [" + Window.TOGGLE_KEY_NAME + "]");
+                            keybindGui.setText("Gui toggle key: " + Window.TOGGLE_KEY_NAME);
                         }
                     }
 
@@ -658,7 +669,37 @@ public class Window extends JFrame{
             // Don't forget to show the popup, otherwise it will be hidden
             dialog.setVisible(true);
         });
-        settingsPanel.add(keybind, "North");
+        togglePanel.add(keybindGui);
+
+        for (Module module : MODULES) {
+            JButton keybindButton = createKeybindButton(module);
+            togglePanel.add(keybindButton);
+            this.KEYBIND_BUTTONS.add(keybindButton);
+        }
+
+        this.KEYBIND_BUTTONS.add(keybindGui);
+
+        // Add a specific icon to the keybind management tab
+        try {
+            ImageIcon icon = new ImageIcon(
+                    Objects.requireNonNull(
+                            Thread.currentThread()
+                                    .getContextClassLoader()
+                                    .getResource("images/key.png")
+                    )
+            );
+            tabbedPane.addTab("Keybinds", icon, togglePanel);
+        } catch (Exception e) {
+            e.printStackTrace();
+            WARN("Failed to load images/key.png");
+            tabbedPane.addTab("Keybinds", togglePanel);
+        }
+    }
+
+    private void createSettingsPanel(JTabbedPane tabbedPane){
+        JPanel settingsPanel = new JPanel();
+        settingsPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+        settingsPanel.setLayout(new BorderLayout(0, 15));
 
         // Now that we have the button to change the key to toggle the GUI, we want to add a new panel to manage the
         // settings file
@@ -703,7 +744,6 @@ public class Window extends JFrame{
 
             // Load the settings (the code is designed for it to be very simple)
             this.loadSettings();
-            keybind.setText("Change the key to toggle the GUI [" + Window.TOGGLE_KEY_NAME + "]");
         });
         buttons.add(select_button);
 
@@ -745,7 +785,6 @@ public class Window extends JFrame{
             SettingsUtils.setOptions(options, false);
             // load them
             this.loadSettings();
-            keybind.setText("Change the key to toggle the GUI [" + Window.TOGGLE_KEY_NAME + "]");
         });
         buttons.add(resetButton);
 
@@ -757,13 +796,13 @@ public class Window extends JFrame{
                     Objects.requireNonNull(
                             Thread.currentThread()
                                     .getContextClassLoader()
-                                    .getResource("images/settings_symbol.png")
+                                    .getResource("images/settings.png")
                     )
             );
             tabbedPane.addTab("Settings", icon, settingsPanel);
         } catch (Exception e) {
             e.printStackTrace();
-            WARN("Failed to load images/settings_symbol.png");
+            WARN("Failed to load images/settings.png");
             tabbedPane.addTab("Settings", settingsPanel);
         }
 
@@ -810,13 +849,13 @@ public class Window extends JFrame{
                     Objects.requireNonNull(
                             Thread.currentThread()
                                     .getContextClassLoader()
-                                    .getResource("images/sprint_symbol.png")
+                                    .getResource("images/friends.png")
                     )
             );
             tabbedPane.addTab("Friends", icon, friendListPanel);
         } catch (Exception e) {
             e.printStackTrace();
-            WARN("Failed to load images/sprint_symbol.png");
+            WARN("Failed to load images/friends.png");
             tabbedPane.addTab("Friends", friendListPanel);
         }
     }
@@ -872,10 +911,86 @@ public class Window extends JFrame{
      */
     private void setupFooter(JPanel footerPanel){
         JLabel credits = new JLabel(
-                " Bettercolors " + Reference.MOD_VERSION + " for MC " + Reference.MC_VERSION
+                " Powered by Bettercolors Engine " + Reference.ENGINE_VERSION + " "
         );
         credits.setFont(new Font(credits.getFont().getFontName(), Font.PLAIN, 12));
         footerPanel.add(credits, "West");
+    }
+
+    private JButton createKeybindButton(Module module) {
+
+        JButton button;
+        if (module.getToggleKey() != -1) {
+            button = new JButton(
+                module.getName() + " toggle key: " + module.getToggleKey() +
+                        " (" + keyNameFunc.getKeyName(module.getToggleKey()) + ")"
+            );
+        } else {
+            button = new JButton(
+                    module.getName() + " no toggle key yet"
+            );
+        }
+
+        button.addActionListener(e -> {
+            // It creates a popup window
+            JDialog dialog = new JDialog(Window.instance, "Waiting for input");
+
+            // Content of that popup window (html)
+            JLabel msg = new JLabel(
+                "<html>Press a key...<br>" +
+                        "Please note that due to the difference between<br>" +
+                        "VK and GLFW key events, ALT, CTRL and SHIFT<br>" +
+                        "keys do not take into account left / right. Only<br>" +
+                        "the right key is working. So if you choose<br>" +
+                        "the left key, it will register the right one.</html>"
+            );
+
+            // Popup layout
+            msg.setHorizontalAlignment(JLabel.CENTER);
+            dialog.getRootPane().setBorder(new EmptyBorder(10, 10, 10, 10));
+            dialog.setLayout(new BorderLayout(0, 15));
+            dialog.add(msg, "North");
+            dialog.pack();
+            dialog.setLocationRelativeTo(Window.instance);
+
+            // The thing that will retrieve the key pressed by the user
+            dialog.addKeyListener(new KeyListener() {
+                @Override
+                public void keyTyped(KeyEvent e) {}
+
+                @Override
+                public void keyPressed(KeyEvent e) {
+                    if(dialog.isVisible()) {
+                        int code = Keymap.map(e.getKeyCode(), Reference.MC_INPUTS_VERSION == BettercolorsEngine.MC_INPUTS.NEW);
+
+                        if (code == -2) {
+                            JOptionPane.showMessageDialog(Window.instance, "This key is not supported, please use an other one");
+                        } else {
+                            // Change the key code used
+                            module.setToggleKey(code);
+                            // Save the new key in the settings file
+                            SettingsUtils.setOption(module.getPrefix() + "_toggle_key", Integer.toString(code));
+                            // Change the label to show the new key used
+                            button.setText(
+                                module.getName() + " toggle key: " + module.getToggleKey() +
+                                " (" + keyNameFunc.getKeyName(module.getToggleKey()) + ")"
+                            );
+                        }
+                    }
+
+                    // Hide the GUI (it won't trigger event, no worries, it is as if it was turned off)
+                    dialog.setVisible(false);
+                }
+
+                @Override
+                public void keyReleased(KeyEvent e) {}
+            });
+
+            // Don't forget to show the popup, otherwise it will be hidden
+            dialog.setVisible(true);
+        });
+
+        return button;
     }
 
     /**
@@ -886,6 +1001,7 @@ public class Window extends JFrame{
         for(Module module : MODULES){
             module.setOptions(options);
             module.setActivated(Boolean.parseBoolean(options.get(module.getClass().getSimpleName())));
+            module.setToggleKey(Integer.parseInt(options.get(module.getPrefix() + "_toggle_key")));
         }
 
         // Update the toggle key and the HUD
@@ -985,10 +1101,8 @@ public class Window extends JFrame{
      * Adds text to the console
      * @param text the text
      * @param new_line if it should create a new line
-     * @deprecated use Window#log instead, this will be private on the stable release (1.0.0)
      */
-    @Deprecated
-    public void addText(String text, boolean new_line){
+    private void addText(String text, boolean new_line){
         addText(text, Color.WHITE, new_line);
     }
 
@@ -997,16 +1111,12 @@ public class Window extends JFrame{
      * @param text the text
      * @param color color of the text
      * @param new_line if it should create a new line
-     * @deprecated use Window#log instead, this will be private on the stable release (1.0.0)
      */
-    @Deprecated
-    public void addText(String text, Color color, boolean new_line){
-        // TODO: remove on 1.0.0 release
+    private void addText(String text, Color color, boolean new_line){
         if(this.console == null) {
             waitingMessages.add(new Message(text, color, new_line));
             return;
         }
-        // ---------------------------------
 
         this.textCounter ++;
         if(this.textCounter > 30) {
@@ -1052,6 +1162,21 @@ public class Window extends JFrame{
                     found = true;
                 }else{
                     ++ i;
+                }
+            }
+        }
+
+        for(JButton keybindButton : KEYBIND_BUTTONS) {
+            String name = keybindButton.getText();
+
+            if (name.startsWith("Gui")) {
+                keybindButton.setText("Gui toggle key: " + Window.TOGGLE_KEY_NAME);
+            } else {
+                for(Module module : MODULES){
+                    if (name.startsWith(module.getName())) {
+                        keybindButton.setText(module.getName() + " toggle key: " + module.getToggleKey());
+                        break;
+                    }
                 }
             }
         }
@@ -1110,7 +1235,9 @@ public class Window extends JFrame{
      * It hides / reveals the window.
      */
     public void toggle(){
-        setVisible(!isVisible());
+        SwingUtilities.invokeLater(
+                () -> Window.getInstance().setVisible(!Window.getInstance().isVisible())
+        );
     }
 
     public static Window getInstance() {

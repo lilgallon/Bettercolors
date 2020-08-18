@@ -15,18 +15,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package dev.nero.bettercolors.engine.utils;
 
-package dev.nero.bettercolors.engine;
-
-import dev.nero.bettercolors.engine.version.Version;
-
-public class Reference {
-	public static String ENGINE_VERSION = "1.0.0";
-	public static BettercolorsEngine.MC_INPUTS MC_INPUTS_VERSION;
-	public static String MC_VERSION;
-	public static String VERSION_SUFFIX;
-	public static Version MOD_VERSION;
-	public static String RELEASES_API_URL;
-	public static String RELEASES_DOWNLOAD_URL;
-	public static String ISSUES_TRACKER_URL;
+public interface KeyName {
+    public String getKeyName(int code);
 }

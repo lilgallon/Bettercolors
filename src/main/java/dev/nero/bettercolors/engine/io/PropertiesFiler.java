@@ -18,6 +18,8 @@
 
 package dev.nero.bettercolors.engine.io;
 
+import dev.nero.bettercolors.engine.BettercolorsEngine;
+
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -61,13 +63,15 @@ public class PropertiesFiler extends Filer {
             }
             prop.store(output, null);
         } catch (IOException io) {
-            io.printStackTrace();
+            if (BettercolorsEngine.VERBOSE)
+                io.printStackTrace();
         } finally {
             if (output != null) {
                 try {
                     output.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    if (BettercolorsEngine.VERBOSE)
+                        e.printStackTrace();
                 }
             }
         }
@@ -87,14 +91,16 @@ public class PropertiesFiler extends Filer {
             prop.load(input);
             value = prop.getProperty(key);
         } catch (IOException e) {
-            e.printStackTrace();
+            if (BettercolorsEngine.VERBOSE)
+                e.printStackTrace();
             return null;
         }
 
         try{
             input.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            if (BettercolorsEngine.VERBOSE)
+                e.printStackTrace();
             return null;
         }
 

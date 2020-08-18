@@ -37,7 +37,7 @@ public class Reach extends Module {
      * @param givenOptions the options for the mod
      */
     public Reach(Integer toggleKey, Boolean isActivated, Map<String, String> givenOptions) {
-        super("Reach", toggleKey, isActivated, "sword_symbol.png", "[" + PREFIX + "]");
+        super("Reach", toggleKey, isActivated, "hit.png", PREFIX);
 
         this.options = new ArrayList<>();
 
@@ -64,9 +64,10 @@ public class Reach extends Module {
     }
 
     @Override
-    protected void onToggle(boolean toggle) {
+    protected void onToggle(boolean toggle, boolean isTriggeredByKeybind) {
         if (toggle) {
-            Window.getInstance().dialog("Don't abuse of the extended reach. It can get you banned.");
+            if (!isTriggeredByKeybind)
+                Window.getInstance().dialog("Don't abuse of the extended reach. It can get you banned.");
         }
     }
 

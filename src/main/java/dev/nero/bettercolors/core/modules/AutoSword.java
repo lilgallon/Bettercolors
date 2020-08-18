@@ -28,14 +28,14 @@ import net.minecraft.item.SwordItem;
 
 import java.util.ArrayList;
 
-public class AutoSword extends Module {
+public class AutoSword extends BetterModule {
 
     /**
      * @param toggleKey the toggle key (-1 -> none)
      * @param isActivated the initial state
      */
     public AutoSword(Integer toggleKey, Boolean isActivated) {
-        super("Auto sword", toggleKey, isActivated, "sword_symbol.png", "[ASw]");
+        super("Auto sword", toggleKey, isActivated, "unknown.png", "ASw");
     }
 
     @Override

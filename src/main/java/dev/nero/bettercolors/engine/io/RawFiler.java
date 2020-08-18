@@ -1,6 +1,7 @@
 package dev.nero.bettercolors.engine.io;
 
 import dev.nero.bettercolors.engine.BettercolorsEngine;
+import dev.nero.bettercolors.engine.Reference;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -29,8 +30,10 @@ public class RawFiler extends Filer {
             writer.write((append ? "\n" : "") + lineToWrite.replaceAll("\n", ""));
             writer.close();
         } catch (IOException e) {
-            System.out.println("Failed to write in " + getCompeletePath());
-            e.printStackTrace();
+            if (BettercolorsEngine.VERBOSE) {
+                System.out.println("Failed to write in " + getCompeletePath());
+                e.printStackTrace();
+            }
         }
     }
 
@@ -56,9 +59,11 @@ public class RawFiler extends Filer {
 
             return true;
         } else {
-            System.out.println("Could not find:");
-            System.out.println(lineToErase);
-            System.out.println("In " + getCompeletePath());
+            if (BettercolorsEngine.VERBOSE) {
+                System.out.println("Could not find:");
+                System.out.println(lineToErase);
+                System.out.println("In " + getCompeletePath());
+            }
             return false;
         }
     }

@@ -22,17 +22,16 @@ import dev.nero.bettercolors.engine.module.Module;
 import dev.nero.bettercolors.engine.io.PropertiesFiler;
 import dev.nero.bettercolors.engine.io.SettingsUtils;
 import dev.nero.bettercolors.engine.utils.Friends;
+import dev.nero.bettercolors.engine.utils.KeyName;
 import dev.nero.bettercolors.engine.utils.KeysManager;
 import dev.nero.bettercolors.engine.option.Option;
 import dev.nero.bettercolors.engine.option.ToggleOption;
 import dev.nero.bettercolors.engine.version.Version;
-import dev.nero.bettercolors.engine.view.LogLevel;
 import dev.nero.bettercolors.engine.view.Window;
 import mdlaf.MaterialLookAndFeel;
 import mdlaf.themes.JMarsDarkTheme;
 import mdlaf.themes.MaterialLiteTheme;
 import mdlaf.themes.MaterialOceanicTheme;
-import net.minecraft.client.Minecraft;
 
 import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
@@ -45,9 +44,8 @@ import java.util.Map;
  * Your main class (the one with @Mod annotation) needs to instantiate this one.
  *
  * Stuff to know:
- * - Make sure to write System.setProperty("java.awt.headless", "false"); before calling init() if you're using forge
- *  >= 1.13
- * - The engine is designed to work with any forge version. The only thing that changes is wrapper.Wrapper.
+ * - Make sure to write System.setProperty("java.awt.headless", "false"); before calling init() if you're using MC
+ * >= 1.13
  *
  * Functions to call:
  * - init(...) during forge init
@@ -58,11 +56,10 @@ public class BettercolorsEngine {
 
     public static boolean VERBOSE = false;
     public static final String DEBUG_OPTION = "debug";
-    public static Minecraft MC;
     public static BettercolorsEngine instance;
 
     // Used to know if the mod is being built with the new forge api or not (>=1.13 is new, <1.13 is old)
-    public enum FORGE { NEW, OLD }
+    public enum MC_INPUTS { NEW, OLD }
 
     public static class Key {
         public Key(int code, String name) { this.code = code; this.name = name; }
@@ -83,6 +80,7 @@ public class BettercolorsEngine {
 
     public BettercolorsEngine() {
         instance = this;
+        System.setProperty("java.awt.headless", "false");
     }
 
     /**
@@ -90,29 +88,32 @@ public class BettercolorsEngine {
      *
      * -> Needs to be called first after or before registering forge event
      *
+     * @param windowTitle the title of the window (hud)
      * @param modVersion the mod version (ex: 6.2.0 for minecraft 1.8.9)
+     * @param versionSuffix the mod version prefix (ex: fa for fabric, fo for forge, or even nothing). It will be
+     *                      added to the end of the version to find the github tag. Ex: 6.2.0-MC1.8.9fa (fa here)
      * @param mcVersion the minecraft version (ex: 1.8.9)
-     * @param releasesUrl the github releases page
+     * @param releasesApiUrl the github releases API link (ex: https://api.github.com/repos/n3roo/bettercolors/releases)
+     * @param releasesDownloadUrl the download page (ex: https://github.com/n3roo/bettercolors/releases)
      * @param issuesTrackerUrl the issues tracker url
-     * @param downloadUrl the mod download url
      * @param modulesAndDetails the modules with their default state (turned on or off: boolean) and their toggle key
      *                         (int), -1 if they haven't any toggle key.
      * @param keyToToggleWindow the key to toggle the window
-     * @param MC the minecraft instance (Minecraft.getInstance() or Minecraft.getMinecraft() or something)
+     * @param keyNameFunc a function that takes a key code and returns its string representation
      */
     public void init(
+            String windowTitle,
             String modVersion,
+            String versionSuffix,
             String mcVersion,
-            String releasesUrl,
+            String releasesApiUrl,
+            String releasesDownloadUrl,
             String issuesTrackerUrl,
-            String downloadUrl,
             HashMap<Class<? extends Module>, IntAndBoolean> modulesAndDetails,
             Key keyToToggleWindow,
-            Minecraft MC
+            KeyName keyNameFunc
         )
     {
-        BettercolorsEngine.MC = MC;
-
         Reference.MOD_VERSION = new Version(
                 mcVersion,
                 Integer.parseInt(modVersion.split("\\.")[0]),
@@ -121,15 +122,16 @@ public class BettercolorsEngine {
                 modVersion.split("b").length > 1 ? Integer.parseInt(modVersion.split("b")[1]) : 0,
                 ""
         );
+        Reference.VERSION_SUFFIX = versionSuffix;
         Reference.MC_VERSION = mcVersion;
-        Reference.RELEASES_URL = releasesUrl;
+        Reference.RELEASES_API_URL = releasesApiUrl;
+        Reference.RELEASES_DOWNLOAD_URL = releasesDownloadUrl;
         Reference.ISSUES_TRACKER_URL = issuesTrackerUrl;
-        Reference.DOWNLOAD_URL = downloadUrl;
 
         this.modulesAndDetails = modulesAndDetails;
 
         // Used to know if the mod is being built with the new forge api or not (>=1.13 is new, <1.13 is old)
-        Reference.FORGE_API = (
+        Reference.MC_INPUTS_VERSION = (
                 (
                     new Version(
                             Integer.parseInt(mcVersion.split("\\.")[0]),
@@ -142,10 +144,10 @@ public class BettercolorsEngine {
                             13,
                             0
                     )
-                ) == Version.VersionDiff.OUTDATED) ? FORGE.OLD : FORGE.NEW;
+                ) == Version.VersionDiff.OUTDATED) ? MC_INPUTS.OLD : MC_INPUTS.NEW;
 
         if (VERBOSE) {
-            System.out.println((Reference.FORGE_API == FORGE.NEW ? "New " : "Old ") + "Forge API detected.");
+            System.out.println((Reference.MC_INPUTS_VERSION == MC_INPUTS.NEW ? "New " : "Old ") + "MC inputs detected");
         }
 
         // Update the window toggle key with the given one
@@ -302,6 +304,16 @@ public class BettercolorsEngine {
         // This variable will be shown in the GUI to say what key is currently used to toggle it
         Window.TOGGLE_KEY_NAME =  "code: " + Window.TOGGLE_KEY;
 
+        // Now we do the same thing but for the modules
+        for (Module module : modules) {
+            String optionName = module.getPrefix() + "_toggle_key";
+            try {
+                module.setToggleKey(Integer.parseInt(options.get(optionName)));
+            } catch (Exception ignored) {
+                SettingsUtils.setOption(optionName, Integer.toString(module.getToggleKey()));
+            }
+        }
+
         // We are almost done. We need to initialize everything related to the theme here.
         // We load the default swing theme first, and we store it in "defaultLookAndFeel".
         Window.defaultLookAndFeel = UIManager.getLookAndFeel();
@@ -346,9 +358,10 @@ public class BettercolorsEngine {
 
         // We have everything, we can finally create the GUI
         this.window = new Window(
-                "Bettercolors " + Reference.MOD_VERSION.toString(),
+                windowTitle,
                 this.modules,
-                Reference.MOD_VERSION
+                Reference.MOD_VERSION,
+                keyNameFunc
         );
     }
 
@@ -396,13 +409,10 @@ public class BettercolorsEngine {
     public void keyReleased(int code) {
 
         for (Module mod : this.modules){
-            // Update key handler of modules
-            mod.updateKeyHandler();
-
             if (mod.getToggleKey() != -1) { // = if the module has a toggle key
                 if (code == mod.getToggleKey()) {
                     // Toggle the module
-                    mod.toggle();
+                    mod.toggle(true);
 
                     // Synchronize the window's checkboxes
                     this.window.synchronizeComponents();
@@ -542,15 +552,5 @@ public class BettercolorsEngine {
      */
     public static BettercolorsEngine getInstance() {
         return instance;
-    }
-
-    /**
-     * @deprecated As of release 0.2.0, replaced by {@link Window#getInstance()}
-     *
-     * @return the GUI
-     */
-    @Deprecated()
-    public Window getWindow() {
-        return this.window;
     }
 }

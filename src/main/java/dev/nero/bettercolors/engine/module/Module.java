@@ -18,7 +18,6 @@
 
 package dev.nero.bettercolors.engine.module;
 
-import dev.nero.bettercolors.engine.BettercolorsEngine;
 import dev.nero.bettercolors.engine.option.Option;
 import dev.nero.bettercolors.engine.option.ToggleOption;
 import dev.nero.bettercolors.engine.option.ValueFloatOption;
@@ -27,19 +26,13 @@ import dev.nero.bettercolors.engine.view.LogLevel;
 import dev.nero.bettercolors.engine.view.Window;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 public abstract class Module {
 
     // Utility
-    private final String LOG_PREFIX;
+    private final String PREFIX;
     private String lastLogMessage;
-
-    // Keys utility
-    private final Map<Key, KeyState> KEY_HANDLER;
-    protected enum Key { ATTACK, USE }
-    protected enum KeyState { JUST_PRESSED, BEING_PRESSED, JUST_RELEASED, IDLE }
 
     // Module details
     private final String name;
@@ -47,7 +40,7 @@ public abstract class Module {
     private final String symbol;
 
     // Module status
-    private final int TOGGLE_KEY;
+    private int toggleKey;
     private boolean isActivated;
 
     /**
@@ -55,37 +48,28 @@ public abstract class Module {
      * @param toggleKey the toggle Key (-1 -> none).
      * @param isActivated the initial state.
      * @param symbol the picture name.
-     * @param log_prefix the prefix for console logging.
+     * @param prefix the prefix for console logging and settings.
      */
-    protected Module(String name, Integer toggleKey, Boolean isActivated, String symbol, String log_prefix){
+    protected Module(String name, Integer toggleKey, Boolean isActivated, String symbol, String prefix){
         this.name = name;
         this.isActivated = isActivated;
-        this.TOGGLE_KEY = toggleKey;
+        this.toggleKey = toggleKey;
         this.symbol = symbol;
-        this.LOG_PREFIX = log_prefix;
+        this.PREFIX = prefix;
 
         lastLogMessage = "";
 
         options = new ArrayList<>();
-
-        KEY_HANDLER = new HashMap<>();
-        KEY_HANDLER.put(Key.ATTACK, KeyState.IDLE);
-        KEY_HANDLER.put(Key.USE, KeyState.IDLE);
     }
 
     /**
      * It toggles the module.
+     *
+     * @param isTriggeredByKeybind if true means that the mod has been toggled using key press
      */
-    public void toggle(){
+    public void toggle(boolean isTriggeredByKeybind){
         isActivated = !isActivated;
-        this.onToggle(isActivated);
-
-        if (!isActivated) {
-            // Reset Key handler
-            for (Map.Entry<Key, KeyState> entry : KEY_HANDLER.entrySet()) {
-                entry.setValue(KeyState.IDLE);
-            }
-        }
+        this.onToggle(isActivated, isTriggeredByKeybind);
     }
 
     /**
@@ -95,7 +79,7 @@ public abstract class Module {
     protected void logInfo(String msg){
         if(!msg.equalsIgnoreCase(lastLogMessage)) {
             lastLogMessage = msg;
-            Window.LOG(LogLevel.INFO, LOG_PREFIX + " " + msg);
+            Window.LOG(LogLevel.INFO, "[" + PREFIX + "]" + msg);
         }
     }
 
@@ -106,50 +90,15 @@ public abstract class Module {
     protected void logError(String msg){
         if(!msg.equalsIgnoreCase(lastLogMessage)) {
             lastLogMessage = msg;
-            Window.LOG(LogLevel.ERROR, LOG_PREFIX + " " + msg);
+            Window.LOG(LogLevel.ERROR, "[" + PREFIX + "]" + msg);
         }
-    }
-
-    /**
-     * @param Key the Key to check the state.
-     * @param state the state of the Key.
-     * @return true if the [Key] is currently at the state [state].
-     */
-    protected boolean isKeyState(Key Key, KeyState state){
-        return KEY_HANDLER.get(Key) == state;
     }
 
     /**
      * It updates the module
      */
     public void update(){
-        updateKeyHandler();
         onUpdate();
-    }
-
-    /**
-     * It updates the Key handler
-     */
-    public void updateKeyHandler(){
-        if(BettercolorsEngine.MC.gameSettings.keyBindAttack.isKeyDown() && KEY_HANDLER.get(Key.ATTACK) == KeyState.IDLE){
-            KEY_HANDLER.replace(Key.ATTACK, KeyState.JUST_PRESSED);
-        }else if(BettercolorsEngine.MC.gameSettings.keyBindAttack.isKeyDown() && KEY_HANDLER.get(Key.ATTACK) == KeyState.JUST_PRESSED) {
-            KEY_HANDLER.replace(Key.ATTACK, KeyState.BEING_PRESSED);
-        }else if(!BettercolorsEngine.MC.gameSettings.keyBindAttack.isKeyDown() && (KEY_HANDLER.get(Key.ATTACK) == KeyState.JUST_PRESSED || KEY_HANDLER.get(Key.ATTACK) == KeyState.BEING_PRESSED)){
-            KEY_HANDLER.replace(Key.ATTACK, KeyState.JUST_RELEASED);
-        } else if(!BettercolorsEngine.MC.gameSettings.keyBindAttack.isKeyDown() && KEY_HANDLER.get(Key.ATTACK) == KeyState.JUST_RELEASED){
-            KEY_HANDLER.replace(Key.ATTACK, KeyState.IDLE);
-        }
-
-        if(BettercolorsEngine.MC.gameSettings.keyBindUseItem.isKeyDown() && KEY_HANDLER.get(Key.USE) == KeyState.IDLE){
-            KEY_HANDLER.replace(Key.USE, KeyState.JUST_PRESSED);
-        }else if(BettercolorsEngine.MC.gameSettings.keyBindUseItem.isKeyDown() && KEY_HANDLER.get(Key.USE) == KeyState.JUST_PRESSED) {
-            KEY_HANDLER.replace(Key.USE, KeyState.BEING_PRESSED);
-        }else if(!BettercolorsEngine.MC.gameSettings.keyBindUseItem.isKeyDown() && (KEY_HANDLER.get(Key.USE) == KeyState.JUST_PRESSED || KEY_HANDLER.get(Key.USE) == KeyState.BEING_PRESSED)){
-            KEY_HANDLER.replace(Key.USE, KeyState.JUST_RELEASED);
-        }else if(!BettercolorsEngine.MC.gameSettings.keyBindUseItem.isKeyDown() && KEY_HANDLER.get(Key.USE) == KeyState.JUST_RELEASED){
-            KEY_HANDLER.replace(Key.USE, KeyState.IDLE);
-        }
     }
 
     /**
@@ -184,20 +133,23 @@ public abstract class Module {
      * Used in children to execute some code when they're turning on and off.
      * Only called when toggle() is called by the engine.
      * @param toggle true if turned on, false otherwise
+     * @param isTriggeredByKeybind if true means that the mod has been toggled using key press
      */
-    protected void onToggle(boolean toggle) {}
+    protected void onToggle(boolean toggle, boolean isTriggeredByKeybind) {}
 
     protected static ArrayList<Option> getDefaultOptions() {
         return new ArrayList<>();
     }
 
     // Setters
-    public void setActivated(boolean activated){ isActivated = activated; }
+    public void setActivated(boolean activated) { this.isActivated = activated; }
+    public void setToggleKey(int key) { this.toggleKey = key; }
 
     // Getters
     public String getName() { return name; }
-    public int getToggleKey(){ return TOGGLE_KEY; }
+    public int getToggleKey(){ return toggleKey; }
     public boolean isActivated() { return isActivated; }
     public ArrayList<Option> getOptions() { return options; }
-    public String getSymbol(){ return symbol; }
+    public String getSymbol() { return symbol; }
+    public String getPrefix() { return PREFIX; }
 }

@@ -1,6 +1,5 @@
 package dev.nero.bettercolors.core.modules;
 
-import dev.nero.bettercolors.engine.module.Module;
 import dev.nero.bettercolors.engine.option.Option;
 import dev.nero.bettercolors.engine.option.ToggleOption;
 import dev.nero.bettercolors.engine.option.ValueFloatOption;
@@ -21,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class AimAssistance extends Module {
+public class AimAssistance extends BetterModule {
 
     // Prefix for AimAssistance (logging and settings)
     private static final String PREFIX = "AA";
@@ -93,7 +92,7 @@ public class AimAssistance extends Module {
      */
     public AimAssistance(Integer toggleKey, Boolean IsActivated, Map<String, String> givenOptions) {
 
-        super("Aim assistance", toggleKey, IsActivated, "aim_symbol.png", "[AA]");
+        super("Aim assistance", toggleKey, IsActivated, "magnet.png", PREFIX);
 
         this.options = new ArrayList<>();
 

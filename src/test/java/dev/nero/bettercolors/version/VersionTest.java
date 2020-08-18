@@ -1,11 +1,18 @@
 package dev.nero.bettercolors.version;
 
+import dev.nero.bettercolors.engine.Reference;
 import dev.nero.bettercolors.engine.version.Version;
 import dev.nero.bettercolors.engine.version.VersionException;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
 
 public class VersionTest {
+
+    @BeforeAll
+    static void init() {
+        Reference.RELEASES_API_URL = "https://api.github.com/repos/n3roo/bettercolors/releases";
+    }
 
     @Test
     void toStringTest() {

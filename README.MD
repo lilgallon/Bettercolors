@@ -1,12 +1,15 @@
 <h3 align="center">
   <img src=".github/header.png">
+  <br>
   <a href="https://img.shields.io/github/downloads/n3roo/bettercolors/total.svg"><img alt="Downloads" src="https://img.shields.io/github/downloads/n3roo/bettercolors/total.svg"/></a>
     <a href="https://img.shields.io/github/issues/n3roo/bettercolors.svg"><img alt="Open issues" src="https://img.shields.io/github/issues/n3roo/bettercolors.svg?label=issues%20or%20requests"/></a>
 </h3>
 
-<h3 align="center">
+<p align="center">
   A silent "hack" built with forgeand fabric. It bypasses powerful anticheats to help you improve your gameplay.
-  <br>
+</p>
+
+<h3 align="center">
   <b>Reach 💥 Aim Assistance 💥 Click Assistance 💥 Auto Sprint 💥 Auto Sword 💥 Triggerbot / Autoclick 💥 And more to come...</b>
   <br><br>
   <img src=".github/illustration.gif">

@@ -1,8 +1,8 @@
 <h3 align="center">
   <img src=".github/header.png">
   <br>
-  <a href="https://img.shields.io/github/downloads/n3roo/bettercolors/total.svg"><img alt="Downloads" src="https://img.shields.io/github/downloads/n3roo/bettercolors/total.svg"/></a>
-    <a href="https://img.shields.io/github/issues/n3roo/bettercolors.svg"><img alt="Open issues" src="https://img.shields.io/github/issues/n3roo/bettercolors.svg?label=issues%20or%20requests"/></a>
+  <a href="https://github.com/N3ROO/Bettercolors/releases"><img alt="Downloads" src="https://img.shields.io/github/downloads/n3roo/bettercolors/total.svg"/></a>
+    <a href="https://github.com/N3ROO/Bettercolors/issues"><img alt="issues and requests" src="https://img.shields.io/github/issues/n3roo/bettercolors.svg?label=issues%20or%20requests"/></a>
 </h3>
 
 <p align="center">

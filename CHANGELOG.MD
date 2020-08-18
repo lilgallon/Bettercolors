@@ -1,5 +1,14 @@
 **V7.3.0 MC_1.16.2**
-- *soon*
+You can use the same settings file as before.
+
+**Bettercolors engine 1.0.0:**
+- Added a new tab to change the toggle key of each module
+- Updated the theme: new icons and better layout
+- Support for linux
+- Support for fabric
+
+**Core:**
+- todo
 
 **V7.2.0 MC_1.16.1**
 

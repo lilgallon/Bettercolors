@@ -12,6 +12,8 @@ You can use the same settings file as before.
     - Improved reach
     - Changed max attack reach from 1.5 to 3.0 (you can go up to 6.0 reach which is not recommended lol)
     - Added a block reach (0 to 1 blocks)
+- Triggerbot:
+    - If the item has no attack cooldown (ex: hand), auto CPS will be 6 instead of 10
 
 **V7.2.0 MC_1.16.1**
 

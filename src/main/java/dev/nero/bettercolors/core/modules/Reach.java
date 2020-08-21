@@ -16,10 +16,12 @@ public class Reach extends Module {
     private static final String PREFIX = "REACH";
 
     // Options name
-    private static final String REACH_OPTION_LABEL = "Reach_increment";
+    private static final String CBT_REACH_OPTION_LABEL = "Combat_Reach_increment";
+    private static final String BLK_REACH_OPTION_LABEL = "Block_Reach_increment";
 
     // Options index
-    private static final int I_REACH_INCREMENT = 0;
+    private static final int I_CBT_REACH_INCREMENT = 0;
+    private static final int I_BLK_REACH_INCREMENT = 1;
 
     private static final ArrayList<Option> DEFAULT_OPTIONS;
     static {
@@ -27,7 +29,10 @@ public class Reach extends Module {
 
         // 10 = 1 block, so 5 means 0.5 block
         DEFAULT_OPTIONS.add(
-                new ValueFloatOption(PREFIX, REACH_OPTION_LABEL, 0.2f, 0.01f, 1.5f, 0.01f, 0.5f)
+                new ValueFloatOption(PREFIX, CBT_REACH_OPTION_LABEL, 0.2f, 0.01f, 3.0f, 0.01f, 0.5f)
+        );
+        DEFAULT_OPTIONS.add(
+                new ValueFloatOption(PREFIX, BLK_REACH_OPTION_LABEL, 0.2f, 0.01f, 1.0f, 0.01f, 0.5f)
         );
     }
 
@@ -71,8 +76,12 @@ public class Reach extends Module {
         }
     }
 
-    public float getReachIncrement() {
-        return ((ValueFloatOption) this.options.get(I_REACH_INCREMENT)).getVal();
+    public float getCombatReachIncrement() {
+        return ((ValueFloatOption) this.options.get(I_CBT_REACH_INCREMENT)).getVal();
+    }
+
+    public float getBlockReachIncrement() {
+        return ((ValueFloatOption) this.options.get(I_BLK_REACH_INCREMENT)).getVal();
     }
 
     public static ArrayList<Option> getDefaultOptions(){

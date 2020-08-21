@@ -104,7 +104,16 @@ public class Wrapper {
      * With a security (100 ms min between clicks) -> 10 CPS max allowed
      */
     public static void click() {
-        if (delay.isDelayComplete(100)){
+        Wrapper.click(100);
+    }
+
+    /**
+     * Human-like click (fake mouse click).
+     *
+     * @param minDelay minimum delay between each click. If not sure, use Wrapper#click()
+     */
+    public static void click(int minDelay) {
+        if (delay.isDelayComplete(minDelay)){
             if (robot != null) {
                 robot.mouseRelease(16);
                 robot.mousePress(16);

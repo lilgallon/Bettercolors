@@ -96,7 +96,7 @@ public class Triggerbot extends Module {
                 if (!pointedEntity.isInvisibleToPlayer(Wrapper.MC.player) && !Wrapper.isInSameTeam(pointedEntity)) {
                     // attack
                     timeout.start();
-                    Wrapper.click();
+                    Wrapper.click(166); // 6 cps max
                 }
             }
         }

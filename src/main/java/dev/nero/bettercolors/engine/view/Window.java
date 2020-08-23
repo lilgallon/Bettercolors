@@ -526,7 +526,7 @@ public class Window extends JFrame{
                     value = Math.max(min, Math.min(max, value)); // if value < min, value = min, if value > max, value = max
 
                     // The label contains the value next to the its name
-                    final JLabel label = new JLabel(valueOption.getName() + " [" + value + "]");
+                    final JLabel label = new JLabel(valueOption.getName().replace("_", " ") + " [" + value + "]");
                     final JSlider slider = new JSlider();
 
                     // Slider value settings
@@ -568,7 +568,7 @@ public class Window extends JFrame{
                         }
 
                         // Update the label with the slider's new value
-                        label.setText(valueOption.getName() + " [" + newValue + "]");
+                        label.setText(valueOption.getName().replace("_", " ") + " [" + newValue + "]");
                         // Update the GUI
                         repaint();
                     });

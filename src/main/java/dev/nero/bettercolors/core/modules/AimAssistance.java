@@ -129,7 +129,7 @@ public class AimAssistance extends BetterModule {
         List<Entity> entities = Wrapper.getEntitiesAroundPlayer(RANGE, ENTITY_TYPE);
 
         // Get the closest one to the crosshair
-        Entity closest = Wrapper.getClosestEntityToCrosshair(entities);
+        Entity closest = Wrapper.getClosestEntityToCrosshair(entities, true);
 
         if (closest != null) {
             this.target = closest;
@@ -138,7 +138,7 @@ public class AimAssistance extends BetterModule {
 
     /**
      * This function analyzes the player's behaviour to know if the aim assistance should be turned on or not. It should
-     * be called (at least) at every game tick because it uses input events (attack key information).
+     * be called (at least) at every game tick because it checks timers
      */
     private void analyseBehaviour() {
         // Settings

@@ -182,13 +182,16 @@ public class Wrapper {
 
     /**
      * @param entities list of entities to scan
+     * @param canAttackFilter if true, will remove entities not attackable by the player
      * @return the closest entity from the list from the player's crosshair
      */
-    public static Entity getClosestEntityToCrosshair(List<Entity> entities) {
+    public static Entity getClosestEntityToCrosshair(List<Entity> entities, boolean canAttackFilter) {
         float minDist = Float.MAX_VALUE;
         Entity closest = null;
 
         for(Entity entity : entities){
+            if (!Wrapper.canAttack(entity) && canAttackFilter) continue;
+
             // Get distance between the two entities (rotations)
             float[] yawPitch = getYawPitchBetween(
                     Wrapper.MC.player, entity

@@ -12,6 +12,7 @@ import dev.nero.bettercolors.engine.utils.TimeHelper;
 import dev.nero.bettercolors.engine.view.Window;
 import dev.nero.bettercolors.core.wrapper.Wrapper;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 
@@ -76,7 +77,7 @@ public class Triggerbot extends Module {
             // attack mobs is turned on
             if (pointedEntity instanceof PlayerEntity || (pointedEntity instanceof MobEntity && getOptionB(I_USE_ON_MOBS))) {
                 // Then check if the player sees it & not in same team
-                if (!pointedEntity.isInvisibleToPlayer(Wrapper.MC.player) && Wrapper.canAttack(pointedEntity)) {
+                if (!pointedEntity.isInvisibleToPlayer(Wrapper.MC.player) && Wrapper.canAttack((LivingEntity) pointedEntity)) {
                     // attack
                     timeout.start();
                     Wrapper.click(166); // 6 cps max

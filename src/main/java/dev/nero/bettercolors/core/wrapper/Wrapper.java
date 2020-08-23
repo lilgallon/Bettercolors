@@ -18,6 +18,7 @@
 
 package dev.nero.bettercolors.core.wrapper;
 
+import dev.nero.bettercolors.core.modules.Antibot;
 import dev.nero.bettercolors.core.modules.TeamFilter;
 import dev.nero.bettercolors.engine.BettercolorsEngine;
 import dev.nero.bettercolors.engine.utils.Friends;
@@ -26,6 +27,7 @@ import dev.nero.bettercolors.engine.view.Window;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -192,7 +194,8 @@ public class Wrapper {
         Entity closest = null;
 
         for(Entity entity : entities){
-            if (!Wrapper.canAttack(entity) && canAttackFilter) continue;
+            if (entity instanceof LivingEntity)
+                if (!Wrapper.canAttack((LivingEntity) entity) && canAttackFilter) continue;
 
             // Get distance between the two entities (rotations)
             float[] yawPitch = getYawPitchBetween(
@@ -311,21 +314,19 @@ public class Wrapper {
      * @param entity anything as long as it's an entity
      * @return true if the player can attack the given entity
      */
-    public static boolean canAttack(Entity entity) {
+    public static boolean canAttack(LivingEntity entity) {
         if (entity instanceof PlayerEntity) {
-            boolean canAttack;
-
             // Check friend
-            canAttack = !Friends.isFriend(entity.getDisplayName().getString());
-            if (!canAttack) return false;
+            if (Friends.isFriend(entity.getDisplayName().getString())) return false;
 
             // Check team
             if (TeamFilter.getInstance().isActivated()) {
-                canAttack = !Wrapper.isPlayerInSameTeamAs(entity);
-                if (!canAttack) return false;
+                if (Wrapper.isPlayerInSameTeamAs(entity)) return false;
             }
+        }
 
-            // TODO: antibot
+        if (Antibot.getInstance().isActivated()) {
+            if (Antibot.getInstance().isBot(entity)) return false;
         }
 
         return true;

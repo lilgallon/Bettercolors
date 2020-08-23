@@ -149,7 +149,7 @@ public class Bettercolors {
 
     @SubscribeEvent
     public void entityLeaveEvent(final EntityLeaveWorldEvent event) {
-        engine.event(EventType.ENTITY_JOIN, event);
+        engine.event(EventType.ENTITY_LEAVE, event);
     }
 
     @SubscribeEvent

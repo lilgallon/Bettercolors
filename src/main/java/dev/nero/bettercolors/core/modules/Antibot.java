@@ -10,6 +10,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.EntityLeaveWorldEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.world.WorldEvent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,6 +43,7 @@ public class Antibot extends Module {
     public Antibot(Integer toggleKey, Boolean isActivated) {
         super("Antibot", toggleKey, isActivated, "shield.png", PREFIX);
         this.entities = new HashMap<>();
+        instance = this;
     }
 
     @Override
@@ -50,10 +52,13 @@ public class Antibot extends Module {
         switch (code) {
             case EventType.WORLD_LOAD:
                 this.entities = new HashMap<>();
-                Wrapper.MC.world.getAllEntities().forEach((entity -> this.entities.put(
+
+                /*
+                WorldEvent.Load worldEvent = (WorldEvent.Load) details;
+                worldEvent.getWorld().getPlayers().forEach((entity -> this.entities.put(
                         entity.getEntityId(),
                         new Data()
-                )));
+                )));*/
                 break;
 
             case EventType.ENTITY_JOIN:

@@ -27,6 +27,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.EntityLeaveWorldEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -115,21 +118,15 @@ public class Bettercolors {
                 gameRendererField.setAccessible(false);
             }
         }
+
+        engine.event(EventType.WORLD_LOAD, event);
     }
 
-    /**
-     * Called when a key is pressed.
-     * @param event event details (containing the key pressed)
-     */
     @SubscribeEvent
     public void keyInputEvent(final InputEvent.KeyInputEvent event) {
         engine.keyEvent(event.getKey(),event.getAction() != GLFW.GLFW_RELEASE);
     }
 
-    /**
-     * A function called at every render tick event.
-     * @param event the event information
-     */
     @SubscribeEvent
     public void renderTickEvent(final TickEvent.RenderTickEvent event){
         engine.event(EventType.RENDER, event);
@@ -143,5 +140,20 @@ public class Bettercolors {
     @SubscribeEvent
     public void worldTickEvent(final TickEvent.WorldTickEvent event) {
         engine.event(EventType.WORLD_TICK, event);
+    }
+
+    @SubscribeEvent
+    public void entityJoinEvent(final EntityJoinWorldEvent event) {
+        engine.event(EventType.ENTITY_JOIN, event);
+    }
+
+    @SubscribeEvent
+    public void entityLeaveEvent(final EntityLeaveWorldEvent event) {
+        engine.event(EventType.ENTITY_JOIN, event);
+    }
+
+    @SubscribeEvent
+    public void entityHurtEvent(final LivingHurtEvent event) {
+        engine.event(EventType.ENTITY_HURT, event);
     }
 }

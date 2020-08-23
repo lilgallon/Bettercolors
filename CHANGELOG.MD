@@ -1,5 +1,5 @@
 **V7.3.0 MC_1.16.2**
-You can use the same settings file as before. This is a *big update*.
+You can use the same settings file as before, but it is recommended to reset it to default since some settings changed (see below).
 
 **Bettercolors engine 1.1.0:**
 - Added a new tab to change the toggle key of each module
@@ -26,6 +26,7 @@ You can use the same settings file as before. This is a *big update*.
     - Renamed "additional_clicks" to "additional_cps"
     - **A lot of improvements**
     - **A lot of optimizations**
+- TeamFilter: removed "teamfilter" option from every module. It is now a module, so when turned on, it works on every other module.
 
 - Miscellaneous:
     - You can now use greater values than the ones given by the UI. To do so, you need to update the config file manually.

@@ -18,6 +18,7 @@
 
 package dev.nero.bettercolors.core.wrapper;
 
+import dev.nero.bettercolors.engine.utils.Friends;
 import dev.nero.bettercolors.engine.utils.TimeHelper;
 import dev.nero.bettercolors.engine.view.Window;
 import net.minecraft.client.Minecraft;
@@ -299,5 +300,16 @@ public class Wrapper {
     public static void setRotations(float yaw, float pitch) {
         Wrapper.MC.player.rotationYaw = yaw;
         Wrapper.MC.player.rotationPitch = pitch;
+    }
+
+    public static boolean canAttack(Entity entity) {
+        // TODO:
+        // - antibot
+        // - team
+
+        if (entity instanceof PlayerEntity) {
+            return !Friends.isFriend(entity.getDisplayName().getString());
+        }
+        return true;
     }
 }

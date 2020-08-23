@@ -18,20 +18,18 @@ package dev.nero.bettercolors.core.modules;
 
 import dev.nero.bettercolors.core.events.EventType;
 import dev.nero.bettercolors.engine.BettercolorsEngine;
-import dev.nero.bettercolors.engine.module.Module;
 import dev.nero.bettercolors.engine.option.Option;
 import dev.nero.bettercolors.engine.option.ToggleOption;
 import dev.nero.bettercolors.engine.option.ValueFloatOption;
 import dev.nero.bettercolors.engine.option.ValueOption;
-import dev.nero.bettercolors.engine.utils.Friends;
 import dev.nero.bettercolors.engine.utils.MathUtils;
 import dev.nero.bettercolors.engine.utils.TimeHelper;
 import dev.nero.bettercolors.engine.view.Window;
 import dev.nero.bettercolors.core.wrapper.Wrapper;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.Hand;
+import net.minecraft.util.math.RayTraceResult;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -44,21 +42,18 @@ public class ClickAssistance extends BetterModule {
     private static final String PACKETS = "Packets";
     private static final String ONLY_ON_ENTITY = "Only_on_entity";
     private static final String TEAM_FILTER = "Team_filter";
-    private static final String ADDITIONAL_CLICKS = "Additional_clicks";
+    private static final String ADDITIONAL_CPS = "Additional_CPS";
     private static final String CHANCE = "Chance";
     private static final String DURATION = "Duration";
-    private static final String CLICKS_TO_ACTIVATE = "Clicks_to_activate";
-    private static final String TIME_TO_ACTIVATE = "Time_to_activate";
+    private static final String CPS_TO_ACTIVATE = "CPS_to_activate";
 
     // Options index
     private static final int I_PACKETS = 0;
     private static final int I_ONLY_ON_ENTITY = 1;
-    private static final int I_TEAM_FILTER = 2;
-    private static final int I_ADDITIONAL_CLICKS = 3;
-    private static final int I_CHANCE = 4;
-    private static final int I_DURATION = 5;
-    private static final int I_CLICKS_TO_ACTIVATE = 6;
-    private static final int I_TIME_TO_ACTIVATE = 7;
+    private static final int I_ADDITIONAL_CPS = 2;
+    private static final int I_CHANCE = 3;
+    private static final int I_DURATION = 4;
+    private static final int I_CPS_TO_ACTIVATE = 5;
 
     // Default options loading
     private static final ArrayList<Option> DEFAULT_OPTIONS;
@@ -69,18 +64,19 @@ public class ClickAssistance extends BetterModule {
         DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, ONLY_ON_ENTITY, false));
         DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, TEAM_FILTER, true));
 
-        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, ADDITIONAL_CLICKS, 2, 0, 5, 0, 1));
+        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, ADDITIONAL_CPS, 2, 0, 5, 0, 1));
         DEFAULT_OPTIONS.add(new ValueOption(PREFIX, CHANCE, 80, 0, 100, 5, 25));
         DEFAULT_OPTIONS.add(new ValueOption(PREFIX, DURATION, 1500, 0, 10000, 200, 1000));
-        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, CLICKS_TO_ACTIVATE, 3, 0, 20, 1, 5));
-        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, TIME_TO_ACTIVATE, 1000, 0, 10000, 200, 1000));
+
+        DEFAULT_OPTIONS.add(new ValueFloatOption(PREFIX, CPS_TO_ACTIVATE, 4, 0, 10, 1, 5));
     }
 
-    private final TimeHelper postActivationTimer;
-    private int postActivationClickCounter;
 
+    private boolean assist;
+    private int attackCount;
+    private final TimeHelper attackTimer;
+    private final TimeHelper attackDelay;
     private final TimeHelper activationTimer;
-    private final TimeHelper clickTimer;
 
     /**
      * @param toggleKey the toggle key (-1 -> none).
@@ -91,11 +87,17 @@ public class ClickAssistance extends BetterModule {
         super("Click assistance", toggleKey, IsActivated, "click.png", PREFIX);
         this.loadOptionsAccordingTo(DEFAULT_OPTIONS, givenOptions);
 
-        postActivationTimer = new TimeHelper();
-        postActivationClickCounter = 0;
+        this.assist = false;
+        this.attackCount = 0;
 
-        activationTimer = new TimeHelper();
-        clickTimer = new TimeHelper();
+        this.attackTimer = new TimeHelper();
+        this.attackTimer.stop();
+
+        this.attackDelay = new TimeHelper();
+        this.attackDelay.stop();
+
+        this.activationTimer = new TimeHelper();
+        this.activationTimer.stop();
     }
 
     @Override
@@ -123,85 +125,95 @@ public class ClickAssistance extends BetterModule {
         if (Wrapper.MC.player == null) return;
         if (Wrapper.isInGui()) return;
 
-        if (code == EventType.MOUSE_INPUT) {
-            if(activationTimer.isStopped()) {
-                boolean playerAttacks = this.playerAttacks();
+        switch (code) {
+            case EventType.MOUSE_INPUT:
+                break;
 
-                // If the click assist is not activated, we check if the user made the actions to activate it
-                if (playerAttacks && postActivationTimer.isStopped()) {
-                    // Attack pressed just pressed and timer stopped
-                    postActivationTimer.start();
-                    postActivationClickCounter = 1;
-                } else if (playerAttacks && !postActivationTimer.isStopped()) {
-                    postActivationClickCounter++;
-                }
-
-                int post_activation_duration = ((ValueOption) this.options.get(I_TIME_TO_ACTIVATE)).getVal();
-                int post_activation_clicks = ((ValueOption) this.options.get(I_CLICKS_TO_ACTIVATE)).getVal();
-                if (postActivationTimer.isDelayComplete(post_activation_duration)
-                        && postActivationClickCounter >= post_activation_clicks) {
-                    // The user clicked enough times in the given time, so the click assistance turns on
-                    postActivationTimer.stop();
-                    activationTimer.start();
-                    clickTimer.start();
-                    logInfo("Click assistance started.");
-                }else if (postActivationTimer.isDelayComplete(post_activation_duration)
-                        && postActivationClickCounter < post_activation_clicks) {
-                    // The user did not click enough times in the given time, so the click assistance turns off
-                    postActivationTimer.stop();
-                }
-            }
-
-            boolean timerDone = activationTimer.isDelayComplete(((ValueOption) this.options.get(I_DURATION)).getVal());
-
-            if(!activationTimer.isStopped() && (timerDone || Wrapper.isInGui())){
-                activationTimer.stop();
-                clickTimer.stop();
-                logInfo("Click assistance stopped.");
-            }
-
-            if(!activationTimer.isStopped()){
-                int cps = ((ValueOption) this.options.get(I_ADDITIONAL_CLICKS)).getVal();
-                if(cps != 0) {
-                    if (clickTimer.isDelayComplete(1000 / cps)) {
-                        useClickAssist();
-                        clickTimer.reset();
-                    }
-                }
-            }
+            case EventType.WORLD_TICK:
+                analyseBehaviour();
+                assistIfPossible();
+                break;
         }
     }
 
-    private void useClickAssist(){
-        boolean packets = ((ToggleOption) this.options.get(I_PACKETS)).isActivated();
-        boolean teamFilter = ((ToggleOption) this.options.get(I_TEAM_FILTER)).isActivated();
-        boolean onlyOnEntity = ((ToggleOption) this.options.get(I_ONLY_ON_ENTITY)).isActivated();
-        int chance = ((ValueOption) this.options.get(I_CHANCE)).getVal();
+    private void analyseBehaviour() {
+        // Settings
+        final float SPEED_TO_ACTIVATE = this.getOptionF(I_CPS_TO_ACTIVATE) / 1000f;
+        final int ACTIVATION_DURATION = this.getOptionI(I_DURATION);
+        final int TEST_DURATION = 1500; // ms: time to check if the speed is reached
 
-        Entity target = null;
-        try{
-            target = Wrapper.MC.pointedEntity;
-        }catch (Exception ignored){}
+        boolean playerAttacks = this.playerAttacks();
 
-        int rand = MathUtils.random(0, 100);
-        if(rand <= chance){
-            // If we care about being aiming at an entity, or if we use packets, we must make sure that the user is
-            // aiming at an entity that is close enough
-            if( (onlyOnEntity || packets) && target != null){
-                boolean reachable = Wrapper.MC.player.getDistance(target) <= Wrapper.MC.playerController.getBlockReachDistance();
-                if (reachable && (teamFilter && !Wrapper.isInSameTeam(target)) && !Friends.isFriend(target.getName().getString())) {
-                    if (packets) {
-                        // We basically do what the minecraft client does when attacking an entity
-                        Wrapper.MC.playerController.attackEntity(Wrapper.MC.player, target);
-                        Wrapper.MC.player.swingArm(Hand.MAIN_HAND);
-                    } else {
-                        Wrapper.click();
-                    }
-                }
-            } else if (!onlyOnEntity && !packets) {
+        // First time that the player attacks
+        if (this.attackCount == 0 && playerAttacks) {
+            this.attackCount += 1;
+            this.attackTimer.start();
+        }
+        // If it's not the first time that the player attacked
+        else if (this.attackCount > 0 && playerAttacks) {
+            this.attackCount += 1;
+
+            // Calculate the number of attacks per miliseconds
+            float speed = (float) this.attackCount / (float) this.attackTimer.getTimeElapsed();
+
+            // If player's attack speed is greater than the speed given to toggle the assistance, then we can tell to
+            // the instance that the player is interacting
+            if (speed > SPEED_TO_ACTIVATE) {
+                // We need to reset the variables that are used to define if the player is interacting because we know
+                // that the user is interacting right now
+                this.attackCount = 0;
+                this.attackTimer.stop();
+
+                this.activationTimer.start(); // it will reset if already started, so we're all good
+
+                this.assist = true;
+                this.attackDelay.start();
+            }
+        }
+        // If the player did not attack for that period of time, we give up and reset everything
+        else if (this.attackTimer.isDelayComplete(TEST_DURATION)) {
+            this.attackTimer.stop();
+            this.attackCount = 0;
+        }
+
+        // Stop the interaction once that the delay is reached
+        if (this.activationTimer.isDelayComplete(ACTIVATION_DURATION)) {
+            this.stop();
+        }
+    }
+
+    private void assistIfPossible() {
+        if (!this.assist) return;
+        if (!this.attackDelay.isDelayComplete(1000 / this.getOptionI(I_ADDITIONAL_CPS))) return;
+
+        // Settings
+        final boolean PACKETS = this.getOptionB(I_PACKETS);
+        final boolean ONLY_ON_ENTITY = this.getOptionB(I_ONLY_ON_ENTITY);
+        final int CHANCE = this.getOptionI(I_CHANCE);
+
+        boolean pointedEntity = false;
+        if (Wrapper.MC.objectMouseOver != null) {
+            pointedEntity = Wrapper.MC.objectMouseOver.getType() == RayTraceResult.Type.ENTITY;
+        }
+        if ((!pointedEntity || PACKETS) && ONLY_ON_ENTITY) return;
+
+        final int RAND = MathUtils.random(0, 100);
+        if (RAND <= CHANCE) {
+            if (PACKETS) {
+                Wrapper.MC.playerController.attackEntity(Wrapper.MC.player, (Entity) Wrapper.MC.objectMouseOver.hitInfo);
+                Wrapper.MC.player.swingArm(Hand.MAIN_HAND);
+            } else {
                 Wrapper.click();
             }
         }
+
+        this.attackDelay.start();
+    }
+
+    private void stop() {
+        this.assist = false;
+        this.activationTimer.stop();
+        this.attackDelay.stop();
     }
 
     /**

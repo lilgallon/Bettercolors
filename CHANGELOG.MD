@@ -15,12 +15,18 @@ You can use the same settings file as before. This is a *big update*.
     - Changed max attack reach from 1.5 to 3.0 (you can go up to 6.0 reach which is not recommended lol)
 - Triggerbot:
     - If the item has no attack cooldown (ex: hand), auto CPS will be 6 instead of 10
-- Aim Assistance:
+- Aim Assistance (has been re-coded):
     - Added "Sticky": assist if aiming an entity
     - Modified "Stop when reached": assist if not aiming an entity
     - Removed "time_to_activate" & "clicks_to_activate": (replaced by "cps_to_activate")
     - Removed "refresh_rate"
-    - **Huge improvements**
+    - **A lot of improvements**
+    - **A lot optimizations**
+- Click Assistance (has been re-coded):
+    - Renamed "additional_clicks" to "additional_cps"
+    - **A lot of improvements**
+    - **A lot of optimizations**
+
 - Miscellaneous:
     - You can now use greater values than the ones given by the UI. To do so, you need to update the config file manually.
     It's not recommended, but I'm sure that some of you will like that.

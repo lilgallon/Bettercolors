@@ -121,7 +121,7 @@ public class ClickAssistance extends BetterModule {
     protected void onEvent(int code, Object details) {
         if (!this.isActivated()) return;
         if (Wrapper.MC.player == null) return;
-
+        if (Wrapper.isInGui()) return;
 
         if (code == EventType.MOUSE_INPUT) {
             if(activationTimer.isStopped()) {

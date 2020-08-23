@@ -43,6 +43,7 @@ public class AutoSword extends BetterModule {
     protected void onEvent(int code, Object details) {
         if (!this.isActivated()) return;
         if (Wrapper.MC.player == null) return;
+        if (Wrapper.isInGui()) return;
 
         if (code == EventType.MOUSE_INPUT) {
             boolean isPointingEntity = false;

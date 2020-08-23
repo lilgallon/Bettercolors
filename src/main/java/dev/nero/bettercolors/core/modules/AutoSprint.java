@@ -37,6 +37,7 @@ public class AutoSprint extends Module {
     protected void onEvent(int code, Object details) {
         if (!this.isActivated()) return;
         if (Wrapper.MC.player == null) return;
+        if (Wrapper.isInGui()) return;
 
         if (code == EventType.WORLD_TICK) {
             if(Wrapper.MC.player.moveForward > 0 && !Wrapper.MC.player.isSprinting()){

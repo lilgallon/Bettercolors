@@ -90,6 +90,7 @@ public class AimAssistance extends BetterModule {
     @Override
     protected void onEvent(int code, Object details) {
         if (!this.isActivated()) return;
+        if (Wrapper.MC.player == null) return;
 
         switch (code) {
             case EventType.RENDER:

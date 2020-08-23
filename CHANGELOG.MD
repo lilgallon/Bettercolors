@@ -1,11 +1,12 @@
 **V7.3.0 MC_1.16.2**
 You can use the same settings file as before.
 
-**Bettercolors engine 1.0.0:**
+**Bettercolors engine 1.1.0:**
 - Added a new tab to change the toggle key of each module
 - Updated the theme: new icons and better layout
 - Support for linux
 - Support for fabric
+- Better events system **Modules can be now optimized a lot**
 
 **Core:**
 - Reach:
@@ -14,6 +15,11 @@ You can use the same settings file as before.
     - Added a block reach (0 to 1 blocks)
 - Triggerbot:
     - If the item has no attack cooldown (ex: hand), auto CPS will be 6 instead of 10
+- Aim Assistance:
+    - Added "Sticky": assist if aiming an entity
+    - Modified "Stop when reached": assist if not aiming an entity
+    - Removed "time_to_activate" & "clicks_to_activate": (replaced by "cps_to_activate")
+    - Removed "refresh_rate"
 
 **V7.2.0 MC_1.16.1**
 

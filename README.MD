@@ -5,7 +5,7 @@
 - Minecraft version: `1.16.2`
 - Bettercolors version: `7.3.0`
 - Forge version used: `33.0.20`
-- Bettercolors Engine version: `1.0.0`
+- Bettercolors Engine version: `1.1.0`
 - Maintained: `yes until MC1.17 release`
 - Changelog: [here](CHANGELOG.MD)
 

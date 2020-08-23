@@ -24,7 +24,6 @@ public class AimAssistance extends BetterModule {
     // Options name
     private static final String STOP_ON_RIGHT_CLICK = "Stop_on_right_click";
     private static final String USE_ON_MOBS = "Use_on_mobs";
-    private static final String TEAM_FILTER = "Team_filter";
     private static final String STOP_WHEN_REACHED = "Stop_when_reached";
     private static final String STICKY = "Sticky";
     private static final String STEP_X = "Step_X";
@@ -55,7 +54,6 @@ public class AimAssistance extends BetterModule {
 
         DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, STOP_ON_RIGHT_CLICK, true));
         DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, USE_ON_MOBS, false));
-        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, TEAM_FILTER, true));
         DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, STOP_WHEN_REACHED, false));
         DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, STICKY, false));
 
@@ -91,6 +89,7 @@ public class AimAssistance extends BetterModule {
     protected void onEvent(int code, Object details) {
         if (!this.isActivated()) return;
         if (Wrapper.MC.player == null) return;
+        if (Wrapper.isInGui()) return;
 
         switch (code) {
             case EventType.RENDER:
@@ -119,10 +118,7 @@ public class AimAssistance extends BetterModule {
 
         // Settings
         final int RANGE = ((ValueOption) this.options.get(I_RANGE)).getVal();
-        final Class<? extends Entity> ENTITY_TYPE = (
-                ((ToggleOption) this.options.get(I_USE_ON_MOBS)).isActivated() ?
-                        LivingEntity.class : PlayerEntity.class
-        );
+        final Class<? extends Entity> ENTITY_TYPE = (this.getOptionB(I_USE_ON_MOBS) ? LivingEntity.class : PlayerEntity.class);
 
         // Get all entities around the player
         List<Entity> entities = Wrapper.getEntitiesAroundPlayer(RANGE, ENTITY_TYPE);
@@ -143,8 +139,8 @@ public class AimAssistance extends BetterModule {
         if (Wrapper.MC.player == null) return;
 
         // Settings
-        final float SPEED_TO_ACTIVATE = ((ValueFloatOption) this.options.get(I_CPS_TO_ACTIVATE)).getVal() / 1000f;
-        final int ACTIVATION_DURATION = ((ValueOption) this.options.get(I_DURATION)).getVal();
+        final float SPEED_TO_ACTIVATE = this.getOptionF(I_CPS_TO_ACTIVATE) / 1000f;
+        final int ACTIVATION_DURATION = this.getOptionI(I_DURATION);
         final int TEST_DURATION = 1500; // ms: time to check if the speed is reached
 
         boolean playerAttacks = isKeyState(Key.ATTACK, KeyState.JUST_PRESSED);
@@ -199,12 +195,12 @@ public class AimAssistance extends BetterModule {
             }
 
             // Settings
-            final boolean stopWhenReached = ((ToggleOption) this.options.get(I_STOP_WHEN_REACHED)).isActivated();
-            final boolean sticky = ((ToggleOption) this.options.get(I_STICKY)).isActivated();
-            final float FOV_X = ((ValueOption) this.options.get(I_RADIUS_X)).getVal();
-            final float FOV_Y = ((ValueOption) this.options.get(I_RADIUS_Y)).getVal();
-            final float FORCE_X = ((ValueOption) this.options.get(I_STEP_X)).getVal();
-            final float FORCE_Y = ((ValueOption) this.options.get(I_STEP_Y)).getVal();
+            final boolean stopWhenReached = this.getOptionB(I_STOP_WHEN_REACHED);
+            final boolean sticky = this.getOptionB(I_STICKY);
+            final float FOV_X = this.getOptionI(I_RADIUS_X);
+            final float FOV_Y = this.getOptionI(I_RADIUS_Y);
+            final float FORCE_X = this.getOptionI(I_STEP_X);
+            final float FORCE_Y = this.getOptionI(I_STEP_Y);
 
             if (stopWhenReached && isAimingEntity) return; // stopWhenReached -> aim if not on entity
             if (sticky && !isAimingEntity) return; // sticky -> aim if on entity

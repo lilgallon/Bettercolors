@@ -7,6 +7,7 @@ You can use the same settings file as before, but it is recommended to reset it 
 - Support for linux
 - Support for fabric
 - Better events system **Modules can be now optimized a lot**
+- Options now use spaces instead of "_"'s
 
 **Core:**
 - Reach:

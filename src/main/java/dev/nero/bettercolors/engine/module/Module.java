@@ -226,7 +226,7 @@ public abstract class Module {
      *
      * TODO: abstract that in 2.0.0 release
      */
-    void onEvent(int code, Object details){}
+    protected void onEvent(int code, Object details){}
 
     /**
      * Used in children to execute some code when they're turning on and off.

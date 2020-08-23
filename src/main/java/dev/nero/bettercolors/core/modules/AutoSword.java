@@ -51,7 +51,7 @@ public class AutoSword extends BetterModule {
                 isPointingEntity = Wrapper.MC.objectMouseOver.getType() == RayTraceResult.Type.ENTITY;
             }
 
-            if(isKeyState(Key.ATTACK, KeyState.JUST_PRESSED) && isPointingEntity){
+            if(this.playerAttacks() && isPointingEntity){
                 // We find the best sword
                 float max_damage = -1;
                 int best_item = -1;

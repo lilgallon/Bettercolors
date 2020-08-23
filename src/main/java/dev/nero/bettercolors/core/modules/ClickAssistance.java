@@ -125,12 +125,14 @@ public class ClickAssistance extends BetterModule {
 
         if (code == EventType.MOUSE_INPUT) {
             if(activationTimer.isStopped()) {
+                boolean playerAttacks = this.playerAttacks();
+
                 // If the click assist is not activated, we check if the user made the actions to activate it
-                if (isKeyState(Key.ATTACK, KeyState.JUST_PRESSED) && postActivationTimer.isStopped()) {
+                if (playerAttacks && postActivationTimer.isStopped()) {
                     // Attack pressed just pressed and timer stopped
                     postActivationTimer.start();
                     postActivationClickCounter = 1;
-                } else if (isKeyState(Key.ATTACK, KeyState.JUST_PRESSED) && !postActivationTimer.isStopped()) {
+                } else if (playerAttacks && !postActivationTimer.isStopped()) {
                     postActivationClickCounter++;
                 }
 

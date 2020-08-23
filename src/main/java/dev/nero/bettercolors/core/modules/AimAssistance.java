@@ -68,9 +68,11 @@ public class AimAssistance extends BetterModule {
     }
 
     private Entity target;
+    private boolean assist;
     private int attackCount;
     private final TimeHelper attackTimer;
     private final TimeHelper activationTimer;
+    private boolean attackKeyAlreadyPressed;
 
     /**
      * @param toggleKey the toggle key (-1 -> none)
@@ -81,8 +83,17 @@ public class AimAssistance extends BetterModule {
         super("Aim assistance", toggleKey, IsActivated, "magnet.png", PREFIX);
         this.loadOptionsAccordingTo(DEFAULT_OPTIONS, givenOptions);
 
-        this.activationTimer = new TimeHelper();
+        this.target = null;
+        this.assist = false;
+        this.attackCount = 0;
+
         this.attackTimer = new TimeHelper();
+        this.attackTimer.stop();
+
+        this.activationTimer = new TimeHelper();
+        this.activationTimer.stop();
+
+        this.attackKeyAlreadyPressed = false;
     }
 
     @Override
@@ -97,15 +108,14 @@ public class AimAssistance extends BetterModule {
                 break;
 
             case EventType.MOUSE_INPUT:
-                if (isKeyState(Key.USE, KeyState.JUST_PRESSED) && this.getOptionB(I_STOP_ON_RIGHT_CLICK)) {
+                if (this.playerUses()) {
                     this.stop();
                 }
-
-                analyseBehaviour();
                 break;
 
             case EventType.WORLD_TICK:
                 analyseEnvironment();
+                analyseBehaviour();
                 break;
         }
     }
@@ -114,8 +124,6 @@ public class AimAssistance extends BetterModule {
      * This function analyses the player's environment to know what they're aiming at.
      */
     private void analyseEnvironment() {
-        if (Wrapper.MC.player == null) return;
-
         // Settings
         final int RANGE = ((ValueOption) this.options.get(I_RANGE)).getVal();
         final Class<? extends Entity> ENTITY_TYPE = (this.getOptionB(I_USE_ON_MOBS) ? LivingEntity.class : PlayerEntity.class);
@@ -136,14 +144,12 @@ public class AimAssistance extends BetterModule {
      * be called (at least) at every game tick because it uses input events (attack key information).
      */
     private void analyseBehaviour() {
-        if (Wrapper.MC.player == null) return;
-
         // Settings
         final float SPEED_TO_ACTIVATE = this.getOptionF(I_CPS_TO_ACTIVATE) / 1000f;
         final int ACTIVATION_DURATION = this.getOptionI(I_DURATION);
         final int TEST_DURATION = 1500; // ms: time to check if the speed is reached
 
-        boolean playerAttacks = isKeyState(Key.ATTACK, KeyState.JUST_PRESSED);
+        boolean playerAttacks = this.playerAttacks();
 
         // First time that the player attacks
         if (this.attackCount == 0 && playerAttacks) {
@@ -165,6 +171,7 @@ public class AimAssistance extends BetterModule {
                 this.attackCount = 0;
                 this.attackTimer.stop();
 
+                this.assist = true;
                 this.activationTimer.start(); // it will reset if already started, so we're all good
             }
         }
@@ -185,10 +192,8 @@ public class AimAssistance extends BetterModule {
      * assistance is.
      */
     private void assistIfPossible() {
-        if (Wrapper.MC.player == null) return;
-
         // Assist the player by taking into account this.target, only if it's valid
-        if (this.target != null) {
+        if (this.target != null && this.assist) {
             boolean isAimingEntity = false;
             if(Wrapper.MC.objectMouseOver != null) {
                 isAimingEntity = Wrapper.MC.objectMouseOver.getType() == RayTraceResult.Type.ENTITY;
@@ -219,6 +224,7 @@ public class AimAssistance extends BetterModule {
      * Stops the assistance
      */
     private void stop() {
+        this.assist = false;
         this.target = null;
         this.activationTimer.stop();
     }

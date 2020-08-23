@@ -46,14 +46,14 @@ public class ValueFloatOption extends Option{
      * @param val the new value.
      */
     public void setVal(float val){
+        this.val = val;
+        saveOption();
+
         if(val > MAX) {
             throw new IllegalArgumentException("The value " + val + " is bigger than its max : " + MAX);
         }else if(val < MIN){
             throw new IllegalArgumentException("The value " + val + " is lower than its min : " + MIN);
         }
-
-        this.val = val;
-        saveOption();
     }
 
     /**

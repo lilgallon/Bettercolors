@@ -1,5 +1,5 @@
 **V7.3.0 MC_1.16.2**
-You can use the same settings file as before.
+You can use the same settings file as before. This is a *big update*.
 
 **Bettercolors engine 1.1.0:**
 - Added a new tab to change the toggle key of each module
@@ -11,8 +11,8 @@ You can use the same settings file as before.
 **Core:**
 - Reach:
     - Improved reach
+    - Removed reach_increment: replaced by "combat_reach" and "block_reach"
     - Changed max attack reach from 1.5 to 3.0 (you can go up to 6.0 reach which is not recommended lol)
-    - Added a block reach (0 to 1 blocks)
 - Triggerbot:
     - If the item has no attack cooldown (ex: hand), auto CPS will be 6 instead of 10
 - Aim Assistance:
@@ -20,7 +20,11 @@ You can use the same settings file as before.
     - Modified "Stop when reached": assist if not aiming an entity
     - Removed "time_to_activate" & "clicks_to_activate": (replaced by "cps_to_activate")
     - Removed "refresh_rate"
-
+    - **Huge improvements**
+- Miscellaneous:
+    - You can now use greater values than the ones given by the UI. To do so, you need to update the config file manually.
+    It's not recommended, but I'm sure that some of you will like that.
+    
 **V7.2.0 MC_1.16.1**
 
 Built with forge 32.0.108. You can use the same settings file as before.

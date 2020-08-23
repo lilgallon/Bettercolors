@@ -1,5 +1,6 @@
 package dev.nero.bettercolors.core.modules;
 
+import dev.nero.bettercolors.core.events.EventType;
 import dev.nero.bettercolors.engine.option.Option;
 import dev.nero.bettercolors.engine.option.ToggleOption;
 import dev.nero.bettercolors.engine.option.ValueFloatOption;
@@ -9,6 +10,7 @@ import dev.nero.bettercolors.core.wrapper.Wrapper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.math.RayTraceResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,16 +38,15 @@ public class AimAssistance extends BetterModule {
     // Options index
     private static final int I_STOP_ON_RIGHT_CLICK = 0;
     private static final int I_USE_ON_MOBS = 1;
-    private static final int I_TEAM_FILTER = 2;
-    private static final int I_STOP_WHEN_REACHED = 3;
-    private static final int I_STICKY = 4;
-    private static final int I_STEP_X = 5;
-    private static final int I_STEP_Y = 6;
-    private static final int I_RANGE = 7;
-    private static final int I_RADIUS_X = 8;
-    private static final int I_RADIUS_Y = 9;
-    private static final int I_DURATION = 10;
-    private static final int I_CPS_TO_ACTIVATE = 11;
+    private static final int I_STOP_WHEN_REACHED = 2;
+    private static final int I_STICKY = 3;
+    private static final int I_STEP_X = 4;
+    private static final int I_STEP_Y = 5;
+    private static final int I_RANGE = 6;
+    private static final int I_RADIUS_X = 7;
+    private static final int I_RADIUS_Y = 8;
+    private static final int I_DURATION = 9;
+    private static final int I_CPS_TO_ACTIVATE = 10;
 
     // Default options loading
     private static final ArrayList<Option> DEFAULT_OPTIONS;
@@ -60,7 +61,7 @@ public class AimAssistance extends BetterModule {
 
         DEFAULT_OPTIONS.add(new ValueOption(PREFIX, STEP_X, 5, 0, 20, 1, 5));
         DEFAULT_OPTIONS.add(new ValueOption(PREFIX, STEP_Y, 5, 0, 20, 1, 5));
-        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, RANGE, 5, 0, 10, 1, 5));
+        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, RANGE, 3, 0, 10, 1, 5));
         DEFAULT_OPTIONS.add(new ValueOption(PREFIX, RADIUS_X, 60, 0, 180, 5, 25));
         DEFAULT_OPTIONS.add(new ValueOption(PREFIX, RADIUS_Y, 30, 0, 90, 3, 15));
         DEFAULT_OPTIONS.add(new ValueOption(PREFIX, DURATION, 2000, 0, 10000, 200, 1000));
@@ -79,45 +80,34 @@ public class AimAssistance extends BetterModule {
      * @param givenOptions the options for the mod
      */
     public AimAssistance(Integer toggleKey, Boolean IsActivated, Map<String, String> givenOptions) {
-
         super("Aim assistance", toggleKey, IsActivated, "magnet.png", PREFIX);
-
-        this.options = new ArrayList<>();
-
-        for (Option defaultOption : DEFAULT_OPTIONS) {
-            Option option = (Option) defaultOption.clone();
-            String name = defaultOption.getCompleteName();
-
-            if (option instanceof ToggleOption) {
-                ((ToggleOption) option).setActivated(
-                        Boolean.parseBoolean(givenOptions.get(name))
-                );
-            } else if (option instanceof ValueOption) {
-                ((ValueOption) option).setVal(
-                        Integer.parseInt(givenOptions.get(name))
-                );
-            } else if (option instanceof ValueFloatOption) {
-                ((ValueFloatOption) option).setVal(
-                        Float.parseFloat(givenOptions.get(name))
-                );
-            }
-
-            this.options.add(option);
-        }
+        this.loadOptionsAccordingTo(DEFAULT_OPTIONS, givenOptions);
 
         this.activationTimer = new TimeHelper();
         this.attackTimer = new TimeHelper();
     }
 
     @Override
-    public void onUpdate() {
-        if (isKeyState(Key.USE, KeyState.JUST_PRESSED) && ((ToggleOption) this.options.get(I_STOP_ON_RIGHT_CLICK)).isActivated()) {
-            this.stop();
-        }
+    protected void onEvent(int code, Object details) {
+        if (!this.isActivated()) return;
 
-        analyseBehaviour();
-        analyseEnvironment();
-        assistIfPossible();
+        switch (code) {
+            case EventType.RENDER:
+                assistIfPossible();
+                break;
+
+            case EventType.MOUSE_INPUT:
+                if (isKeyState(Key.USE, KeyState.JUST_PRESSED) && this.getOptionB(I_STOP_ON_RIGHT_CLICK)) {
+                    this.stop();
+                }
+
+                analyseBehaviour();
+                break;
+
+            case EventType.WORLD_TICK:
+                analyseEnvironment();
+                break;
+        }
     }
 
     /**
@@ -202,6 +192,10 @@ public class AimAssistance extends BetterModule {
 
         // Assist the player by taking into account this.target, only if it's valid
         if (this.target != null) {
+            boolean isAimingEntity = false;
+            if(Wrapper.MC.objectMouseOver != null) {
+                isAimingEntity = Wrapper.MC.objectMouseOver.getType() == RayTraceResult.Type.ENTITY;
+            }
 
             // Settings
             final boolean stopWhenReached = ((ToggleOption) this.options.get(I_STOP_WHEN_REACHED)).isActivated();
@@ -211,8 +205,8 @@ public class AimAssistance extends BetterModule {
             final float FORCE_X = ((ValueOption) this.options.get(I_STEP_X)).getVal();
             final float FORCE_Y = ((ValueOption) this.options.get(I_STEP_Y)).getVal();
 
-            if (stopWhenReached && Wrapper.MC.objectMouseOver != null) return; // stopWhenReached -> aim if not on entity
-            if (sticky && Wrapper.MC.objectMouseOver == null) return; // sticky -> aim if on entity
+            if (stopWhenReached && isAimingEntity) return; // stopWhenReached -> aim if not on entity
+            if (sticky && !isAimingEntity) return; // sticky -> aim if on entity
 
             final float[] rotations = Wrapper.getRotationsNeeded(
                     target,
@@ -224,11 +218,17 @@ public class AimAssistance extends BetterModule {
         }
     }
 
+    /**
+     * Stops the assistance
+     */
     private void stop() {
         this.target = null;
         this.activationTimer.stop();
     }
 
+    /**
+     * Used by the engine (reflection)
+     */
     public static ArrayList<Option> getDefaultOptions(){
         return DEFAULT_OPTIONS;
     }

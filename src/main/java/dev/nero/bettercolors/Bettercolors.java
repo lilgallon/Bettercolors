@@ -16,6 +16,7 @@
 
 package dev.nero.bettercolors;
 
+import dev.nero.bettercolors.core.events.EventType;
 import dev.nero.bettercolors.core.wrapper.Wrapper;
 import dev.nero.bettercolors.engine.BettercolorsEngine;
 import dev.nero.bettercolors.engine.module.Module;
@@ -74,7 +75,7 @@ public class Bettercolors {
                 "https://github.com/n3roo/bettercolors/releases",
                 "https://github.com/N3ROO/Bettercolors/issues",
                 modules,
-                new BettercolorsEngine.Key(GLFW.GLFW_KEY_INSERT, "insert"),
+                GLFW.GLFW_KEY_INSERT,
                 (code) -> GLFW.glfwGetKeyName(code, GLFW.glfwGetKeyScancode(code))
         );
 
@@ -129,6 +130,16 @@ public class Bettercolors {
      */
     @SubscribeEvent
     public void renderTickEvent(final TickEvent.RenderTickEvent event){
-        engine.update();
+        engine.event(EventType.RENDER, event);
 	}
+
+	@SubscribeEvent
+	public void mouseInputEvent(final InputEvent.MouseInputEvent event) {
+        engine.event(EventType.MOUSE_INPUT, event);
+    }
+
+    @SubscribeEvent
+    public void worldTickEvent(final TickEvent.WorldTickEvent event) {
+        engine.event(EventType.WORLD_TICK, event);
+    }
 }

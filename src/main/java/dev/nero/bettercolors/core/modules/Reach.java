@@ -43,29 +43,7 @@ public class Reach extends Module {
      */
     public Reach(Integer toggleKey, Boolean isActivated, Map<String, String> givenOptions) {
         super("Reach", toggleKey, isActivated, "hit.png", PREFIX);
-
-        this.options = new ArrayList<>();
-
-        for (Option defaultOption : DEFAULT_OPTIONS) {
-            Option option = (Option) defaultOption.clone();
-            String name = defaultOption.getCompleteName();
-
-            if (option instanceof ToggleOption) {
-                ((ToggleOption) option).setActivated(
-                        Boolean.parseBoolean(givenOptions.get(name))
-                );
-            } else if (option instanceof ValueOption) {
-                ((ValueOption) option).setVal(
-                        Integer.parseInt(givenOptions.get(name))
-                );
-            } else if (option instanceof ValueFloatOption) {
-                ((ValueFloatOption) option).setVal(
-                        Float.parseFloat(givenOptions.get(name))
-                );
-            }
-
-            this.options.add(option);
-        }
+        this.loadOptionsAccordingTo(DEFAULT_OPTIONS, givenOptions);
     }
 
     @Override
@@ -76,14 +54,23 @@ public class Reach extends Module {
         }
     }
 
+    /**
+     * @return the combat reach increment
+     */
     public float getCombatReachIncrement() {
-        return ((ValueFloatOption) this.options.get(I_CBT_REACH_INCREMENT)).getVal();
+        return this.getOptionF(I_CBT_REACH_INCREMENT);
     }
 
+    /**
+     * @return the block reach increment
+     */
     public float getBlockReachIncrement() {
-        return ((ValueFloatOption) this.options.get(I_BLK_REACH_INCREMENT)).getVal();
+        return this.getOptionF(I_BLK_REACH_INCREMENT);
     }
 
+    /**
+     * Used by the engine (reflection)
+     */
     public static ArrayList<Option> getDefaultOptions(){
         return DEFAULT_OPTIONS;
     }

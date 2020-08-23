@@ -16,6 +16,7 @@
 
 package dev.nero.bettercolors.core.modules;
 
+import dev.nero.bettercolors.core.events.EventType;
 import dev.nero.bettercolors.engine.BettercolorsEngine;
 import dev.nero.bettercolors.engine.module.Module;
 import dev.nero.bettercolors.engine.option.Option;
@@ -75,11 +76,11 @@ public class ClickAssistance extends BetterModule {
         DEFAULT_OPTIONS.add(new ValueOption(PREFIX, TIME_TO_ACTIVATE, 1000, 0, 10000, 200, 1000));
     }
 
-    private TimeHelper postActivationTimer;
+    private final TimeHelper postActivationTimer;
     private int postActivationClickCounter;
 
-    private TimeHelper activationTimer;
-    private TimeHelper clickTimer;
+    private final TimeHelper activationTimer;
+    private final TimeHelper clickTimer;
 
     /**
      * @param toggleKey the toggle key (-1 -> none).
@@ -87,31 +88,8 @@ public class ClickAssistance extends BetterModule {
      * @param givenOptions the options for the mod
      */
     public ClickAssistance(Integer toggleKey, Boolean IsActivated, Map<String, String> givenOptions) {
-
         super("Click assistance", toggleKey, IsActivated, "click.png", PREFIX);
-
-        this.options = new ArrayList<>();
-
-        for (Option defaultOption : DEFAULT_OPTIONS) {
-            Option option = (Option) defaultOption.clone();
-            String name = defaultOption.getCompleteName();
-
-            if (option instanceof ToggleOption) {
-                ((ToggleOption) option).setActivated(
-                        Boolean.parseBoolean(givenOptions.get(name))
-                );
-            } else if (option instanceof ValueOption) {
-                ((ValueOption) option).setVal(
-                        Integer.parseInt(givenOptions.get(name))
-                );
-            } else if (option instanceof ValueFloatOption) {
-                ((ValueFloatOption) option).setVal(
-                        Float.parseFloat(givenOptions.get(name))
-                );
-            }
-
-            this.options.add(option);
-        }
+        this.loadOptionsAccordingTo(DEFAULT_OPTIONS, givenOptions);
 
         postActivationTimer = new TimeHelper();
         postActivationClickCounter = 0;
@@ -140,8 +118,12 @@ public class ClickAssistance extends BetterModule {
     }
 
     @Override
-    public void onUpdate() {
-        if(Wrapper.MC.player != null){
+    protected void onEvent(int code, Object details) {
+        if (!this.isActivated()) return;
+        if (Wrapper.MC.player == null) return;
+
+
+        if (code == EventType.MOUSE_INPUT) {
             if(activationTimer.isStopped()) {
                 // If the click assist is not activated, we check if the user made the actions to activate it
                 if (isKeyState(Key.ATTACK, KeyState.JUST_PRESSED) && postActivationTimer.isStopped()) {
@@ -188,10 +170,6 @@ public class ClickAssistance extends BetterModule {
         }
     }
 
-    public static ArrayList<Option> getDefaultOptions(){
-        return DEFAULT_OPTIONS;
-    }
-
     private void useClickAssist(){
         boolean packets = ((ToggleOption) this.options.get(I_PACKETS)).isActivated();
         boolean teamFilter = ((ToggleOption) this.options.get(I_TEAM_FILTER)).isActivated();
@@ -222,5 +200,12 @@ public class ClickAssistance extends BetterModule {
                 Wrapper.click();
             }
         }
+    }
+
+    /**
+     * Used by the engine (reflection)
+     */
+    public static ArrayList<Option> getDefaultOptions(){
+        return DEFAULT_OPTIONS;
     }
 }

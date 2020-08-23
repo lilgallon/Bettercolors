@@ -1,5 +1,6 @@
 package dev.nero.bettercolors.core.modules;
 
+import dev.nero.bettercolors.core.events.EventType;
 import dev.nero.bettercolors.core.wrapper.Wrapper;
 import dev.nero.bettercolors.engine.module.Module;
 
@@ -48,9 +49,12 @@ public class BetterModule extends Module {
     }
 
     @Override
-    public void update(){
-        updateKeyHandler();
-        onUpdate();
+    public void event(int code, Object details) {
+        if (code == EventType.MOUSE_INPUT) {
+            updateKeyHandler();
+        }
+
+        this.onEvent(code, details);
     }
 
     /**

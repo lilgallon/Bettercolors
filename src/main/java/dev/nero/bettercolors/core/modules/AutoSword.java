@@ -16,7 +16,7 @@
 
 package dev.nero.bettercolors.core.modules;
 
-import dev.nero.bettercolors.engine.module.Module;
+import dev.nero.bettercolors.core.events.EventType;
 import dev.nero.bettercolors.engine.option.Option;
 import dev.nero.bettercolors.core.wrapper.Wrapper;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -25,6 +25,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.SwordItem;
+import net.minecraft.util.math.RayTraceResult;
 
 import java.util.ArrayList;
 
@@ -39,20 +40,17 @@ public class AutoSword extends BetterModule {
     }
 
     @Override
-    public void onUpdate() {
-        if(Wrapper.MC.player != null){
+    protected void onEvent(int code, Object details) {
+        if (!this.isActivated()) return;
+        if (Wrapper.MC.player == null) return;
 
-            boolean has_clicked_on_living_entity = false;
-            try {
-                Entity mouseOverEntity = Wrapper.MC.pointedEntity;
-                if ((mouseOverEntity instanceof LivingEntity))
-                    has_clicked_on_living_entity = true;
-            } catch (Exception ignored) {
-                // Happens sometimes in MC1.8.9, did not test if it happens on 1.15.2 as well
-                // When we try to get what the player is pointing at, and it's a ladder, it crashes for example
+        if (code == EventType.MOUSE_INPUT) {
+            boolean isPointingEntity = false;
+            if (Wrapper.MC.objectMouseOver != null) {
+                isPointingEntity = Wrapper.MC.objectMouseOver.getType() == RayTraceResult.Type.ENTITY;
             }
 
-            if(isKeyState(Key.ATTACK, KeyState.JUST_PRESSED) && has_clicked_on_living_entity){
+            if(isKeyState(Key.ATTACK, KeyState.JUST_PRESSED) && isPointingEntity){
                 // We find the best sword
                 float max_damage = -1;
                 int best_item = -1;
@@ -92,6 +90,9 @@ public class AutoSword extends BetterModule {
         }
     }
 
+    /**
+     * Used by the engine (reflection)
+     */
     public static ArrayList<Option> getDefaultOptions(){
         return new ArrayList<>();
     }

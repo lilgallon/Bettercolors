@@ -1,5 +1,6 @@
 package dev.nero.bettercolors.core.modules;
 
+import dev.nero.bettercolors.core.events.EventType;
 import dev.nero.bettercolors.engine.BettercolorsEngine;
 import dev.nero.bettercolors.engine.module.Module;
 import dev.nero.bettercolors.engine.option.Option;
@@ -45,7 +46,7 @@ public class Triggerbot extends Module {
     }
 
     // Utility attributes
-    private TimeHelper timeout;
+    private final TimeHelper timeout;
 
     /**
      * @param toggleKey the toggle key (-1 -> none).
@@ -53,45 +54,27 @@ public class Triggerbot extends Module {
      */
     public Triggerbot(Integer toggleKey, Boolean isActivated, Map<String, String> givenOptions) {
         super("Triggerbot", toggleKey, isActivated, "target.png", PREFIX);
-
-        for (Option defaultOption : DEFAULT_OPTIONS) {
-            Option option = (Option) defaultOption.clone();
-            String name = defaultOption.getCompleteName();
-
-            if (option instanceof ToggleOption) {
-                ((ToggleOption) option).setActivated(
-                        Boolean.parseBoolean(givenOptions.get(name))
-                );
-            } else if (option instanceof ValueOption) {
-                ((ValueOption) option).setVal(
-                        Integer.parseInt(givenOptions.get(name))
-                );
-            } else if (option instanceof ValueFloatOption) {
-                ((ValueFloatOption) option).setVal(
-                        Float.parseFloat(givenOptions.get(name))
-                );
-            }
-
-            this.options.add(option);
-        }
+        this.loadOptionsAccordingTo(DEFAULT_OPTIONS, givenOptions);
 
         this.timeout = new TimeHelper();
         this.timeout.start();
     }
 
     @Override
-    protected void onUpdate() {
-        if (Wrapper.MC.player != null) {
-            if (Wrapper.isInGui()) return;
+    protected void onEvent(int code, Object details) {
+        if (!this.isActivated()) return;
+        if (Wrapper.MC.player == null) return;
+        if (Wrapper.isInGui()) return;
 
-            if (Wrapper.MC.player.getCooledAttackStrength(0) != 1.0 && autoCps()) return;
-            if (!timeout.isDelayComplete((int) (1000f / getRandomCPS())) && !autoCps()) return;
+        if (code == EventType.WORLD_TICK) {
+            if (Wrapper.MC.player.getCooledAttackStrength(0) != 1.0 && getOptionB(I_AUTO_CPS)) return;
+            if (!timeout.isDelayComplete((int) (1000f / getRandomCPS())) && !getOptionB(I_AUTO_CPS)) return;
 
             Entity pointedEntity = Wrapper.MC.pointedEntity;
 
             // Check if the entity is either a player or a mob (if it's a mob, we need to check if the option to
             // attack mobs is turned on
-            if (pointedEntity instanceof PlayerEntity || (pointedEntity instanceof MobEntity && useOnMobs())) {
+            if (pointedEntity instanceof PlayerEntity || (pointedEntity instanceof MobEntity && getOptionB(I_USE_ON_MOBS))) {
                 // Then check if the player sees it & not in same team
                 if (!pointedEntity.isInvisibleToPlayer(Wrapper.MC.player) && !Wrapper.isInSameTeam(pointedEntity)) {
                     // attack
@@ -120,26 +103,14 @@ public class Triggerbot extends Module {
         }
     }
 
-    private boolean useOnMobs() {
-        return ((ToggleOption) this.options.get(I_USE_ON_MOBS)).isActivated();
-    }
-
-    private boolean autoCps() {
-        return ((ToggleOption) this.options.get(I_AUTO_CPS)).isActivated();
-    }
-
-    private float getCPS() {
-        return ((ValueFloatOption) this.options.get(I_CPS)).getVal();
-    }
-
     /**
      * CPS +-= 1.0
      * @return random number of cps in [cps-1; cps+1]
      */
     private float getRandomCPS() {
         return MathUtils.random(
-                (int) (getCPS()*100f) - 100,
-                (int) (getCPS()*100f) + 100
+                (int) (getOptionF(I_CPS)*100f) - 100,
+                (int) (getOptionF(I_CPS)*100f) + 100
         ) / 100f;
     }
 

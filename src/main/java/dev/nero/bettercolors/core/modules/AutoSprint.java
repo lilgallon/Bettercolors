@@ -16,6 +16,7 @@
 
 package dev.nero.bettercolors.core.modules;
 
+import dev.nero.bettercolors.core.events.EventType;
 import dev.nero.bettercolors.engine.module.Module;
 import dev.nero.bettercolors.engine.option.Option;
 import dev.nero.bettercolors.core.wrapper.Wrapper;
@@ -33,15 +34,20 @@ public class AutoSprint extends Module {
     }
 
     @Override
-    public void onUpdate() {
-        if(Wrapper.MC.player != null){
+    protected void onEvent(int code, Object details) {
+        if (!this.isActivated()) return;
+        if (Wrapper.MC.player == null) return;
+
+        if (code == EventType.WORLD_TICK) {
             if(Wrapper.MC.player.moveForward > 0 && !Wrapper.MC.player.isSprinting()){
-                logInfo("Forcing player to run");
                 Wrapper.MC.player.setSprinting(true);
             }
         }
     }
 
+    /**
+     * Used by the engine (reflection)
+     */
     public static ArrayList<Option> getDefaultOptions(){
         return new ArrayList<>();
     }

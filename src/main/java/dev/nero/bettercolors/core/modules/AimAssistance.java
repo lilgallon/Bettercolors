@@ -72,7 +72,6 @@ public class AimAssistance extends BetterModule {
     private int attackCount;
     private final TimeHelper attackTimer;
     private final TimeHelper activationTimer;
-    private boolean attackKeyAlreadyPressed;
 
     /**
      * @param toggleKey the toggle key (-1 -> none)
@@ -92,8 +91,6 @@ public class AimAssistance extends BetterModule {
 
         this.activationTimer = new TimeHelper();
         this.activationTimer.stop();
-
-        this.attackKeyAlreadyPressed = false;
     }
 
     @Override
@@ -108,7 +105,7 @@ public class AimAssistance extends BetterModule {
                 break;
 
             case EventType.MOUSE_INPUT:
-                if (this.playerUses()) {
+                if (this.playerUses() && this.getOptionB(I_STOP_ON_RIGHT_CLICK)) {
                     this.stop();
                 }
                 break;

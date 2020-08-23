@@ -5,6 +5,7 @@ import dev.nero.bettercolors.core.wrapper.Wrapper;
 import dev.nero.bettercolors.engine.module.Module;
 import dev.nero.bettercolors.engine.option.Option;
 import net.minecraft.client.network.play.NetworkPlayerInfo;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -32,6 +33,7 @@ public class Antibot extends Module {
     class Data {
         public int ticksLived = 0;
         public boolean hasBeenHit = false;
+        public boolean attackedSomeone = false;
     }
 
     private final int LEGIT_ALIVE_TICKS = 40;
@@ -64,10 +66,13 @@ public class Antibot extends Module {
             case EventType.ENTITY_JOIN:
                 EntityJoinWorldEvent joinWorldEvent = (EntityJoinWorldEvent) details;
 
-                this.entities.put(
-                        joinWorldEvent.getEntity().getEntityId(),
-                        new Data()
-                );
+                if (joinWorldEvent.getEntity() instanceof PlayerEntity) {
+                    this.entities.put(
+                            joinWorldEvent.getEntity().getEntityId(),
+                            new Data()
+                    );
+                }
+
                 break;
 
             case EventType.ENTITY_LEAVE:
@@ -86,7 +91,27 @@ public class Antibot extends Module {
 
             case EventType.ENTITY_HURT:
                 LivingHurtEvent livingHurtEvent = (LivingHurtEvent) details;
-                this.entities.get(livingHurtEvent.getEntityLiving().getEntityId()).hasBeenHit = true;
+
+                // Source handling
+                if (livingHurtEvent.getSource().getTrueSource() != null) {
+                    int sourceId = livingHurtEvent.getSource().getTrueSource().getEntityId();
+
+                    if (livingHurtEvent.getSource().getTrueSource() instanceof PlayerEntity) {
+                        if (!this.entities.containsKey(sourceId)) {
+                            this.entities.put(sourceId, new Data());
+                        }
+
+                        this.entities.get(sourceId).attackedSomeone = true;
+                    }
+                }
+
+                // Target handling
+                int targetId = livingHurtEvent.getEntityLiving().getEntityId();
+                if (!this.entities.containsKey(targetId)) {
+                    this.entities.put(targetId, new Data());
+                }
+                this.entities.get(targetId).hasBeenHit = true;
+
                 break;
         }
     }

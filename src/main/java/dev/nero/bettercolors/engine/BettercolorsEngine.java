@@ -100,7 +100,10 @@ public class BettercolorsEngine {
      *                         (int), -1 if they haven't any toggle key.
      * @param keyToToggleWindow the key to toggle the window
      * @param keyNameFunc a function that takes a key code and returns its string representation
+     *
+     * @deprecated Use the other init function. The keyToToggleWindow var only uses the code now
      */
+    @Deprecated
     public void init(
             String windowTitle,
             String modVersion,
@@ -111,6 +114,44 @@ public class BettercolorsEngine {
             String issuesTrackerUrl,
             HashMap<Class<? extends Module>, IntAndBoolean> modulesAndDetails,
             Key keyToToggleWindow,
+            KeyName keyNameFunc
+    )
+    {
+        init(windowTitle,
+                modVersion, versionSuffix, mcVersion,
+                releasesApiUrl, releasesDownloadUrl, issuesTrackerUrl,
+                modulesAndDetails, keyToToggleWindow.code, keyNameFunc);
+    }
+
+
+    /**
+     * It initializes everything
+     *
+     * -> Needs to be called first after or before registering forge event
+     *
+     * @param windowTitle the title of the window (hud)
+     * @param modVersion the mod version (ex: 6.2.0 for minecraft 1.8.9)
+     * @param versionSuffix the mod version prefix (ex: fa for fabric, fo for forge, or even nothing). It will be
+     *                      added to the end of the version to find the github tag. Ex: 6.2.0-MC1.8.9fa (fa here)
+     * @param mcVersion the minecraft version (ex: 1.8.9)
+     * @param releasesApiUrl the github releases API link (ex: https://api.github.com/repos/n3roo/bettercolors/releases)
+     * @param releasesDownloadUrl the download page (ex: https://github.com/n3roo/bettercolors/releases)
+     * @param issuesTrackerUrl the issues tracker url
+     * @param modulesAndDetails the modules with their default state (turned on or off: boolean) and their toggle key
+     *                         (int), -1 if they haven't any toggle key.
+     * @param keyToToggleWindow the key to toggle the window
+     * @param keyNameFunc a function that takes a key code and returns its string representation
+     */
+    public void init(
+            String windowTitle,
+            String modVersion,
+            String versionSuffix,
+            String mcVersion,
+            String releasesApiUrl,
+            String releasesDownloadUrl,
+            String issuesTrackerUrl,
+            HashMap<Class<? extends Module>, IntAndBoolean> modulesAndDetails,
+            int keyToToggleWindow,
             KeyName keyNameFunc
         )
     {
@@ -151,8 +192,7 @@ public class BettercolorsEngine {
         }
 
         // Update the window toggle key with the given one
-        Window.TOGGLE_KEY = keyToToggleWindow.code;
-        Window.TOGGLE_KEY_NAME = keyToToggleWindow.name;
+        Window.TOGGLE_KEY = keyToToggleWindow;
 
         // It tells swing (the "library" that handles the GUI) to use antialiasing to render fonts so that it looks
         // smooth
@@ -301,9 +341,6 @@ public class BettercolorsEngine {
             SettingsUtils.setOption(Window.TOGGLE_KEY_OPTION, Integer.toString(Window.TOGGLE_KEY));
         }
 
-        // This variable will be shown in the GUI to say what key is currently used to toggle it
-        Window.TOGGLE_KEY_NAME =  "code: " + Window.TOGGLE_KEY;
-
         // Now we do the same thing but for the modules
         for (Module module : modules) {
             String optionName = module.getPrefix() + "_toggle_key";
@@ -437,6 +474,18 @@ public class BettercolorsEngine {
             if(mod.isActivated()){
                 mod.update();
             }
+        }
+    }
+
+    /**
+     * Call this method and define your own codes and details. You will then use the onEvent function in your modules,
+     * and you will use those codes and details to differentiate the events (ex: render == 1, packet == 2, ...)
+     * @param code your own event code
+     * @param details your own details (ex: for a packet event, this could be the packet)
+     */
+    public void event(int code, Object details) {
+        for (Module mod : this.modules) {
+            mod.event(code, details);
         }
     }
 

@@ -70,6 +70,13 @@ public class TimeHelper {
 	}
 
 	/**
+	 * @return the time elapsed since the timer started.
+	 */
+	public long getTimeElapsed() {
+		return this.getCurrentMS() - this.lastMS;
+	}
+
+	/**
 	 * @return current system milliseconds
 	 */
 	private long getCurrentMS(){

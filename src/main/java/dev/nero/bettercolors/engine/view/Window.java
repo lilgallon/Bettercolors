@@ -63,7 +63,6 @@ public class Window extends JFrame{
 
     // Used to display / change the key used to toggle the GUI
     public final static String TOGGLE_KEY_OPTION = "toggle_key";
-    public static String TOGGLE_KEY_NAME;
     public static int TOGGLE_KEY;
 
     // Modules that will be displayed in the GUI
@@ -612,7 +611,7 @@ public class Window extends JFrame{
         togglePanel.setLayout(new FlowLayout());
 
         // Used to change the key to toggle the GUI
-        JButton keybindGui = new JButton("Gui toggle key: " + Window.TOGGLE_KEY_NAME);
+        JButton keybindGui = new JButton("Gui toggle key: " + this.keyNameFunc.getKeyName(Window.TOGGLE_KEY));
         keybindGui.addActionListener(e -> {
             // It creates a popup window
             JDialog dialog = new JDialog(Window.instance, "Message");
@@ -647,14 +646,12 @@ public class Window extends JFrame{
                         if (code == -2) {
                             JOptionPane.showMessageDialog(Window.instance, "This key is not supported, please use an other one");
                         } else {
-                            // Change the message that shows the current key used
-                            Window.TOGGLE_KEY_NAME = e.getKeyChar() + " code: " + code;
                             // Change the key code used
                             Window.TOGGLE_KEY = code;
                             // Save the new key in the settings file
                             SettingsUtils.setOption(Window.TOGGLE_KEY_OPTION, Integer.toString(code));
                             // Change the label to show the new key used
-                            keybindGui.setText("Gui toggle key: " + Window.TOGGLE_KEY_NAME);
+                            keybindGui.setText("Gui toggle key: " + keyNameFunc.getKeyName(code));
                         }
                     }
 
@@ -1006,7 +1003,6 @@ public class Window extends JFrame{
 
         // Update the toggle key and the HUD
         Window.TOGGLE_KEY = Integer.parseInt(options.get(Window.TOGGLE_KEY_OPTION));
-        Window.TOGGLE_KEY_NAME = "code: " + Window.TOGGLE_KEY;
         BettercolorsEngine.VERBOSE = Boolean.parseBoolean(options.get(BettercolorsEngine.DEBUG_OPTION));
 
         // Tell the user that we loaded the settings file
@@ -1170,7 +1166,7 @@ public class Window extends JFrame{
             String name = keybindButton.getText();
 
             if (name.startsWith("Gui")) {
-                keybindButton.setText("Gui toggle key: " + Window.TOGGLE_KEY_NAME);
+                keybindButton.setText("Gui toggle key: " + this.keyNameFunc.getKeyName(Window.TOGGLE_KEY));
             } else {
                 for(Module module : MODULES){
                     if (name.startsWith(module.getName())) {

@@ -173,8 +173,10 @@ public abstract class Module {
      * Used in children to run the module.
      * @param code the event code (you need to define it since your modules will use it to differentiate events)
      * @param details the event details (you need to define it)
+     *
+     * TODO: abstract that in 2.0.0 release
      */
-    abstract void onEvent(int code, Object details);
+    void onEvent(int code, Object details){}
 
     /**
      * Used in children to execute some code when they're turning on and off.

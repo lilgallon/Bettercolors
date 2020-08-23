@@ -128,11 +128,61 @@ public abstract class Module {
                 if(this.options.get(index) instanceof ToggleOption){
                     ((ToggleOption) this.options.get(index)).setActivated(Boolean.parseBoolean(optionValue));
                 } else if (this.options.get(index) instanceof ValueOption){
-                    ((ValueOption) this.options.get(index)).setVal(Integer.parseInt(optionValue));
+                    try {
+                        ((ValueOption) this.options.get(index)).setVal(Integer.parseInt(optionValue));
+                    } catch (IllegalArgumentException e) {
+                        Window.WARN("The option for " + optionName + " is out of bounds, it's not recommended");
+                        Window.WARN(e.toString());
+                    }
                 }  else if (this.options.get(index) instanceof ValueFloatOption){
-                    ((ValueFloatOption) this.options.get(index)).setVal(Float.parseFloat(optionValue));
+                    try {
+                        ((ValueFloatOption) this.options.get(index)).setVal(Float.parseFloat(optionValue));
+                    } catch (IllegalArgumentException e) {
+                        Window.WARN("The option for " + optionName + " is out of bounds, it's not recommended");
+                        Window.WARN(e.toString());
+                    }
                 }
             }
+        }
+    }
+
+    /**
+     * It loads the "givenOptions" into "this.options" by taking into account the options in "defaultOptions".
+     * @param defaultOptions the module's default options
+     * @param givenOptions the options to load
+     */
+    protected void loadOptionsAccordingTo(ArrayList<Option> defaultOptions, Map<String, String> givenOptions) {
+        this.options = new ArrayList<>();
+
+        for (Option defaultOption : defaultOptions) {
+            Option option = (Option) defaultOption.clone();
+            String name = defaultOption.getCompleteName();
+
+            if (option instanceof ToggleOption) {
+                ((ToggleOption) option).setActivated(
+                        Boolean.parseBoolean(givenOptions.get(name))
+                );
+            } else if (option instanceof ValueOption) {
+                try {
+                    ((ValueOption) option).setVal(
+                            Integer.parseInt(givenOptions.get(name))
+                    );
+                } catch (IllegalArgumentException exc) {
+                    Window.WARN("The option for " + defaultOption.getName() + " is out of bounds, it's not recommended");
+                    Window.WARN(exc.toString());
+                }
+            } else if (option instanceof ValueFloatOption) {
+                try {
+                    ((ValueFloatOption) option).setVal(
+                            Float.parseFloat(givenOptions.get(name))
+                    );
+                } catch (IllegalArgumentException exc) {
+                    Window.WARN("The option for " + defaultOption.getName() + " is out of bounds, it's not recommended");
+                    Window.WARN(exc.toString());
+                }
+            }
+
+            this.options.add(option);
         }
     }
 

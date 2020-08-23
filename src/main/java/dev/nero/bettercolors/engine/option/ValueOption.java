@@ -62,10 +62,10 @@ public class ValueOption extends Option {
             throw new IllegalArgumentException("The value " + val + " is bigger than its max : " + MAX);
         }else if(val < MIN){
             throw new IllegalArgumentException("The value " + val + " is lower than its min : " + MIN);
-        }else{
-            this.val = val;
-            saveOption();
         }
+
+        this.val = val;
+        saveOption();
     }
 
     /**

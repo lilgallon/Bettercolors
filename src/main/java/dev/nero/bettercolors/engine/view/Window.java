@@ -478,7 +478,7 @@ public class Window extends JFrame{
                 // button will be clicked, and we will add each checkbox in the CHECKBOXES_MODULES array (used to
                 // synchronize checkboxes if the user loads a new settings file)
                 for(ToggleOption toggleOption : toggleOptions){
-                    final JCheckBox checkBox = new JCheckBox(toggleOption.getName());
+                    final JCheckBox checkBox = new JCheckBox(toggleOption.getName().replace("_", " "));
                     checkBox.setSelected(toggleOption.isActivated());
                     checkBox.addActionListener(e -> {
                         // Update the module's option

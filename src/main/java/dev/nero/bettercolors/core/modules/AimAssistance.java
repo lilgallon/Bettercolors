@@ -52,19 +52,19 @@ public class AimAssistance extends BetterModule {
     static{
         DEFAULT_OPTIONS = new ArrayList<>();
 
-        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, STOP_ON_RIGHT_CLICK, true));
+        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, STOP_ON_RIGHT_CLICK, false));
         DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, USE_ON_MOBS, false));
-        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, STOP_WHEN_REACHED, false));
+        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, STOP_WHEN_REACHED, true));
         DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, STICKY, false));
 
-        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, STEP_X, 5, 0, 20, 1, 5));
-        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, STEP_Y, 5, 0, 20, 1, 5));
+        DEFAULT_OPTIONS.add(new ValueFloatOption(PREFIX, STEP_X, 2.0f, 0, 7, 0.1f, 1));
+        DEFAULT_OPTIONS.add(new ValueFloatOption(PREFIX, STEP_Y, 2.0f, 0, 7, 0.1f, 1));
         DEFAULT_OPTIONS.add(new ValueOption(PREFIX, RANGE, 3, 0, 10, 1, 5));
-        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, RADIUS_X, 60, 0, 180, 5, 25));
+        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, RADIUS_X, 25, 0, 180, 5, 25));
         DEFAULT_OPTIONS.add(new ValueOption(PREFIX, RADIUS_Y, 30, 0, 90, 3, 15));
         DEFAULT_OPTIONS.add(new ValueOption(PREFIX, DURATION, 2000, 0, 10000, 200, 1000));
 
-        DEFAULT_OPTIONS.add(new ValueFloatOption(PREFIX, CPS_TO_ACTIVATE, 4.0f, 0, 10.0f, 1, 5));
+        DEFAULT_OPTIONS.add(new ValueFloatOption(PREFIX, CPS_TO_ACTIVATE, 4, 0, 10, 1, 5));
     }
 
     private Entity target;
@@ -201,8 +201,8 @@ public class AimAssistance extends BetterModule {
             final boolean sticky = this.getOptionB(I_STICKY);
             final float FOV_X = this.getOptionI(I_RADIUS_X);
             final float FOV_Y = this.getOptionI(I_RADIUS_Y);
-            final float FORCE_X = this.getOptionI(I_STEP_X);
-            final float FORCE_Y = this.getOptionI(I_STEP_Y);
+            final float FORCE_X = this.getOptionF(I_STEP_X);
+            final float FORCE_Y = this.getOptionF(I_STEP_Y);
 
             if (stopWhenReached && isAimingEntity) return; // stopWhenReached -> aim if not on entity
             if (sticky && !isAimingEntity) return; // sticky -> aim if on entity

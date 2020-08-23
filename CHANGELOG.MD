@@ -28,7 +28,13 @@ You can use the same settings file as before, but it is recommended to reset it 
     - **A lot of improvements**
     - **A lot of optimizations**
 - TeamFilter: removed "teamfilter" option from every module. It is now a module, so when turned on, it works on every other module.
-
+- Added Antibot:
+    - If the entity is not a player -> bot
+    - "Tab_check": If the entity is not in the tab -> bot
+    - "Ping_check": If the entity ping is 0 ms -> bot
+    - "Ticks_lived_check": If the entity has lived less than "Ticks_lived_min" -> bot
+    - "Has_been_hit_check": If the entity has not been hit (did not receive damage yet) -> bot
+    - "Has_made_damage_check": If the entity has not made any damage to any other entity -> bot
 - Miscellaneous:
     - You can now use greater values than the ones given by the UI. To do so, you need to update the config file manually.
     It's not recommended, but I'm sure that some of you will like that.

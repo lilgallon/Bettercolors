@@ -76,7 +76,7 @@ public class Triggerbot extends Module {
             // attack mobs is turned on
             if (pointedEntity instanceof PlayerEntity || (pointedEntity instanceof MobEntity && getOptionB(I_USE_ON_MOBS))) {
                 // Then check if the player sees it & not in same team
-                if (!pointedEntity.isInvisibleToPlayer(Wrapper.MC.player) && !Wrapper.isInSameTeam(pointedEntity)) {
+                if (!pointedEntity.isInvisibleToPlayer(Wrapper.MC.player) && Wrapper.canAttack(pointedEntity)) {
                     // attack
                     timeout.start();
                     Wrapper.click(166); // 6 cps max

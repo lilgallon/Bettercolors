@@ -18,6 +18,8 @@
 
 package dev.nero.bettercolors.core.wrapper;
 
+import dev.nero.bettercolors.core.modules.TeamFilter;
+import dev.nero.bettercolors.engine.BettercolorsEngine;
 import dev.nero.bettercolors.engine.utils.Friends;
 import dev.nero.bettercolors.engine.utils.TimeHelper;
 import dev.nero.bettercolors.engine.view.Window;
@@ -88,7 +90,7 @@ public class Wrapper {
      * @param entity the entity (can be anything).
      * @return true if the given entity is in the same team as the player.
      */
-    public static boolean isInSameTeam(Entity entity){
+    public static boolean isPlayerInSameTeamAs(Entity entity){
         if(!(entity.getClass().isInstance(Wrapper.playerEntityClass)))
             return false;
 
@@ -305,14 +307,27 @@ public class Wrapper {
         Wrapper.MC.player.rotationPitch = pitch;
     }
 
+    /**
+     * @param entity anything as long as it's an entity
+     * @return true if the player can attack the given entity
+     */
     public static boolean canAttack(Entity entity) {
-        // TODO:
-        // - antibot
-        // - team
-
         if (entity instanceof PlayerEntity) {
-            return !Friends.isFriend(entity.getDisplayName().getString());
+            boolean canAttack;
+
+            // Check friend
+            canAttack = !Friends.isFriend(entity.getDisplayName().getString());
+            if (!canAttack) return false;
+
+            // Check team
+            if (TeamFilter.getInstance().isActivated()) {
+                canAttack = !Wrapper.isPlayerInSameTeamAs(entity);
+                if (!canAttack) return false;
+            }
+
+            // TODO: antibot
         }
+
         return true;
     }
 }

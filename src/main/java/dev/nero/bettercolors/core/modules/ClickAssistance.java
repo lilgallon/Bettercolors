@@ -70,14 +70,14 @@ public class ClickAssistance extends BetterModule {
     static{
         DEFAULT_OPTIONS = new ArrayList<>();
 
-        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, DESC_PACKETS, PACKETS, false));
-        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, DESC_ONLY_ON_ENTITY, ONLY_ON_ENTITY, false));
+        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, PACKETS, DESC_PACKETS, false));
+        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, ONLY_ON_ENTITY, DESC_ONLY_ON_ENTITY, false));
 
-        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, DESC_ADDITIONAL_CPS, ADDITIONAL_CPS, 2, 0, 5, 0, 1));
-        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, DESC_CHANCE, CHANCE, 80, 0, 100, 5, 25));
-        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, DESC_DURATION, DURATION, 1500, 0, 10000, 200, 1000));
+        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, ADDITIONAL_CPS, DESC_ADDITIONAL_CPS, 2, 0, 5, 0, 1));
+        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, CHANCE, DESC_CHANCE, 80, 0, 100, 5, 25));
+        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, DURATION, DESC_DURATION, 1500, 0, 10000, 200, 1000));
 
-        DEFAULT_OPTIONS.add(new ValueFloatOption(PREFIX, DESC_CPS_TO_ACTIVATE, CPS_TO_ACTIVATE, 4, 0, 10, 1, 5));
+        DEFAULT_OPTIONS.add(new ValueFloatOption(PREFIX, CPS_TO_ACTIVATE, DESC_CPS_TO_ACTIVATE, 4, 0, 10, 1, 5));
     }
 
 

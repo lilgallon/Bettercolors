@@ -68,17 +68,17 @@ public class AimAssistance extends BetterModule {
     static{
         DEFAULT_OPTIONS = new ArrayList<>();
 
-        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, DESC_STOP_ON_RIGHT_CLICK, STOP_ON_RIGHT_CLICK, false));
-        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, DESC_USE_ON_MOBS, USE_ON_MOBS, false));
-        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, DESC_STOP_WHEN_REACHED, STOP_WHEN_REACHED, true));
-        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, DESC_STICKY, STICKY, false));
+        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, STOP_ON_RIGHT_CLICK, DESC_STOP_ON_RIGHT_CLICK, false));
+        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, USE_ON_MOBS, DESC_USE_ON_MOBS, false));
+        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, STOP_WHEN_REACHED, DESC_STOP_WHEN_REACHED, true));
+        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, STICKY, DESC_STICKY, false));
 
-        DEFAULT_OPTIONS.add(new ValueFloatOption(PREFIX, DESC_STEP_X, STEP_X, 2.0f, 0, 7, 0.1f, 1));
-        DEFAULT_OPTIONS.add(new ValueFloatOption(PREFIX, DESC_STEP_Y, STEP_Y, 2.0f, 0, 7, 0.1f, 1));
-        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, DESC_RANGE, RANGE, 3, 0, 10, 1, 5));
-        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, DESC_RADIUS_X, RADIUS_X, 25, 0, 180, 5, 25));
-        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, DESC_RADIUS_Y, RADIUS_Y, 30, 0, 90, 3, 15));
-        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, DESC_DURATION, DURATION, 2000, 0, 10000, 200, 1000));
+        DEFAULT_OPTIONS.add(new ValueFloatOption(PREFIX, STEP_X, DESC_STEP_X, 2.0f, 0, 7, 0.1f, 1));
+        DEFAULT_OPTIONS.add(new ValueFloatOption(PREFIX, STEP_Y, DESC_STEP_Y, 2.0f, 0, 7, 0.1f, 1));
+        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, RANGE, DESC_RANGE, 3, 0, 10, 1, 5));
+        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, RADIUS_X, DESC_RADIUS_X, 25, 0, 180, 5, 25));
+        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, RADIUS_Y, DESC_RADIUS_Y, 30, 0, 90, 3, 15));
+        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, DURATION, DESC_DURATION, 2000, 0, 10000, 200, 1000));
 
         DEFAULT_OPTIONS.add(new ValueFloatOption(PREFIX, DESC_CPS_TO_ACTIVATE, CPS_TO_ACTIVATE, 4, 0, 10, 1, 5));
     }

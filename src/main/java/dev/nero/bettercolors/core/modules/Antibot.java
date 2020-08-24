@@ -55,13 +55,13 @@ public class Antibot extends Module {
     static {
         DEFAULT_OPTIONS = new ArrayList<>();
 
-        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, DESC_TAB_CHECK, TAB_CHECK, true));
-        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, DESC_PING_CHECK, PING_CHECK, true));
-        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, DESC_TICKS_LIVED_CHECK, TICKS_LIVED_CHECK, true));
-        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, DESC_HAS_BEEN_HIT_CHECK, HAS_BEEN_HIT_CHECK, true));
-        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, DESC_HAS_MADE_DAMAGE_CHECK, HAS_MADE_DAMAGE_CHECK, true));
+        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, TAB_CHECK, DESC_TAB_CHECK, true));
+        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, PING_CHECK, DESC_PING_CHECK, true));
+        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, TICKS_LIVED_CHECK, DESC_TICKS_LIVED_CHECK, true));
+        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, HAS_BEEN_HIT_CHECK, DESC_HAS_BEEN_HIT_CHECK, true));
+        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, HAS_MADE_DAMAGE_CHECK, DESC_HAS_MADE_DAMAGE_CHECK, true));
 
-        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, DESC_TICKS_LIVED_MIN, TICKS_LIVED_MIN, 40, 1, 100, 5, 20));
+        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, TICKS_LIVED_MIN, DESC_TICKS_LIVED_MIN, 40, 1, 100, 5, 20));
     }
 
     class Data {

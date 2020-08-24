@@ -46,10 +46,10 @@ public class Triggerbot extends Module {
     static {
         DEFAULT_OPTIONS = new ArrayList<>();
 
-        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, DESC_USE_ON_MOBS, USE_ON_MOBS, false));
-        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, DESC_AUTO_CPS, AUTO_CPS, false));
+        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, USE_ON_MOBS, DESC_USE_ON_MOBS, false));
+        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, AUTO_CPS, DESC_AUTO_CPS, false));
 
-        DEFAULT_OPTIONS.add(new ValueFloatOption(PREFIX, DESC_CPS, CPS, 7, 1, 9, 0.1f, 0.5f));
+        DEFAULT_OPTIONS.add(new ValueFloatOption(PREFIX, CPS, DESC_CPS, 7, 1, 9, 0.1f, 0.5f));
     }
 
     // Utility attributes

@@ -36,10 +36,10 @@ public class Reach extends Module {
 
         // 10 = 1 block, so 5 means 0.5 block
         DEFAULT_OPTIONS.add(
-                new ValueFloatOption(PREFIX, DESC_CBT_REACH_OPTION_LABEL, CBT_REACH_OPTION_LABEL, 0.2f, 0.01f, 3.0f, 0.01f, 0.5f)
+                new ValueFloatOption(PREFIX, CBT_REACH_OPTION_LABEL, DESC_CBT_REACH_OPTION_LABEL, 0.2f, 0.01f, 3.0f, 0.01f, 0.5f)
         );
         DEFAULT_OPTIONS.add(
-                new ValueFloatOption(PREFIX, DESC_BLK_REACH_OPTION_LABEL, BLK_REACH_OPTION_LABEL, 0.2f, 0.01f, 1.0f, 0.01f, 0.5f)
+                new ValueFloatOption(PREFIX, BLK_REACH_OPTION_LABEL, DESC_BLK_REACH_OPTION_LABEL, 0.2f, 0.01f, 1.0f, 0.01f, 0.5f)
         );
     }
 

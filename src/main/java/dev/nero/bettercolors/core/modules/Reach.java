@@ -15,6 +15,9 @@ public class Reach extends Module {
     // Prefix for Reach (logging and settings)
     private static final String PREFIX = "REACH";
 
+    // Description
+    private static final String DESCRIPTION = "Increases your reach";
+
     // Options name
     private static final String CBT_REACH_OPTION_LABEL = "Combat_Reach_increment";
     private static final String BLK_REACH_OPTION_LABEL = "Block_Reach_increment";
@@ -23,16 +26,20 @@ public class Reach extends Module {
     private static final int I_CBT_REACH_INCREMENT = 0;
     private static final int I_BLK_REACH_INCREMENT = 1;
 
+    // Options description
+    private static final String DESC_CBT_REACH_OPTION_LABEL = "The default combat reach is 3.0, how much more do you want?";
+    private static final String DESC_BLK_REACH_OPTION_LABEL = "The default block reach is 4.5, how much more do you want?";
+
     private static final ArrayList<Option> DEFAULT_OPTIONS;
     static {
         DEFAULT_OPTIONS = new ArrayList<>();
 
         // 10 = 1 block, so 5 means 0.5 block
         DEFAULT_OPTIONS.add(
-                new ValueFloatOption(PREFIX, CBT_REACH_OPTION_LABEL, 0.2f, 0.01f, 3.0f, 0.01f, 0.5f)
+                new ValueFloatOption(PREFIX, DESC_CBT_REACH_OPTION_LABEL, CBT_REACH_OPTION_LABEL, 0.2f, 0.01f, 3.0f, 0.01f, 0.5f)
         );
         DEFAULT_OPTIONS.add(
-                new ValueFloatOption(PREFIX, BLK_REACH_OPTION_LABEL, 0.2f, 0.01f, 1.0f, 0.01f, 0.5f)
+                new ValueFloatOption(PREFIX, DESC_BLK_REACH_OPTION_LABEL, BLK_REACH_OPTION_LABEL, 0.2f, 0.01f, 1.0f, 0.01f, 0.5f)
         );
     }
 
@@ -42,7 +49,7 @@ public class Reach extends Module {
      * @param givenOptions the options for the mod
      */
     public Reach(Integer toggleKey, Boolean isActivated, Map<String, String> givenOptions) {
-        super("Reach", toggleKey, isActivated, "hit.png", PREFIX);
+        super("Reach", DESCRIPTION, toggleKey, isActivated, "hit.png", PREFIX);
         this.loadOptionsAccordingTo(DEFAULT_OPTIONS, givenOptions);
     }
 

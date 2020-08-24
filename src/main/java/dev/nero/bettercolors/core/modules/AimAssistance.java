@@ -21,16 +21,19 @@ public class AimAssistance extends BetterModule {
     // Prefix for AimAssistance (logging and settings)
     private static final String PREFIX = "AA";
 
+    // Description
+    private static final String DESCRIPTION = "Helps you aiming while fighting";
+
     // Options name
     private static final String STOP_ON_RIGHT_CLICK = "Stop_on_right_click";
     private static final String USE_ON_MOBS = "Use_on_mobs";
     private static final String STOP_WHEN_REACHED = "Stop_when_reached";
     private static final String STICKY = "Sticky";
-    private static final String STEP_X = "Step_X";
-    private static final String STEP_Y = "Step_Y";
+    private static final String STEP_X = "Force_X";
+    private static final String STEP_Y = "Force_Y";
     private static final String RANGE = "Range";
-    private static final String RADIUS_X = "Radius_X";
-    private static final String RADIUS_Y = "Radius_Y";
+    private static final String RADIUS_X = "Fov_X";
+    private static final String RADIUS_Y = "Fov_Y";
     private static final String DURATION = "Duration";
     private static final String CPS_TO_ACTIVATE = "CPS_to_activate";
 
@@ -47,24 +50,37 @@ public class AimAssistance extends BetterModule {
     private static final int I_DURATION = 9;
     private static final int I_CPS_TO_ACTIVATE = 10;
 
+    // Options description
+    private static final String DESC_STOP_ON_RIGHT_CLICK = "if enabled, stops the assistance when you right click (it does not turn the module off though).";
+    private static final String DESC_USE_ON_MOBS = "If enabled, it will help you while fighting mobs";
+    private static final String DESC_STOP_WHEN_REACHED = "If enabled, the assistance only works when you're not aiming at an entity";
+    private static final String DESC_STICKY = "If enabled, the assistance only works when you're aiming an entity ";
+    private static final String DESC_STEP_X = "The force of the assistance horizontally";
+    private static final String DESC_STEP_Y = "The force of the assistance vertically";
+    private static final String DESC_RANGE = "The range of the aim assistance";
+    private static final String DESC_RADIUS_X = "The assistance will only work if you're less than <?> degrees (horizontally) from an entity";
+    private static final String DESC_RADIUS_Y = "The assistance will only work if you're less than <?> degrees (vertically) from an entity";
+    private static final String DESC_DURATION = "When the aim assistance detects that you're fighting, how much time should it help you (in milliseconds)";
+    private static final String DESC_CPS_TO_ACTIVATE = "If your CPS are higher or equal to that value, then it turns the assistance on (detects that you're fighting)";
+
     // Default options loading
     private static final ArrayList<Option> DEFAULT_OPTIONS;
     static{
         DEFAULT_OPTIONS = new ArrayList<>();
 
-        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, STOP_ON_RIGHT_CLICK, false));
-        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, USE_ON_MOBS, false));
-        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, STOP_WHEN_REACHED, true));
-        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, STICKY, false));
+        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, DESC_STOP_ON_RIGHT_CLICK, STOP_ON_RIGHT_CLICK, false));
+        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, DESC_USE_ON_MOBS, USE_ON_MOBS, false));
+        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, DESC_STOP_WHEN_REACHED, STOP_WHEN_REACHED, true));
+        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, DESC_STICKY, STICKY, false));
 
-        DEFAULT_OPTIONS.add(new ValueFloatOption(PREFIX, STEP_X, 2.0f, 0, 7, 0.1f, 1));
-        DEFAULT_OPTIONS.add(new ValueFloatOption(PREFIX, STEP_Y, 2.0f, 0, 7, 0.1f, 1));
-        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, RANGE, 3, 0, 10, 1, 5));
-        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, RADIUS_X, 25, 0, 180, 5, 25));
-        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, RADIUS_Y, 30, 0, 90, 3, 15));
-        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, DURATION, 2000, 0, 10000, 200, 1000));
+        DEFAULT_OPTIONS.add(new ValueFloatOption(PREFIX, DESC_STEP_X, STEP_X, 2.0f, 0, 7, 0.1f, 1));
+        DEFAULT_OPTIONS.add(new ValueFloatOption(PREFIX, DESC_STEP_Y, STEP_Y, 2.0f, 0, 7, 0.1f, 1));
+        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, DESC_RANGE, RANGE, 3, 0, 10, 1, 5));
+        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, DESC_RADIUS_X, RADIUS_X, 25, 0, 180, 5, 25));
+        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, DESC_RADIUS_Y, RADIUS_Y, 30, 0, 90, 3, 15));
+        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, DESC_DURATION, DURATION, 2000, 0, 10000, 200, 1000));
 
-        DEFAULT_OPTIONS.add(new ValueFloatOption(PREFIX, CPS_TO_ACTIVATE, 4, 0, 10, 1, 5));
+        DEFAULT_OPTIONS.add(new ValueFloatOption(PREFIX, DESC_CPS_TO_ACTIVATE, CPS_TO_ACTIVATE, 4, 0, 10, 1, 5));
     }
 
     private Entity target;
@@ -79,7 +95,7 @@ public class AimAssistance extends BetterModule {
      * @param givenOptions the options for the mod
      */
     public AimAssistance(Integer toggleKey, Boolean IsActivated, Map<String, String> givenOptions) {
-        super("Aim assistance", toggleKey, IsActivated, "magnet.png", PREFIX);
+        super("Aim assistance", DESCRIPTION, toggleKey, IsActivated, "magnet.png", PREFIX);
         this.loadOptionsAccordingTo(DEFAULT_OPTIONS, givenOptions);
 
         this.target = null;
@@ -91,6 +107,14 @@ public class AimAssistance extends BetterModule {
 
         this.activationTimer = new TimeHelper();
         this.activationTimer.stop();
+    }
+
+    @Override
+    protected void onOptionChange(Option option, Object oldValue) {
+        if (option.getName().equals(STICKY) && getOptionB(I_STOP_WHEN_REACHED) ||
+                option.getName().equals(STOP_WHEN_REACHED) && getOptionB(I_STICKY)) {
+            this.logInfo("Sticky and stop when reached options should not be used together");
+        }
     }
 
     @Override

@@ -38,6 +38,9 @@ public class ClickAssistance extends BetterModule {
     // Prefix for AimAssistance (logging and settings)
     private static final String PREFIX = "CA";
 
+    // Description
+    private static final String DESCRIPTION = "Helps you clicking while fighting";
+
     // Options name
     private static final String PACKETS = "Packets";
     private static final String ONLY_ON_ENTITY = "Only_on_entity";
@@ -54,19 +57,27 @@ public class ClickAssistance extends BetterModule {
     private static final int I_DURATION = 4;
     private static final int I_CPS_TO_ACTIVATE = 5;
 
+    // Options description
+    private static final String DESC_PACKETS = "If enabled, it will attack by using packets and not human clicks (not recommended)";
+    private static final String DESC_ONLY_ON_ENTITY = "If enabled, it will assist you only while you're aiming an entity";
+    private static final String DESC_ADDITIONAL_CPS = "Defines how many additional clicks you want while you're fighting";
+    private static final String DESC_CHANCE = "Defines the chance according to which an additional click will be produced";
+    private static final String DESC_DURATION = "When the click assistance detects that you're fighting, how much time should it help you (in milliseconds)";
+    private static final String DESC_CPS_TO_ACTIVATE = "If your CPS are higher or equal to that value, then it turns the assistance on (detects that you're fighting)";
+
     // Default options loading
     private static final ArrayList<Option> DEFAULT_OPTIONS;
     static{
         DEFAULT_OPTIONS = new ArrayList<>();
 
-        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, PACKETS, false));
-        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, ONLY_ON_ENTITY, false));
+        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, DESC_PACKETS, PACKETS, false));
+        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, DESC_ONLY_ON_ENTITY, ONLY_ON_ENTITY, false));
 
-        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, ADDITIONAL_CPS, 2, 0, 5, 0, 1));
-        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, CHANCE, 80, 0, 100, 5, 25));
-        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, DURATION, 1500, 0, 10000, 200, 1000));
+        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, DESC_ADDITIONAL_CPS, ADDITIONAL_CPS, 2, 0, 5, 0, 1));
+        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, DESC_CHANCE, CHANCE, 80, 0, 100, 5, 25));
+        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, DESC_DURATION, DURATION, 1500, 0, 10000, 200, 1000));
 
-        DEFAULT_OPTIONS.add(new ValueFloatOption(PREFIX, CPS_TO_ACTIVATE, 4, 0, 10, 1, 5));
+        DEFAULT_OPTIONS.add(new ValueFloatOption(PREFIX, DESC_CPS_TO_ACTIVATE, CPS_TO_ACTIVATE, 4, 0, 10, 1, 5));
     }
 
 
@@ -82,7 +93,7 @@ public class ClickAssistance extends BetterModule {
      * @param givenOptions the options for the mod
      */
     public ClickAssistance(Integer toggleKey, Boolean IsActivated, Map<String, String> givenOptions) {
-        super("Click assistance", toggleKey, IsActivated, "click.png", PREFIX);
+        super("Click assistance", DESCRIPTION, toggleKey, IsActivated, "click.png", PREFIX);
         this.loadOptionsAccordingTo(DEFAULT_OPTIONS, givenOptions);
 
         this.assist = false;

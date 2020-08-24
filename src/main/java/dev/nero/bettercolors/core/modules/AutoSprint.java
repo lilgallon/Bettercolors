@@ -30,7 +30,7 @@ public class AutoSprint extends Module {
      * @param isActivated the initial state.
      */
     public AutoSprint(Integer toggleKey, Boolean isActivated) {
-        super("Auto sprint", toggleKey, isActivated, "unknown.png", "ASp");
+        super("Auto sprint", "Sprints for you when you're going forward", toggleKey, isActivated, "unknown.png", "ASp");
     }
 
     @Override

@@ -36,7 +36,7 @@ public class AutoSword extends BetterModule {
      * @param isActivated the initial state
      */
     public AutoSword(Integer toggleKey, Boolean isActivated) {
-        super("Auto sword", toggleKey, isActivated, "unknown.png", "ASw");
+        super("Auto sword", "Gets the best sword from the hotbar when attacking an entity", toggleKey, isActivated, "unknown.png", "ASw");
     }
 
     @Override

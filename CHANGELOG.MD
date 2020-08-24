@@ -1,5 +1,6 @@
 **V7.3.0 MC_1.16.2**
-You can use the same settings file as before, but it is recommended to reset it to default since some settings changed (see below).
+You can use the same settings file as before, but it is recommended to reset it to default since some settings changed,
+and some were renamed (see below).
 
 **Bettercolors engine 1.1.0:**
 - Added a new tab to change the toggle key of each module
@@ -21,6 +22,8 @@ You can use the same settings file as before, but it is recommended to reset it 
     - Modified "Stop when reached": assist if not aiming an entity
     - Removed "time_to_activate" & "clicks_to_activate": (replaced by "cps_to_activate")
     - Removed "refresh_rate"
+    - Renamed "step X" and "step Y" to "force X" and "force Y"
+    - Renamed "radius X" and "radius Y" to "fov X" and "fov Y"
     - **A lot of improvements**
     - **A lot optimizations**
 - Click Assistance (has been re-coded):
@@ -39,6 +42,8 @@ You can use the same settings file as before, but it is recommended to reset it 
     - You can now use greater values than the ones given by the UI. To do so, you need to update the config file manually.
     It's not recommended, but I'm sure that some of you will like that.
     - Debug mode now shows the GUI on startup
+    - You can put your cursor over an option to get a description of it
+    - You can put your cursor over a module to get a description of it
     
 **V7.2.0 MC_1.16.1**
 

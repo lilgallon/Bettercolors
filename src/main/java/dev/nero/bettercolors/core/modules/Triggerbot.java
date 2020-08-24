@@ -23,6 +23,9 @@ public class Triggerbot extends Module {
     // Prefix for AimAssistance (logging and settings)
     private static final String PREFIX = "TB";
 
+    // Description
+    private static final String DESCRIPTION = "It's an autoclick that works when you're aiming an entity";
+
     // Options name
     private static final String USE_ON_MOBS = "Use_on_mobs";
     private static final String AUTO_CPS = "Auto_cps_sword_progress";
@@ -33,15 +36,20 @@ public class Triggerbot extends Module {
     private static final int I_AUTO_CPS = 1;
     private static final int I_CPS = 2;
 
+    // Options description
+    private static final String DESC_USE_ON_MOBS = "If enabled, the module will work on mobs";
+    private static final String DESC_AUTO_CPS = "If enabled, the CPS will be automatically calculated based on the item's cooldown";
+    private static final String DESC_CPS = "Defines the speed of the autoclick in clicks per seconds (only works when \"Auto CPS\" is turned off";
+
     // Default options loading
     private static final ArrayList<Option> DEFAULT_OPTIONS;
     static {
         DEFAULT_OPTIONS = new ArrayList<>();
 
-        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, USE_ON_MOBS, false));
-        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, AUTO_CPS, false));
+        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, DESC_USE_ON_MOBS, USE_ON_MOBS, false));
+        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, DESC_AUTO_CPS, AUTO_CPS, false));
 
-        DEFAULT_OPTIONS.add(new ValueFloatOption(PREFIX, CPS, 7, 1, 9, 0.1f, 0.5f));
+        DEFAULT_OPTIONS.add(new ValueFloatOption(PREFIX, DESC_CPS, CPS, 7, 1, 9, 0.1f, 0.5f));
     }
 
     // Utility attributes
@@ -52,7 +60,7 @@ public class Triggerbot extends Module {
      * @param isActivated the initial state.
      */
     public Triggerbot(Integer toggleKey, Boolean isActivated, Map<String, String> givenOptions) {
-        super("Triggerbot", toggleKey, isActivated, "target.png", PREFIX);
+        super("Triggerbot", DESCRIPTION, toggleKey, isActivated, "target.png", PREFIX);
         this.loadOptionsAccordingTo(DEFAULT_OPTIONS, givenOptions);
 
         this.timeout = new TimeHelper();

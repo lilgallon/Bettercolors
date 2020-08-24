@@ -24,6 +24,9 @@ public class Antibot extends Module {
     // Prefix for Antibot (logging and settings)
     private static final String PREFIX = "ANTIBOT";
 
+    // Description
+    private static final String DESCRIPTION = "If enabled, all the modules will make sure that the targeted entity is not an anticheat bot";
+
     // Options name
     private static final String TAB_CHECK = "Tab_check";
     private static final String PING_CHECK = "Ping_check";
@@ -40,17 +43,25 @@ public class Antibot extends Module {
     private static final int I_HAS_MADE_DAMAGE_CHECK = 4;
     private static final int I_TICKS_LIVED_MIN = 5;
 
+    // Options description
+    private static final String DESC_TAB_CHECK = "If enabled, an entity is defined as a bot if it's not showing in the tab";
+    private static final String DESC_PING_CHECK = "If enabled, an entity is defined as a bot if its ping is 0";
+    private static final String DESC_TICKS_LIVED_CHECK = "If enabled, an entity is defined as a bot if it lived less than the given amount of ticks (see slider below)";
+    private static final String DESC_HAS_BEEN_HIT_CHECK = "If enabled, an entity is defined as a bot if it has not been hit yet (it has not received any damage yet)";
+    private static final String DESC_HAS_MADE_DAMAGE_CHECK = "If enabled, an entity is defined as a bot if it has not hit anything yet (it did not deal damage to anything yet)";
+    private static final String DESC_TICKS_LIVED_MIN = "The numbers of ticks that an entity needs to be alive to be considered as legit (needs \"Check ticks lived\" to be turned on)";
+
     private static final ArrayList<Option> DEFAULT_OPTIONS;
     static {
         DEFAULT_OPTIONS = new ArrayList<>();
 
-        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, TAB_CHECK, true));
-        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, PING_CHECK, true));
-        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, TICKS_LIVED_CHECK, true));
-        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, HAS_BEEN_HIT_CHECK, true));
-        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, HAS_MADE_DAMAGE_CHECK, true));
+        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, DESC_TAB_CHECK, TAB_CHECK, true));
+        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, DESC_PING_CHECK, PING_CHECK, true));
+        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, DESC_TICKS_LIVED_CHECK, TICKS_LIVED_CHECK, true));
+        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, DESC_HAS_BEEN_HIT_CHECK, HAS_BEEN_HIT_CHECK, true));
+        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, DESC_HAS_MADE_DAMAGE_CHECK, HAS_MADE_DAMAGE_CHECK, true));
 
-        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, TICKS_LIVED_MIN, 40, 1, 100, 5, 20));
+        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, DESC_TICKS_LIVED_MIN, TICKS_LIVED_MIN, 40, 1, 100, 5, 20));
     }
 
     class Data {
@@ -67,7 +78,7 @@ public class Antibot extends Module {
      * @param isActivated the initial state.
      */
     public Antibot(Integer toggleKey, Boolean isActivated, Map<String, String> givenOptions) {
-        super("Antibot", toggleKey, isActivated, "shield.png", PREFIX);
+        super("Antibot", DESCRIPTION, toggleKey, isActivated, "shield.png", PREFIX);
         this.loadOptionsAccordingTo(DEFAULT_OPTIONS, givenOptions);
 
         this.entities = new HashMap<>();

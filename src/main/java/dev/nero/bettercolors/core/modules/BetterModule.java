@@ -12,13 +12,14 @@ public class BetterModule extends Module {
 
     /**
      * @param name        the name.
+     * @param description the description.
      * @param toggleKey   the toggle Key (-1 -> none).
      * @param isActivated the initial state.
      * @param symbol      the picture name.
      * @param prefix      the prefix for console logging and settings
      */
-    protected BetterModule(String name, Integer toggleKey, Boolean isActivated, String symbol, String prefix) {
-        super(name, toggleKey, isActivated, symbol, prefix);
+    protected BetterModule(String name, String description, Integer toggleKey, Boolean isActivated, String symbol, String prefix) {
+        super(name, description, toggleKey, isActivated, symbol, prefix);
     }
 
 

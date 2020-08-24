@@ -14,7 +14,7 @@ public class TeamFilter extends Module {
      * @param isActivated the initial state.
      */
     public TeamFilter(Integer toggleKey, Boolean isActivated) {
-        super("Team Filter", toggleKey, isActivated, "unknwon.png", "TF");
+        super("Team Filter", "If enabled, all the modules will make sure that the targeted entity is not in your team", toggleKey, isActivated, "unknwon.png", "TF");
         instance = this;
     }
 

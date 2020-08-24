@@ -29,9 +29,23 @@ public class ToggleOption extends Option {
      *               same option name.
      * @param name name of the option.
      * @param activated the initial state of the option.
+     *
+     * @deprecated use the other constructor with the description instead
      */
+    @Deprecated
     public ToggleOption(String prefix, String name, boolean activated) {
-        super(prefix, name);
+        this(prefix, name, "", activated);
+    }
+
+    /**
+     * @param prefix prefix of the option (module name for example) -> used to prevent conflict if some modules have the
+     *               same option name.
+     * @param name name of the option.
+     * @param description the description.
+     * @param activated the initial state of the option.
+     */
+    public ToggleOption(String prefix, String name, String description, boolean activated) {
+        super(prefix, name, description);
         this.activated = activated;
     }
 

@@ -418,6 +418,9 @@ public class Window extends JFrame{
             // Init it according to the module's activation: turned on or off?
             checkBox.setSelected(module.isActivated());
 
+            // Show the module's description when overing the checkbox
+            checkBox.setToolTipText(module.getDescription());
+
             // When clicked, we need to toggle the module and save its status to the settings file
             checkBox.addActionListener(e -> {
                 // Toggle the module
@@ -478,6 +481,7 @@ public class Window extends JFrame{
                 // synchronize checkboxes if the user loads a new settings file)
                 for(ToggleOption toggleOption : toggleOptions){
                     final JCheckBox checkBox = new JCheckBox(toggleOption.getName().replace("_", " "));
+                    checkBox.setToolTipText(toggleOption.getDescription());
                     checkBox.setSelected(toggleOption.isActivated());
                     checkBox.addActionListener(e -> {
                         // Trigger module's option change event
@@ -536,6 +540,9 @@ public class Window extends JFrame{
                     slider.setMinimum(decimal ? (int) (min * 100.0f) : (int) min);
                     slider.setMaximum(decimal ? (int) (max * 100.0f) : (int) max);
                     slider.setValue(decimal ? (int) (value * 100.0f) : (int) value);
+
+                    label.setToolTipText(valueOption.getDescription());
+                    slider.setToolTipText(valueOption.getDescription());
 
                     // Max/min size
                     slider.setMaximumSize(new Dimension(100, 10));

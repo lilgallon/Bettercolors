@@ -32,10 +32,11 @@ public abstract class Module {
 
     // Utility
     private final String PREFIX;
+    private final String DESCRIPTION;
     private String lastLogMessage;
 
     // Module details
-    private final String name;
+    private final String NAME;
     protected ArrayList<Option> options;
     private final String symbol;
 
@@ -49,9 +50,25 @@ public abstract class Module {
      * @param isActivated the initial state.
      * @param symbol the picture name.
      * @param prefix the prefix for console logging and settings.
+     *
+     * @deprecated you the other constructor with the description parameter
      */
+    @Deprecated
     protected Module(String name, Integer toggleKey, Boolean isActivated, String symbol, String prefix){
-        this.name = name;
+        this(name, "", toggleKey, isActivated, symbol, prefix);
+    }
+
+    /**
+     * @param name the name.
+     * @param description the description.
+     * @param toggleKey the toggle Key (-1 -> none).
+     * @param isActivated the initial state.
+     * @param symbol the picture name.
+     * @param prefix the prefix for console logging and settings.
+     */
+    protected Module(String name, String description, Integer toggleKey, Boolean isActivated, String symbol, String prefix){
+        this.NAME = name;
+        this.DESCRIPTION = description;
         this.isActivated = isActivated;
         this.toggleKey = toggleKey;
         this.symbol = symbol;
@@ -259,7 +276,8 @@ public abstract class Module {
     public void setToggleKey(int key) { this.toggleKey = key; }
 
     // Getters
-    public String getName() { return name; }
+    public String getName() { return NAME; }
+    public String getDescription() { return DESCRIPTION; }
     public int getToggleKey(){ return toggleKey; }
     public boolean isActivated() { return isActivated; }
     public ArrayList<Option> getOptions() { return options; }

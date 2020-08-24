@@ -10,4 +10,4 @@
 - Changelog: [here](CHANGELOG.MD)
 
 
-All the mods details are shown in the main readme that you can acess [here](https://github.com/N3ROO/Bettercolors).
+All the mods details are shown in the main readme that you can access [here](https://github.com/N3ROO/Bettercolors).

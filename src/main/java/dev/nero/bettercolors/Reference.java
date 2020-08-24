@@ -20,6 +20,6 @@ public class Reference {
 	public static final String MOD_ID = "minecraft";
 	public static final String MOD_NAME = "bettercolors";
 	public static final String MC_VERSION = "1.8.9";
-	public static final String MOD_VERSION = "7.1.0";
+	public static final String MOD_VERSION = "7.3.0";
 	public static final String MOD_VERSION_SUFFIX = "";
 }

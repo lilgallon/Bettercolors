@@ -41,7 +41,6 @@ public class ClickAssistance extends BetterModule {
     // Options name
     private static final String PACKETS = "Packets";
     private static final String ONLY_ON_ENTITY = "Only_on_entity";
-    private static final String TEAM_FILTER = "Team_filter";
     private static final String ADDITIONAL_CPS = "Additional_CPS";
     private static final String CHANCE = "Chance";
     private static final String DURATION = "Duration";
@@ -62,7 +61,6 @@ public class ClickAssistance extends BetterModule {
 
         DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, PACKETS, false));
         DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, ONLY_ON_ENTITY, false));
-        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, TEAM_FILTER, true));
 
         DEFAULT_OPTIONS.add(new ValueOption(PREFIX, ADDITIONAL_CPS, 2, 0, 5, 0, 1));
         DEFAULT_OPTIONS.add(new ValueOption(PREFIX, CHANCE, 80, 0, 100, 5, 25));
@@ -129,7 +127,7 @@ public class ClickAssistance extends BetterModule {
             case EventType.MOUSE_INPUT:
                 break;
 
-            case EventType.WORLD_TICK:
+            case EventType.CLIENT_TICK:
                 analyseBehaviour();
                 assistIfPossible();
                 break;

@@ -138,11 +138,6 @@ public class Bettercolors {
     }
 
     @SubscribeEvent
-    public void worldTickEvent(final TickEvent.WorldTickEvent event) {
-        engine.event(EventType.WORLD_TICK, event);
-    }
-
-    @SubscribeEvent
     public void entityJoinEvent(final EntityJoinWorldEvent event) {
         engine.event(EventType.ENTITY_JOIN, event);
     }
@@ -155,5 +150,10 @@ public class Bettercolors {
     @SubscribeEvent
     public void entityHurtEvent(final LivingHurtEvent event) {
         engine.event(EventType.ENTITY_HURT, event);
+    }
+
+    @SubscribeEvent
+    public void clientTickEvent(final TickEvent.ClientTickEvent event) {
+        engine.event(EventType.CLIENT_TICK, event);
     }
 }

@@ -6,7 +6,6 @@ import dev.nero.bettercolors.engine.module.Module;
 import dev.nero.bettercolors.engine.option.Option;
 import dev.nero.bettercolors.engine.option.ToggleOption;
 import dev.nero.bettercolors.engine.option.ValueFloatOption;
-import dev.nero.bettercolors.engine.option.ValueOption;
 import dev.nero.bettercolors.engine.utils.MathUtils;
 import dev.nero.bettercolors.engine.utils.TimeHelper;
 import dev.nero.bettercolors.engine.view.Window;
@@ -16,7 +15,6 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -67,7 +65,7 @@ public class Triggerbot extends Module {
         if (Wrapper.MC.player == null) return;
         if (Wrapper.isInGui()) return;
 
-        if (code == EventType.WORLD_TICK) {
+        if (code == EventType.CLIENT_TICK) {
             if (Wrapper.MC.player.getCooledAttackStrength(0) != 1.0 && getOptionB(I_AUTO_CPS)) return;
             if (!timeout.isDelayComplete((int) (1000f / getRandomCPS())) && !getOptionB(I_AUTO_CPS)) return;
 

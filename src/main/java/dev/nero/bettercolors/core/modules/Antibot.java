@@ -103,7 +103,7 @@ public class Antibot extends Module {
                 this.entities.remove(leaveWorldEvent.getEntity().getEntityId());
                 break;
 
-            case EventType.WORLD_TICK:
+            case EventType.CLIENT_TICK:
                 if (!this.entitiesLoaded && Wrapper.MC.world != null) {
                     Wrapper.MC.world.getPlayers().forEach((entity -> this.entities.put(
                             entity.getEntityId(),

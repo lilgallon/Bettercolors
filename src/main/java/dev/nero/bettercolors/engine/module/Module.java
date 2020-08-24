@@ -18,7 +18,6 @@
 
 package dev.nero.bettercolors.engine.module;
 
-import dev.nero.bettercolors.engine.BettercolorsEngine;
 import dev.nero.bettercolors.engine.option.Option;
 import dev.nero.bettercolors.engine.option.ToggleOption;
 import dev.nero.bettercolors.engine.option.ValueFloatOption;
@@ -27,27 +26,22 @@ import dev.nero.bettercolors.engine.view.LogLevel;
 import dev.nero.bettercolors.engine.view.Window;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 public abstract class Module {
 
     // Utility
-    private final String LOG_PREFIX;
+    private final String PREFIX;
+    private final String DESCRIPTION;
     private String lastLogMessage;
 
-    // Keys utility
-    private final Map<Key, KeyState> KEY_HANDLER;
-    protected enum Key { ATTACK, USE }
-    protected enum KeyState { JUST_PRESSED, BEING_PRESSED, JUST_RELEASED, IDLE }
-
     // Module details
-    private final String name;
+    private final String NAME;
     protected ArrayList<Option> options;
     private final String symbol;
 
     // Module status
-    private final int TOGGLE_KEY;
+    private int toggleKey;
     private boolean isActivated;
 
     /**
@@ -55,37 +49,44 @@ public abstract class Module {
      * @param toggleKey the toggle Key (-1 -> none).
      * @param isActivated the initial state.
      * @param symbol the picture name.
-     * @param log_prefix the prefix for console logging.
+     * @param prefix the prefix for console logging and settings.
+     *
+     * @deprecated you the other constructor with the description parameter
      */
-    protected Module(String name, Integer toggleKey, Boolean isActivated, String symbol, String log_prefix){
-        this.name = name;
+    @Deprecated
+    protected Module(String name, Integer toggleKey, Boolean isActivated, String symbol, String prefix){
+        this(name, "", toggleKey, isActivated, symbol, prefix);
+    }
+
+    /**
+     * @param name the name.
+     * @param description the description.
+     * @param toggleKey the toggle Key (-1 -> none).
+     * @param isActivated the initial state.
+     * @param symbol the picture name.
+     * @param prefix the prefix for console logging and settings.
+     */
+    protected Module(String name, String description, Integer toggleKey, Boolean isActivated, String symbol, String prefix){
+        this.NAME = name;
+        this.DESCRIPTION = description;
         this.isActivated = isActivated;
-        this.TOGGLE_KEY = toggleKey;
+        this.toggleKey = toggleKey;
         this.symbol = symbol;
-        this.LOG_PREFIX = log_prefix;
+        this.PREFIX = prefix;
 
         lastLogMessage = "";
 
         options = new ArrayList<>();
-
-        KEY_HANDLER = new HashMap<>();
-        KEY_HANDLER.put(Key.ATTACK, KeyState.IDLE);
-        KEY_HANDLER.put(Key.USE, KeyState.IDLE);
     }
 
     /**
      * It toggles the module.
+     *
+     * @param isTriggeredByKeybind if true means that the mod has been toggled using key press
      */
-    public void toggle(){
+    public void toggle(boolean isTriggeredByKeybind){
         isActivated = !isActivated;
-        this.onToggle(isActivated);
-
-        if (!isActivated) {
-            // Reset Key handler
-            for (Map.Entry<Key, KeyState> entry : KEY_HANDLER.entrySet()) {
-                entry.setValue(KeyState.IDLE);
-            }
-        }
+        this.onToggle(isActivated, isTriggeredByKeybind);
     }
 
     /**
@@ -95,7 +96,18 @@ public abstract class Module {
     protected void logInfo(String msg){
         if(!msg.equalsIgnoreCase(lastLogMessage)) {
             lastLogMessage = msg;
-            Window.LOG(LogLevel.INFO, LOG_PREFIX + " " + msg);
+            Window.LOG(LogLevel.INFO, "[+] " + PREFIX + "] " + msg);
+        }
+    }
+
+    /**
+     * It sends an information message to the window's console.
+     * @param msg the message to send.
+     */
+    protected void logWarn(String msg){
+        if(!msg.equalsIgnoreCase(lastLogMessage)) {
+            lastLogMessage = msg;
+            Window.LOG(LogLevel.WARNING, "[" + PREFIX + "] " + msg);
         }
     }
 
@@ -106,50 +118,36 @@ public abstract class Module {
     protected void logError(String msg){
         if(!msg.equalsIgnoreCase(lastLogMessage)) {
             lastLogMessage = msg;
-            Window.LOG(LogLevel.ERROR, LOG_PREFIX + " " + msg);
+            Window.LOG(LogLevel.ERROR, "[" + PREFIX + "] " + msg);
         }
-    }
-
-    /**
-     * @param Key the Key to check the state.
-     * @param state the state of the Key.
-     * @return true if the [Key] is currently at the state [state].
-     */
-    protected boolean isKeyState(Key Key, KeyState state){
-        return KEY_HANDLER.get(Key) == state;
     }
 
     /**
      * It updates the module
+     *
+     * @deprecated Use Module#event instead
      */
+    @Deprecated
     public void update(){
-        updateKeyHandler();
         onUpdate();
     }
 
     /**
-     * It updates the Key handler
+     * It calls the onEvent method of the module with the event code and its details.
+     * @param code the event code (the client needs to define it)
+     * @param details the details (the client needs to define it)
      */
-    public void updateKeyHandler(){
-        if(BettercolorsEngine.MC.options.keyAttack.isPressed() && KEY_HANDLER.get(Key.ATTACK) == KeyState.IDLE){
-            KEY_HANDLER.replace(Key.ATTACK, KeyState.JUST_PRESSED);
-        }else if(BettercolorsEngine.MC.options.keyAttack.isPressed() && KEY_HANDLER.get(Key.ATTACK) == KeyState.JUST_PRESSED) {
-            KEY_HANDLER.replace(Key.ATTACK, KeyState.BEING_PRESSED);
-        }else if(!BettercolorsEngine.MC.options.keyAttack.isPressed() && (KEY_HANDLER.get(Key.ATTACK) == KeyState.JUST_PRESSED || KEY_HANDLER.get(Key.ATTACK) == KeyState.BEING_PRESSED)){
-            KEY_HANDLER.replace(Key.ATTACK, KeyState.JUST_RELEASED);
-        } else if(!BettercolorsEngine.MC.options.keyAttack.isPressed() && KEY_HANDLER.get(Key.ATTACK) == KeyState.JUST_RELEASED){
-            KEY_HANDLER.replace(Key.ATTACK, KeyState.IDLE);
-        }
+    public void event(int code, Object details) {
+        this.onEvent(code, details);
+    }
 
-        if(BettercolorsEngine.MC.options.keyUse.isPressed() && KEY_HANDLER.get(Key.USE) == KeyState.IDLE){
-            KEY_HANDLER.replace(Key.USE, KeyState.JUST_PRESSED);
-        }else if(BettercolorsEngine.MC.options.keyUse.isPressed() && KEY_HANDLER.get(Key.USE) == KeyState.JUST_PRESSED) {
-            KEY_HANDLER.replace(Key.USE, KeyState.BEING_PRESSED);
-        }else if(!BettercolorsEngine.MC.options.keyUse.isPressed() && (KEY_HANDLER.get(Key.USE) == KeyState.JUST_PRESSED || KEY_HANDLER.get(Key.USE) == KeyState.BEING_PRESSED)){
-            KEY_HANDLER.replace(Key.USE, KeyState.JUST_RELEASED);
-        }else if(!BettercolorsEngine.MC.options.keyUse.isPressed() && KEY_HANDLER.get(Key.USE) == KeyState.JUST_RELEASED){
-            KEY_HANDLER.replace(Key.USE, KeyState.IDLE);
-        }
+    /***
+     * It calls the onOptionChange method of the module
+     * @param option the option that changed
+     * @param oldValue the value before the change
+     */
+    public void optionChange(Option option, Object oldValue) {
+        this.onOptionChange(option, oldValue);
     }
 
     /**
@@ -167,37 +165,133 @@ public abstract class Module {
                 if(this.options.get(index) instanceof ToggleOption){
                     ((ToggleOption) this.options.get(index)).setActivated(Boolean.parseBoolean(optionValue));
                 } else if (this.options.get(index) instanceof ValueOption){
-                    ((ValueOption) this.options.get(index)).setVal(Integer.parseInt(optionValue));
+                    try {
+                        ((ValueOption) this.options.get(index)).setVal(Integer.parseInt(optionValue));
+                    } catch (IllegalArgumentException e) {
+                        Window.WARN("The option for " + optionName + " is out of bounds, it's not recommended");
+                        Window.WARN(e.toString());
+                    }
                 }  else if (this.options.get(index) instanceof ValueFloatOption){
-                    ((ValueFloatOption) this.options.get(index)).setVal(Float.parseFloat(optionValue));
+                    try {
+                        ((ValueFloatOption) this.options.get(index)).setVal(Float.parseFloat(optionValue));
+                    } catch (IllegalArgumentException e) {
+                        Window.WARN("The option for " + optionName + " is out of bounds, it's not recommended");
+                        Window.WARN(e.toString());
+                    }
                 }
             }
         }
     }
 
     /**
-     * Used in children to run the module.
+     * It loads the "givenOptions" into "this.options" by taking into account the options in "defaultOptions".
+     * @param defaultOptions the module's default options
+     * @param givenOptions the options to load
      */
+    protected void loadOptionsAccordingTo(ArrayList<Option> defaultOptions, Map<String, String> givenOptions) {
+        this.options = new ArrayList<>();
+
+        for (Option defaultOption : defaultOptions) {
+            Option option = (Option) defaultOption.clone();
+            String name = defaultOption.getCompleteName();
+
+            if (option instanceof ToggleOption) {
+                ((ToggleOption) option).setActivated(
+                        Boolean.parseBoolean(givenOptions.get(name))
+                );
+            } else if (option instanceof ValueOption) {
+                try {
+                    ((ValueOption) option).setVal(
+                            Integer.parseInt(givenOptions.get(name))
+                    );
+                } catch (IllegalArgumentException exc) {
+                    Window.WARN("The option for " + defaultOption.getName() + " is out of bounds, it's not recommended");
+                    Window.WARN(exc.toString());
+                }
+            } else if (option instanceof ValueFloatOption) {
+                try {
+                    ((ValueFloatOption) option).setVal(
+                            Float.parseFloat(givenOptions.get(name))
+                    );
+                } catch (IllegalArgumentException exc) {
+                    Window.WARN("The option for " + defaultOption.getName() + " is out of bounds, it's not recommended");
+                    Window.WARN(exc.toString());
+                }
+            }
+
+            this.options.add(option);
+        }
+    }
+
+    /**
+     * @param index the index of the ValueOption in the options array
+     * @return the option's value
+     */
+    protected int getOptionI(int index) {
+        return ((ValueOption) this.options.get(index)).getVal();
+    }
+
+    /**
+     *
+     * @param index the index of the ValueFloatOption in the options array
+     * @return the option's value
+     */
+    protected float getOptionF(int index) {
+        return ((ValueFloatOption) this.options.get(index)).getVal();
+    }
+
+    /**
+     * @param index the index of the ToggleOption in the options array
+     * @return the option's value
+     */
+    protected boolean getOptionB(int index) {
+        return ((ToggleOption) this.options.get(index)).isActivated();
+    }
+
+    /**
+     * Used in children to run the module.
+     *
+     * @deprecated use Module#onEvent(int code, Object details) instead
+     */
+    @Deprecated
     protected void onUpdate() { }
+
+    /**
+     * Used in children to run the module.
+     * @param code the event code (you need to define it since your modules will use it to differentiate events)
+     * @param details the event details (you need to define it)
+     */
+    protected void onEvent(int code, Object details){}
 
     /**
      * Used in children to execute some code when they're turning on and off.
      * Only called when toggle() is called by the engine.
      * @param toggle true if turned on, false otherwise
+     * @param isTriggeredByKeybind if true means that the mod has been toggled using key press
      */
-    protected void onToggle(boolean toggle) {}
+    protected void onToggle(boolean toggle, boolean isTriggeredByKeybind) {}
+
+    /**
+     * Used in children to execute some code when an option has been updated.
+     * @param option the updated option
+     * @param oldValue the value before the change
+     */
+    protected void onOptionChange(Option option, Object oldValue) {}
 
     protected static ArrayList<Option> getDefaultOptions() {
         return new ArrayList<>();
     }
 
     // Setters
-    public void setActivated(boolean activated){ isActivated = activated; }
+    public void setActivated(boolean activated) { this.isActivated = activated; }
+    public void setToggleKey(int key) { this.toggleKey = key; }
 
     // Getters
-    public String getName() { return name; }
-    public int getToggleKey(){ return TOGGLE_KEY; }
+    public String getName() { return NAME; }
+    public String getDescription() { return DESCRIPTION; }
+    public int getToggleKey(){ return toggleKey; }
     public boolean isActivated() { return isActivated; }
     public ArrayList<Option> getOptions() { return options; }
-    public String getSymbol(){ return symbol; }
+    public String getSymbol() { return symbol; }
+    public String getPrefix() { return PREFIX; }
 }

@@ -16,43 +16,41 @@
 
 package dev.nero.bettercolors.core.modules;
 
-import dev.nero.bettercolors.engine.module.Module;
+import dev.nero.bettercolors.core.events.EventType;
 import dev.nero.bettercolors.engine.option.Option;
 import dev.nero.bettercolors.core.wrapper.Wrapper;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityGroup;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.SwordItem;
+import net.minecraft.util.hit.HitResult;
+
 
 import java.util.ArrayList;
 
-public class AutoSword extends Module {
+public class AutoSword extends BetterModule {
 
     /**
      * @param toggleKey the toggle key (-1 -> none)
      * @param isActivated the initial state
      */
     public AutoSword(Integer toggleKey, Boolean isActivated) {
-        super("Auto sword", toggleKey, isActivated, "sword_symbol.png", "[ASw]");
+        super("Auto sword", "Gets the best sword from the hotbar when attacking an entity", toggleKey, isActivated, "unknown.png", "ASw");
     }
 
     @Override
-    public void onUpdate() {
-        if(Wrapper.MC.player != null){
+    protected void onEvent(int code, Object details) {
+        if (!this.isActivated()) return;
+        if (Wrapper.MC.player == null) return;
+        if (Wrapper.isInGui()) return;
 
-            boolean has_clicked_on_living_entity = false;
-            try {
-                Entity mouseOverEntity = Wrapper.MC.targetedEntity;
-                if ((mouseOverEntity instanceof LivingEntity))
-                    has_clicked_on_living_entity = true;
-            } catch (Exception ignored) {
-                // Happens sometimes in MC1.8.9, did not test if it happens on 1.15.2 as well
-                // When we try to get what the player is pointing at, and it's a ladder, it crashes for example
+        if (code == EventType.MOUSE_INPUT) {
+            boolean isPointingEntity = false;
+            if (Wrapper.MC.crosshairTarget != null) {
+                isPointingEntity = Wrapper.MC.crosshairTarget.getType() == HitResult.Type.ENTITY;
             }
 
-            if(isKeyState(Key.ATTACK, KeyState.JUST_PRESSED) && has_clicked_on_living_entity){
+            if(this.playerAttacks() && isPointingEntity){
                 // We find the best sword
                 float max_damage = -1;
                 int best_item = -1;
@@ -64,10 +62,10 @@ public class AutoSword extends Module {
                         SwordItem sword = (SwordItem) stack.getItem();
                         float damage = sword.getAttackDamage();
 
-                        if (stack.hasEnchantments()) {
+                        // It's not the best algorithm, but that's enough for most of the cases
+                        if(sword.hasGlint(stack)){
                             damage += EnchantmentHelper.getAttackDamage(stack, EntityGroup.DEFAULT);
                         }
-
 
                         if(damage >= max_damage){
                             best_item = slot;
@@ -76,22 +74,16 @@ public class AutoSword extends Module {
                     }
                 }
                 // We give the best sword to the player
-                if(best_item != -1 && Wrapper.MC.player.inventory.selectedSlot != best_item){
-                    logInfo(
-                            "Better sword found (" +
-                                    Wrapper.MC.player.inventory
-                                            .main
-                                            .get(best_item)
-                                            .getName()
-                                            .getString()
-                                    + ")."
-                    );
+                if(best_item != -1 && Wrapper.MC.player.inventory.selectedSlot  != best_item){
                     Wrapper.MC.player.inventory.selectedSlot = best_item;
                 }
             }
         }
     }
 
+    /**
+     * Used by the engine (reflection)
+     */
     public static ArrayList<Option> getDefaultOptions(){
         return new ArrayList<>();
     }

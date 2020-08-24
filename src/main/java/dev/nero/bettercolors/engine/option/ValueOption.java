@@ -37,9 +37,27 @@ public class ValueOption extends Option {
      * @param max the maximum value.
      * @param minor_tick_spc the minor tick spacing (for the slider).
      * @param major_tick_spc the major tick spacing (for the slider).
+     *
+     * @deprecated use the other constructor with the description instead
      */
+    @Deprecated
     public ValueOption(String prefix, String name, int val, int min, int max, int minor_tick_spc, int major_tick_spc) {
-        super(prefix, name);
+        this(prefix, name, "", val, min, max, minor_tick_spc, major_tick_spc);
+    }
+
+    /**
+     * @param prefix prefix of the option (module name for example) -> used to prevent conflict if some modules have
+     *               the same option name.
+     * @param name the name.
+     * @param description the description.
+     * @param val the initial value.
+     * @param min the minimum value.
+     * @param max the maximum value.
+     * @param minor_tick_spc the minor tick spacing (for the slider).
+     * @param major_tick_spc the major tick spacing (for the slider).
+     */
+    public ValueOption(String prefix, String name, String description, int val, int min, int max, int minor_tick_spc, int major_tick_spc) {
+        super(prefix, name, description);
         this.val = val;
         MIN = min;
         MAX = max;
@@ -58,13 +76,13 @@ public class ValueOption extends Option {
      * @param val the new value.
      */
     public void setVal(int val){
+        this.val = val;
+        saveOption();
+
         if(val > MAX) {
             throw new IllegalArgumentException("The value " + val + " is bigger than its max : " + MAX);
         }else if(val < MIN){
             throw new IllegalArgumentException("The value " + val + " is lower than its min : " + MIN);
-        }else{
-            this.val = val;
-            saveOption();
         }
     }
 
@@ -79,7 +97,7 @@ public class ValueOption extends Option {
     @Override
     public Object clone() {
         return new ValueOption(
-                this.PREFIX, this.NAME,
+                this.PREFIX, this.NAME, this.DESCRIPTION,
                 this.getVal(), this.getMin(), this.getMax(),
                 this.getMinorTickSpacing(), this.getMajorTickSpacing()
         );

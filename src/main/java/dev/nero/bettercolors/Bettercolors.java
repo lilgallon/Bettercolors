@@ -18,14 +18,11 @@ import java.util.HashMap;
 
 public class Bettercolors implements ModInitializer {
 
-    public static final String MODID = "mcp";
     private static BettercolorsEngine engine;
     private static boolean failedBypass = false;
 
     @Override
     public void onInitialize() {
-        System.setProperty("java.awt.headless", "false");
-
         // The engine will handle absolutely everything. We will just need to write some modules for the mod, the rest
         // is totally handled by the engine. :)
         engine = new BettercolorsEngine();
@@ -38,16 +35,20 @@ public class Bettercolors implements ModInitializer {
         modules.put(AutoSword.class, new BettercolorsEngine.IntAndBoolean(-1, true));
         modules.put(Reach.class, new BettercolorsEngine.IntAndBoolean(-1, false));
         modules.put(Triggerbot.class, new BettercolorsEngine.IntAndBoolean(-1, false));
+        modules.put(TeamFilter.class, new BettercolorsEngine.IntAndBoolean(-1, false));
+        modules.put(Antibot.class, new BettercolorsEngine.IntAndBoolean(-1, true));
 
         engine.init(
+                "Bettercolors " + Reference.MOD_VERSION + " for MC " + Reference.MC_VERSION + " (fabric)",
                 Reference.MOD_VERSION,
+                Reference.MOD_VERSION_SUFFIX,
                 Reference.MC_VERSION,
-                "https://github.com/N3ROO/Bettercolors/releases",
+                "https://api.github.com/repos/n3roo/bettercolors/releases",
+                "https://github.com/n3roo/bettercolors/releases",
                 "https://github.com/N3ROO/Bettercolors/issues",
-                "https://github.com/N3ROO/Bettercolors/releases/latest",
                 modules,
-                new BettercolorsEngine.Key(GLFW.GLFW_KEY_INSERT, "insert"),
-                MinecraftClient.getInstance()
+                GLFW.GLFW_KEY_INSERT,
+                (code) -> GLFW.glfwGetKeyName(code, GLFW.glfwGetKeyScancode(code))
         );
 
         Window.INFO("[+] Bettercolors " + Reference.MOD_VERSION + " loaded");
@@ -80,7 +81,7 @@ public class Bettercolors implements ModInitializer {
                     gameRendererField.setAccessible(true);
 
                     try {
-                        gameRendererField.set(Wrapper.MC.getInstance(), GameRendererHijack.hijack(BettercolorsEngine.MC.gameRenderer));
+                        gameRendererField.set(Wrapper.MC.getInstance(), GameRendererHijack.hijack(Wrapper.MC.gameRenderer));
                     } catch (IllegalAccessException e) {
                         Window.ERROR("Error while hijacking gameRenderer");
                         failedBypass = true;
@@ -98,9 +99,14 @@ public class Bettercolors implements ModInitializer {
         OnRenderCallback.EVENT.register( (tick, info) -> {
             final long HANDLE = MinecraftClient.getInstance().getWindow().getHandle();
 
-            engine.keyEvent(GLFW.GLFW_KEY_HOME, InputUtil.isKeyPressed(HANDLE, GLFW.GLFW_KEY_HOME));
-            engine.keyEvent(GLFW.GLFW_KEY_PAGE_UP, InputUtil.isKeyPressed(HANDLE, GLFW.GLFW_KEY_PAGE_UP));
+            // Window toggle key
             engine.keyEvent(Window.TOGGLE_KEY, InputUtil.isKeyPressed(HANDLE, Window.TOGGLE_KEY));
+
+            // Modules' toggle keys
+            for (Module module : engine.getModules()) {
+                if (module.getToggleKey() != -1)
+                    engine.keyEvent(module.getToggleKey(), InputUtil.isKeyPressed(HANDLE, module.getToggleKey()));
+            }
 
             engine.update();
         });

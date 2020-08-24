@@ -135,7 +135,7 @@ public class AimAssistance extends BetterModule {
                 break;
 
             case EventType.CLIENT_TICK:
-                analyseEnvironment();
+                if (this.assist) analyseEnvironment();
                 analyseBehaviour();
                 break;
         }

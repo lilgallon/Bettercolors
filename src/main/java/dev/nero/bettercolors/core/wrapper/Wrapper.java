@@ -45,7 +45,6 @@ import java.util.List;
 public class Wrapper {
 
     public final static Minecraft MC = Minecraft.getInstance();
-    public final static Class<PlayerEntity> playerEntityClass = PlayerEntity.class;
 
     private final static TimeHelper delay = new TimeHelper();
     private static Robot robot;
@@ -62,21 +61,6 @@ public class Wrapper {
     }
 
     /**
-     * @param e entity.
-     * @return the team tag of the entity.
-     */
-    public static String exportTag(PlayerEntity e){
-        String tag;
-        try{
-            tag = e.getDisplayName().getUnformattedComponentText().split(e.getName().getString())[0].replace(" ","");
-            tag = tag.replace("§","");
-        }catch(Exception exc){
-            tag = "";
-        }
-        return tag;
-    }
-
-    /**
      * @return true if the user is in a Gui (he can't move).
      */
     public static boolean isInGui(){
@@ -86,27 +70,6 @@ public class Wrapper {
                 !MC.isGameFocused() ||
                 MC.isGamePaused() ||
                 (Wrapper.MC.currentScreen instanceof ContainerScreen);
-    }
-
-    /**
-     * @param entity the entity (can be anything).
-     * @return true if the given entity is in the same team as the player.
-     */
-    public static boolean isPlayerInSameTeamAs(Entity entity){
-        if(!(entity.getClass().isInstance(Wrapper.playerEntityClass)))
-            return false;
-
-        boolean same_team = false;
-        String target_tag;
-        try {
-            // Check friends / teammate
-            target_tag = Wrapper.exportTag(Wrapper.playerEntityClass.cast(entity.getClass()));
-            if (Wrapper.exportTag(Wrapper.MC.player).equalsIgnoreCase(target_tag)) {
-                same_team = true;
-            }
-
-        } catch (Exception ignored) { }
-        return same_team;
     }
 
     /**
@@ -321,7 +284,7 @@ public class Wrapper {
 
             // Check team
             if (TeamFilter.getInstance().isActivated()) {
-                if (Wrapper.isPlayerInSameTeamAs(entity)) return false;
+                if (TeamFilter.getInstance().isPlayerInSameTeamAs(entity)) return false;
             }
         }
 

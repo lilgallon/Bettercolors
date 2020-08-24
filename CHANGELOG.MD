@@ -44,6 +44,7 @@ and some were renamed (see below).
     - Debug mode now shows the GUI on startup
     - You can put your cursor over an option to get a description of it
     - You can put your cursor over a module to get a description of it
+    - Improved modules messages in the console
     
 **V7.2.0 MC_1.16.1**
 

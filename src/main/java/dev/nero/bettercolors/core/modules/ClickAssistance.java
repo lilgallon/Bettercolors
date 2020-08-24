@@ -110,20 +110,28 @@ public class ClickAssistance extends BetterModule {
     }
 
     @Override
+    protected void onOptionChange(Option option, Object oldValue) {
+        if (option.getName().equals(PACKETS)) {
+            logWarn("Use packets only if you know what you're doing");
+        }
+    }
+
+    @Override
     protected void onToggle(boolean toggle, boolean isTriggeredByKeybind) {
         if (toggle) {
             if (BettercolorsEngine.getInstance().getModule("Triggerbot").isActivated()) {
+                String message = "Click assistance can't be used along with triggerbot. Triggerbot will" +
+                        " be turned off.\n Also, Don't abuse of the click assistance. It can get you banned with" +
+                        " high values. Keep the values low and you will be safe.";
+
                 if (!isTriggeredByKeybind)
-                    Window.getInstance().dialog("Click assistance can't be used along with triggerbot. Triggerbot will" +
-                            " be turned off.\n Also, Don't abuse of the click assistance. It can get you banned with" +
-                            " high values. Keep the values low and you will be safe.");
+                    Window.getInstance().dialog(message);
+                logWarn(message);
+
                 BettercolorsEngine.getInstance().toggleModule("Triggerbot", false);
             } else {
-                if (!isTriggeredByKeybind)
-                    Window.getInstance().dialog(
-                            "Don't abuse of the click assistance. It can get you banned with high values. Keep the " +
-                            " values low and you will be safe."
-                    );
+                logWarn("Don't abuse of the click assistance. It can get you banned with high values. Keep the " +
+                            " values low and you will be safe.");
             }
         }
     }

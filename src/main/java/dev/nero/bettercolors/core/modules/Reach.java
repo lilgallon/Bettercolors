@@ -56,8 +56,7 @@ public class Reach extends Module {
     @Override
     protected void onToggle(boolean toggle, boolean isTriggeredByKeybind) {
         if (toggle) {
-            if (!isTriggeredByKeybind)
-                Window.getInstance().dialog("Don't abuse of the extended reach. It can get you banned.");
+            logWarn("Don't abuse of the extended reach. It can get you banned.");
         }
     }
 

@@ -97,13 +97,14 @@ public class Triggerbot extends Module {
         if (toggle) {
             timeout.start();
             if (BettercolorsEngine.getInstance().getModule("Click assistance").isActivated()) {
+                String message = "Trigger bot can't be used along with click assistance. Click assistance" +
+                        "will be turned off. This feature is not as safe as click assistance. Use it at your own risk";
                 if (!isTriggeredByKeybind)
-                    Window.getInstance().dialog("Trigger bot can't be used along with click assistance. Click assistance" +
-                            "will be turned off. This feature is not as safe as click assistance. Use it at your own risk");
+                    Window.getInstance().dialog(message);
+                logWarn(message);
                 BettercolorsEngine.getInstance().toggleModule("Click assistance", false);
             } else {
-                if (!isTriggeredByKeybind)
-                    Window.getInstance().dialog("This feature is not as safe as click assistance. Use it at your own risk");
+                logWarn("This feature is not as safe as click assistance. Use it at your own risk");
             }
         } else {
             timeout.stop();

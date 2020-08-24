@@ -80,7 +80,7 @@ public class AimAssistance extends BetterModule {
         DEFAULT_OPTIONS.add(new ValueOption(PREFIX, RADIUS_Y, DESC_RADIUS_Y, 30, 0, 90, 3, 15));
         DEFAULT_OPTIONS.add(new ValueOption(PREFIX, DURATION, DESC_DURATION, 2000, 0, 10000, 200, 1000));
 
-        DEFAULT_OPTIONS.add(new ValueFloatOption(PREFIX, DESC_CPS_TO_ACTIVATE, CPS_TO_ACTIVATE, 4, 0, 10, 1, 5));
+        DEFAULT_OPTIONS.add(new ValueFloatOption(PREFIX, CPS_TO_ACTIVATE, DESC_CPS_TO_ACTIVATE, 4, 0, 10, 1, 5));
     }
 
     private Entity target;
@@ -113,7 +113,7 @@ public class AimAssistance extends BetterModule {
     protected void onOptionChange(Option option, Object oldValue) {
         if (option.getName().equals(STICKY) && getOptionB(I_STOP_WHEN_REACHED) ||
                 option.getName().equals(STOP_WHEN_REACHED) && getOptionB(I_STICKY)) {
-            this.logInfo("Sticky and stop when reached options should not be used together");
+            this.logWarn("Sticky and stop when reached options should not be used together");
         }
     }
 

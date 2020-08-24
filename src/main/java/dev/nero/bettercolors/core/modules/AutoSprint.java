@@ -14,35 +14,41 @@
  * limitations under the License.
  */
 
-
 package dev.nero.bettercolors.core.modules;
 
+import dev.nero.bettercolors.core.events.EventType;
+import dev.nero.bettercolors.engine.module.Module;
 import dev.nero.bettercolors.engine.option.Option;
+import dev.nero.bettercolors.core.wrapper.Wrapper;
 
 import java.util.ArrayList;
 
-import static dev.nero.bettercolors.core.wrapper.Wrapper.MC;
-
-public class AutoSprint extends BetterModule {
+public class AutoSprint extends Module {
 
     /**
-     * @param toggle_key the toggle key (-1 -> none).
-     * @param is_activated the initial state.
+     * @param toggleKey the toggle key (-1 -> none).
+     * @param isActivated the initial state.
      */
-    public AutoSprint(Integer toggle_key, Boolean is_activated) {
-        super("Auto sprint", toggle_key, is_activated, "unknown.png", "ASp");
+    public AutoSprint(Integer toggleKey, Boolean isActivated) {
+        super("Auto sprint", "Sprints for you when you're going forward", toggleKey, isActivated, "unknown.png", "ASp");
     }
 
     @Override
-    public void onUpdate() {
-        if(MC.thePlayer != null){
-            if(MC.thePlayer.moveForward > 0 && !MC.thePlayer.isSprinting()){
-                logInfo("Forcing player to run");
-                MC.thePlayer.setSprinting(true);
+    protected void onEvent(int code, Object details) {
+        if (!this.isActivated()) return;
+        if (Wrapper.MC.thePlayer == null) return;
+        if (Wrapper.isInGui()) return;
+
+        if (code == EventType.CLIENT_TICK) {
+            if(Wrapper.MC.thePlayer.moveForward > 0 && !Wrapper.MC.thePlayer.isSprinting()){
+                Wrapper.MC.thePlayer.setSprinting(true);
             }
         }
     }
 
+    /**
+     * Used by the engine (reflection)
+     */
     public static ArrayList<Option> getDefaultOptions(){
         return new ArrayList<>();
     }

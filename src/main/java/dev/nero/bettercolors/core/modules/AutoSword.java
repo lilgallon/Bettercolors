@@ -16,57 +16,52 @@
 
 package dev.nero.bettercolors.core.modules;
 
+import dev.nero.bettercolors.core.events.EventType;
 import dev.nero.bettercolors.engine.option.Option;
+import dev.nero.bettercolors.core.wrapper.Wrapper;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
+import net.minecraft.util.MovingObjectPosition;
 
 import java.util.ArrayList;
-
-import static dev.nero.bettercolors.core.wrapper.Wrapper.MC;
 
 public class AutoSword extends BetterModule {
 
     /**
-     * @param toggle_key the toggle key (-1 -> none)
-     * @param is_activated the initial state
+     * @param toggleKey the toggle key (-1 -> none)
+     * @param isActivated the initial state
      */
-    public AutoSword(Integer toggle_key, Boolean is_activated) {
-        super("Auto sword", toggle_key, is_activated, "unknown.png", "ASw");
+    public AutoSword(Integer toggleKey, Boolean isActivated) {
+        super("Auto sword", "Gets the best sword from the hotbar when attacking an entity", toggleKey, isActivated, "unknown.png", "ASw");
     }
 
     @Override
-    public void onUpdate() {
-        if(MC.thePlayer != null){
+    protected void onEvent(int code, Object details) {
+        if (!this.isActivated()) return;
+        if (Wrapper.MC.thePlayer == null) return;
+        if (Wrapper.isInGui()) return;
 
-            boolean has_clicked_on_living_entity = false;
-            try {
-                Entity mouseOverEntity = MC.objectMouseOver.entityHit;
-                if ((mouseOverEntity instanceof EntityLivingBase))
-                    has_clicked_on_living_entity = true;
-            } catch (Exception ignored) {
-                // Happens sometimes in MC1.8.9, did not test if it happens on 1.15.2 as well
-                // When we try to get what the player is pointing at, and it's a ladder, it crashes for example
+        if (code == EventType.MOUSE_INPUT) {
+            boolean isPointingEntity = false;
+            if (Wrapper.MC.objectMouseOver != null) {
+                isPointingEntity = Wrapper.MC.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY;
             }
 
-            if(isKeyState(Key.ATTACK, KeyState.JUST_PRESSED) && has_clicked_on_living_entity){
+            if(this.playerAttacks() && isPointingEntity){
                 // We find the best sword
                 float max_damage = -1;
                 int best_item = -1;
 
                 // We look for every slot of the hotbar, and we take the best item
                 for(int slot = 0; slot < 9 ; slot ++){
-                    ItemStack stack = MC.thePlayer.inventory.mainInventory[slot];
+                    ItemStack stack = Wrapper.MC.thePlayer.inventory.mainInventory[slot];
                     if(stack == null) continue;
                     if(stack.getItem() instanceof ItemSword){
                         ItemSword sword = (ItemSword) stack.getItem();
                         float damage = sword.getMaxDamage();
                         if(sword.hasEffect(stack)){
-                            // The damage calculation is not correct here, but we just need to find the item with the most
-                            // powerful enchantment, so we don't care.
                             damage += EnchantmentHelper.getEnchantmentLevel(Enchantment.sharpness.effectId, stack);
                         }
 
@@ -77,14 +72,16 @@ public class AutoSword extends BetterModule {
                     }
                 }
                 // We give the best sword to the player
-                if(best_item != -1 && MC.thePlayer.inventory.currentItem != best_item){
-                    logInfo("Better sword found (" +  MC.thePlayer.inventory.mainInventory[best_item].getDisplayName() + ").");
-                    MC.thePlayer.inventory.currentItem = best_item;
+                if(best_item != -1 && Wrapper.MC.thePlayer.inventory.currentItem != best_item){
+                    Wrapper.MC.thePlayer.inventory.currentItem = best_item;
                 }
             }
         }
     }
 
+    /**
+     * Used by the engine (reflection)
+     */
     public static ArrayList<Option> getDefaultOptions(){
         return new ArrayList<>();
     }

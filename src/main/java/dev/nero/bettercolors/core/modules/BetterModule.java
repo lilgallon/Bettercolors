@@ -1,31 +1,25 @@
 package dev.nero.bettercolors.core.modules;
 
+import dev.nero.bettercolors.core.events.EventType;
 import dev.nero.bettercolors.core.wrapper.Wrapper;
 import dev.nero.bettercolors.engine.module.Module;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class BetterModule extends Module {
 
     // Keys utility
-    private final Map<Key, KeyState> KEY_HANDLER;
-    protected enum Key { ATTACK, USE }
-    protected enum KeyState { JUST_PRESSED, BEING_PRESSED, JUST_RELEASED, IDLE }
+    private boolean attack = false;
+    private boolean use = false;
 
     /**
      * @param name        the name.
+     * @param description the description.
      * @param toggleKey   the toggle Key (-1 -> none).
      * @param isActivated the initial state.
      * @param symbol      the picture name.
      * @param prefix      the prefix for console logging and settings
      */
-    protected BetterModule(String name, Integer toggleKey, Boolean isActivated, String symbol, String prefix) {
-        super(name, toggleKey, isActivated, symbol, prefix);
-
-        KEY_HANDLER = new HashMap<>();
-        KEY_HANDLER.put(Key.ATTACK, KeyState.IDLE);
-        KEY_HANDLER.put(Key.USE, KeyState.IDLE);
+    protected BetterModule(String name, String description, Integer toggleKey, Boolean isActivated, String symbol, String prefix) {
+        super(name, description, toggleKey, isActivated, symbol, prefix);
     }
 
 
@@ -40,50 +34,38 @@ public class BetterModule extends Module {
         this.onToggle(this.isActivated(), isTriggeredByKeybind);
 
         if (!this.isActivated()) {
-            // Reset Key handler
-            for (Map.Entry<Key, KeyState> entry : KEY_HANDLER.entrySet()) {
-                entry.setValue(KeyState.IDLE);
-            }
+            attack = false;
+            use = false;
         }
     }
 
     @Override
-    public void update(){
-        updateKeyHandler();
-        onUpdate();
+    public void event(int code, Object details) {
+        if (code == EventType.MOUSE_INPUT) {
+            attack = Wrapper.MC.gameSettings.keyBindAttack.isKeyDown();
+            use = Wrapper.MC.gameSettings.keyBindUseItem.isKeyDown();
+        }
+
+        this.onEvent(code, details);
     }
 
     /**
-     * It updates the Key handler
+     * ! Consumes the event
+     * @return true if the player attacks (left click)
      */
-    private void updateKeyHandler(){
-        if(Wrapper.MC.gameSettings.keyBindAttack.isPressed() && KEY_HANDLER.get(Key.ATTACK) == KeyState.IDLE){
-            KEY_HANDLER.replace(Key.ATTACK, KeyState.JUST_PRESSED);
-        }else if(Wrapper.MC.gameSettings.keyBindAttack.isPressed() && KEY_HANDLER.get(Key.ATTACK) == KeyState.JUST_PRESSED) {
-            KEY_HANDLER.replace(Key.ATTACK, KeyState.BEING_PRESSED);
-        }else if(!Wrapper.MC.gameSettings.keyBindAttack.isPressed() && (KEY_HANDLER.get(Key.ATTACK) == KeyState.JUST_PRESSED || KEY_HANDLER.get(Key.ATTACK) == KeyState.BEING_PRESSED)){
-            KEY_HANDLER.replace(Key.ATTACK, KeyState.JUST_RELEASED);
-        } else if(!Wrapper.MC.gameSettings.keyBindAttack.isPressed() && KEY_HANDLER.get(Key.ATTACK) == KeyState.JUST_RELEASED){
-            KEY_HANDLER.replace(Key.ATTACK, KeyState.IDLE);
-        }
-
-        if(Wrapper.MC.gameSettings.keyBindUseItem.isPressed() && KEY_HANDLER.get(Key.USE) == KeyState.IDLE){
-            KEY_HANDLER.replace(Key.USE, KeyState.JUST_PRESSED);
-        }else if(Wrapper.MC.gameSettings.keyBindUseItem.isPressed() && KEY_HANDLER.get(Key.USE) == KeyState.JUST_PRESSED) {
-            KEY_HANDLER.replace(Key.USE, KeyState.BEING_PRESSED);
-        }else if(!Wrapper.MC.gameSettings.keyBindUseItem.isPressed() && (KEY_HANDLER.get(Key.USE) == KeyState.JUST_PRESSED || KEY_HANDLER.get(Key.USE) == KeyState.BEING_PRESSED)){
-            KEY_HANDLER.replace(Key.USE, KeyState.JUST_RELEASED);
-        }else if(!Wrapper.MC.gameSettings.keyBindUseItem.isPressed() && KEY_HANDLER.get(Key.USE) == KeyState.JUST_RELEASED){
-            KEY_HANDLER.replace(Key.USE, KeyState.IDLE);
-        }
+    protected boolean playerAttacks(){
+        boolean b = attack;
+        attack = false;
+        return b;
     }
 
     /**
-     * @param Key the Key to check the state.
-     * @param state the state of the Key.
-     * @return true if the [Key] is currently at the state [state].
+     * ! Consumes the event
+     * @return true if the player uses (right click)
      */
-    protected boolean isKeyState(Key Key, KeyState state){
-        return KEY_HANDLER.get(Key) == state;
+    protected boolean playerUses(){
+        boolean b = use;
+        use = false;
+        return b;
     }
 }

@@ -16,6 +16,7 @@
 
 package dev.nero.bettercolors;
 
+import dev.nero.bettercolors.core.events.EventType;
 import dev.nero.bettercolors.engine.BettercolorsEngine;
 import dev.nero.bettercolors.engine.module.*;
 import dev.nero.bettercolors.engine.view.Window;
@@ -24,6 +25,8 @@ import dev.nero.bettercolors.core.modules.*;
 import dev.nero.bettercolors.core.wrapper.Wrapper;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
@@ -68,6 +71,8 @@ public class Bettercolors {
         modules.put(AutoSword.class, new BettercolorsEngine.IntAndBoolean(-1, true));
         modules.put(Reach.class, new BettercolorsEngine.IntAndBoolean(-1, false));
         modules.put(Triggerbot.class, new BettercolorsEngine.IntAndBoolean(-1, false));
+        modules.put(TeamFilter.class, new BettercolorsEngine.IntAndBoolean(-1, false));
+        modules.put(Antibot.class, new BettercolorsEngine.IntAndBoolean(-1, false));
 
         engine.init(
                 "Bettercolors " + Reference.MOD_VERSION + " for MC " + Reference.MC_VERSION + " (forge)",
@@ -78,7 +83,8 @@ public class Bettercolors {
                 "https://github.com/n3roo/bettercolors/releases",
                 "https://github.com/N3ROO/Bettercolors/issues",
                 modules,
-                new BettercolorsEngine.Key(Keyboard.KEY_INSERT, "insert")
+                Keyboard.KEY_INSERT,
+                Keyboard::getKeyName
         );
 
         Window.INFO("[+] Bettercolors " + Reference.MOD_VERSION + " loaded");
@@ -94,22 +100,42 @@ public class Bettercolors {
                 Wrapper.MC.entityRenderer = EntityRendererHijack.hijack(Wrapper.MC.entityRenderer);
             }
         }
+
+        this.engine.event(EventType.RENDER, event);
+    }
+
+    @SubscribeEvent
+    public void renderTickEvent(final TickEvent.RenderTickEvent event){
+        this.engine.event(EventType.RENDER, event);
+    }
+
+    @SubscribeEvent
+    public void entityJoinEvent(final EntityJoinWorldEvent event){
+        this.engine.event(EventType.ENTITY_JOIN, event);
+    }
+
+    // no entity leave event :(
+
+    @SubscribeEvent
+    public void entityAttackEvent(final LivingAttackEvent event) {
+        this.engine.event(EventType.ENTITY_ATTACK, event);
     }
 
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
+        // We don't use keyInputEvent because it's only triggered while in game. We want to be able
+        // to open the window when the player is in the menus
+
         // Window toggle key
         engine.keyEvent(Window.TOGGLE_KEY, Keyboard.isKeyDown(Window.TOGGLE_KEY));
 
         // Modules' toggle keys
         for (Module module : engine.getModules()) {
-            if (module.getToggleKey() != -1)
+            if (module.getToggleKey() != -1) {
                 engine.keyEvent(module.getToggleKey(), Keyboard.isKeyDown(module.getToggleKey()));
+            }
         }
-    }
 
-	@SubscribeEvent
-	public void tickEvent(final TickEvent event){
-        engine.update();
-	}
+        this.engine.event(EventType.CLIENT_TICK, event);
+    }
 }

@@ -3,7 +3,6 @@ package dev.nero.bettercolors.core.hijacks;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import dev.nero.bettercolors.engine.BettercolorsEngine;
-import dev.nero.bettercolors.engine.module.Module;
 import dev.nero.bettercolors.core.modules.Reach;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.EntityRenderer;
@@ -29,30 +28,34 @@ public class EntityRendererHijack extends EntityRenderer {
 
     private Entity pointedEntity;
     private Minecraft mc;
+    private Reach reach;
 
     public EntityRendererHijack(Minecraft mcIn, IResourceManager resourceManagerIn) {
         super(mcIn, resourceManagerIn);
         this.mc = mcIn;
+        this.reach = (Reach) BettercolorsEngine.getInstance().getModule("Reach");
     }
 
-    private float getBlockReachDistance() {
-        float increment = 0.0f;
-        Module reach = BettercolorsEngine.getInstance().getModule("Reach");
-
-        if (reach.isActivated()) {
-            increment = ((Reach) reach).getReachIncrement();
+    private float getCombatReachInc() {
+        if (this.reach.isActivated()) {
+            return this.reach.getCombatReachIncrement();
+        } else {
+            return 0.0f;
         }
+    }
 
-        // That's basically the code from playerController
-        float defaultReach = this.mc.playerController.getCurrentGameType().isCreative() ? 5.0F : 4.5F;
-        // end
-
-        return defaultReach + increment;
+    private float getBlockReachInc() {
+        if (this.reach.isActivated()) {
+            return this.reach.getBlockReachIncrement();
+        } else {
+            return 0.0f;
+        }
     }
 
     @Override
     public void getMouseOver(float partialTicks) {
         // Code copied from EntityRenderer#getMouseOver
+        // And updated
 
         Entity entity = this.mc.getRenderViewEntity();
 
@@ -62,30 +65,37 @@ public class EntityRendererHijack extends EntityRenderer {
             {
                 this.mc.mcProfiler.startSection("pick");
                 this.mc.pointedEntity = null;
-                double d0 = (double) this.getBlockReachDistance();
+
+                double d0 = (double) this.mc.playerController.getBlockReachDistance() + this.getBlockReachInc();
                 this.mc.objectMouseOver = entity.rayTrace(d0, partialTicks);
-                double d1 = d0;
+
                 Vec3 vec3 = entity.getPositionEyes(partialTicks);
                 boolean flag = false;
-                int i = 3;
 
+                double d1 = d0;
                 if (this.mc.playerController.extendedReach())
                 {
                     d0 = 6.0D;
                     d1 = 6.0D;
                 }
-                /* The flag is used to prevent extending reach
                 else
                 {
                     if (d0 > 3.0D)
                     {
+                        // flag true -> will verify later on that it's a block that has been hit
                         flag = true;
                     }
-                }*/
+                }
 
                 if (this.mc.objectMouseOver != null)
                 {
                     d1 = this.mc.objectMouseOver.hitVec.distanceTo(vec3);
+                }
+
+                if (this.reach.isActivated()) {
+                    d1 = 3.0f + getCombatReachInc();
+                    final MovingObjectPosition movingObjectPosition = entity.rayTrace(d1, partialTicks);
+                    if(movingObjectPosition != null) d1 = movingObjectPosition.hitVec.distanceTo(vec3);
                 }
 
                 Vec3 vec31 = entity.getLook(partialTicks);
@@ -142,12 +152,11 @@ public class EntityRendererHijack extends EntityRenderer {
                     }
                 }
 
-                /* always false because we removed the flag
-                if (this.pointedEntity != null && flag && vec3.distanceTo(vec33) > 3.0D)
+                if (this.pointedEntity != null && flag && vec3.distanceTo(vec33) > 3.0D + getCombatReachInc())
                 {
                     this.pointedEntity = null;
                     this.mc.objectMouseOver = new MovingObjectPosition(MovingObjectPosition.MovingObjectType.MISS, vec33, (EnumFacing)null, new BlockPos(vec33));
-                }*/
+                }
 
                 if (this.pointedEntity != null && (d2 < d1 || this.mc.objectMouseOver == null))
                 {

@@ -83,6 +83,6 @@ public class ToggleOption extends Option {
 
     @Override
     public Object clone() {
-        return new ToggleOption(this.PREFIX, this.NAME, this.activated);
+        return new ToggleOption(this.PREFIX, this.NAME, this.DESCRIPTION, this.activated);
     }
 }

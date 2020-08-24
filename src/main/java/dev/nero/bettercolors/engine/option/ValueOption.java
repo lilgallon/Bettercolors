@@ -97,7 +97,7 @@ public class ValueOption extends Option {
     @Override
     public Object clone() {
         return new ValueOption(
-                this.PREFIX, this.NAME,
+                this.PREFIX, this.NAME, this.DESCRIPTION,
                 this.getVal(), this.getMin(), this.getMax(),
                 this.getMinorTickSpacing(), this.getMajorTickSpacing()
         );

@@ -96,7 +96,18 @@ public abstract class Module {
     protected void logInfo(String msg){
         if(!msg.equalsIgnoreCase(lastLogMessage)) {
             lastLogMessage = msg;
-            Window.LOG(LogLevel.INFO, "[" + PREFIX + "]" + msg);
+            Window.LOG(LogLevel.INFO, "[+] " + PREFIX + "] " + msg);
+        }
+    }
+
+    /**
+     * It sends an information message to the window's console.
+     * @param msg the message to send.
+     */
+    protected void logWarn(String msg){
+        if(!msg.equalsIgnoreCase(lastLogMessage)) {
+            lastLogMessage = msg;
+            Window.LOG(LogLevel.WARNING, "[" + PREFIX + "] " + msg);
         }
     }
 
@@ -107,7 +118,7 @@ public abstract class Module {
     protected void logError(String msg){
         if(!msg.equalsIgnoreCase(lastLogMessage)) {
             lastLogMessage = msg;
-            Window.LOG(LogLevel.ERROR, "[" + PREFIX + "]" + msg);
+            Window.LOG(LogLevel.ERROR, "[" + PREFIX + "] " + msg);
         }
     }
 

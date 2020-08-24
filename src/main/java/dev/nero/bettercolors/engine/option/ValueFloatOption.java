@@ -91,7 +91,7 @@ public class ValueFloatOption extends Option{
     @Override
     public Object clone() {
         return new ValueFloatOption(
-                this.PREFIX, this.NAME,
+                this.PREFIX, this.NAME, this.DESCRIPTION,
                 this.getVal(), this.getMin(), this.getMax(),
                 this.getMinorTickSpacing(), this.getMajorTickSpacing()
         );

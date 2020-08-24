@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package dev.nero.bettercolors.mod.modules;
+package dev.nero.bettercolors.core.modules;
 
-import dev.nero.bettercolors.engine.module.Module;
 import dev.nero.bettercolors.engine.option.Option;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -27,16 +26,16 @@ import net.minecraft.item.ItemSword;
 
 import java.util.ArrayList;
 
-import static dev.nero.bettercolors.mod.wrapper.Wrapper.MC;
+import static dev.nero.bettercolors.core.wrapper.Wrapper.MC;
 
-public class AutoSword extends Module {
+public class AutoSword extends BetterModule {
 
     /**
      * @param toggle_key the toggle key (-1 -> none)
      * @param is_activated the initial state
      */
     public AutoSword(Integer toggle_key, Boolean is_activated) {
-        super("Auto sword", toggle_key, is_activated, "sword_symbol.png", "[ASw]");
+        super("Auto sword", toggle_key, is_activated, "unknown.png", "ASw");
     }
 
     @Override

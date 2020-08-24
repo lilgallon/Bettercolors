@@ -16,11 +16,9 @@
  * limitations under the License.
  */
 
-package dev.nero.bettercolors.mod.wrapper;
+package dev.nero.bettercolors.core.wrapper;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ContainerPlayer;

@@ -29,8 +29,10 @@ public class RawFiler extends Filer {
             writer.write((append ? "\n" : "") + lineToWrite.replaceAll("\n", ""));
             writer.close();
         } catch (IOException e) {
-            System.out.println("Failed to write in " + getCompeletePath());
-            e.printStackTrace();
+            if (BettercolorsEngine.DEBUG) {
+                System.out.println("Failed to write in " + getCompeletePath());
+                e.printStackTrace();
+            }
         }
     }
 
@@ -56,9 +58,11 @@ public class RawFiler extends Filer {
 
             return true;
         } else {
-            System.out.println("Could not find:");
-            System.out.println(lineToErase);
-            System.out.println("In " + getCompeletePath());
+            if (BettercolorsEngine.DEBUG) {
+                System.out.println("Could not find:");
+                System.out.println(lineToErase);
+                System.out.println("In " + getCompeletePath());
+            }
             return false;
         }
     }
@@ -70,7 +74,7 @@ public class RawFiler extends Filer {
         try {
             return new ArrayList<>(Files.readAllLines(Paths.get(getCompeletePath()), StandardCharsets.UTF_8));
         } catch (IOException e) {
-            if (BettercolorsEngine.VERBOSE) {
+            if (BettercolorsEngine.DEBUG) {
                 e.printStackTrace();
                 System.out.println("Failed to read file " + getCompeletePath());
             }

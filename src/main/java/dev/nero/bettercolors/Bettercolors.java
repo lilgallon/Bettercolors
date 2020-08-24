@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package dev.nero.bettercolors.mod;
+package dev.nero.bettercolors;
 
 import dev.nero.bettercolors.engine.BettercolorsEngine;
 import dev.nero.bettercolors.engine.module.*;
 import dev.nero.bettercolors.engine.view.Window;
-import dev.nero.bettercolors.mod.hijacks.EntityRendererHijack;
-import dev.nero.bettercolors.mod.modules.*;
-import net.minecraft.client.Minecraft;
+import dev.nero.bettercolors.core.hijacks.EntityRendererHijack;
+import dev.nero.bettercolors.core.modules.*;
+import dev.nero.bettercolors.core.wrapper.Wrapper;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.WorldEvent;
@@ -70,14 +70,15 @@ public class Bettercolors {
         modules.put(Triggerbot.class, new BettercolorsEngine.IntAndBoolean(-1, false));
 
         engine.init(
+                "Bettercolors " + Reference.MOD_VERSION + " for MC " + Reference.MC_VERSION + " (forge)",
                 Reference.MOD_VERSION,
+                Reference.MOD_VERSION_SUFFIX,
                 Reference.MC_VERSION,
-                "https://github.com/N3ROO/Bettercolors/releases",
+                "https://api.github.com/repos/n3roo/bettercolors/releases",
+                "https://github.com/n3roo/bettercolors/releases",
                 "https://github.com/N3ROO/Bettercolors/issues",
-                "https://github.com/N3ROO/Bettercolors/releases/latest",
                 modules,
-                new BettercolorsEngine.Key(Keyboard.KEY_INSERT, "insert"),
-                Minecraft.getMinecraft()
+                new BettercolorsEngine.Key(Keyboard.KEY_INSERT, "insert")
         );
 
         Window.INFO("[+] Bettercolors " + Reference.MOD_VERSION + " loaded");
@@ -89,25 +90,22 @@ public class Bettercolors {
 	@SubscribeEvent
     public void worldLoadEvent(WorldEvent.Load event) {
         if (event.world instanceof WorldClient) {
-            if (!(BettercolorsEngine.MC.entityRenderer instanceof EntityRendererHijack)) {
-                BettercolorsEngine.MC.entityRenderer = EntityRendererHijack.hijack(BettercolorsEngine.MC.entityRenderer);
+            if (!(Wrapper.MC.entityRenderer instanceof EntityRendererHijack)) {
+                Wrapper.MC.entityRenderer = EntityRendererHijack.hijack(Wrapper.MC.entityRenderer);
             }
         }
     }
 
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
-        // We only care about those keys
+        // Window toggle key
         engine.keyEvent(Window.TOGGLE_KEY, Keyboard.isKeyDown(Window.TOGGLE_KEY));
-        engine.keyEvent(Keyboard.KEY_HOME, Keyboard.isKeyDown(Keyboard.KEY_HOME));
-        engine.keyEvent(Keyboard.KEY_PRIOR, Keyboard.isKeyDown(Keyboard.KEY_PRIOR));
 
-        // We use ClientTickEvent because KeyInputEvent only works in-game
-
-        // We can't use the following code because it will mess with Minecraft's key events handling
-        // while (Keyboard.next()) {
-        //     engine.keyEvent(Keyboard.getEventKey(), Keyboard.getEventKeyState());
-        // }
+        // Modules' toggle keys
+        for (Module module : engine.getModules()) {
+            if (module.getToggleKey() != -1)
+                engine.keyEvent(module.getToggleKey(), Keyboard.isKeyDown(module.getToggleKey()));
+        }
     }
 
 	@SubscribeEvent

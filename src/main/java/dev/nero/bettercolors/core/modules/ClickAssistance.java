@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package dev.nero.bettercolors.mod.modules;
+package dev.nero.bettercolors.core.modules;
 
 import dev.nero.bettercolors.engine.BettercolorsEngine;
-import dev.nero.bettercolors.engine.module.Module;
 import dev.nero.bettercolors.engine.option.Option;
 import dev.nero.bettercolors.engine.option.ToggleOption;
 import dev.nero.bettercolors.engine.option.ValueFloatOption;
@@ -26,7 +25,7 @@ import dev.nero.bettercolors.engine.utils.Friends;
 import dev.nero.bettercolors.engine.utils.MathUtils;
 import dev.nero.bettercolors.engine.utils.TimeHelper;
 import dev.nero.bettercolors.engine.view.Window;
-import dev.nero.bettercolors.mod.wrapper.Wrapper;
+import dev.nero.bettercolors.core.wrapper.Wrapper;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.play.client.C02PacketUseEntity;
 
@@ -34,10 +33,10 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Map;
 
-import static dev.nero.bettercolors.mod.wrapper.Wrapper.MC;
-import static dev.nero.bettercolors.mod.wrapper.Wrapper.isInGui;
+import static dev.nero.bettercolors.core.wrapper.Wrapper.MC;
+import static dev.nero.bettercolors.core.wrapper.Wrapper.isInGui;
 
-public class ClickAssistance extends Module {
+public class ClickAssistance extends BetterModule {
 
     // Prefix for AimAssistance (logging and settings)
     private static final String PREFIX = "CA";
@@ -91,7 +90,7 @@ public class ClickAssistance extends Module {
      */
     public ClickAssistance(Integer toggle_key, Boolean isActivated, Map<String, String> givenOptions) {
 
-        super("Click assistance", toggle_key, isActivated, "click_symbol.png", "[CA]");
+        super("Click assistance", toggle_key, isActivated, "click.png", PREFIX);
 
         this.options = new ArrayList<>();
 
@@ -173,18 +172,20 @@ public class ClickAssistance extends Module {
     }
 
     @Override
-    protected void onToggle(boolean toggle) {
+    protected void onToggle(boolean toggle, boolean isTriggeredByKeybind) {
         if (toggle) {
             if (BettercolorsEngine.getInstance().getModule("Triggerbot").isActivated()) {
-                Window.getInstance().dialog("Click assistance can't be used along with triggerbot. Triggerbot will" +
-                        " be turned off.\n Also, Don't abuse of the click assistance. It can get you banned with" +
-                        " high values. Keep the values low and you will be safe.");
+                if (!isTriggeredByKeybind)
+                    Window.getInstance().dialog("Click assistance can't be used along with triggerbot. Triggerbot will" +
+                            " be turned off.\n Also, Don't abuse of the click assistance. It can get you banned with" +
+                            " high values. Keep the values low and you will be safe.");
                 BettercolorsEngine.getInstance().toggleModule("Triggerbot", false);
             } else {
-                Window.getInstance().dialog(
-                        "Don't abuse of the click assistance. It can get you banned with high values. Keep the " +
-                                " values low and you will be safe."
-                );
+                if (!isTriggeredByKeybind)
+                    Window.getInstance().dialog(
+                            "Don't abuse of the click assistance. It can get you banned with high values. Keep the " +
+                                    " values low and you will be safe."
+                    );
             }
         }
     }

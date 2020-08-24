@@ -15,23 +15,22 @@
  */
 
 
-package dev.nero.bettercolors.mod.modules;
+package dev.nero.bettercolors.core.modules;
 
-import dev.nero.bettercolors.engine.module.Module;
 import dev.nero.bettercolors.engine.option.Option;
 
 import java.util.ArrayList;
 
-import static dev.nero.bettercolors.mod.wrapper.Wrapper.MC;
+import static dev.nero.bettercolors.core.wrapper.Wrapper.MC;
 
-public class AutoSprint extends Module {
+public class AutoSprint extends BetterModule {
 
     /**
      * @param toggle_key the toggle key (-1 -> none).
      * @param is_activated the initial state.
      */
     public AutoSprint(Integer toggle_key, Boolean is_activated) {
-        super("Auto sprint", toggle_key, is_activated, "sprint_symbol.png", "[ASp]");
+        super("Auto sprint", toggle_key, is_activated, "unknown.png", "ASp");
     }
 
     @Override

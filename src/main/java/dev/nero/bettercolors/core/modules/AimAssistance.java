@@ -1,6 +1,5 @@
-package dev.nero.bettercolors.mod.modules;
+package dev.nero.bettercolors.core.modules;
 
-import dev.nero.bettercolors.engine.module.Module;
 import dev.nero.bettercolors.engine.option.Option;
 import dev.nero.bettercolors.engine.option.ToggleOption;
 import dev.nero.bettercolors.engine.option.ValueFloatOption;
@@ -9,7 +8,7 @@ import dev.nero.bettercolors.engine.utils.Friends;
 import dev.nero.bettercolors.engine.utils.MathUtils;
 import dev.nero.bettercolors.engine.utils.TimeHelper;
 import com.google.common.collect.Lists;
-import dev.nero.bettercolors.mod.wrapper.Wrapper;
+import dev.nero.bettercolors.core.wrapper.Wrapper;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -21,10 +20,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static dev.nero.bettercolors.mod.wrapper.Wrapper.MC;
-import static dev.nero.bettercolors.mod.wrapper.Wrapper.isInGui;
+import static dev.nero.bettercolors.core.wrapper.Wrapper.MC;
+import static dev.nero.bettercolors.core.wrapper.Wrapper.isInGui;
 
-public class AimAssistance extends Module {
+public class AimAssistance extends BetterModule {
 
     // Prefix for AimAssistance (logging and settings)
     private static final String PREFIX = "AA";
@@ -96,7 +95,7 @@ public class AimAssistance extends Module {
      */
     public AimAssistance(Integer toggle_key, Boolean isActivated, Map<String, String> givenOptions) {
 
-        super("Aim assistance", toggle_key, isActivated, "aim_symbol.png", "[AA]");
+        super("Aim assistance", toggle_key, isActivated, "magnet.png", PREFIX);
 
         this.options = new ArrayList<>();
 

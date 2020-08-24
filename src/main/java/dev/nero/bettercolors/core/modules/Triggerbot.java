@@ -1,7 +1,6 @@
-package dev.nero.bettercolors.mod.modules;
+package dev.nero.bettercolors.core.modules;
 
 import dev.nero.bettercolors.engine.BettercolorsEngine;
-import dev.nero.bettercolors.engine.module.Module;
 import dev.nero.bettercolors.engine.option.Option;
 import dev.nero.bettercolors.engine.option.ToggleOption;
 import dev.nero.bettercolors.engine.option.ValueFloatOption;
@@ -9,7 +8,7 @@ import dev.nero.bettercolors.engine.option.ValueOption;
 import dev.nero.bettercolors.engine.utils.MathUtils;
 import dev.nero.bettercolors.engine.utils.TimeHelper;
 import dev.nero.bettercolors.engine.view.Window;
-import dev.nero.bettercolors.mod.wrapper.Wrapper;
+import dev.nero.bettercolors.core.wrapper.Wrapper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
@@ -18,7 +17,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class Triggerbot extends Module {
+public class Triggerbot extends BetterModule {
 
     // Prefix for AimAssistance (logging and settings)
     private static final String PREFIX = "TB";
@@ -49,7 +48,7 @@ public class Triggerbot extends Module {
      * @param isActivated the initial state.
      */
     public Triggerbot(Integer toggleKey, Boolean isActivated, Map<String, String> givenOptions) {
-        super("Triggerbot", toggleKey, isActivated, "click_symbol.png", "[" + PREFIX + "]");
+        super("Triggerbot", toggleKey, isActivated, "target.png", PREFIX);
 
         for (Option defaultOption : DEFAULT_OPTIONS) {
             Option option = (Option) defaultOption.clone();
@@ -105,15 +104,17 @@ public class Triggerbot extends Module {
     }
 
     @Override
-    protected void onToggle(boolean toggle) {
+    protected void onToggle(boolean toggle, boolean isTriggeredByKeybind) {
         if (toggle) {
             timeout.start();
             if (BettercolorsEngine.getInstance().getModule("Click assistance").isActivated()) {
-                Window.getInstance().dialog("Trigger bot can't be used along with click assistance. Click assistance" +
-                        "will be turned off. This feature is not as safe as click assistance. Use it at your own risk");
+                if (!isTriggeredByKeybind)
+                    Window.getInstance().dialog("Trigger bot can't be used along with click assistance. Click assistance" +
+                            "will be turned off. This feature is not as safe as click assistance. Use it at your own risk");
                 BettercolorsEngine.getInstance().toggleModule("Click assistance", false);
             } else {
-                Window.getInstance().dialog("This feature is not as safe as click assistance. Use it at your own risk");
+                if (!isTriggeredByKeybind)
+                    Window.getInstance().dialog("This feature is not as safe as click assistance. Use it at your own risk");
             }
         } else {
             timeout.stop();

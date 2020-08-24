@@ -1,6 +1,5 @@
-package dev.nero.bettercolors.mod.modules;
+package dev.nero.bettercolors.core.modules;
 
-import dev.nero.bettercolors.engine.module.Module;
 import dev.nero.bettercolors.engine.option.Option;
 import dev.nero.bettercolors.engine.option.ToggleOption;
 import dev.nero.bettercolors.engine.option.ValueFloatOption;
@@ -10,7 +9,7 @@ import dev.nero.bettercolors.engine.view.Window;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class Reach extends Module {
+public class Reach extends BetterModule {
 
     // Prefix for Reach (logging and settings)
     private static final String PREFIX = "REACH";
@@ -37,7 +36,7 @@ public class Reach extends Module {
      * @param givenOptions the options for the mod
      */
     public Reach(Integer toggleKey, Boolean isActivated, Map<String, String> givenOptions) {
-        super("Reach", toggleKey, isActivated, "sword_symbol.png", "[" + PREFIX + "]");
+        super("Reach", toggleKey, isActivated, "hit.png", PREFIX );
 
         this.options = new ArrayList<>();
 
@@ -64,9 +63,10 @@ public class Reach extends Module {
     }
 
     @Override
-    protected void onToggle(boolean toggle) {
+    protected void onToggle(boolean toggle, boolean isTriggeredByKeybind) {
         if (toggle) {
-            Window.getInstance().dialog("Don't abuse of the extended reach. It can get you banned.");
+            if (!isTriggeredByKeybind)
+                Window.getInstance().dialog("Don't abuse of the extended reach. It can get you banned.");
         }
     }
 

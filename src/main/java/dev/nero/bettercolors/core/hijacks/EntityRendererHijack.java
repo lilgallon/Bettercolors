@@ -1,10 +1,10 @@
-package dev.nero.bettercolors.mod.hijacks;
+package dev.nero.bettercolors.core.hijacks;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import dev.nero.bettercolors.engine.BettercolorsEngine;
 import dev.nero.bettercolors.engine.module.Module;
-import dev.nero.bettercolors.mod.modules.Reach;
+import dev.nero.bettercolors.core.modules.Reach;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.resources.IResourceManager;

@@ -1,5 +1,7 @@
 /*
- * Copyright 2018-2020 Bettercolors Contributors (https://github.com/N3ROO/Bettercolors)
+ * Copyright 2018-2020
+ * - Bettercolors Contributors (https://github.com/N3ROO/Bettercolors) and
+ * - Bettercolors Engine Contributors (https://github.com/N3ROO/BettercolorsEngine)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,13 +15,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package dev.nero.bettercolors.engine.utils;
 
-package dev.nero.bettercolors.mod;
-
-public class Reference {
-	public static final String MOD_ID = "minecraft";
-	public static final String MOD_NAME = "bettercolors";
-	public static final String MC_VERSION = "1.8.9";
-	public static final String MOD_VERSION = "7.1.0";
-	public static final String ACCEPTED_MC_VERSIONS = "[1.8.9]";
+public interface KeyName {
+    public String getKeyName(int code);
 }

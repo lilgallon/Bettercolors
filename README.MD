@@ -19,7 +19,7 @@
 *Click a version to see the code.*
 
 **Currently maintained:**
-- [![build](https://img.shields.io/github/workflow/status/N3ROO/Bettercolors/Build%20MC1.8.9?label=Bettercolors%207.1.0%20for%20MC1.8.9%20(forge))](https://github.com/N3ROO/Bettercolors/tree/MC_1.8.9) (work in progress: [7.3.0](https://github.com/N3ROO/Bettercolors/projects/17))
+- [![build](https://img.shields.io/github/workflow/status/N3ROO/Bettercolors/Build%20MC1.8.9?label=Bettercolors%207.1.0%20for%20MC1.8.9%20(forge))](https://github.com/N3ROO/Bettercolors/tree/MC_1.8.9) (**[7.3.0](https://github.com/N3ROO/Bettercolors/projects/17) just released!**)
 - [![build](https://img.shields.io/github/workflow/status/N3ROO/Bettercolors/Build%20MC1.16.2?label=Bettercolors%207.3.0%20for%20MC1.16.2%20(forge))](https://github.com/N3ROO/Bettercolors/tree/MC_1.16.2) (work in progress: [7.3.0](https://github.com/N3ROO/Bettercolors/projects/17))
 - [![build](https://img.shields.io/github/workflow/status/N3ROO/Bettercolors/Build%20MC1.16.2_fabric?label=Bettercolors%207.2.0%20for%20MC1.16.2%20(fabric))](https://github.com/N3ROO/Bettercolors/tree/MC_1.16.2_fabric) (work in progress: [7.3.0](https://github.com/N3ROO/Bettercolors/projects/17))
 

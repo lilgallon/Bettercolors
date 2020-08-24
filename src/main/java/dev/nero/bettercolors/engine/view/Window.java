@@ -480,6 +480,8 @@ public class Window extends JFrame{
                     final JCheckBox checkBox = new JCheckBox(toggleOption.getName().replace("_", " "));
                     checkBox.setSelected(toggleOption.isActivated());
                     checkBox.addActionListener(e -> {
+                        // Trigger module's option change event
+                        module.optionChange(toggleOption, toggleOption.isActivated());
                         // Update the module's option
                         toggleOption.toggle();
                         // Update the checkbox
@@ -546,11 +548,15 @@ public class Window extends JFrame{
 
                     // What happens when the user uses the slider
                     slider.addChangeListener(e -> {
+
                         float newValue;
                         // Change the module's option
                         if (decimal) {
                             newValue = (float) slider.getValue() / 100.0f;
                             try {
+                                // Trigger module's option change event
+                                module.optionChange(valueOption, ((ValueFloatOption) valueOption).getVal());
+                                // Update the option's value
                                 ((ValueFloatOption) valueOption).setVal(newValue);
                             } catch (IllegalArgumentException exc) {
                                 Window.WARN("The option for " + valueOption.getName() + " is out of bounds, it's not recommended");
@@ -559,6 +565,9 @@ public class Window extends JFrame{
                         } else {
                             newValue = slider.getValue();
                             try {
+                                // Trigger module's option change event
+                                module.optionChange(valueOption, ((ValueOption) valueOption).getVal());
+                                // Update the option's value
                                 ((ValueOption) valueOption).setVal((int) newValue);
                             } catch (IllegalArgumentException exc) {
                                 Window.WARN("The option for " + valueOption.getName() + " is out of bounds, it's not recommended");

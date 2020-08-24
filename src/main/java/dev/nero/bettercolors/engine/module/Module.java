@@ -113,6 +113,15 @@ public abstract class Module {
         this.onEvent(code, details);
     }
 
+    /***
+     * It calls the onOptionChange method of the module
+     * @param option the option that changed
+     * @param oldValue the value before the change
+     */
+    public void optionChange(Option option, Object oldValue) {
+        this.onOptionChange(option, oldValue);
+    }
+
     /**
      * It updates the options of the module. The options variable can contain ANY options, so it needs to check if the
      * option exists in the current module.
@@ -223,8 +232,6 @@ public abstract class Module {
      * Used in children to run the module.
      * @param code the event code (you need to define it since your modules will use it to differentiate events)
      * @param details the event details (you need to define it)
-     *
-     * TODO: abstract that in 2.0.0 release
      */
     protected void onEvent(int code, Object details){}
 
@@ -235,6 +242,13 @@ public abstract class Module {
      * @param isTriggeredByKeybind if true means that the mod has been toggled using key press
      */
     protected void onToggle(boolean toggle, boolean isTriggeredByKeybind) {}
+
+    /**
+     * Used in children to execute some code when an option has been updated.
+     * @param option the updated option
+     * @param oldValue the value before the change
+     */
+    protected void onOptionChange(Option option, Object oldValue) {}
 
     protected static ArrayList<Option> getDefaultOptions() {
         return new ArrayList<>();

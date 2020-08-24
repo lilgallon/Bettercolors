@@ -38,7 +38,6 @@ import mdlaf.themes.JMarsDarkTheme;
 import mdlaf.themes.MaterialLiteTheme;
 import mdlaf.themes.MaterialOceanicTheme;
 import mdlaf.themes.MaterialTheme;
-import org.lwjgl.glfw.GLFW;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;

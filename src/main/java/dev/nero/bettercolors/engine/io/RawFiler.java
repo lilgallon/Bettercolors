@@ -1,7 +1,6 @@
 package dev.nero.bettercolors.engine.io;
 
 import dev.nero.bettercolors.engine.BettercolorsEngine;
-import dev.nero.bettercolors.engine.Reference;
 
 import java.io.FileWriter;
 import java.io.IOException;

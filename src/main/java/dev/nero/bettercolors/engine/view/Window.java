@@ -138,7 +138,7 @@ public class Window extends JFrame{
         setResizable(true);
 
         // The GUI is turned off by default
-        setVisible(false);
+        setVisible(BettercolorsEngine.DEBUG);
 
         // Used to access the class from outside (to add some text in the console for example)
         Window.instance = this;
@@ -1019,7 +1019,7 @@ public class Window extends JFrame{
 
         // Update the toggle key and the HUD
         Window.TOGGLE_KEY = Integer.parseInt(options.get(Window.TOGGLE_KEY_OPTION));
-        BettercolorsEngine.VERBOSE = Boolean.parseBoolean(options.get(BettercolorsEngine.DEBUG_OPTION));
+        BettercolorsEngine.DEBUG = Boolean.parseBoolean(options.get(BettercolorsEngine.DEBUG_OPTION));
 
         // Tell the user that we loaded the settings file
         INFO( "[+] Loaded \"" + SettingsUtils.SETTINGS_FILENAME + "\"");

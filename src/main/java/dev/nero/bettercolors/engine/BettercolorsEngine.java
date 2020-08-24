@@ -54,7 +54,7 @@ import java.util.Map;
  */
 public class BettercolorsEngine {
 
-    public static boolean VERBOSE = false;
+    public static boolean DEBUG = false;
     public static final String DEBUG_OPTION = "debug";
     public static BettercolorsEngine instance;
 
@@ -187,7 +187,7 @@ public class BettercolorsEngine {
                     )
                 ) == Version.VersionDiff.OUTDATED) ? MC_INPUTS.OLD : MC_INPUTS.NEW;
 
-        if (VERBOSE) {
+        if (DEBUG) {
             System.out.println((Reference.MC_INPUTS_VERSION == MC_INPUTS.NEW ? "New " : "Old ") + "MC inputs detected");
         }
 
@@ -239,7 +239,7 @@ public class BettercolorsEngine {
         options = SettingsUtils.getOptions();
 
         // Debug mode
-        BettercolorsEngine.VERBOSE = Boolean.parseBoolean(options.get(DEBUG_OPTION));
+        BettercolorsEngine.DEBUG = Boolean.parseBoolean(options.get(DEBUG_OPTION));
 
         // The last thing to do with external files is to load all the friends
         Friends.loadFriends();
@@ -262,7 +262,7 @@ public class BettercolorsEngine {
                 );
 
                 this.modules.add(module);
-                if (VERBOSE) System.out.println("It worked, " + moduleClass.getSimpleName() + " created!");
+                if (DEBUG) System.out.println("It worked, " + moduleClass.getSimpleName() + " created!");
                 Window.INFO("[+] " + moduleClass.getSimpleName() + " initialized");
 
             } catch (InstantiationException
@@ -270,16 +270,16 @@ public class BettercolorsEngine {
                     | InvocationTargetException
                     | NoSuchMethodException e1) {
 
-                if (VERBOSE) e1.printStackTrace();
+                if (DEBUG) e1.printStackTrace();
 
                 if (e1 instanceof InvocationTargetException) {
                     Window.ERROR("Could not instantiate " + moduleClass.getSimpleName());
-                    if (VERBOSE)
+                    if (DEBUG)
                         System.out.println(
                                 "Exception caught during " + moduleClass.getSimpleName() + " creation"
                         );
                 } else {
-                    if (VERBOSE)
+                    if (DEBUG)
                         System.out.println(
                                 "Failed to instantiate " + moduleClass.getSimpleName() + " trying with other parameters"
                         );
@@ -294,7 +294,7 @@ public class BettercolorsEngine {
                     );
 
                     this.modules.add(module);
-                    if (VERBOSE) System.out.println("It worked, " + moduleClass.getSimpleName() + " created!");
+                    if (DEBUG) System.out.println("It worked, " + moduleClass.getSimpleName() + " created!");
                     Window.INFO("[+] " + moduleClass.getSimpleName() + " initialized");
 
                 } catch (InstantiationException
@@ -302,15 +302,15 @@ public class BettercolorsEngine {
                         | InvocationTargetException
                         | NoSuchMethodException e2) {
 
-                    if (VERBOSE) e2.printStackTrace();
+                    if (DEBUG) e2.printStackTrace();
 
                     if (e2 instanceof InvocationTargetException) {
-                        if (VERBOSE)
+                        if (DEBUG)
                             System.out.println(
                                     "Exception caught during " + moduleClass.getSimpleName() + " creation"
                             );
                     } else {
-                        if (VERBOSE)
+                        if (DEBUG)
                             System.out.println(
                                     "Failed to instantiate " + moduleClass.getSimpleName() + " (second try)"
                             );
@@ -320,7 +320,7 @@ public class BettercolorsEngine {
                     Window.ERROR("^ It should not happen. Try to rename the config file and restart your client " +
                             "so that a new file will be created");
 
-                    if (VERBOSE) {
+                    if (DEBUG) {
                         System.out.println("1: Make sure that your module constructor has object and not type (ex: Integer and not int)");
                         System.out.println("2: Make sure that your module constructor matches one from the following list:");
                         System.out.println("- (Integer, Boolean, Map)");
@@ -574,7 +574,7 @@ public class BettercolorsEngine {
                                 moduleClass.getSimpleName()
                 );
 
-                if (VERBOSE)
+                if (DEBUG)
                     System.out.println(
                             "If you are the developer you should implement a static method called "
                             + "getDefaultOptions which returns an ArrayList<Option>. Return an empty one"

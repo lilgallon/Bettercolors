@@ -63,14 +63,14 @@ public class PropertiesFiler extends Filer {
             }
             prop.store(output, null);
         } catch (IOException io) {
-            if (BettercolorsEngine.VERBOSE)
+            if (BettercolorsEngine.DEBUG)
                 io.printStackTrace();
         } finally {
             if (output != null) {
                 try {
                     output.close();
                 } catch (IOException e) {
-                    if (BettercolorsEngine.VERBOSE)
+                    if (BettercolorsEngine.DEBUG)
                         e.printStackTrace();
                 }
             }
@@ -91,7 +91,7 @@ public class PropertiesFiler extends Filer {
             prop.load(input);
             value = prop.getProperty(key);
         } catch (IOException e) {
-            if (BettercolorsEngine.VERBOSE)
+            if (BettercolorsEngine.DEBUG)
                 e.printStackTrace();
             return null;
         }
@@ -99,7 +99,7 @@ public class PropertiesFiler extends Filer {
         try{
             input.close();
         } catch (IOException e) {
-            if (BettercolorsEngine.VERBOSE)
+            if (BettercolorsEngine.DEBUG)
                 e.printStackTrace();
             return null;
         }

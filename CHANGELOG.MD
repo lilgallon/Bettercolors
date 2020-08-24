@@ -38,6 +38,7 @@ You can use the same settings file as before, but it is recommended to reset it 
 - Miscellaneous:
     - You can now use greater values than the ones given by the UI. To do so, you need to update the config file manually.
     It's not recommended, but I'm sure that some of you will like that.
+    - Debug mode now shows the GUI on startup
     
 **V7.2.0 MC_1.16.1**
 

@@ -29,7 +29,7 @@ import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.EntityLeaveWorldEvent;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -148,8 +148,8 @@ public class Bettercolors {
     }
 
     @SubscribeEvent
-    public void entityHurtEvent(final LivingHurtEvent event) {
-        engine.event(EventType.ENTITY_HURT, event);
+    public void entityAttackEvent(final LivingAttackEvent event) {
+        engine.event(EventType.ENTITY_ATTACK, event);
     }
 
     @SubscribeEvent

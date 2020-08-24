@@ -11,7 +11,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.EntityLeaveWorldEvent;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -131,8 +131,8 @@ public class Antibot extends Module {
                 }
                 break;
 
-            case EventType.ENTITY_HURT:
-                LivingHurtEvent livingHurtEvent = (LivingHurtEvent) details;
+            case EventType.ENTITY_ATTACK:
+                LivingAttackEvent livingHurtEvent = (LivingAttackEvent) details;
 
                 // Source handling
                 if (livingHurtEvent.getSource().getTrueSource() != null) {

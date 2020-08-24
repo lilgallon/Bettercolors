@@ -13,10 +13,10 @@ loaderVersion="[33,)" #mandatory
 #updateJSONURL="" #optional
 
 # A URL to refer people to when problems occur with this mod
-issueTrackerURL="" #optional
+#issueTrackerURL="" #optional
 
 # A URL for the "homepage" for this mod, displayed in the mod UI
-displayURL="" #optional
+#displayURL="" #optional
 
 # The license for you mod. This is mandatory metadata and allows for easier comprehension of your redistributive properties.
 license="Apache-2.0 License"

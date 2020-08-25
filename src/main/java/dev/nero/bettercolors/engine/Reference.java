@@ -21,11 +21,12 @@ package dev.nero.bettercolors.engine;
 import dev.nero.bettercolors.engine.version.Version;
 
 public class Reference {
-	public static String ENGINE_VERSION = "0.4.0 (preview)";
-	public static BettercolorsEngine.FORGE FORGE_API;
+	public static String ENGINE_VERSION = "1.1.0";
+	public static BettercolorsEngine.MC_INPUTS MC_INPUTS_VERSION;
 	public static String MC_VERSION;
+	public static String VERSION_SUFFIX;
 	public static Version MOD_VERSION;
-	public static String RELEASES_URL;
+	public static String RELEASES_API_URL;
+	public static String RELEASES_DOWNLOAD_URL;
 	public static String ISSUES_TRACKER_URL;
-	public static String DOWNLOAD_URL;
 }

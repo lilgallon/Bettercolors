@@ -14,22 +14,26 @@
  * limitations under the License.
  */
 
-package dev.nero.bettercolors.mod;
+package dev.nero.bettercolors;
 
+import dev.nero.bettercolors.core.events.EventType;
 import dev.nero.bettercolors.engine.BettercolorsEngine;
 import dev.nero.bettercolors.engine.module.*;
 import dev.nero.bettercolors.engine.view.Window;
-import dev.nero.bettercolors.mod.hijacks.EntityRendererHijack;
-import dev.nero.bettercolors.mod.modules.*;
-import net.minecraft.client.Minecraft;
+import dev.nero.bettercolors.core.hijacks.EntityRendererHijack;
+import dev.nero.bettercolors.core.modules.*;
+import dev.nero.bettercolors.core.wrapper.Wrapper;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.lwjgl.input.Keyboard;
 
@@ -68,16 +72,20 @@ public class Bettercolors {
         modules.put(AutoSword.class, new BettercolorsEngine.IntAndBoolean(-1, true));
         modules.put(Reach.class, new BettercolorsEngine.IntAndBoolean(-1, false));
         modules.put(Triggerbot.class, new BettercolorsEngine.IntAndBoolean(-1, false));
+        modules.put(TeamFilter.class, new BettercolorsEngine.IntAndBoolean(-1, false));
+        modules.put(Antibot.class, new BettercolorsEngine.IntAndBoolean(-1, false));
 
         engine.init(
+                "Bettercolors " + Reference.MOD_VERSION + " for MC " + Reference.MC_VERSION + " (forge)",
                 Reference.MOD_VERSION,
+                Reference.MOD_VERSION_SUFFIX,
                 Reference.MC_VERSION,
-                "https://github.com/N3ROO/Bettercolors/releases",
+                "https://api.github.com/repos/n3roo/bettercolors/releases",
+                "https://github.com/n3roo/bettercolors/releases",
                 "https://github.com/N3ROO/Bettercolors/issues",
-                "https://github.com/N3ROO/Bettercolors/releases/latest",
                 modules,
-                new BettercolorsEngine.Key(Keyboard.KEY_INSERT, "insert"),
-                Minecraft.getMinecraft()
+                Keyboard.KEY_INSERT,
+                this::getKeyName
         );
 
         Window.INFO("[+] Bettercolors " + Reference.MOD_VERSION + " loaded");
@@ -89,29 +97,66 @@ public class Bettercolors {
 	@SubscribeEvent
     public void worldLoadEvent(WorldEvent.Load event) {
         if (event.world instanceof WorldClient) {
-            if (!(BettercolorsEngine.MC.entityRenderer instanceof EntityRendererHijack)) {
-                BettercolorsEngine.MC.entityRenderer = EntityRendererHijack.hijack(BettercolorsEngine.MC.entityRenderer);
+            if (!(Wrapper.MC.entityRenderer instanceof EntityRendererHijack)) {
+                Wrapper.MC.entityRenderer = EntityRendererHijack.hijack(Wrapper.MC.entityRenderer);
             }
         }
+
+        this.engine.event(EventType.WORLD_LOAD, event);
+    }
+
+    @SubscribeEvent
+    public void mouseInputEvent(InputEvent.MouseInputEvent event) {
+        this.engine.event(EventType.MOUSE_INPUT, event);
+    }
+
+    @SubscribeEvent
+    public void renderTickEvent(final TickEvent.RenderTickEvent event){
+        this.engine.event(EventType.RENDER, event);
+    }
+
+    @SubscribeEvent
+    public void entityJoinEvent(final EntityJoinWorldEvent event){
+        this.engine.event(EventType.ENTITY_JOIN, event);
+    }
+
+    // no entity leave event :(
+
+    @SubscribeEvent
+    public void entityAttackEvent(final LivingAttackEvent event) {
+        this.engine.event(EventType.ENTITY_ATTACK, event);
     }
 
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
-        // We only care about those keys
+        // We don't use keyInputEvent because it's only triggered while in game. We want to be able
+        // to open the window when the player is in the menus
+
+        // Window toggle key
         engine.keyEvent(Window.TOGGLE_KEY, Keyboard.isKeyDown(Window.TOGGLE_KEY));
-        engine.keyEvent(Keyboard.KEY_HOME, Keyboard.isKeyDown(Keyboard.KEY_HOME));
-        engine.keyEvent(Keyboard.KEY_PRIOR, Keyboard.isKeyDown(Keyboard.KEY_PRIOR));
 
-        // We use ClientTickEvent because KeyInputEvent only works in-game
+        // Modules' toggle keys
+        for (Module module : engine.getModules()) {
+            if (module.getToggleKey() != -1) {
+                engine.keyEvent(module.getToggleKey(), Keyboard.isKeyDown(module.getToggleKey()));
+            }
+        }
 
-        // We can't use the following code because it will mess with Minecraft's key events handling
-        // while (Keyboard.next()) {
-        //     engine.keyEvent(Keyboard.getEventKey(), Keyboard.getEventKeyState());
-        // }
+        this.engine.event(EventType.CLIENT_TICK, event);
     }
 
-	@SubscribeEvent
-	public void tickEvent(final TickEvent event){
-        engine.update();
-	}
+    private String getKeyName(int code) {
+        try {
+            return Keyboard.getKeyName(code);
+        } catch (Exception e) {
+            if (BettercolorsEngine.DEBUG) {
+                System.out.println("Error when reading key code " + code);
+                e.printStackTrace();
+            }
+            Window.ERROR("key code " + code + " not recognized");
+            Window.ERROR("Probably due to the fact that you used a 1.16.2+ version of bettercolors. Delete the keybinds from the config file. It will regenerate fresh ones.");
+        }
+
+        return "unknown";
+    }
 }

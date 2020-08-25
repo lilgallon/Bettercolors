@@ -24,10 +24,17 @@ public abstract class Option implements Cloneable {
 
     final String PREFIX;
     final String NAME;
+    final String DESCRIPTION;
 
+    @Deprecated
     Option(String prefix, String name){
+        this(prefix, name, "");
+    }
+
+    Option(String prefix, String name, String description){
         PREFIX = prefix ;
         NAME = name;
+        DESCRIPTION = description;
     }
 
     /**
@@ -99,6 +106,13 @@ public abstract class Option implements Cloneable {
      */
     public String getName(){
         return NAME;
+    }
+
+    /**
+     * @return the description of the option.
+     */
+    public String getDescription(){
+        return DESCRIPTION;
     }
 
     /**

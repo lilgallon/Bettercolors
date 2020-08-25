@@ -1,16 +1,17 @@
 package dev.nero.bettercolors.core.modules;
 
+import dev.nero.bettercolors.core.events.EventType;
 import dev.nero.bettercolors.engine.BettercolorsEngine;
 import dev.nero.bettercolors.engine.module.Module;
 import dev.nero.bettercolors.engine.option.Option;
 import dev.nero.bettercolors.engine.option.ToggleOption;
 import dev.nero.bettercolors.engine.option.ValueFloatOption;
-import dev.nero.bettercolors.engine.option.ValueOption;
 import dev.nero.bettercolors.engine.utils.MathUtils;
 import dev.nero.bettercolors.engine.utils.TimeHelper;
 import dev.nero.bettercolors.engine.view.Window;
 import dev.nero.bettercolors.core.wrapper.Wrapper;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 
@@ -22,6 +23,9 @@ public class Triggerbot extends Module {
     // Prefix for AimAssistance (logging and settings)
     private static final String PREFIX = "TB";
 
+    // Description
+    private static final String DESCRIPTION = "It's an autoclick that works when you're aiming an entity";
+
     // Options name
     private static final String USE_ON_MOBS = "Use_on_mobs";
     private static final String AUTO_CPS = "Auto_cps_sword_progress";
@@ -32,103 +36,80 @@ public class Triggerbot extends Module {
     private static final int I_AUTO_CPS = 1;
     private static final int I_CPS = 2;
 
+    // Options description
+    private static final String DESC_USE_ON_MOBS = "If enabled, the module will work on mobs";
+    private static final String DESC_AUTO_CPS = "If enabled, the CPS will be automatically calculated based on the item's cooldown";
+    private static final String DESC_CPS = "Defines the speed of the autoclick in clicks per seconds (only works when \"Auto CPS\" is turned off";
+
     // Default options loading
     private static final ArrayList<Option> DEFAULT_OPTIONS;
     static {
         DEFAULT_OPTIONS = new ArrayList<>();
 
-        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, USE_ON_MOBS, false));
-        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, AUTO_CPS, false));
+        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, USE_ON_MOBS, DESC_USE_ON_MOBS, false));
+        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, AUTO_CPS, DESC_AUTO_CPS, false));
 
-        DEFAULT_OPTIONS.add(new ValueFloatOption(PREFIX, CPS, 7, 1, 9, 0.1f, 0.5f));
+        DEFAULT_OPTIONS.add(new ValueFloatOption(PREFIX, CPS, DESC_CPS, 7, 1, 9, 0.1f, 0.5f));
     }
 
     // Utility attributes
-    private TimeHelper timeout;
+    private final TimeHelper timeout;
 
     /**
      * @param toggleKey the toggle key (-1 -> none).
      * @param isActivated the initial state.
      */
     public Triggerbot(Integer toggleKey, Boolean isActivated, Map<String, String> givenOptions) {
-        super("Triggerbot", toggleKey, isActivated, "click_symbol.png", "[" + PREFIX + "]");
-
-        for (Option defaultOption : DEFAULT_OPTIONS) {
-            Option option = (Option) defaultOption.clone();
-            String name = defaultOption.getCompleteName();
-
-            if (option instanceof ToggleOption) {
-                ((ToggleOption) option).setActivated(
-                        Boolean.parseBoolean(givenOptions.get(name))
-                );
-            } else if (option instanceof ValueOption) {
-                ((ValueOption) option).setVal(
-                        Integer.parseInt(givenOptions.get(name))
-                );
-            } else if (option instanceof ValueFloatOption) {
-                ((ValueFloatOption) option).setVal(
-                        Float.parseFloat(givenOptions.get(name))
-                );
-            }
-
-            this.options.add(option);
-        }
+        super("Triggerbot", DESCRIPTION, toggleKey, isActivated, "target.png", PREFIX);
+        this.loadOptionsAccordingTo(DEFAULT_OPTIONS, givenOptions);
 
         this.timeout = new TimeHelper();
         this.timeout.start();
     }
 
     @Override
-    protected void onUpdate() {
-        if (Wrapper.MC.player != null) {
-            if (Wrapper.isInGui()) return;
+    protected void onEvent(int code, Object details) {
+        if (!this.isActivated()) return;
+        if (Wrapper.MC.player == null) return;
+        if (Wrapper.isInGui()) return;
 
-            if (Wrapper.MC.player.getAttackCooldownProgress(0) != 1.0 && autoCps()) return;
-            if (!timeout.isDelayComplete((int) (1000f / getRandomCPS())) && !autoCps()) return;
+        if (code == EventType.CLIENT_TICK) {
+            if (Wrapper.MC.player.getAttackCooldownProgress(0) != 1.0 && getOptionB(I_AUTO_CPS)) return;
+            if (!timeout.isDelayComplete((int) (1000f / getRandomCPS())) && !getOptionB(I_AUTO_CPS)) return;
 
             Entity pointedEntity = Wrapper.MC.targetedEntity;
 
             // Check if the entity is either a player or a mob (if it's a mob, we need to check if the option to
             // attack mobs is turned on
-            if (pointedEntity instanceof PlayerEntity || (pointedEntity instanceof MobEntity && useOnMobs())) {
+            if (pointedEntity instanceof PlayerEntity || (pointedEntity instanceof MobEntity && getOptionB(I_USE_ON_MOBS))) {
                 // Then check if the player sees it & not in same team
-                if (Wrapper.MC.player.canSee(pointedEntity) && !Wrapper.isInSameTeam(pointedEntity)) {
+                if (!pointedEntity.isInvisibleTo(Wrapper.MC.player) && Wrapper.canAttack((LivingEntity) pointedEntity)) {
                     // attack
                     timeout.start();
-                    Wrapper.click();
+                    Wrapper.click(166); // 6 cps max
                 }
             }
         }
     }
 
     @Override
-    protected void onToggle(boolean toggle) {
+    protected void onToggle(boolean toggle, boolean isTriggeredByKeybind) {
         if (toggle) {
             timeout.start();
             if (BettercolorsEngine.getInstance().getModule("Click assistance").isActivated()) {
-                Window.getInstance().dialog("Trigger bot can't be used along with click assistance. Click assistance" +
-                        "will be turned off. This feature is not as safe as click assistance. Use it at your own risk");
+                String message = "Trigger bot can't be used along with click assistance. Click assistance" +
+                        "will be turned off. This feature is not as safe as click assistance. Use it at your own risk";
+                if (!isTriggeredByKeybind)
+                    Window.getInstance().dialog(message);
+                logWarn(message);
                 BettercolorsEngine.getInstance().toggleModule("Click assistance", false);
             } else {
-                Window.getInstance().dialog("This feature is not as safe as click assistance. Use it at your own risk");
+                logWarn("This feature is not as safe as click assistance. Use it at your own risk");
             }
         } else {
             timeout.stop();
         }
     }
-
-    private boolean useOnMobs() {
-        return ((ToggleOption) this.options.get(I_USE_ON_MOBS)).isActivated();
-    }
-
-    private boolean autoCps() {
-        return ((ToggleOption) this.options.get(I_AUTO_CPS)).isActivated();
-    }
-
-    private float getCPS() {
-        return ((ValueFloatOption) this.options.get(I_CPS)).getVal();
-    }
-
 
     /**
      * CPS +-= 1.0
@@ -136,8 +117,8 @@ public class Triggerbot extends Module {
      */
     private float getRandomCPS() {
         return MathUtils.random(
-                (int) (getCPS()*100f) - 100,
-                (int) (getCPS()*100f) + 100
+                (int) (getOptionF(I_CPS)*100f) - 100,
+                (int) (getOptionF(I_CPS)*100f) + 100
         ) / 100f;
     }
 

@@ -21,13 +21,37 @@ public class ValueFloatOption extends Option{
      * @param max the maximum value.
      * @param minor_tick_spc the minor tick spacing (for the slider).
      * @param major_tick_spc the major tick spacing (for the slider).
+     *
+     * @deprecated use the other constructor with the description instead
      */
+    @Deprecated
     public ValueFloatOption(
             String prefix, String name,
             float val, float min, float max,
             float minor_tick_spc, float major_tick_spc) {
 
-        super(prefix, name);
+        this(prefix, name, "", val, min, max, minor_tick_spc, major_tick_spc);
+    }
+
+    /**
+     * /!\ SUPPORTS 2 DECIMAL POINTS /!\
+     *
+     * @param prefix prefix of the option (module name for example) -> used to prevent conflict if some modules have
+     *               the same option name.
+     * @param name the name.
+     * @param description the description.
+     * @param val the initial value.
+     * @param min the minimum value.
+     * @param max the maximum value.
+     * @param minor_tick_spc the minor tick spacing (for the slider).
+     * @param major_tick_spc the major tick spacing (for the slider).
+     */
+    public ValueFloatOption(
+            String prefix, String name, String description,
+            float val, float min, float max,
+            float minor_tick_spc, float major_tick_spc) {
+
+        super(prefix, name, description);
         this.val = val;
         MIN = min;
         MAX = max;
@@ -46,13 +70,13 @@ public class ValueFloatOption extends Option{
      * @param val the new value.
      */
     public void setVal(float val){
+        this.val = val;
+        saveOption();
+
         if(val > MAX) {
             throw new IllegalArgumentException("The value " + val + " is bigger than its max : " + MAX);
         }else if(val < MIN){
             throw new IllegalArgumentException("The value " + val + " is lower than its min : " + MIN);
-        }else{
-            this.val = val;
-            saveOption();
         }
     }
 
@@ -67,7 +91,7 @@ public class ValueFloatOption extends Option{
     @Override
     public Object clone() {
         return new ValueFloatOption(
-                this.PREFIX, this.NAME,
+                this.PREFIX, this.NAME, this.DESCRIPTION,
                 this.getVal(), this.getMin(), this.getMax(),
                 this.getMinorTickSpacing(), this.getMajorTickSpacing()
         );

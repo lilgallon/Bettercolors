@@ -6,7 +6,14 @@
   "mixins": [
   ],
   "client": [
-      "MinecraftClientMixin"
+      "ClientWorldMixin",
+      "DamageTrackerMixin",
+      "GameRendererMixin",
+      "KeyboardMixin",
+      "MinecraftClientMixin",
+      "MinecraftServerMixin",
+      "MouseMixin",
+      "ServerWorldMixin"
   ],
   "injectors": {
     "defaultRequire": 1

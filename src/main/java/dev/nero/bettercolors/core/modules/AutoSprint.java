@@ -16,6 +16,7 @@
 
 package dev.nero.bettercolors.core.modules;
 
+import dev.nero.bettercolors.core.events.EventType;
 import dev.nero.bettercolors.engine.module.Module;
 import dev.nero.bettercolors.engine.option.Option;
 import dev.nero.bettercolors.core.wrapper.Wrapper;
@@ -29,19 +30,25 @@ public class AutoSprint extends Module {
      * @param isActivated the initial state.
      */
     public AutoSprint(Integer toggleKey, Boolean isActivated) {
-        super("Auto sprint", toggleKey, isActivated, "sprint_symbol.png", "[ASp]");
+        super("Auto sprint", "Sprints for you when you're going forward", toggleKey, isActivated, "unknown.png", "ASp");
     }
 
     @Override
-    public void onUpdate() {
-        if(Wrapper.MC.player != null){
+    protected void onEvent(int code, Object details) {
+        if (!this.isActivated()) return;
+        if (Wrapper.MC.player == null) return;
+        if (Wrapper.isInGui()) return;
+
+        if (code == EventType.CLIENT_TICK) {
             if(Wrapper.MC.player.forwardSpeed > 0 && !Wrapper.MC.player.isSprinting()){
-                logInfo("Forcing player to run");
                 Wrapper.MC.player.setSprinting(true);
             }
         }
     }
 
+    /**
+     * Used by the engine (reflection)
+     */
     public static ArrayList<Option> getDefaultOptions(){
         return new ArrayList<>();
     }

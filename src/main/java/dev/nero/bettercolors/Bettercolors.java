@@ -1,34 +1,30 @@
 package dev.nero.bettercolors;
 
-import dev.nero.bettercolors.core.events.OnRenderCallback;
-import dev.nero.bettercolors.core.hijacks.GameRendererHijack;
-import dev.nero.bettercolors.core.wrapper.Wrapper;
+import dev.nero.bettercolors.core.events.*;
 import dev.nero.bettercolors.engine.BettercolorsEngine;
 import dev.nero.bettercolors.engine.module.Module;
 import dev.nero.bettercolors.engine.view.Window;
 import dev.nero.bettercolors.core.modules.*;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.InputUtil;
 import org.lwjgl.glfw.GLFW;
 
-import java.lang.reflect.Field;
 import java.util.HashMap;
 
 public class Bettercolors implements ModInitializer {
 
-    public static final String MODID = "mcp";
     private static BettercolorsEngine engine;
-    private static boolean failedBypass = false;
 
     @Override
     public void onInitialize() {
-        System.setProperty("java.awt.headless", "false");
-
         // The engine will handle absolutely everything. We will just need to write some modules for the mod, the rest
         // is totally handled by the engine. :)
         engine = new BettercolorsEngine();
+
+        // Specify the resources location
+        Window.FONTS_DIR = "assets/" + Reference.MOD_ID + "/";
+        Window.IMAGES_DIR = "assets/" + Reference.MOD_ID + "/";
 
         // Now we need to send some information about our mod to the engine
         HashMap<Class<? extends Module>, BettercolorsEngine.IntAndBoolean> modules = new HashMap<>();
@@ -38,71 +34,74 @@ public class Bettercolors implements ModInitializer {
         modules.put(AutoSword.class, new BettercolorsEngine.IntAndBoolean(-1, true));
         modules.put(Reach.class, new BettercolorsEngine.IntAndBoolean(-1, false));
         modules.put(Triggerbot.class, new BettercolorsEngine.IntAndBoolean(-1, false));
+        modules.put(TeamFilter.class, new BettercolorsEngine.IntAndBoolean(-1, false));
+        modules.put(Antibot.class, new BettercolorsEngine.IntAndBoolean(-1, true));
 
-        engine.init(
-                Reference.MOD_VERSION,
-                Reference.MC_VERSION,
-                "https://github.com/N3ROO/Bettercolors/releases",
-                "https://github.com/N3ROO/Bettercolors/issues",
-                "https://github.com/N3ROO/Bettercolors/releases/latest",
-                modules,
-                new BettercolorsEngine.Key(GLFW.GLFW_KEY_INSERT, "insert"),
-                MinecraftClient.getInstance()
-        );
+        // Important! If GLFW is not init, we won't be able to use GLFW.getKeyName which would create a crash that is
+        // super hard to debug
+        OnPostMinecraftInit.EVENT.register(() -> {
+            engine.init(
+                    "Bettercolors " + Reference.MOD_VERSION + " for MC " + Reference.MC_VERSION + " (fabric)",
+                    Reference.MOD_VERSION,
+                    Reference.MOD_VERSION_SUFFIX,
+                    Reference.MC_VERSION,
+                    "https://api.github.com/repos/n3roo/bettercolors/releases",
+                    "https://github.com/n3roo/bettercolors/releases",
+                    "https://github.com/N3ROO/Bettercolors/issues",
+                    modules,
+                    GLFW.GLFW_KEY_INSERT,
+                    code -> GLFW.glfwGetKeyName(code, GLFW.glfwGetKeyScancode(code))
+            );
 
-        Window.INFO("[+] Bettercolors " + Reference.MOD_VERSION + " loaded");
+            Window.INFO("[+] Bettercolors " + Reference.MOD_VERSION + " loaded");
+        });
 
-        ClientTickEvents.START_WORLD_TICK.register(start -> {
-            if (!(Wrapper.MC.gameRenderer instanceof GameRendererHijack) && !failedBypass) {
-                Window.INFO("[~] Bypassing MC to enable reach...");
+        OnWorldLoadCallback.EVENT.register(() -> {
+            engine.event(EventType.WORLD_LOAD, null);
+        });
 
-                Field gameRendererField = null;
-                try {
-                    gameRendererField = MinecraftClient.class.getField("gameRenderer");
-                } catch (NoSuchFieldException e1) {
+        OnKeyInputEvent.EVENT.register(() -> {
+            final long HANDLE = MinecraftClient.getInstance().getWindow().getHandle();
 
-                    try {
-                        // obf field https://minidigger.github.io/MiniMappingViewer/#/mojang/client/1.16.2-rc2
-                        gameRendererField = MinecraftClient.class.getField("field_1773");
-                    } catch (NoSuchFieldException e2) {
-                        System.out.println("Error 1:");
-                        e1.printStackTrace();
-                        System.out.println("--------------");
-                        System.out.println("Error 2:");
-                        e2.printStackTrace();
+            // Window toggle key
+            engine.keyEvent(Window.TOGGLE_KEY, InputUtil.isKeyPressed(HANDLE, Window.TOGGLE_KEY));
 
-                        Window.ERROR("Error while looking for gameRenderer");
-                        failedBypass = true;
-                    }
-                }
-
-                if (gameRendererField != null) {
-                    gameRendererField.setAccessible(true);
-
-                    try {
-                        gameRendererField.set(Wrapper.MC.getInstance(), GameRendererHijack.hijack(BettercolorsEngine.MC.gameRenderer));
-                    } catch (IllegalAccessException e) {
-                        Window.ERROR("Error while hijacking gameRenderer");
-                        failedBypass = true;
-                        e.printStackTrace();
-                    }
-
-                    // We did not do anything, did we?
-                    gameRendererField.setAccessible(false);
-
-                    Window.INFO("[+] Reach is ready to work!");
-                }
+            // Modules' toggle keys
+            for (Module module : engine.getModules()) {
+                if (module.getToggleKey() != -1)
+                    engine.keyEvent(module.getToggleKey(), InputUtil.isKeyPressed(HANDLE, module.getToggleKey()));
             }
         });
 
-        OnRenderCallback.EVENT.register( (tick, info) -> {
-            final long HANDLE = MinecraftClient.getInstance().getWindow().getHandle();
+        OnRenderCallback.EVENT.register(() -> {
+            engine.event(EventType.RENDER, null);
+        });
 
-            engine.keyEvent(GLFW.GLFW_KEY_HOME, InputUtil.isKeyPressed(HANDLE, GLFW.GLFW_KEY_HOME));
-            engine.keyEvent(GLFW.GLFW_KEY_PAGE_UP, InputUtil.isKeyPressed(HANDLE, GLFW.GLFW_KEY_PAGE_UP));
-            engine.keyEvent(Window.TOGGLE_KEY, InputUtil.isKeyPressed(HANDLE, Window.TOGGLE_KEY));
+        OnMouseInputCallback.EVENT.register(() -> {
+           engine.event(EventType.MOUSE_INPUT, null);
+        });
 
-            engine.update();
+        OnClientTickCallback.EVENT.register(() -> {
+            engine.event(EventType.CLIENT_TICK, null);
+        });
+
+        OnEntityJoinCallback.EVENT.register((entity) -> {
+            engine.event(EventType.ENTITY_JOIN, entity);
+        });
+
+        OnEntityLeaveCallback.EVENT.register((entity) -> {
+            engine.event(EventType.ENTITY_LEAVE, entity);
+        });
+
+        OnEntityDamageCallback.EVENT.register((info) -> {
+            /*
+            System.out.println("Damage event: " +
+                    info.getTarget().getName().getString() + " | " +
+                    (info.getSource().getAttacker() != null ? info.getSource().getAttacker().getName().getString() : info.getSource().getName()) + " | " +
+                    info.getDamageAmount() + " | " +
+                    info.getOriginalHealth()
+            );*/
+            engine.event(EventType.ENTITY_DAMAGE, info);
         });
     }
 }

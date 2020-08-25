@@ -22,7 +22,7 @@ dependencies {
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+	// modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
 	inJar "io.github.vincenzopalazzo:material-ui-swing:1.1.1"
 
@@ -59,17 +59,10 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 }
 
 jar {
-	from "LICENSE"
-
-	into('/META-INF/libraries/') {
-		from configurations.inJar
-	}
-
-	manifest {
-		attributes([
-				'Main-Class': 'mdlaf.MaterialLookAndFeel',
-				'Class-Path': 'material-ui-swing-1.1.1.jar'
-		])
+	from {
+		configurations.inJar.collect {
+			it.isDirectory() ? it : zipTree(it)
+		}
 	}
 }
 

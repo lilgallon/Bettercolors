@@ -10,7 +10,7 @@
   ],
 
   "license": "Apache-2.0",
-  "icon": "assets/mcp/icon.png",
+  "icon": "assets/mcp/bettercolors.png",
 
   "environment": "*",
   "entrypoints": {
@@ -24,7 +24,6 @@
 
   "depends": {
     "fabricloader": ">=0.9.0",
-    "fabric": ">=0.17.0",
-    "minecraft": "1.16.2-rc.2"
+    "minecraft": "1.16.2"
   }
 }

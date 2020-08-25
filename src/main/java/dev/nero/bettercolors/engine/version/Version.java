@@ -18,6 +18,8 @@
 
 package dev.nero.bettercolors.engine.version;
 
+import dev.nero.bettercolors.engine.Reference;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -28,11 +30,8 @@ import java.util.stream.Collectors;
 public class Version {
 
     // Used to delimit the mod version from the MC version
-    // A version is written this way: x.y.z-MCa.b.c-fa (ex: 6.0.0-MC1.8.9fa)
+    // A version is written this way: x.y.z-MCa.b.c (ex: 6.0.0-MC1.8.9)
     private final static String MC_PREFIX = "-MC";
-    private final static String API = "fa";
-    // This url will be used to get the latest version
-    private final static String RELEASES_URL = "https://api.github.com/repos/n3roo/bettercolors/releases";
 
     // The minecraft version of the mod
     private String mcVersion;
@@ -116,7 +115,7 @@ public class Version {
     public static Version getLatestVersion(String mcVersion) throws VersionException {
         try {
             // We open the URL and read what's written
-            URL url = new URL(RELEASES_URL);
+            URL url = new URL(Reference.RELEASES_API_URL);
             BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
             String json = in.lines().collect(Collectors.joining());
             in.close();
@@ -134,7 +133,7 @@ public class Version {
             String latestVersion = "";
             while (i < tags.length && !found){
                 latestVersion = tags[i].split("\"")[1];
-                if (latestVersion.endsWith(MC_PREFIX + mcVersion + API)) {
+                if (latestVersion.endsWith(MC_PREFIX + mcVersion + Reference.VERSION_SUFFIX)) {
                     found = true;
                 } else {
                     i ++;
@@ -144,8 +143,8 @@ public class Version {
             if(!found) {
                 throw new VersionException("No version found", VersionException.Error.NO_VERSION);
             } else {
-                // Remove the minecraft version from the mod version (6.0.0-MC1.15.2fa -> 6.0.0)
-                latestVersion = latestVersion.replace(MC_PREFIX + mcVersion + API, "");
+                // Remove the minecraft version from the mod version (6.0.0-MC1.15.2 -> 6.0.0)
+                latestVersion = latestVersion.replace(MC_PREFIX + mcVersion + Reference.VERSION_SUFFIX, "");
                 // Split the latest version this way: 6.0.0-b1 -> [6.0.0, 1] or 6.0.0 -> [6.0.0]
                 String[] latestVersionSplit = latestVersion.split("-b");
                 // Split the main part of the version this way: 6.1.0 -> [6, 1, 0]

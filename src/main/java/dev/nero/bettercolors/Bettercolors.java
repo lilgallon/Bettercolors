@@ -1,14 +1,12 @@
 package dev.nero.bettercolors;
 
-import dev.nero.bettercolors.core.events.OnRenderCallback;
-import dev.nero.bettercolors.core.hijacks.GameRendererHijack;
+import dev.nero.bettercolors.core.events.*;
 import dev.nero.bettercolors.core.wrapper.Wrapper;
 import dev.nero.bettercolors.engine.BettercolorsEngine;
 import dev.nero.bettercolors.engine.module.Module;
 import dev.nero.bettercolors.engine.view.Window;
 import dev.nero.bettercolors.core.modules.*;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.InputUtil;
 import org.lwjgl.glfw.GLFW;
@@ -19,7 +17,6 @@ import java.util.HashMap;
 public class Bettercolors implements ModInitializer {
 
     private static BettercolorsEngine engine;
-    private static boolean failedBypass = false;
 
     @Override
     public void onInitialize() {
@@ -53,50 +50,11 @@ public class Bettercolors implements ModInitializer {
 
         Window.INFO("[+] Bettercolors " + Reference.MOD_VERSION + " loaded");
 
-        ClientTickEvents.START_WORLD_TICK.register(start -> {
-            if (!(Wrapper.MC.gameRenderer instanceof GameRendererHijack) && !failedBypass) {
-                Window.INFO("[~] Bypassing MC to enable reach...");
-
-                Field gameRendererField = null;
-                try {
-                    gameRendererField = MinecraftClient.class.getField("gameRenderer");
-                } catch (NoSuchFieldException e1) {
-
-                    try {
-                        // obf field https://minidigger.github.io/MiniMappingViewer/#/mojang/client/1.16.2-rc2
-                        gameRendererField = MinecraftClient.class.getField("field_1773");
-                    } catch (NoSuchFieldException e2) {
-                        System.out.println("Error 1:");
-                        e1.printStackTrace();
-                        System.out.println("--------------");
-                        System.out.println("Error 2:");
-                        e2.printStackTrace();
-
-                        Window.ERROR("Error while looking for gameRenderer");
-                        failedBypass = true;
-                    }
-                }
-
-                if (gameRendererField != null) {
-                    gameRendererField.setAccessible(true);
-
-                    try {
-                        gameRendererField.set(Wrapper.MC.getInstance(), GameRendererHijack.hijack(Wrapper.MC.gameRenderer));
-                    } catch (IllegalAccessException e) {
-                        Window.ERROR("Error while hijacking gameRenderer");
-                        failedBypass = true;
-                        e.printStackTrace();
-                    }
-
-                    // We did not do anything, did we?
-                    gameRendererField.setAccessible(false);
-
-                    Window.INFO("[+] Reach is ready to work!");
-                }
-            }
+        OnWorldLoadCallback.EVENT.register(() -> {
+            engine.event(EventType.WORLD_LOAD, null);
         });
 
-        OnRenderCallback.EVENT.register( (tick, info) -> {
+        OnKeyInputEvent.EVENT.register(() -> {
             final long HANDLE = MinecraftClient.getInstance().getWindow().getHandle();
 
             // Window toggle key
@@ -107,8 +65,30 @@ public class Bettercolors implements ModInitializer {
                 if (module.getToggleKey() != -1)
                     engine.keyEvent(module.getToggleKey(), InputUtil.isKeyPressed(HANDLE, module.getToggleKey()));
             }
+        });
 
-            engine.update();
+        OnMouseInputCallback.EVENT.register(() -> {
+           engine.event(EventType.MOUSE_INPUT, null);
+        });
+
+        OnRenderCallback.EVENT.register(() -> {
+            engine.event(EventType.RENDER, null);
+        });
+
+        OnClientTickCallback.EVENT.register(() -> {
+           engine.event(EventType.CLIENT_TICK, null);
+        });
+
+        OnEntityJoinCallback.EVENT.register((entity) -> {
+            engine.event(EventType.ENTITY_JOIN, entity);
+        });
+
+        OnEntityLeaveCallback.EVENT.register((entity) -> {
+            engine.event(EventType.ENTITY_LEAVE, entity);
+        });
+
+        OnEntityAttackCallback.EVENT.register((info) -> {
+            engine.event(EventType.ENTITY_ATTACK, info);
         });
     }
 }

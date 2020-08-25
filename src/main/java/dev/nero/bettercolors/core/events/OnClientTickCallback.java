@@ -2,13 +2,11 @@ package dev.nero.bettercolors.core.events;
 
 import dev.nero.bettercolors.core.events.fabricapi.Event;
 import dev.nero.bettercolors.core.events.fabricapi.EventFactory;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-public interface OnRenderCallback {
-
-    Event<OnRenderCallback> EVENT = EventFactory.createArrayBacked(OnRenderCallback.class,
+public interface OnClientTickCallback {
+    Event<OnClientTickCallback> EVENT = EventFactory.createArrayBacked(OnClientTickCallback.class,
             (listeners) -> () -> {
-                for (OnRenderCallback listener : listeners) {
+                for (OnClientTickCallback listener : listeners) {
                     listener.trigger();
                 }
             });

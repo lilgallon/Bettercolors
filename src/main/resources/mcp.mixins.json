@@ -6,7 +6,13 @@
   "mixins": [
   ],
   "client": [
-      "MinecraftClientMixin"
+      "ClientWorldMixin",
+      "KeyboardMixin",
+      "LivingEntityMixin",
+      "MinecraftClientMixin",
+      "MinecraftServerMixin",
+      "MouseMixin",
+      "ServerWorldMixin"
   ],
   "injectors": {
     "defaultRequire": 1

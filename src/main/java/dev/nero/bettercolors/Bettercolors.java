@@ -131,10 +131,6 @@ public class Bettercolors {
     public void renderTickEvent(final TickEvent.RenderTickEvent event){
         engine.event(EventType.RENDER, event);
 	}
-
-	@SubscribeEvent
-	public void mouseInputEvent(final InputEvent.MouseInputEvent event) {
-        engine.event(EventType.MOUSE_INPUT, event);
     }
 
     @SubscribeEvent

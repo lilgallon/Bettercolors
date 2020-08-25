@@ -6,7 +6,7 @@
 </h3>
 
 <p align="center">
-  A silent "hack" built with forgeand fabric. It bypasses powerful anticheats to help you improve your gameplay.
+  A silent "hack" built with forgeand fabric. It bypasses powerful anticheats to help you improve your gameplay. More than 1000 commits, and exists since July 2018. Designed to be lightweight and easy to update. Powered by [BettercolorsEngine](https://github.com/N3ROO/BettercolorsEngine).
 </p>
 
 <h3 align="center">

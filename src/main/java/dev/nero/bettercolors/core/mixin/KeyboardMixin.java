@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class KeyboardMixin {
 
     @Inject(method = "onKey(JIIII)V", at = @At("TAIL"))
-    private void keyEvent(CallbackInfo info) {
+    private void keyEvent(long window, int key, int scancode, int i, int j, CallbackInfo info) {
         OnKeyInputEvent.EVENT.invoker().trigger();
     }
 }

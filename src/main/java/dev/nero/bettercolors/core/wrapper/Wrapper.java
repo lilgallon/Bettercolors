@@ -65,7 +65,7 @@ public class Wrapper {
         return Wrapper.MC.player.isSleeping() ||
                 !MC.isWindowFocused() ||
                 MC.isPaused() ||
-                !(Wrapper.MC.currentScreen instanceof MultiplayerScreen);
+                Wrapper.MC.currentScreen != null; // null -> no gui open
     }
 
     /**

@@ -7,5 +7,5 @@ public class EventType {
     public static final int WORLD_LOAD = 3;
     public static final int ENTITY_JOIN = 4;
     public static final int ENTITY_LEAVE = 5;
-    public static final int ENTITY_ATTACK = 6;
+    public static final int ENTITY_DAMAGE = 6;
 }

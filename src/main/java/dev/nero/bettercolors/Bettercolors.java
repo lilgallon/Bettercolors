@@ -1,7 +1,6 @@
 package dev.nero.bettercolors;
 
 import dev.nero.bettercolors.core.events.*;
-import dev.nero.bettercolors.core.wrapper.Wrapper;
 import dev.nero.bettercolors.engine.BettercolorsEngine;
 import dev.nero.bettercolors.engine.module.Module;
 import dev.nero.bettercolors.engine.view.Window;
@@ -11,7 +10,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.InputUtil;
 import org.lwjgl.glfw.GLFW;
 
-import java.lang.reflect.Field;
 import java.util.HashMap;
 
 public class Bettercolors implements ModInitializer {
@@ -24,6 +22,10 @@ public class Bettercolors implements ModInitializer {
         // is totally handled by the engine. :)
         engine = new BettercolorsEngine();
 
+        // Specify the resources location
+        Window.FONTS_DIR = "assets/" + Reference.MOD_ID + "/";
+        Window.IMAGES_DIR = "assets/" + Reference.MOD_ID + "/";
+
         // Now we need to send some information about our mod to the engine
         HashMap<Class<? extends Module>, BettercolorsEngine.IntAndBoolean> modules = new HashMap<>();
         modules.put(AimAssistance.class, new BettercolorsEngine.IntAndBoolean(GLFW.GLFW_KEY_HOME, true));
@@ -35,20 +37,24 @@ public class Bettercolors implements ModInitializer {
         modules.put(TeamFilter.class, new BettercolorsEngine.IntAndBoolean(-1, false));
         modules.put(Antibot.class, new BettercolorsEngine.IntAndBoolean(-1, true));
 
-        engine.init(
-                "Bettercolors " + Reference.MOD_VERSION + " for MC " + Reference.MC_VERSION + " (fabric)",
-                Reference.MOD_VERSION,
-                Reference.MOD_VERSION_SUFFIX,
-                Reference.MC_VERSION,
-                "https://api.github.com/repos/n3roo/bettercolors/releases",
-                "https://github.com/n3roo/bettercolors/releases",
-                "https://github.com/N3ROO/Bettercolors/issues",
-                modules,
-                GLFW.GLFW_KEY_INSERT,
-                (code) -> GLFW.glfwGetKeyName(code, GLFW.glfwGetKeyScancode(code))
-        );
+        // Important! If GLFW is not init, we won't be able to use GLFW.getKeyName which would create a crash that is
+        // super hard to debug
+        OnPostMinecraftInit.EVENT.register(() -> {
+            engine.init(
+                    "Bettercolors " + Reference.MOD_VERSION + " for MC " + Reference.MC_VERSION + " (fabric)",
+                    Reference.MOD_VERSION,
+                    Reference.MOD_VERSION_SUFFIX,
+                    Reference.MC_VERSION,
+                    "https://api.github.com/repos/n3roo/bettercolors/releases",
+                    "https://github.com/n3roo/bettercolors/releases",
+                    "https://github.com/N3ROO/Bettercolors/issues",
+                    modules,
+                    GLFW.GLFW_KEY_INSERT,
+                    code -> GLFW.glfwGetKeyName(code, GLFW.glfwGetKeyScancode(code))
+            );
 
-        Window.INFO("[+] Bettercolors " + Reference.MOD_VERSION + " loaded");
+            Window.INFO("[+] Bettercolors " + Reference.MOD_VERSION + " loaded");
+        });
 
         OnWorldLoadCallback.EVENT.register(() -> {
             engine.event(EventType.WORLD_LOAD, null);
@@ -67,16 +73,16 @@ public class Bettercolors implements ModInitializer {
             }
         });
 
-        OnMouseInputCallback.EVENT.register(() -> {
-           engine.event(EventType.MOUSE_INPUT, null);
-        });
-
         OnRenderCallback.EVENT.register(() -> {
             engine.event(EventType.RENDER, null);
         });
 
+        OnMouseInputCallback.EVENT.register(() -> {
+           engine.event(EventType.MOUSE_INPUT, null);
+        });
+
         OnClientTickCallback.EVENT.register(() -> {
-           engine.event(EventType.CLIENT_TICK, null);
+            engine.event(EventType.CLIENT_TICK, null);
         });
 
         OnEntityJoinCallback.EVENT.register((entity) -> {
@@ -87,8 +93,15 @@ public class Bettercolors implements ModInitializer {
             engine.event(EventType.ENTITY_LEAVE, entity);
         });
 
-        OnEntityAttackCallback.EVENT.register((info) -> {
-            engine.event(EventType.ENTITY_ATTACK, info);
+        OnEntityDamageCallback.EVENT.register((info) -> {
+            /*
+            System.out.println("Damage event: " +
+                    info.getTarget().getName().getString() + " | " +
+                    (info.getSource().getAttacker() != null ? info.getSource().getAttacker().getName().getString() : info.getSource().getName()) + " | " +
+                    info.getDamageAmount() + " | " +
+                    info.getOriginalHealth()
+            );*/
+            engine.event(EventType.ENTITY_DAMAGE, info);
         });
     }
 }

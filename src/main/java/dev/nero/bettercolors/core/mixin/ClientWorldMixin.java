@@ -19,12 +19,12 @@ public class ClientWorldMixin {
     }
 
     @Inject(method = "addEntityPrivate(ILnet/minecraft/entity/Entity;)V", at = @At("TAIL"))
-    private void entityJoinEvent(CallbackInfo info, Entity entity) {
+    private void entityJoinEvent(int code, Entity entity, CallbackInfo info) {
         OnEntityJoinCallback.EVENT.invoker().trigger(entity);
     }
 
     @Inject(method = "finishRemovingEntity(Lnet/minecraft/entity/Entity;)V", at = @At("TAIL"))
-    private void entityLeaveEvent(CallbackInfo info, Entity entity) {
+    private void entityLeaveEvent(Entity entity, CallbackInfo info) {
         OnEntityLeaveCallback.EVENT.invoker().trigger(entity);
     }
 }

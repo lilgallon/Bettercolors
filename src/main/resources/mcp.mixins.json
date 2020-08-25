@@ -7,8 +7,9 @@
   ],
   "client": [
       "ClientWorldMixin",
+      "DamageTrackerMixin",
+      "GameRendererMixin",
       "KeyboardMixin",
-      "LivingEntityMixin",
       "MinecraftClientMixin",
       "MinecraftServerMixin",
       "MouseMixin",

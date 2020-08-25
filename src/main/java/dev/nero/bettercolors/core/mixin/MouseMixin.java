@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class MouseMixin {
 
     @Inject(method = "onMouseButton(JIII)V", at = @At("TAIL"))
-    private void mouseEvent(CallbackInfo info) {
+    private void mouseEvent(long window, int button, int action, int mods, CallbackInfo info) {
         OnMouseInputCallback.EVENT.invoker().trigger();
     }
 }

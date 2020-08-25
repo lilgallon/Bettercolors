@@ -13,12 +13,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class ServerWorldMixin {
 
     @Inject(method = "loadEntityUnchecked(Lnet/minecraft/entity/Entity;)V", at = @At("TAIL"))
-    private void entityJoinEvent(CallbackInfo info, Entity entity) {
+    private void entityJoinEvent(Entity entity, CallbackInfo info) {
         OnEntityJoinCallback.EVENT.invoker().trigger(entity);
     }
 
     @Inject(method = "unloadEntity(Lnet/minecraft/entity/Entity;)V", at = @At("TAIL"))
-    private void entityLeaveEvent(CallbackInfo info, Entity entity) {
+    private void entityLeaveEvent(Entity entity, CallbackInfo info) {
         OnEntityLeaveCallback.EVENT.invoker().trigger(entity);
     }
 }

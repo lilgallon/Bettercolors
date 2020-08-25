@@ -63,6 +63,10 @@ public class Window extends JFrame{
     // Used to display / change the key used to toggle the GUI
     public final static String TOGGLE_KEY_OPTION = "toggle_key";
     public static int TOGGLE_KEY;
+    
+    //
+    public static String IMAGES_DIR = "images/";
+    public static String FONTS_DIR = "fonts/";
 
     // Modules that will be displayed in the GUI
     private final ArrayList<Module> MODULES;
@@ -125,12 +129,12 @@ public class Window extends JFrame{
             setIconImage(new ImageIcon(Objects.requireNonNull(
                     Thread.currentThread()
                             .getContextClassLoader()
-                            .getResource("images/bettercolors_symbol.png")))
+                            .getResource(IMAGES_DIR + "bettercolors_symbol.png")))
                     .getImage()
             );
         } catch (Exception e) {
             e.printStackTrace();
-            WARN("Failed to load images/bettercolors_symbol.png");
+            WARN("Failed to load " + IMAGES_DIR + "bettercolors_symbol.png");
         }
 
         // It is possible to resize the GUI
@@ -155,7 +159,11 @@ public class Window extends JFrame{
         try {
             consoleFont = Font.createFont(
                     Font.TRUETYPE_FONT,
-                    getClass().getResource("/fonts/CascadiaCode.ttf").openStream()
+                    Objects.requireNonNull(
+                            Thread.currentThread().
+                                    getContextClassLoader().
+                                    getResource(FONTS_DIR + "CascadiaCode.ttf")
+                    ).openStream()
             );
             GraphicsEnvironment gEnv = GraphicsEnvironment.getLocalGraphicsEnvironment();
             gEnv.registerFont(consoleFont);
@@ -609,13 +617,13 @@ public class Window extends JFrame{
                         Objects.requireNonNull(
                                 Thread.currentThread().
                                         getContextClassLoader().
-                                        getResource("images/" + module.getSymbol())
+                                        getResource(IMAGES_DIR + module.getSymbol())
                         )
                 );
                 tabbedPane.addTab(module.getName(), icon, content);
             } catch (Exception e) {
                 e.printStackTrace();
-                WARN("Failed to load images/" + module.getSymbol());
+                WARN("Failed to load " + IMAGES_DIR + module.getSymbol());
                 tabbedPane.addTab(module.getName(), content);
             }
         }
@@ -713,13 +721,13 @@ public class Window extends JFrame{
                     Objects.requireNonNull(
                             Thread.currentThread()
                                     .getContextClassLoader()
-                                    .getResource("images/key.png")
+                                    .getResource(IMAGES_DIR + "key.png")
                     )
             );
             tabbedPane.addTab("Keybinds", icon, togglePanel);
         } catch (Exception e) {
             e.printStackTrace();
-            WARN("Failed to load images/key.png");
+            WARN("Failed to load " + IMAGES_DIR + "key.png");
             tabbedPane.addTab("Keybinds", togglePanel);
         }
     }
@@ -824,13 +832,13 @@ public class Window extends JFrame{
                     Objects.requireNonNull(
                             Thread.currentThread()
                                     .getContextClassLoader()
-                                    .getResource("images/settings.png")
+                                    .getResource(IMAGES_DIR + "settings.png")
                     )
             );
             tabbedPane.addTab("Settings", icon, settingsPanel);
         } catch (Exception e) {
             e.printStackTrace();
-            WARN("Failed to load images/settings.png");
+            WARN("Failed to load " + IMAGES_DIR + "settings.png");
             tabbedPane.addTab("Settings", settingsPanel);
         }
 
@@ -877,13 +885,13 @@ public class Window extends JFrame{
                     Objects.requireNonNull(
                             Thread.currentThread()
                                     .getContextClassLoader()
-                                    .getResource("images/friends.png")
+                                    .getResource(IMAGES_DIR + "friends.png")
                     )
             );
             tabbedPane.addTab("Friends", icon, friendListPanel);
         } catch (Exception e) {
             e.printStackTrace();
-            WARN("Failed to load images/friends.png");
+            WARN("Failed to load " + IMAGES_DIR + "friends.png");
             tabbedPane.addTab("Friends", friendListPanel);
         }
     }

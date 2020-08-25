@@ -32,23 +32,23 @@ public class Antibot extends Module {
     private static final String PING_CHECK = "Ping_check";
     private static final String TICKS_LIVED_CHECK = "Ticks_lived_check";
     private static final String HAS_BEEN_HIT_CHECK = "Has_been_hit_check";
-    private static final String HAS_MADE_DAMAGE_CHECK = "Has_made_damage_check";
+    //private static final String HAS_MADE_DAMAGE_CHECK = "Has_made_damage_check";
     private static final String TICKS_LIVED_MIN = "Ticks_lived_min";
 
     // Options index
     private static final int I_TAB_CHECK = 0;
     private static final int I_PING_CHECK = 1;
     private static final int I_TICKS_LIVED_CHECK = 2;
-    private static final int I_HAS_BEEN_HIT_CHECK = 3;
-    private static final int I_HAS_MADE_DAMAGE_CHECK = 4;
-    private static final int I_TICKS_LIVED_MIN = 5;
+    //private static final int I_HAS_BEEN_HIT_CHECK = 3;
+    //private static final int I_HAS_MADE_DAMAGE_CHECK = 4;
+    private static final int I_TICKS_LIVED_MIN = 3;
 
     // Options description
     private static final String DESC_TAB_CHECK = "If enabled, an entity is defined as a bot if it's not showing in the tab";
     private static final String DESC_PING_CHECK = "If enabled, an entity is defined as a bot if its ping is 0";
     private static final String DESC_TICKS_LIVED_CHECK = "If enabled, an entity is defined as a bot if it lived less than the given amount of ticks (see slider below)";
-    private static final String DESC_HAS_BEEN_HIT_CHECK = "If enabled, an entity is defined as a bot if it has not been hit yet (it has not received any damage yet)";
-    private static final String DESC_HAS_MADE_DAMAGE_CHECK = "If enabled, an entity is defined as a bot if it has not hit anything yet (it did not deal damage to anything yet)";
+    //private static final String DESC_HAS_BEEN_HIT_CHECK = "If enabled, an entity is defined as a bot if it has not been hit yet (it has not received any damage yet)";
+    //private static final String DESC_HAS_MADE_DAMAGE_CHECK = "If enabled, an entity is defined as a bot if it has not hit anything yet (it did not deal damage to anything yet)";
     private static final String DESC_TICKS_LIVED_MIN = "The numbers of ticks that an entity needs to be alive to be considered as legit (needs \"Check ticks lived\" to be turned on)";
 
     private static final ArrayList<Option> DEFAULT_OPTIONS;
@@ -58,7 +58,7 @@ public class Antibot extends Module {
         DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, TAB_CHECK, DESC_TAB_CHECK, true));
         DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, PING_CHECK, DESC_PING_CHECK, true));
         DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, TICKS_LIVED_CHECK, DESC_TICKS_LIVED_CHECK, true));
-        DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, HAS_BEEN_HIT_CHECK, DESC_HAS_BEEN_HIT_CHECK, false));
+        //DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, HAS_BEEN_HIT_CHECK, DESC_HAS_BEEN_HIT_CHECK, false));
         //DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, HAS_MADE_DAMAGE_CHECK, DESC_HAS_MADE_DAMAGE_CHECK, false));
 
         DEFAULT_OPTIONS.add(new ValueOption(PREFIX, TICKS_LIVED_MIN, DESC_TICKS_LIVED_MIN, 40, 1, 100, 5, 20));
@@ -66,8 +66,8 @@ public class Antibot extends Module {
 
     class Data {
         public int ticksLived = 0;
-        public boolean hasBeenHit = false;
-        public boolean attackedSomeone = false;
+        //public boolean hasBeenHit = false;
+        //public boolean attackedSomeone = false;
     }
 
     HashMap<Integer, Data> entities;
@@ -132,7 +132,7 @@ public class Antibot extends Module {
                     data.ticksLived ++;
                 }
                 break;
-
+/*
             case EventType.ENTITY_ATTACK:
                 LivingAttackEvent livingHurtEvent = (LivingAttackEvent) details;
 
@@ -161,7 +161,7 @@ public class Antibot extends Module {
                     this.entities.get(target.getEntityId()).hasBeenHit = true;
                 }
 
-                break;
+                break;*/
         }
     }
 
@@ -178,7 +178,7 @@ public class Antibot extends Module {
         final boolean TAB_CHECK = this.getOptionB(I_TAB_CHECK);
         final boolean PING_CHECK = this.getOptionB(I_PING_CHECK);
         final boolean TICKS_LIVED_CHECK = this.getOptionB(I_TICKS_LIVED_CHECK);
-        final boolean HAS_BEEN_HIT_CHECK = this.getOptionB(I_HAS_BEEN_HIT_CHECK);
+        //final boolean HAS_BEEN_HIT_CHECK = this.getOptionB(I_HAS_BEEN_HIT_CHECK);
         //final boolean HAS_MADE_DAMAGE_CHECK = this.getOptionB(I_HAS_MADE_DAMAGE_CHECK);
         final int TICKS_LIVED_MIN = this.getOptionI(I_TICKS_LIVED_MIN);
 
@@ -194,7 +194,7 @@ public class Antibot extends Module {
             if (data.ticksLived < TICKS_LIVED_MIN && TICKS_LIVED_CHECK) return true;
 
             // If it has not been hit yet (received damage), it's a bot
-            if (!data.hasBeenHit && HAS_BEEN_HIT_CHECK) return true;
+            //if (!data.hasBeenHit && HAS_BEEN_HIT_CHECK) return true;
 
             // If it has attacked something (and made damage), it's a bot
             //if (!data.attackedSomeone && HAS_MADE_DAMAGE_CHECK) return true;

@@ -35,7 +35,6 @@ and some were renamed (see below).
     - "Tab_check": If the entity is not in the tab -> bot
     - "Ping_check": If the entity ping is 0 ms -> bot
     - "Ticks_lived_check": If the entity has lived less than "Ticks_lived_min" -> bot
-    - "Has_been_hit_check": If the entity has not been hit (did not receive damage yet) -> bot
 - Miscellaneous:
     - You can now use greater values than the ones given by the UI. To do so, you need to update the config file manually.
     It's not recommended, but I'm sure that some of you will like that.
@@ -169,7 +168,6 @@ This update is backwards compatible with settings files from v6.0.0-b2 and highe
 - Added CPS use only on entity setting (before it was always true V3.0-)
 - Fixed a very rare crash
 - Auto save settings
-
 
 **V3.0**
 - Very smooth aim

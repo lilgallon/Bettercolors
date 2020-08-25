@@ -33,6 +33,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.lwjgl.input.Keyboard;
 
@@ -84,7 +85,7 @@ public class Bettercolors {
                 "https://github.com/N3ROO/Bettercolors/issues",
                 modules,
                 Keyboard.KEY_INSERT,
-                Keyboard::getKeyName
+                this::getKeyName
         );
 
         Window.INFO("[+] Bettercolors " + Reference.MOD_VERSION + " loaded");
@@ -101,7 +102,12 @@ public class Bettercolors {
             }
         }
 
-        this.engine.event(EventType.RENDER, event);
+        this.engine.event(EventType.WORLD_LOAD, event);
+    }
+
+    @SubscribeEvent
+    public void mouseInputEvent(InputEvent.MouseInputEvent event) {
+        this.engine.event(EventType.MOUSE_INPUT, event);
     }
 
     @SubscribeEvent
@@ -137,5 +143,20 @@ public class Bettercolors {
         }
 
         this.engine.event(EventType.CLIENT_TICK, event);
+    }
+
+    private String getKeyName(int code) {
+        try {
+            return Keyboard.getKeyName(code);
+        } catch (Exception e) {
+            if (BettercolorsEngine.DEBUG) {
+                System.out.println("Error when reading key code " + code);
+                e.printStackTrace();
+            }
+            Window.ERROR("key code " + code + " not recognized");
+            Window.ERROR("Probably due to the fact that you used a 1.16.2+ version of bettercolors. Delete the keybinds from the config file. It will regenerate fresh ones.");
+        }
+
+        return "unknown";
     }
 }

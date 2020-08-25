@@ -130,7 +130,6 @@ public class Bettercolors {
     @SubscribeEvent
     public void renderTickEvent(final TickEvent.RenderTickEvent event){
         engine.event(EventType.RENDER, event);
-	}
     }
 
     @SubscribeEvent

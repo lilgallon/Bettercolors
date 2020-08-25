@@ -59,17 +59,10 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 }
 
 jar {
-	from "LICENSE"
-
-	into('/META-INF/libraries/') {
-		from configurations.inJar
-	}
-
-	manifest {
-		attributes([
-				'Main-Class': 'mdlaf.MaterialLookAndFeel',
-				'Class-Path': 'material-ui-swing-1.1.1.jar'
-		])
+	from {
+		configurations.inJar.collect {
+			it.isDirectory() ? it : zipTree(it)
+		}
 	}
 }
 

@@ -73,8 +73,8 @@ public class AimAssistance extends BetterModule {
         DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, STOP_WHEN_REACHED, DESC_STOP_WHEN_REACHED, true));
         DEFAULT_OPTIONS.add(new ToggleOption(PREFIX, STICKY, DESC_STICKY, false));
 
-        DEFAULT_OPTIONS.add(new ValueFloatOption(PREFIX, STEP_X, DESC_STEP_X, 2.0f, 0, 7, 0.1f, 1));
-        DEFAULT_OPTIONS.add(new ValueFloatOption(PREFIX, STEP_Y, DESC_STEP_Y, 2.0f, 0, 7, 0.1f, 1));
+        DEFAULT_OPTIONS.add(new ValueFloatOption(PREFIX, STEP_X, DESC_STEP_X, 2.0f, 0, 20, 0.1f, 1));
+        DEFAULT_OPTIONS.add(new ValueFloatOption(PREFIX, STEP_Y, DESC_STEP_Y, 2.0f, 0, 20, 0.1f, 1));
         DEFAULT_OPTIONS.add(new ValueOption(PREFIX, RANGE, DESC_RANGE, 3, 0, 10, 1, 5));
         DEFAULT_OPTIONS.add(new ValueOption(PREFIX, RADIUS_X, DESC_RADIUS_X, 25, 0, 180, 5, 25));
         DEFAULT_OPTIONS.add(new ValueOption(PREFIX, RADIUS_Y, DESC_RADIUS_Y, 30, 0, 90, 3, 15));

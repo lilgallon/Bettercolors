@@ -126,6 +126,11 @@ public class Bettercolors {
     public void keyInputEvent(final InputEvent.KeyInputEvent event) {
         engine.keyEvent(event.getKey(),event.getAction() != GLFW.GLFW_RELEASE);
     }
+    
+    @SubscribeEvent
+    public void mouseInputEvent(final InputEvent.MouseInputEvent event) {
+        engine.event(EventType.MOUSE_INPUT, event);
+    }
 
     @SubscribeEvent
     public void renderTickEvent(final TickEvent.RenderTickEvent event){

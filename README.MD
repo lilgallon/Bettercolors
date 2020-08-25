@@ -10,7 +10,7 @@
 </p>
 
 <h3 align="center">
-  <b>Reach 💥 Aim Assistance 💥 Click Assistance 💥 Auto Sprint 💥 Auto Sword 💥 Triggerbot / Autoclick 💥 And more to come...</b>
+  <b>Reach 💥 Aim Assistance 💥 Click Assistance 💥 Auto Sprint 💥 Auto Sword 💥 Triggerbot / Autoclick 💥 Antibot 💥 And more to come...</b>
   <br><br>
   <img src=".github/illustration.gif">
 </h3>

@@ -40,15 +40,15 @@ import java.awt.AWTException;
 import java.util.List;
 
 /**
- * Wrapper for Minecraft 1.16
+ * This class needs to contains everything directly related to Minecraft forge 1.16.2. The modules need to be coded in a
+ * way that we just need to change the wrapper for them to work on a different MC version.
  */
 public class Wrapper {
 
     public final static Minecraft MC = Minecraft.getInstance();
-
     private final static TimeHelper delay = new TimeHelper();
-    private static Robot robot;
 
+    private static Robot robot;
     static {
         try {
             robot = new Robot();

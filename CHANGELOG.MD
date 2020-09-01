@@ -1,4 +1,9 @@
+**V7.4.0 MC_1.16.2**
+
+*coming soon*
+
 **V7.3.0 MC_1.16.2**
+
 You can use the same settings file as before, but it is recommended to reset it to default since some settings changed,
 and some were renamed (see below).
 

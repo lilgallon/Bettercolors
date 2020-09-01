@@ -43,7 +43,7 @@ import java.util.HashMap;
 @Mod(Reference.MOD_ID)
 public class Bettercolors {
 
-    private BettercolorsEngine engine;
+    private final BettercolorsEngine ENGINE;
 
     /**
      * Called when forge needs to init our mod. This is the first "function" called. It is actually called the
@@ -54,11 +54,9 @@ public class Bettercolors {
         // functions with that annotation, and will register those functions automatically
         MinecraftForge.EVENT_BUS.register(this);
 
-        //System.setProperty("java.awt.headless", "false");
-
         // The engine will handle absolutely everything. We will just need to write some modules for the mod, the rest
         // is totally handled by the engine. :)
-        engine = new BettercolorsEngine();
+        ENGINE = new BettercolorsEngine();
 
         // Now we need to send some information about our mod to the engine
         HashMap<Class<? extends Module>, BettercolorsEngine.IntAndBoolean> modules = new HashMap<>();
@@ -71,7 +69,7 @@ public class Bettercolors {
         modules.put(TeamFilter.class, new BettercolorsEngine.IntAndBoolean(-1, false));
         modules.put(Antibot.class, new BettercolorsEngine.IntAndBoolean(-1, true));
 
-        engine.init(
+        ENGINE.init(
                 "Bettercolors " + Reference.MOD_VERSION + " for MC " + Reference.MC_VERSION + " (forge)",
                 Reference.MOD_VERSION,
                 Reference.MOD_VERSION_SUFFIX,
@@ -119,41 +117,41 @@ public class Bettercolors {
             }
         }
 
-        engine.event(EventType.WORLD_LOAD, event);
+        ENGINE.event(EventType.WORLD_LOAD, event);
     }
 
     @SubscribeEvent
     public void keyInputEvent(final InputEvent.KeyInputEvent event) {
-        engine.keyEvent(event.getKey(),event.getAction() != GLFW.GLFW_RELEASE);
+        ENGINE.keyEvent(event.getKey(),event.getAction() != GLFW.GLFW_RELEASE);
     }
     
     @SubscribeEvent
     public void mouseInputEvent(final InputEvent.MouseInputEvent event) {
-        engine.event(EventType.MOUSE_INPUT, event);
+        ENGINE.event(EventType.MOUSE_INPUT, event);
     }
 
     @SubscribeEvent
     public void renderTickEvent(final TickEvent.RenderTickEvent event){
-        engine.event(EventType.RENDER, event);
+        ENGINE.event(EventType.RENDER, event);
     }
 
     @SubscribeEvent
     public void entityJoinEvent(final EntityJoinWorldEvent event) {
-        engine.event(EventType.ENTITY_JOIN, event);
+        ENGINE.event(EventType.ENTITY_JOIN, event);
     }
 
     @SubscribeEvent
     public void entityLeaveEvent(final EntityLeaveWorldEvent event) {
-        engine.event(EventType.ENTITY_LEAVE, event);
+        ENGINE.event(EventType.ENTITY_LEAVE, event);
     }
 
     @SubscribeEvent
     public void entityAttackEvent(final LivingAttackEvent event) {
-        engine.event(EventType.ENTITY_ATTACK, event);
+        ENGINE.event(EventType.ENTITY_ATTACK, event);
     }
 
     @SubscribeEvent
     public void clientTickEvent(final TickEvent.ClientTickEvent event) {
-        engine.event(EventType.CLIENT_TICK, event);
+        ENGINE.event(EventType.CLIENT_TICK, event);
     }
 }

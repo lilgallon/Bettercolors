@@ -30,13 +30,6 @@
 - [![build](https://img.shields.io/github/workflow/status/N3ROO/Bettercolors/Build%20MC1.15.2?label=Bettercolors%206.1.2%20for%20MC1.15.2%20(forge))](https://github.com/N3ROO/Bettercolors/tree/MC_1.15.2)
 - [![build](https://img.shields.io/github/workflow/status/N3ROO/Bettercolors/Build%20MC1.16.1?label=Bettercolors%207.2.0%20for%20MC1.16.1%20(forge))](https://github.com/N3ROO/Bettercolors/tree/MC_1.16.1)
 
-
-## Last major changes
-
-- (7.1.0) Added **Reach**
-- (7.1.0) Added **Friend list**
-- (7.2.0) Added **Triggerbot** (can be seen as an autoclicker)
-
 ## Incoming changes
 
 See the github [projects](https://github.com/N3ROO/Bettercolors/projects) page.

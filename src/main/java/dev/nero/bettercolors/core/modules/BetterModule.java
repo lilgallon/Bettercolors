@@ -3,12 +3,21 @@ package dev.nero.bettercolors.core.modules;
 import dev.nero.bettercolors.core.events.EventType;
 import dev.nero.bettercolors.core.wrapper.Wrapper;
 import dev.nero.bettercolors.engine.module.Module;
+import net.minecraftforge.client.event.InputEvent;
+import org.lwjgl.glfw.GLFW;
 
 public class BetterModule extends Module {
 
     // Keys utility
     private boolean attack = false;
     private boolean use = false;
+
+    private boolean holdingAttack = false;
+    private boolean holdingUse = false;
+
+    // Used because events sucks and just after a RIGHT mouse press it sends a mouse release event
+    // but it works as intended for left click
+    private boolean fakeUseReleaseSent = false;
 
     /**
      * @param name        the name.
@@ -36,6 +45,8 @@ public class BetterModule extends Module {
         if (!this.isActivated()) {
             attack = false;
             use = false;
+            holdingAttack = false;
+            holdingUse = false;
         }
     }
 
@@ -44,6 +55,22 @@ public class BetterModule extends Module {
         if (code == EventType.MOUSE_INPUT) {
             attack = Wrapper.MC.gameSettings.keyBindAttack.isKeyDown();
             use = Wrapper.MC.gameSettings.keyBindUseItem.isKeyDown();
+
+            InputEvent.MouseInputEvent event = (InputEvent.MouseInputEvent ) details;
+            if (event.getButton() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+                holdingAttack = event.getAction() == GLFW.GLFW_PRESS;
+            } else {
+                if (event.getAction() == GLFW.GLFW_PRESS) {
+                    holdingUse = true;
+                    fakeUseReleaseSent = false;
+                } else {
+                    if (fakeUseReleaseSent) {
+                        holdingUse = false;
+                    }
+
+                    fakeUseReleaseSent = true;
+                }
+            }
         }
 
         this.onEvent(code, details);
@@ -67,5 +94,19 @@ public class BetterModule extends Module {
         boolean b = use;
         use = false;
         return b;
+    }
+
+    /**
+     * @return true if the left mouse click is being pressed
+     */
+    protected boolean playerHoldingAttack() {
+        return holdingAttack;
+    }
+
+    /**
+     * @return true if the right mouse click is being pressed
+     */
+    protected boolean playerHoldingUse() {
+        return holdingUse;
     }
 }

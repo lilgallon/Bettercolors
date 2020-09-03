@@ -69,6 +69,7 @@ public class AutoRightClick extends BetterModule {
 
             if (randomCps != 0) {
                 if (playerHoldingUse() && clickDelay.isDelayComplete(1000 / randomCps)) {
+                    this.ignoreNextRightClick();
                     Wrapper.click(65, false);
                     clickDelay.reset();
                 }

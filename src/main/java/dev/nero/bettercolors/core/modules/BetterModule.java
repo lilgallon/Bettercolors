@@ -15,9 +15,8 @@ public class BetterModule extends Module {
     private boolean holdingAttack = false;
     private boolean holdingUse = false;
 
-    // Used because events sucks and just after a RIGHT mouse press it sends a mouse release event
-    // but it works as intended for left click
-    private boolean fakeUseReleaseSent = false;
+    private int ignoringNextLeftClick = 0; // number of ignored events
+    private int ignoringNextRightClick = 0; // number of ignored events
 
     /**
      * @param name        the name.
@@ -53,24 +52,18 @@ public class BetterModule extends Module {
     @Override
     public void event(int code, Object details) {
         if (code == EventType.MOUSE_INPUT) {
-            attack = Wrapper.MC.gameSettings.keyBindAttack.isKeyDown();
-            use = Wrapper.MC.gameSettings.keyBindUseItem.isKeyDown();
+            if (this.ignoringNextLeftClick == 0) attack = Wrapper.MC.gameSettings.keyBindAttack.isKeyDown();
+            if (this.ignoringNextRightClick == 0) use = Wrapper.MC.gameSettings.keyBindUseItem.isKeyDown();
 
             InputEvent.MouseInputEvent event = (InputEvent.MouseInputEvent ) details;
             if (event.getButton() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-                holdingAttack = event.getAction() == GLFW.GLFW_PRESS;
+                if (this.ignoringNextLeftClick == 0) holdingAttack = event.getAction() == GLFW.GLFW_PRESS;
             } else {
-                if (event.getAction() == GLFW.GLFW_PRESS) {
-                    holdingUse = true;
-                    fakeUseReleaseSent = false;
-                } else {
-                    if (fakeUseReleaseSent) {
-                        holdingUse = false;
-                    }
-
-                    fakeUseReleaseSent = true;
-                }
+                if (this.ignoringNextRightClick == 0) holdingUse = event.getAction() == GLFW.GLFW_PRESS;
             }
+
+            if (this.ignoringNextRightClick != 0) this.ignoringNextRightClick --;
+            if (this.ignoringNextLeftClick != 0) this.ignoringNextLeftClick --;
         }
 
         this.onEvent(code, details);
@@ -109,4 +102,19 @@ public class BetterModule extends Module {
     protected boolean playerHoldingUse() {
         return holdingUse;
     }
+
+    /**
+     * If called, then it ignores the next left click event
+     */
+    public void ignoreNextLeftClick() {
+        this.ignoringNextLeftClick = 3;
+    }
+
+    /**
+     * If called, then it ignores the next right click event
+     */
+    public void ignoreNextRightClick() {
+        this.ignoringNextRightClick = 3;
+    }
+
 }

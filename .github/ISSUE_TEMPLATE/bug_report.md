@@ -1,3 +1,12 @@
+---
+name: Bug report
+about: Report a bug for this mod
+title: ''
+labels: ''
+assignees: ''
+
+---
+
 **Describe the bug:**
 
 _write here_

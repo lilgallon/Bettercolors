@@ -1,38 +1,18 @@
----
-name: Bug report
-about: Create a report to help us improve
-title: ''
-labels: ''
-assignees: ''
+**Describe the bug:**
 
----
+_write here_
 
-**Describe the bug**
-A clear and concise description of what the bug is.
+**To Reproduce (or what were you doing when it happened):**
 
-**To Reproduce**
-Steps to reproduce the behavior:
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
+_write here_
 
-**Expected behavior**
-A clear and concise description of what you expected to happen.
+**Screenshots (if applicable):**
 
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
+_write here_
 
-**Desktop (please complete the following information):**
- - OS: [e.g. iOS]
- - Browser [e.g. chrome, safari]
- - Version [e.g. 22]
+**Crash log:**
 
-**Smartphone (please complete the following information):**
- - Device: [e.g. iPhone6]
- - OS: [e.g. iOS8.1]
- - Browser [e.g. stock browser, safari]
- - Version [e.g. 22]
+_write here_
 
-**Additional context**
-Add any other context about the problem here.
+- **Have you tried running the mod using the option debug=true**: yes / no
+- **Have you tried deleting the config files? (minecraft/config/bc_filename.properties)**: yes / no

@@ -68,6 +68,7 @@ public class Bettercolors {
         modules.put(Triggerbot.class, new BettercolorsEngine.IntAndBoolean(-1, false));
         modules.put(TeamFilter.class, new BettercolorsEngine.IntAndBoolean(-1, false));
         modules.put(Antibot.class, new BettercolorsEngine.IntAndBoolean(-1, true));
+        modules.put(AutoRightClick.class, new BettercolorsEngine.IntAndBoolean(-1, true));
 
         ENGINE.init(
                 "Bettercolors " + Reference.MOD_VERSION + " for MC " + Reference.MC_VERSION + " (forge)",

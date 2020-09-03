@@ -20,7 +20,6 @@ package dev.nero.bettercolors.core.wrapper;
 
 import dev.nero.bettercolors.core.modules.Antibot;
 import dev.nero.bettercolors.core.modules.TeamFilter;
-import dev.nero.bettercolors.engine.BettercolorsEngine;
 import dev.nero.bettercolors.engine.utils.Friends;
 import dev.nero.bettercolors.engine.utils.TimeHelper;
 import dev.nero.bettercolors.engine.view.Window;

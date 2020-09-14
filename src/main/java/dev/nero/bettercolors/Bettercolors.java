@@ -70,6 +70,7 @@ public class Bettercolors {
         modules.put(Antibot.class, new BettercolorsEngine.IntAndBoolean(-1, true));
         modules.put(AutoRightClick.class, new BettercolorsEngine.IntAndBoolean(-1, true));
         modules.put(AutoUse.class, new BettercolorsEngine.IntAndBoolean(-1, true));
+        modules.put(Panic.class, new BettercolorsEngine.IntAndBoolean(-1, true));
 
         ENGINE.init(
                 "Bettercolors " + Reference.MOD_VERSION + " for MC " + Reference.MC_VERSION + " (forge)",

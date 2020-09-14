@@ -1,8 +1,11 @@
-**V7.4.0 MC_1.16.2**
+**V7.4.0 MC_1.16.3**
 
 **Modules:**
 - Added Auto Right Click (#75): can be used to fast place blocks for speed bridging
 - Added Auto Use (#73): can be used as an auto pot, auto rod, auto soup for example
+
+**Misc:**
+- Should be compatible with MC 1.16.1 and MC 1.16.2
 
 **V7.3.0 MC_1.16.2**
 

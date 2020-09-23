@@ -54,6 +54,9 @@ public class Bettercolors {
         // functions with that annotation, and will register those functions automatically
         MinecraftForge.EVENT_BUS.register(this);
 
+        // TODO: remove for release
+        BettercolorsEngine.DEBUG = true;
+
         // The engine will handle absolutely everything. We will just need to write some modules for the mod, the rest
         // is totally handled by the engine. :)
         ENGINE = new BettercolorsEngine();
@@ -71,6 +74,7 @@ public class Bettercolors {
         modules.put(AutoRightClick.class, new BettercolorsEngine.IntAndBoolean(-1, true));
         modules.put(AutoUse.class, new BettercolorsEngine.IntAndBoolean(-1, true));
         modules.put(Panic.class, new BettercolorsEngine.IntAndBoolean(-1, true));
+        modules.put(SpeedBridging.class, new BettercolorsEngine.IntAndBoolean(-1, true));
 
         ENGINE.init(
                 "Bettercolors " + Reference.MOD_VERSION + " for MC " + Reference.MC_VERSION + " (forge)",

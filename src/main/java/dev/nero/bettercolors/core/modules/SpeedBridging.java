@@ -7,8 +7,10 @@ import dev.nero.bettercolors.engine.option.Option;
 import dev.nero.bettercolors.engine.option.ValueOption;
 import dev.nero.bettercolors.engine.utils.MathUtils;
 import dev.nero.bettercolors.engine.utils.TimeHelper;
+import dev.nero.bettercolors.engine.view.Window;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class SpeedBridging extends Module {
 
@@ -38,30 +40,46 @@ public class SpeedBridging extends Module {
     static {
         DEFAULT_OPTIONS = new ArrayList<>();
 
-        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, SNEAK_DELAY_MIN, DESC_SNEAK_DELAY_MIN, 100, 50, 1000, 25, 50));
-        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, SNEAK_DELAY_MAX, DESC_SNEAK_DELAY_MAX, 200, 100, 1000, 25, 50));
-        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, SNEAK_TIME, DESC_SNEAK_TIME, 100, 50, 1000, 25, 50));
+        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, SNEAK_DELAY_MIN, DESC_SNEAK_DELAY_MIN, 140, 50, 1000, 25, 50));
+        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, SNEAK_DELAY_MAX, DESC_SNEAK_DELAY_MAX, 180, 100, 1000, 25, 50));
+        DEFAULT_OPTIONS.add(new ValueOption(PREFIX, SNEAK_TIME, DESC_SNEAK_TIME, 350, 50, 1000, 25, 50));
     }
 
     // Utility attributes
-    private final TimeHelper delay; // used to keep track of the time between each sneak
-    private final TimeHelper timer; // used to keep track of the sneak duration
+    private final TimeHelper sneakDelay; // used to keep track of the time between each sneak
+    private final TimeHelper sneakDuration; // used to keep track of the sneak duration
     private boolean forceSneak = false;
 
-    protected SpeedBridging(Integer toggleKey, Boolean isActivated) {
+    public SpeedBridging(Integer toggleKey, Boolean isActivated, Map<String, String> givenOptions) {
         super("Speed bridging", DESCRIPTION, toggleKey, isActivated, "unknown.png", PREFIX);
+        this.loadOptionsAccordingTo(DEFAULT_OPTIONS, givenOptions);
 
-        this.delay = new TimeHelper();
-        this.delay.start();
+        this.sneakDelay = new TimeHelper();
+        this.sneakDelay.start();
 
-        this.timer = new TimeHelper();
-        this.timer.start();
+        this.sneakDuration = new TimeHelper();
+        this.sneakDuration.start();
     }
 
     @Override
     protected void onToggle(boolean toggle, boolean isTriggeredByKeybind) {
         if (toggle) {
-            this.delay.start();
+            this.sneakDelay.start();
+        }
+    }
+
+    @Override
+    protected void onOptionChange(Option option, Object oldValue) {
+        if (option.getName().equals(SNEAK_DELAY_MIN)) {
+            if (((ValueOption) option).getVal() > this.getOptionI(I_SNEAK_DELAY_MAX)) {
+                ((ValueOption) option).setVal((int) oldValue);
+                Window.getInstance().synchronizeComponents();
+            }
+        } else if (option.getName().equals(SNEAK_DELAY_MAX)) {
+            if (((ValueOption) option).getVal() < this.getOptionI(I_SNEAK_DELAY_MIN)) {
+                ((ValueOption) option).setVal((int) oldValue);
+                Window.getInstance().synchronizeComponents();
+            }
         }
     }
 
@@ -74,23 +92,26 @@ public class SpeedBridging extends Module {
         if (code == EventType.CLIENT_TICK) {
             int randomDelay = MathUtils.random(getOptionI(I_SNEAK_DELAY_MIN), getOptionI(I_SNEAK_DELAY_MAX));
 
-            if (this.delay.isStopped()) {
-                if (this.timer.isDelayComplete(getOptionI(I_SNEAK_TIME))) {
-                    this.timer.stop();
-                    this.delay.start();
 
-                    this.forceSneak = true;
+            if (this.sneakDelay.isStopped()) {
+                if (this.sneakDuration.isDelayComplete(getOptionI(I_SNEAK_TIME))) {
+                    this.sneakDuration.stop();
+                    this.sneakDelay.start();
+
+                    this.forceSneak = false;
                 }
-            } if (delay.isDelayComplete(randomDelay)) {
-                this.delay.stop();
-                this.timer.start();
+            } else if (sneakDelay.isDelayComplete(randomDelay)) {
+                this.sneakDelay.stop();
+                this.sneakDuration.start();
 
-                this.forceSneak = false;
+                this.forceSneak = true;
             }
         }
 
         if (this.forceSneak) {
-            Wrapper.MC.player.setSneaking(true);
+            Wrapper.MC.gameSettings.keyBindSneak.setPressed(true);
+        } else {
+            Wrapper.MC.gameSettings.keyBindSneak.setPressed(false);
         }
     }
 
@@ -98,6 +119,6 @@ public class SpeedBridging extends Module {
      * Used by the engine (reflection)
      */
     public static ArrayList<Option> getDefaultOptions(){
-        return new ArrayList<>();
+        return DEFAULT_OPTIONS;
     }
 }

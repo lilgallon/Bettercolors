@@ -19,6 +19,7 @@ package dev.nero.bettercolors.core.modules;
 import dev.nero.bettercolors.engine.BettercolorsEngine;
 import dev.nero.bettercolors.engine.module.Module;
 import dev.nero.bettercolors.engine.option.Option;
+import dev.nero.bettercolors.engine.view.Window;
 
 import java.util.ArrayList;
 
@@ -37,10 +38,12 @@ public class Panic extends Module {
         if (toggle) {
             // just turned on, we can disable all the modules
             for (Module module : BettercolorsEngine.getInstance().getModules()) {
-                if (module.isActivated()) {
+                if (module.isActivated() && !(module instanceof Panic)) {
                     module.toggle(false);
                 }
             }
+
+            Window.getInstance().synchronizeComponents();
 
             // turn it back off
             this.toggle(false);

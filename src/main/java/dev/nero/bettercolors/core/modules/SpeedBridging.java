@@ -71,13 +71,15 @@ public class SpeedBridging extends Module {
     @Override
     protected void onOptionChange(Option option, Object oldValue) {
         if (option.getName().equals(SNEAK_DELAY_MIN)) {
+            // If the min is greater than the max, then set the max to min +1
             if (((ValueOption) option).getVal() > this.getOptionI(I_SNEAK_DELAY_MAX)) {
-                ((ValueOption) option).setVal((int) oldValue);
+                ((ValueOption) this.options.get(I_SNEAK_DELAY_MAX)).setVal(((ValueOption) option).getVal() + 1);
                 Window.getInstance().synchronizeComponents();
             }
         } else if (option.getName().equals(SNEAK_DELAY_MAX)) {
+            // If the max is less than the min, then set the min to max -1
             if (((ValueOption) option).getVal() < this.getOptionI(I_SNEAK_DELAY_MIN)) {
-                ((ValueOption) option).setVal((int) oldValue);
+                ((ValueOption) this.options.get(I_SNEAK_DELAY_MIN)).setVal(((ValueOption) option).getVal() - 1);
                 Window.getInstance().synchronizeComponents();
             }
         }

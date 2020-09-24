@@ -1,10 +1,10 @@
-name: Build MC1.16.2
+name: Build MC1.16.3
 
 on:
   pull_request:
-    branches: MC_1.16.2
+    branches: MC_1.16.3
   push:
-    branches: MC_1.16.2
+    branches: MC_1.16.3
 
 jobs:
   build:

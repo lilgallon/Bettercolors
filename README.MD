@@ -6,12 +6,10 @@
 </h3>
 
 <p align="center">
-  A silent "hack" built with forgeand fabric. It bypasses powerful anticheats to help you improve your gameplay. More than 1000 commits, and exists since September 2017. Designed to be lightweight and easy to update. Powered by <a href="https://github.com/N3ROO/BettercolorsEngine">BettercolorsEngine</a>.
+  An assistance mod built with forge and fabric. More than 1000 commits, and exists since September 2017. Designed to be lightweight and easy to update. Powered by <a href="https://github.com/N3ROO/BettercolorsEngine">BettercolorsEngine</a>.
 </p>
 
 <h3 align="center">
-  <b>Reach 💥 Aim Assistance 💥 Click Assistance 💥 Auto Sprint 💥 Auto Sword 💥 Triggerbot / Autoclick 💥 Antibot 💥 And more to come...</b>
-  <br><br>
   <img src=".github/illustration.gif">
 </h3>
 

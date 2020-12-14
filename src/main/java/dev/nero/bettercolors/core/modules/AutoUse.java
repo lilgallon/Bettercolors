@@ -3,8 +3,11 @@ package dev.nero.bettercolors.core.modules;
 import dev.nero.bettercolors.core.events.EventType;
 import dev.nero.bettercolors.core.wrapper.Wrapper;
 import dev.nero.bettercolors.engine.module.Module;
+import dev.nero.bettercolors.engine.option.Option;
 import dev.nero.bettercolors.engine.utils.TimeHelper;
 import net.minecraft.item.SwordItem;
+
+import java.util.ArrayList;
 
 public class AutoUse extends Module {
 
@@ -73,5 +76,12 @@ public class AutoUse extends Module {
     private boolean isSword(int slot) {
         if (slot < 0 || slot > 9) return false;
         return Wrapper.MC.player.inventory.mainInventory.get(slot).getItem() instanceof SwordItem;
+    }
+
+    /**
+     * Used by the engine (reflection)
+     */
+    public static ArrayList<Option> getDefaultOptions(){
+        return new ArrayList<>();
     }
 }

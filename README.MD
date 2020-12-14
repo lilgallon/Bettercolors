@@ -6,7 +6,7 @@
 - Bettercolors version: `7.3.0`
 - Forge version used: `33.0.20`
 - Bettercolors Engine version: `1.1.0`
-- Maintained: `yes until MC1.17 release`
+- Maintained: `no, replaced by MC1.16.4`
 - Changelog: [here](CHANGELOG.MD)
 
 

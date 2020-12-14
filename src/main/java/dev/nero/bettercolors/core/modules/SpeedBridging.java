@@ -51,7 +51,7 @@ public class SpeedBridging extends Module {
     private boolean forceSneak = false;
 
     public SpeedBridging(Integer toggleKey, Boolean isActivated, Map<String, String> givenOptions) {
-        super("Speed bridging", DESCRIPTION, toggleKey, isActivated, "unknown.png", PREFIX);
+        super("Speed bridging", DESCRIPTION, toggleKey, isActivated, "bridge.png", PREFIX);
         this.loadOptionsAccordingTo(DEFAULT_OPTIONS, givenOptions);
 
         this.sneakDelay = new TimeHelper();

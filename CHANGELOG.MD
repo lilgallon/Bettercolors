@@ -6,6 +6,10 @@
 - Added Panic (#76): it turns all the modules off (it does not write the changes to the config file, you can load the config file to restore)
 - Added Speed Bridging (#72) *experimental*: people usually call this scaffolding
 
+**Bettercolors engine 1.1.1:**
+- Fixed synchronization issue with sliders
+- Fixed toggle key display issue when a module's toggle key is not set
+
 **V7.3.0 MC_1.16.2**
 
 You can use the same settings file as before, but it is recommended to reset it to default since some settings changed,

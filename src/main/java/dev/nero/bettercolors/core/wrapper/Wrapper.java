@@ -40,7 +40,7 @@ import java.awt.event.InputEvent;
 import java.util.List;
 
 /**
- * This class needs to contains everything directly related to Minecraft forge 1.16.2. The modules need to be coded in a
+ * This class needs to contains everything directly related to Minecraft forge 1.16.4. The modules need to be coded in a
  * way that we just need to change the wrapper for them to work on a different MC version.
  */
 public class Wrapper {

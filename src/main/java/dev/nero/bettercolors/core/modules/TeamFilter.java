@@ -54,7 +54,7 @@ public class TeamFilter extends Module {
      */
     private Color getColor(PlayerEntity e){
         if (!e.getDisplayName().getSiblings().isEmpty()) {
-            return e.getDisplayName().getSiblings().get(0).getStyle().func_240711_a_();
+            return e.getDisplayName().getSiblings().get(0).getStyle().getColor();
         } else {
             return null;
         }

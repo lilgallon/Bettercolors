@@ -1,13 +1,10 @@
-**V7.4.0 MC_1.16.3**
+**V7.4.0 MC_1.16.4**
 
 **Modules:**
 - Added Auto Right Click (#75): can be used to fast place blocks for speed bridging
-- Added Auto Use (#73): can be used as an auto pot, auto rod, auto soup for example
+- Added Auto Use (#73) *experimental*: can be used as an auto pot, auto rod, auto soup for example
 - Added Panic (#76): it turns all the modules off (it does not write the changes to the config file, you can load the config file to restore)
-- Added Speed Bridging (#72): people usually call this scaffolding
-
-**Misc:**
-- Should be compatible with MC 1.16.1 and MC 1.16.2
+- Added Speed Bridging (#72) *experimental*: people usually call this scaffolding
 
 **V7.3.0 MC_1.16.2**
 

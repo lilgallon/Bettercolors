@@ -19,7 +19,7 @@ public class AutoUse extends Module {
         super("Auto use",
                 "Can be used as an autorod, autopot, autosoup, ... When you select something else than a " +
                         "sword, it uses that item, and then it reselects the sword",
-                toggleKey, isActivated, "unknown.png", "AU");
+                toggleKey, isActivated, "unknown.png", "AU", true);
 
         this.usingTimer = new TimeHelper();
     }

@@ -12,6 +12,6 @@ public class MouseMixin {
 
     @Inject(method = "onMouseButton(JIII)V", at = @At("TAIL"))
     private void mouseEvent(long window, int button, int action, int mods, CallbackInfo info) {
-        OnMouseInputCallback.EVENT.invoker().trigger();
+        OnMouseInputCallback.EVENT.invoker().trigger(button, action, mods);
     }
 }

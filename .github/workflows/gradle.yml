@@ -1,10 +1,10 @@
-name: Build MC1.16.2_fabric
+name: Build MC1.16.4_fabric
 
 on:
   pull_request:
-    branches: MC_1.16.2_fabric
+    branches: MC_1.16.4_fabric
   push:
-    branches: MC_1.16.2_fabric
+    branches: MC_1.16.4_fabric
 
 jobs:
   build:

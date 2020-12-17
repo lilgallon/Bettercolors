@@ -63,9 +63,9 @@ public class Bettercolors implements ModInitializer {
             Window.INFO("[+] Bettercolors " + Reference.MOD_VERSION + " loaded");
         });
 
-        OnWorldLoadCallback.EVENT.register(() -> {
-            engine.event(EventType.WORLD_LOAD, null);
-        });
+        OnWorldLoadCallback.EVENT.register(
+                () -> engine.event(EventType.WORLD_LOAD, null)
+        );
 
         OnKeyInputEvent.EVENT.register(() -> {
             final long HANDLE = MinecraftClient.getInstance().getWindow().getHandle();
@@ -80,35 +80,28 @@ public class Bettercolors implements ModInitializer {
             }
         });
 
-        OnRenderCallback.EVENT.register(() -> {
-            engine.event(EventType.RENDER, null);
-        });
+        OnRenderCallback.EVENT.register(
+                () -> engine.event(EventType.RENDER, null)
+        );
 
-        OnMouseInputCallback.EVENT.register((button, action, mods) -> {
-           engine.event(EventType.MOUSE_INPUT, new MouseInput(button, action));
-        });
+        OnMouseInputCallback.EVENT.register(
+                (button, action, mods) -> engine.event(EventType.MOUSE_INPUT, new MouseInput(button, action))
+        );
 
-        OnClientTickCallback.EVENT.register(() -> {
-            engine.event(EventType.CLIENT_TICK, null);
-        });
+        OnClientTickCallback.EVENT.register(
+                () -> engine.event(EventType.CLIENT_TICK, null)
+        );
 
-        OnEntityJoinCallback.EVENT.register((entity) -> {
-            engine.event(EventType.ENTITY_JOIN, entity);
-        });
+        OnEntityJoinCallback.EVENT.register(
+                (entity) -> engine.event(EventType.ENTITY_JOIN, entity)
+        );
 
-        OnEntityLeaveCallback.EVENT.register((entity) -> {
-            engine.event(EventType.ENTITY_LEAVE, entity);
-        });
+        OnEntityLeaveCallback.EVENT.register(
+                (entity) -> engine.event(EventType.ENTITY_LEAVE, entity)
+        );
 
-        OnEntityDamageCallback.EVENT.register((info) -> {
-            /*
-            System.out.println("Damage event: " +
-                    info.getTarget().getName().getString() + " | " +
-                    (info.getSource().getAttacker() != null ? info.getSource().getAttacker().getName().getString() : info.getSource().getName()) + " | " +
-                    info.getDamageAmount() + " | " +
-                    info.getOriginalHealth()
-            );*/
-            engine.event(EventType.ENTITY_DAMAGE, info);
-        });
+        OnEntityDamageCallback.EVENT.register(
+                (info) -> engine.event(EventType.ENTITY_DAMAGE, info)
+        );
     }
 }

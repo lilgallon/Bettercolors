@@ -55,7 +55,10 @@ public class Bettercolors {
         MinecraftForge.EVENT_BUS.register(this);
 
         // TODO: remove for release
-        BettercolorsEngine.DEBUG = true;
+        // BettercolorsEngine.DEBUG = true;
+
+        // Fixes headless issue for some users
+        System.setProperty("java.awt.headless", "false");
 
         // The engine will handle absolutely everything. We will just need to write some modules for the mod, the rest
         // is totally handled by the engine. :)

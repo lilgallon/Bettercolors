@@ -37,7 +37,7 @@ authors="nero!" #optional
 modId="mcp" #mandatory
 
 # The version number of the mod
-version="7.4.0" #mandatory
+version="7.4.1" #mandatory
 
 # A display name for the mod
 displayName="Bettercolors" #mandatory

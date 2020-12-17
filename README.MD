@@ -19,7 +19,7 @@
 **Currently maintained:**
 - [![build](https://img.shields.io/github/workflow/status/N3ROO/Bettercolors/Build%20MC1.8.9?label=Bettercolors%207.3.0%20for%20MC1.8.9%20(forge))](https://github.com/N3ROO/Bettercolors/tree/MC_1.8.9)
 - [![build](https://img.shields.io/github/workflow/status/N3ROO/Bettercolors/Build%20MC1.16.4?label=Bettercolors%207.4.0%20for%20MC1.16.4%20(forge))](https://github.com/N3ROO/Bettercolors/tree/MC_1.16.4)
-- [![build](https://img.shields.io/github/workflow/status/N3ROO/Bettercolors/Build%20MC1.16.4_fabric?label=Bettercolors%207.3.0%20for%20MC1.16.4%20(fabric))](https://github.com/N3ROO/Bettercolors/tree/MC_1.16.4_fabric) 
+- [![build](https://img.shields.io/github/workflow/status/N3ROO/Bettercolors/Build%20MC1.16.4_fabric?label=Bettercolors%207.4.0%20for%20MC1.16.4%20(fabric))](https://github.com/N3ROO/Bettercolors/tree/MC_1.16.4_fabric) 
 
 **Not maintained anymore:**
 - [![build](https://img.shields.io/github/workflow/status/N3ROO/Bettercolors/Build%20MC1.12.2?label=Bettercolors%206.1.0%20for%20MC1.12.2%20(forge))](https://github.com/N3ROO/Bettercolors/tree/MC_1.12.2)

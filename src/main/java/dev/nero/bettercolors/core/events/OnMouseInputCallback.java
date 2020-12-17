@@ -6,11 +6,11 @@ import dev.nero.bettercolors.core.events.fabricapi.EventFactory;
 public interface OnMouseInputCallback {
 
     Event<OnMouseInputCallback> EVENT = EventFactory.createArrayBacked(OnMouseInputCallback.class,
-            (listeners) -> () -> {
+            (listeners) -> (button, action, mod) -> {
                 for (OnMouseInputCallback listener : listeners) {
-                    listener.trigger();
+                    listener.trigger(button, action, mod);
                 }
             });
 
-    void trigger();
+    void trigger(int button, int action, int mod);
 }

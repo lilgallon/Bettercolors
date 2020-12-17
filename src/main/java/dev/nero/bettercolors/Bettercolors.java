@@ -77,8 +77,8 @@ public class Bettercolors implements ModInitializer {
             engine.event(EventType.RENDER, null);
         });
 
-        OnMouseInputCallback.EVENT.register(() -> {
-           engine.event(EventType.MOUSE_INPUT, null);
+        OnMouseInputCallback.EVENT.register((button, action, mods) -> {
+           engine.event(EventType.MOUSE_INPUT, new MouseInput(button, action));
         });
 
         OnClientTickCallback.EVENT.register(() -> {

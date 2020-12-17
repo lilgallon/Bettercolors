@@ -1,13 +1,20 @@
 **V7.4.0 MC_1.16.4**
 
-wip
+*You need fabricloader >= 0.9.0*
+
+- Added Auto Right Click (#75): can be used to fast place blocks for speed bridging
+- Added Auto Use (#73) experimental: can be used as an auto pot, auto rod, auto soup for example
+- Added Panic (#76): it turns all the modules off (it does not write the changes to the config file, you can load the config file to restore)
+- Added Speed Bridging (#72) experimental: people usually call this scaffolding
 
 **V7.3.0 MC_1.16.4**
+
 It is the same version as V7.3.0 MC_1.16.2. The engine has been updated to 1.1.1. You need:
 - fabricloader >= 0.9.0
 - mc: 1.16.4
 
 **V7.3.0 MC_1.16.2**
+
 You can use the same settings file as before, but it is recommended to reset it to default since some settings changed,
 and some were renamed (see below).
 

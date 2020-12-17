@@ -18,6 +18,9 @@ public class Bettercolors implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        // Fixes headless issue for some users
+        System.setProperty("java.awt.headless", "false");
+
         // The engine will handle absolutely everything. We will just need to write some modules for the mod, the rest
         // is totally handled by the engine. :)
         engine = new BettercolorsEngine();
@@ -36,6 +39,10 @@ public class Bettercolors implements ModInitializer {
         modules.put(Triggerbot.class, new BettercolorsEngine.IntAndBoolean(-1, false));
         modules.put(TeamFilter.class, new BettercolorsEngine.IntAndBoolean(-1, false));
         modules.put(Antibot.class, new BettercolorsEngine.IntAndBoolean(-1, true));
+        modules.put(AutoRightClick.class, new BettercolorsEngine.IntAndBoolean(-1, true));
+        modules.put(AutoUse.class, new BettercolorsEngine.IntAndBoolean(-1, true));
+        modules.put(Panic.class, new BettercolorsEngine.IntAndBoolean(-1, true));
+        modules.put(SpeedBridging.class, new BettercolorsEngine.IntAndBoolean(-1, true));
 
         // Important! If GLFW is not init, we won't be able to use GLFW.getKeyName which would create a crash that is
         // super hard to debug

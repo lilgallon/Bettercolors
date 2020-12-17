@@ -86,7 +86,7 @@ public class Triggerbot extends Module {
                 if (!pointedEntity.isInvisibleTo(Wrapper.MC.player) && Wrapper.canAttack((LivingEntity) pointedEntity)) {
                     // attack
                     timeout.start();
-                    Wrapper.click(166); // 6 cps max
+                    Wrapper.click(166, true); // 6 cps max
                 }
             }
         }

@@ -219,7 +219,7 @@ public class ClickAssistance extends BetterModule {
                 Wrapper.MC.interactionManager.attackEntity(Wrapper.MC.player, Wrapper.MC.targetedEntity);
                 Wrapper.MC.player.swingHand(Hand.MAIN_HAND);
             } else {
-                Wrapper.click();
+                Wrapper.leftClick();
             }
         }
 

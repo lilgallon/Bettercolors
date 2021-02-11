@@ -14,7 +14,7 @@ buildscript {
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "7.3.0-MC1.8.9"
+version = "7.4.0-MC1.8.9"
 group = "dev.nero.bettercolors.main"
 archivesBaseName = "bettercolors"
 
@@ -35,6 +35,7 @@ configurations {
 
 dependencies {
     inJar "io.github.vincenzopalazzo:material-ui-swing:1.1.1"
+    inJar 'dev.nero:bettercolors-engine:1.1.1'
 }
 
 jar {

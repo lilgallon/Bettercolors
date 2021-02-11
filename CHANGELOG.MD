@@ -1,3 +1,8 @@
+**V7.4.0 MC_1.16.5**
+
+- Same as **V7.4.0 MC_1.16.4**
+- Speedbridging, autouse, panic and autorightclick are disabled by default
+
 **V7.4.0 MC_1.16.4**
 
 *You need fabricloader >= 0.9.0*

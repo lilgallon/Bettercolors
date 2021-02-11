@@ -24,6 +24,7 @@ import dev.nero.bettercolors.core.hijacks.EntityRendererHijack;
 import dev.nero.bettercolors.core.modules.*;
 import dev.nero.bettercolors.core.wrapper.Wrapper;
 import net.minecraft.client.multiplayer.WorldClient;
+import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
@@ -74,6 +75,10 @@ public class Bettercolors {
         modules.put(Triggerbot.class, new BettercolorsEngine.IntAndBoolean(-1, false));
         modules.put(TeamFilter.class, new BettercolorsEngine.IntAndBoolean(-1, false));
         modules.put(Antibot.class, new BettercolorsEngine.IntAndBoolean(-1, false));
+        modules.put(AutoRightClick.class, new BettercolorsEngine.IntAndBoolean(-1, false));
+        modules.put(AutoUse.class, new BettercolorsEngine.IntAndBoolean(-1, false));
+        modules.put(Panic.class, new BettercolorsEngine.IntAndBoolean(-1, false));
+        modules.put(SpeedBridging.class, new BettercolorsEngine.IntAndBoolean(-1, false));
 
         engine.init(
                 "Bettercolors " + Reference.MOD_VERSION + " for MC " + Reference.MC_VERSION + " (forge)",
@@ -106,7 +111,7 @@ public class Bettercolors {
     }
 
     @SubscribeEvent
-    public void mouseInputEvent(InputEvent.MouseInputEvent event) {
+    public void mouseInputEvent(MouseEvent event) {
         this.engine.event(EventType.MOUSE_INPUT, event);
     }
 

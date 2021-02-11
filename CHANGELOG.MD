@@ -1,3 +1,13 @@
+**V7.4.0 MC_1.8.9**
+
+- Added Auto Right Click (#75): can be used to fast place blocks for speed bridging
+- Added Auto Use (#73) experimental: can be used as an auto pot, auto rod, auto soup for example
+- Added Panic (#76): it turns all the modules off (it does not write the changes to the config file, you can load the config file to restore)
+- Added Speed Bridging (#72) experimental: people usually call this scaffolding
+
+**Bettercolors engine 1.1.1:**
+- See [changelog here](https://github.com/N3ROO/BettercolorsEngine/blob/master/CHANGELOG.MD)
+
 **V7.3.0 MC_1.8.9**
 
 You can use the same settings file as before, but it is recommended to reset it to default since some settings changed,

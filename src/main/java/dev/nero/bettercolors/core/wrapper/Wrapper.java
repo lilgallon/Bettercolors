@@ -32,6 +32,7 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 
 import java.awt.*;
+import java.awt.event.InputEvent;
 import java.util.List;
 
 /**
@@ -41,9 +42,10 @@ public class Wrapper {
 
     public final static Minecraft MC = Minecraft.getMinecraft();
 
-    private final static TimeHelper delay = new TimeHelper();
-    private static Robot robot;
+    private final static TimeHelper delayLeft = new TimeHelper();
+    private final static TimeHelper delayRight = new TimeHelper();
 
+    private static Robot robot;
     static {
         try {
             robot = new Robot();
@@ -52,7 +54,8 @@ public class Wrapper {
             Window.ERROR("Could not create robot to generate fake clicks");
         }
 
-        delay.start();
+        delayLeft.start();
+        delayRight.start();
     }
 
     /**
@@ -68,12 +71,21 @@ public class Wrapper {
     }
 
     /**
-     * Human-like click (fake mouse click).
+     * Human-like left click (fake mouse click).
      *
      * With a security (100 ms min between clicks) -> 10 CPS max allowed
      */
-    public static void click() {
-        Wrapper.click(100);
+    public static void leftClick() {
+        Wrapper.click(100, true);
+    }
+
+    /**
+     * Human-like right click (fake mouse click).
+     *
+     * With a security (100 ms min between clicks) -> 10 CPS max allowed
+     */
+    public static void rightClick() {
+        Wrapper.click(100, false);
     }
 
     /**
@@ -81,14 +93,16 @@ public class Wrapper {
      *
      * @param minDelay minimum delay between each click. If not sure, use Wrapper#click()
      */
-    public static void click(int minDelay) {
-        if (delay.isDelayComplete(minDelay)){
+    public static void click(int minDelay, boolean left) {
+        if (left ? delayLeft.isDelayComplete(minDelay) : delayRight.isDelayComplete(minDelay)){
             if (robot != null) {
-                robot.mouseRelease(16);
-                robot.mousePress(16);
-                robot.mouseRelease(16);
+                robot.mouseRelease(left ? InputEvent.BUTTON1_DOWN_MASK : InputEvent.BUTTON3_DOWN_MASK);
+                robot.mousePress(left ? InputEvent.BUTTON1_DOWN_MASK : InputEvent.BUTTON3_DOWN_MASK);
+                robot.mouseRelease(left ? InputEvent.BUTTON1_DOWN_MASK : InputEvent.BUTTON3_DOWN_MASK);
             }
-            delay.reset();
+
+            if (left) delayLeft.reset();
+            else delayRight.reset();
         }
     }
 
@@ -198,7 +212,7 @@ public class Wrapper {
         // We calculate the yaw/pitch difference between the target and the player
         float[] yawPitch = getYawPitchBetween(Wrapper.MC.thePlayer, entity);
 
-        // We make sure that it's absolute, because the sign may change if we invert entity and MC.player
+        // We make sure that it's absolute, because the sign may change if we invert entity and MC.thePlayer
         //float yaw = MathHelper.abs(yawPitch[0]);
         //float pitch = MathHelper.abs(yawPitch[1]);
         float yaw = yawPitch[0];

@@ -3,12 +3,21 @@ package dev.nero.bettercolors.core.modules;
 import dev.nero.bettercolors.core.events.EventType;
 import dev.nero.bettercolors.core.wrapper.Wrapper;
 import dev.nero.bettercolors.engine.module.Module;
+import net.minecraftforge.client.event.MouseEvent;
+import net.minecraftforge.fml.common.gameevent.InputEvent;
+import org.lwjgl.input.Mouse;
 
 public class BetterModule extends Module {
 
     // Keys utility
     private boolean attack = false;
     private boolean use = false;
+
+    private boolean holdingAttack = false;
+    private boolean holdingUse = false;
+
+    private int ignoringNextLeftClick = 0; // number of ignored events
+    private int ignoringNextRightClick = 0; // number of ignored events
 
     /**
      * @param name        the name.
@@ -36,14 +45,24 @@ public class BetterModule extends Module {
         if (!this.isActivated()) {
             attack = false;
             use = false;
+            holdingAttack = false;
+            holdingUse = false;
         }
     }
 
     @Override
     public void event(int code, Object details) {
         if (code == EventType.MOUSE_INPUT) {
-            attack = Wrapper.MC.gameSettings.keyBindAttack.isKeyDown();
-            use = Wrapper.MC.gameSettings.keyBindUseItem.isKeyDown();
+            if (this.ignoringNextLeftClick == 0) attack = Wrapper.MC.gameSettings.keyBindAttack.isKeyDown();
+            if (this.ignoringNextRightClick == 0) use = Wrapper.MC.gameSettings.keyBindUseItem.isKeyDown();
+
+            MouseEvent event = (MouseEvent) details;
+
+            if (event.button == 0 && this.ignoringNextLeftClick == 0) holdingAttack = event.buttonstate;
+            if (event.button == 1 && this.ignoringNextRightClick == 0) holdingUse = event.buttonstate;
+
+            if (event.button == 0 && this.ignoringNextLeftClick > 0) this.ignoringNextLeftClick --;
+            if (event.button == 1 && this.ignoringNextRightClick > 0) this.ignoringNextRightClick --;
         }
 
         this.onEvent(code, details);
@@ -68,4 +87,33 @@ public class BetterModule extends Module {
         use = false;
         return b;
     }
+
+    /**
+     * @return true if the left mouse click is being pressed
+     */
+    protected boolean playerHoldingAttack() {
+        return holdingAttack;
+    }
+
+    /**
+     * @return true if the right mouse click is being pressed
+     */
+    protected boolean playerHoldingUse() {
+        return holdingUse;
+    }
+
+    /**
+     * If called, then it ignores the next left click event
+     */
+    public void ignoreNextLeftClick() {
+        this.ignoringNextLeftClick = 3;
+    }
+
+    /**
+     * If called, then it ignores the next right click event
+     */
+    public void ignoreNextRightClick() {
+        this.ignoringNextRightClick = 3;
+    }
+
 }

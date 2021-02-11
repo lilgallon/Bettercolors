@@ -14,7 +14,7 @@
 </h3>
 
 ## Versions
-*Click a version to see the code.*
+*Click a version to see the code. Click on the download count to download a version. Not all the versions are listed here, if you want to see older versions, check [the releases page](https://github.com/N3ROO/Bettercolors/releases)*
 
 **Currently maintained:**
 - [![build](https://img.shields.io/github/workflow/status/N3ROO/Bettercolors/Build%20MC1.8.9?label=Bettercolors%207.4.0%20for%20MC1.8.9%20(forge))](https://github.com/N3ROO/Bettercolors/tree/MC_1.8.9) [![downloads](https://img.shields.io/github/downloads/N3ROO/Bettercolors/7.4.0-MC1.8.9/total)](https://github.com/N3ROO/Bettercolors/releases/tag/7.4.0-MC1.8.9)

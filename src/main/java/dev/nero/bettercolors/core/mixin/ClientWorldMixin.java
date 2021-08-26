@@ -23,8 +23,8 @@ public class ClientWorldMixin {
         OnEntityJoinCallback.EVENT.invoker().trigger(entity);
     }
 
-    @Inject(method = "finishRemovingEntity(Lnet/minecraft/entity/Entity;)V", at = @At("TAIL"))
-    private void entityLeaveEvent(Entity entity, CallbackInfo info) {
+    @Inject(method = "removeEntity(ILnet/minecraft/entity/Entity.RemovalReason;)V", at = @At("TAIL"))
+    private void entityLeaveEvent(int code, Entity.RemovalReason reason, CallbackInfo info) {
         OnEntityLeaveCallback.EVENT.invoker().trigger(entity);
     }
 }

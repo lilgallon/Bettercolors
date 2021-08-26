@@ -31,11 +31,11 @@ public class AutoUse extends Module {
         if (Wrapper.isInGui()) return;
 
         if (code == EventType.CLIENT_TICK) {
-            int currSlot = Wrapper.MC.player.inventory.selectedSlot;
+            int currSlot = Wrapper.MC.player.getInventory().selectedSlot;
 
             if (!usingTimer.isStopped()) {
                 if (usingTimer.isDelayComplete(100)) {
-                    Wrapper.MC.player.inventory.selectedSlot = this.swordSlot;
+                    Wrapper.MC.player.getInventory().selectedSlot = this.swordSlot;
                     usingTimer.stop();
                 }
             } else {
@@ -75,7 +75,7 @@ public class AutoUse extends Module {
      */
     private boolean isSword(int slot) {
         if (slot < 0 || slot > 9) return false;
-        return Wrapper.MC.player.inventory.main.get(slot).getItem() instanceof SwordItem;
+        return Wrapper.MC.player.getInventory().main.get(slot).getItem() instanceof SwordItem;
     }
 
     /**

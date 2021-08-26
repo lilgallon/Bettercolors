@@ -57,7 +57,7 @@ public class AutoSword extends BetterModule {
 
                 // We look for every slot of the hotbar, and we take the best item
                 for(int slot = 0; slot < 9 ; slot ++){
-                    ItemStack stack = Wrapper.MC.player.inventory.main.get(slot);
+                    ItemStack stack = Wrapper.MC.player.getInventory().main.get(slot);
                     if(stack.getItem() instanceof SwordItem){
                         SwordItem sword = (SwordItem) stack.getItem();
                         float damage = sword.getAttackDamage();
@@ -74,8 +74,8 @@ public class AutoSword extends BetterModule {
                     }
                 }
                 // We give the best sword to the player
-                if(best_item != -1 && Wrapper.MC.player.inventory.selectedSlot  != best_item){
-                    Wrapper.MC.player.inventory.selectedSlot = best_item;
+                if(best_item != -1 && Wrapper.MC.player.getInventory().selectedSlot  != best_item){
+                    Wrapper.MC.player.getInventory().selectedSlot = best_item;
                 }
             }
         }

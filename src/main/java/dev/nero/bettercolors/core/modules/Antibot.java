@@ -99,20 +99,20 @@ public class Antibot extends Module {
                 Entity entityJoin = (Entity) details;
 
                 if (entityJoin instanceof PlayerEntity) {
-                    this.entities.put(entityJoin.getEntityId(), new Data());
+                    this.entities.put(entityJoin.getId(), new Data());
                 }
 
                 break;
 
             case EventType.ENTITY_LEAVE:
                 Entity entityLeave = (Entity) details;
-                this.entities.remove(entityLeave.getEntityId());
+                this.entities.remove(entityLeave.getId());
                 break;
 
             case EventType.CLIENT_TICK:
                 if (!this.entitiesLoaded && Wrapper.MC.world != null) {
                     Wrapper.MC.world.getPlayers().forEach((entity -> this.entities.put(
-                            entity.getEntityId(),
+                            entity.getId(),
                             new Data()
                     )));
 
@@ -183,7 +183,7 @@ public class Antibot extends Module {
         // If it has 0 ms, it's a bot
         if (Wrapper.MC.getNetworkHandler().getPlayerListEntry(player.getUuid()).getLatency() == 0 && PING_CHECK) return true;
 
-        Data data = this.entities.get(player.getEntityId());
+        Data data = this.entities.get(player.getId());
         if (data != null) {
             // If it has lived less than 40 ticks, it's a bot
             if (data.ticksLived < TICKS_LIVED_MIN && TICKS_LIVED_CHECK) return true;

@@ -24,7 +24,6 @@ import dev.nero.bettercolors.engine.utils.Friends;
 import dev.nero.bettercolors.engine.utils.TimeHelper;
 import dev.nero.bettercolors.engine.view.Window;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.multiplayer.MultiplayerScreen;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -111,7 +110,7 @@ public class Wrapper {
      * @param entityClass the entity type to look for (Check the Entity class: MobEntity.class for mobs for example)
      * @return all the entities that are within the given range from the player
      */
-    public static List<Entity> getEntitiesAroundPlayer(float range, Class<? extends Entity> entityClass) {
+    public static <T extends Entity> List<Entity> getEntitiesAroundPlayer(float range, Class<T> entityClass) {
 
         Box area = new Box(
                 Wrapper.MC.player.getX() - range,
@@ -122,7 +121,7 @@ public class Wrapper {
                 Wrapper.MC.player.getZ() + range
         );
 
-        return Wrapper.MC.world.getEntitiesByClass(entityClass, area, null);
+        return Wrapper.MC.world.getEntitiesByClass((Class<Entity>) entityClass, area, null);
     }
 
     /**
@@ -144,8 +143,8 @@ public class Wrapper {
             );
 
             // Compute the distance from the player's crosshair
-            float distYaw = MathHelper.abs(MathHelper.wrapDegrees(yawPitch[0] - Wrapper.MC.player.yaw));
-            float distPitch = MathHelper.abs(MathHelper.wrapDegrees(yawPitch[1] - Wrapper.MC.player.pitch));
+            float distYaw = MathHelper.abs(MathHelper.wrapDegrees(yawPitch[0] - Wrapper.MC.player.getYaw()));
+            float distPitch = MathHelper.abs(MathHelper.wrapDegrees(yawPitch[1] - Wrapper.MC.player.getPitch()));
             float dist = MathHelper.sqrt(distYaw*distYaw + distPitch*distPitch);
 
             // Get the closest entity
@@ -197,7 +196,7 @@ public class Wrapper {
         double diffY = targetY - sourceY;
         double diffZ = targetZ - sourceZ;
 
-        double dist = MathHelper.sqrt(diffX * diffX + diffZ * diffZ);
+        float dist = MathHelper.sqrt((float) (diffX * diffX + diffZ * diffZ));
 
         float yaw = (float) ((Math.atan2(diffZ, diffX) * 180.0D / Math.PI) - 90.0F );
         float pitch = (float) - (Math.atan2(diffY, dist) * 180.0D / Math.PI);
@@ -223,8 +222,8 @@ public class Wrapper {
         // yaw and pitch are absolute, not relative to anything. We fix that by calling wrapDegrees and subtracting
         // the yaw & pitch to the player's rotation. Now, the yaw, and the pitch are relative to the player's view
         // So we can compare that with the given fov: radiusX, and radiusY (which are both in degrees)
-        boolean inFovX = MathHelper.abs(MathHelper.wrapDegrees(yaw - MC.player.yaw)) <= fovX;
-        boolean inFovY = MathHelper.abs(MathHelper.wrapDegrees(pitch - MC.player.pitch)) <= fovY;
+        boolean inFovX = MathHelper.abs(MathHelper.wrapDegrees(yaw - MC.player.getYaw())) <= fovX;
+        boolean inFovY = MathHelper.abs(MathHelper.wrapDegrees(pitch - MC.player.getPitch())) <= fovY;
 
         // If the targeted entity is within the fov, then, we will compute the step in yaw / pitch of the player's view
         // to get closer to the targeted entity. We will use the given stepX and stepY to compute that. Dividing by 100
@@ -232,12 +231,12 @@ public class Wrapper {
         // user-friendly. That way, instead of showing 0.05, we show 5.
         if(inFovX && inFovY) {
             float yawFinal, pitchFinal;
-            yawFinal = ((MathHelper.wrapDegrees(yaw - MC.player.yaw)) * stepX) / 100;
-            pitchFinal = ((MathHelper.wrapDegrees(pitch - MC.player.pitch)) * stepY) / 100;
+            yawFinal = ((MathHelper.wrapDegrees(yaw - MC.player.getYaw())) * stepX) / 100;
+            pitchFinal = ((MathHelper.wrapDegrees(pitch - MC.player.getPitch())) * stepY) / 100;
 
-            return new float[] { MC.player.yaw + yawFinal, MC.player.pitch + pitchFinal};
+            return new float[] { MC.player.getYaw() + yawFinal, MC.player.getPitch() + pitchFinal};
         } else {
-            return new float[] { MC.player.yaw, MC.player.pitch};
+            return new float[] { MC.player.getYaw(), MC.player.getPitch()};
         }
     }
 
@@ -247,8 +246,8 @@ public class Wrapper {
      * @param pitch vertical pos (degrees)
      */
     public static void setRotations(float yaw, float pitch) {
-        Wrapper.MC.player.yaw = yaw;
-        Wrapper.MC.player.pitch = pitch;
+        Wrapper.MC.player.setYaw(yaw);
+        Wrapper.MC.player.setPitch(pitch);
     }
 
     /**

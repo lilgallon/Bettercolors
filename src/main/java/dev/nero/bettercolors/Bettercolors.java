@@ -107,7 +107,7 @@ public class Bettercolors {
                 // First, we need to find the field
                 Field gameRendererField = ObfuscationReflectionHelper.findField(
                         Minecraft.class,
-                        "field_71460_t"
+                        "f_91063_"
                         // The documentation says that we need to give the SRG name, and it will be automatically
                         // resolved if MCP mappings are detected (with MCP mappings, "field_71460_t" = "gameRenderer"
                 );

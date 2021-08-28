@@ -17,7 +17,7 @@
 package dev.nero.bettercolors;
 
 public class Reference {
-	public static final String MC_VERSION = "1.16.5";
+	public static final String MC_VERSION = "1.17.1";
 	public static final String MOD_VERSION = "7.4.0";
 	public static final String MOD_VERSION_SUFFIX = "fa";
 	public static final String MOD_ID = "mcp";

@@ -6,10 +6,10 @@ import dev.nero.bettercolors.engine.module.Module;
 import dev.nero.bettercolors.engine.option.Option;
 import dev.nero.bettercolors.engine.option.ToggleOption;
 import dev.nero.bettercolors.engine.option.ValueOption;
-import net.minecraft.client.network.play.NetworkPlayerInfo;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.client.multiplayer.PlayerInfo;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.EntityLeaveWorldEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
@@ -100,9 +100,9 @@ public class Antibot extends Module {
             case EventType.ENTITY_JOIN:
                 EntityJoinWorldEvent joinWorldEvent = (EntityJoinWorldEvent) details;
 
-                if (joinWorldEvent.getEntity() instanceof PlayerEntity) {
+                if (joinWorldEvent.getEntity() instanceof Player) {
                     this.entities.put(
-                            joinWorldEvent.getEntity().getEntityId(),
+                            joinWorldEvent.getEntity().getId(),
                             new Data()
                     );
                 }
@@ -112,13 +112,13 @@ public class Antibot extends Module {
             case EventType.ENTITY_LEAVE:
                 EntityLeaveWorldEvent leaveWorldEvent = (EntityLeaveWorldEvent) details;
 
-                this.entities.remove(leaveWorldEvent.getEntity().getEntityId());
+                this.entities.remove(leaveWorldEvent.getEntity().getId());
                 break;
 
             case EventType.CLIENT_TICK:
-                if (!this.entitiesLoaded && Wrapper.MC.world != null) {
-                    Wrapper.MC.world.getPlayers().forEach((entity -> this.entities.put(
-                            entity.getEntityId(),
+                if (!this.entitiesLoaded && Wrapper.MC.level != null) {
+                    Wrapper.MC.level.players().forEach((entity -> this.entities.put(
+                            entity.getId(),
                             new Data()
                     )));
 
@@ -140,23 +140,23 @@ public class Antibot extends Module {
                 Entity target = livingHurtEvent.getEntityLiving();
 
                 /*
-                if (source instanceof PlayerEntity) {
+                if (source instanceof Player) {
                     // If the source is not in the tracked entities list, then add it
-                    if(!this.entities.containsKey(source.getEntityId())) {
-                        this.entities.put(source.getEntityId(), new Data());
+                    if(!this.entities.containsKey(source.getId())) {
+                        this.entities.put(source.getId(), new Data());
                     }
 
-                    this.entities.get(source.getEntityId()).attackedSomeone = true;
+                    this.entities.get(source.getId()).attackedSomeone = true;
                 }
                 */
 
-                if (target instanceof PlayerEntity) {
+                if (target instanceof Player) {
                     // If the target is not in the tracked entities list, then add it
-                    if(!this.entities.containsKey(target.getEntityId())) {
-                        this.entities.put(target.getEntityId(), new Data());
+                    if(!this.entities.containsKey(target.getId())) {
+                        this.entities.put(target.getId(), new Data());
                     }
 
-                    this.entities.get(target.getEntityId()).hasBeenHit = true;
+                    this.entities.get(target.getId()).hasBeenHit = true;
                 }
 
                 break;
@@ -169,8 +169,8 @@ public class Antibot extends Module {
      */
     public boolean isBot(LivingEntity entity) {
         // If it's not a player, it's a bot
-        if (!(entity instanceof PlayerEntity)) return true;
-        PlayerEntity player = (PlayerEntity) entity;
+        if (!(entity instanceof Player)) return true;
+        Player player = (Player) entity;
 
         // Settings
         final boolean TAB_CHECK = this.getOptionB(I_TAB_CHECK);
@@ -184,9 +184,9 @@ public class Antibot extends Module {
         if (!isInTab(player) && TAB_CHECK) return true;
 
         // If it has 0 ms, it's a bot
-        if (Wrapper.MC.getConnection().getPlayerInfo(player.getUniqueID()).getResponseTime() == 0 && PING_CHECK) return true;
+        if (Wrapper.MC.getConnection().getPlayerInfo(player.getUUID()).getLatency() == 0 && PING_CHECK) return true;
 
-        Data data = this.entities.get(player.getEntityId());
+        Data data = this.entities.get(player.getId());
         if (data != null) {
             // If it has lived less than 40 ticks, it's a bot
             if (data.ticksLived < TICKS_LIVED_MIN && TICKS_LIVED_CHECK) return true;
@@ -205,9 +205,9 @@ public class Antibot extends Module {
      * @param entity the entity
      * @return true if the given entity is showing on the tab
      */
-    public boolean isInTab(PlayerEntity entity) {
-        for(NetworkPlayerInfo info : Wrapper.MC.getConnection().getPlayerInfoMap()) {
-            if (info.getGameProfile().getName().equals(entity.getName().getString())) return true;
+    public boolean isInTab(Player entity) {
+        for(PlayerInfo info : Wrapper.MC.getConnection().getOnlinePlayers()) {
+            if (info.getProfile().getName().equals(entity.getName().getString())) return true;
         }
 
         return false;

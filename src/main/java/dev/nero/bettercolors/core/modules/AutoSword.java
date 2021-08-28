@@ -17,15 +17,13 @@
 package dev.nero.bettercolors.core.modules;
 
 import dev.nero.bettercolors.core.events.EventType;
-import dev.nero.bettercolors.engine.option.Option;
 import dev.nero.bettercolors.core.wrapper.Wrapper;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.Enchantments;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.SwordItem;
-import net.minecraft.util.math.RayTraceResult;
+import dev.nero.bettercolors.engine.option.Option;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.SwordItem;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.phys.HitResult;
 
 import java.util.ArrayList;
 
@@ -47,8 +45,8 @@ public class AutoSword extends BetterModule {
 
         if (code == EventType.MOUSE_INPUT) {
             boolean isPointingEntity = false;
-            if (Wrapper.MC.objectMouseOver != null) {
-                isPointingEntity = Wrapper.MC.objectMouseOver.getType() == RayTraceResult.Type.ENTITY;
+            if (Wrapper.MC.hitResult != null) {
+                isPointingEntity = Wrapper.MC.hitResult.getType() == HitResult.Type.ENTITY;
             }
 
             if(this.playerAttacks() && isPointingEntity){
@@ -58,15 +56,12 @@ public class AutoSword extends BetterModule {
 
                 // We look for every slot of the hotbar, and we take the best item
                 for(int slot = 0; slot < 9 ; slot ++){
-                    ItemStack stack = Wrapper.MC.player.inventory.mainInventory.get(slot);
-                    if(stack.getItem() instanceof SwordItem){
-                        SwordItem sword = (SwordItem) stack.getItem();
-                        float damage = sword.getAttackDamage();
+                    ItemStack stack = Wrapper.MC.player.inventoryMenu.slots.get(slot).getItem();
+                    if(stack.getItem() instanceof SwordItem sword){
+                        float damage = sword.getDamage();
 
                         // It's not the best algorithm, but that's enough for most of the cases
-                        if(sword.hasEffect(stack)){
-                            damage += EnchantmentHelper.getEnchantmentLevel(Enchantments.SHARPNESS, stack);
-                        }
+                        damage += EnchantmentHelper.getEnchantments(stack).getOrDefault(Enchantments.SHARPNESS, 0);
 
                         if(damage >= max_damage){
                             best_item = slot;
@@ -75,17 +70,18 @@ public class AutoSword extends BetterModule {
                     }
                 }
                 // We give the best sword to the player
-                if(best_item != -1 && Wrapper.MC.player.inventory.currentItem != best_item){
+                if(best_item != -1 && Wrapper.MC.player.getInventory().selected != best_item){
                     logInfo(
                             "Better sword found (" +
-                                    Wrapper.MC.player.inventory
-                                            .mainInventory
+                                    Wrapper.MC.player.inventoryMenu
+                                            .slots
                                             .get(best_item)
+                                            .getItem()
                                             .getDisplayName()
                                             .getString()
                                     + ")."
                     );
-                    Wrapper.MC.player.inventory.currentItem = best_item;
+                    Wrapper.MC.player.getInventory().selected = best_item;
                 }
             }
         }

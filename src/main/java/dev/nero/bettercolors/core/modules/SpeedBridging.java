@@ -110,11 +110,7 @@ public class SpeedBridging extends Module {
             }
         }
 
-        if (this.forceSneak) {
-            Wrapper.MC.gameSettings.keyBindSneak.setPressed(true);
-        } else {
-            Wrapper.MC.gameSettings.keyBindSneak.setPressed(false);
-        }
+        Wrapper.MC.options.keyShift.setDown(this.forceSneak);
     }
 
     /**

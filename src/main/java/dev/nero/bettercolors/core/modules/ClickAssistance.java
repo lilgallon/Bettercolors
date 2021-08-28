@@ -17,6 +17,7 @@
 package dev.nero.bettercolors.core.modules;
 
 import dev.nero.bettercolors.core.events.EventType;
+import dev.nero.bettercolors.core.wrapper.Wrapper;
 import dev.nero.bettercolors.engine.BettercolorsEngine;
 import dev.nero.bettercolors.engine.option.Option;
 import dev.nero.bettercolors.engine.option.ToggleOption;
@@ -25,10 +26,9 @@ import dev.nero.bettercolors.engine.option.ValueOption;
 import dev.nero.bettercolors.engine.utils.MathUtils;
 import dev.nero.bettercolors.engine.utils.TimeHelper;
 import dev.nero.bettercolors.engine.view.Window;
-import dev.nero.bettercolors.core.wrapper.Wrapper;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -209,16 +209,16 @@ public class ClickAssistance extends BetterModule {
         final int CHANCE = this.getOptionI(I_CHANCE);
 
         boolean pointedEntity = false;
-        if (Wrapper.MC.objectMouseOver != null) {
-            pointedEntity = Wrapper.MC.objectMouseOver.getType() == RayTraceResult.Type.ENTITY;
+        if (Wrapper.MC.hitResult != null) {
+            pointedEntity = Wrapper.MC.hitResult.getType() == HitResult.Type.ENTITY;
         }
         if ((!pointedEntity || PACKETS) && ONLY_ON_ENTITY) return;
 
         final int RAND = MathUtils.random(0, 100);
         if (RAND <= CHANCE) {
             if (PACKETS) {
-                Wrapper.MC.playerController.attackEntity(Wrapper.MC.player, (Entity) Wrapper.MC.objectMouseOver.hitInfo);
-                Wrapper.MC.player.swingArm(Hand.MAIN_HAND);
+                Wrapper.MC.gameMode.attack(Wrapper.MC.player, ((EntityHitResult) Wrapper.MC.hitResult).getEntity());
+                Wrapper.MC.player.swing(InteractionHand.MAIN_HAND);
             } else {
                 Wrapper.leftClick();
             }

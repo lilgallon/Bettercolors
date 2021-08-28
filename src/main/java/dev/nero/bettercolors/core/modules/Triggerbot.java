@@ -10,10 +10,10 @@ import dev.nero.bettercolors.engine.utils.MathUtils;
 import dev.nero.bettercolors.engine.utils.TimeHelper;
 import dev.nero.bettercolors.engine.view.Window;
 import dev.nero.bettercolors.core.wrapper.Wrapper;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.player.Player;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -74,16 +74,16 @@ public class Triggerbot extends Module {
         if (Wrapper.isInGui()) return;
 
         if (code == EventType.CLIENT_TICK) {
-            if (Wrapper.MC.player.getCooledAttackStrength(0) != 1.0 && getOptionB(I_AUTO_CPS)) return;
+            if (Wrapper.MC.player.getAttackStrengthScale(0) != 1.0 && getOptionB(I_AUTO_CPS)) return;
             if (!timeout.isDelayComplete((int) (1000f / getRandomCPS())) && !getOptionB(I_AUTO_CPS)) return;
 
-            Entity pointedEntity = Wrapper.MC.pointedEntity;
+            Entity pointedEntity = Wrapper.MC.crosshairPickEntity;
 
             // Check if the entity is either a player or a mob (if it's a mob, we need to check if the option to
             // attack mobs is turned on
-            if (pointedEntity instanceof PlayerEntity || (pointedEntity instanceof MobEntity && getOptionB(I_USE_ON_MOBS))) {
+            if (pointedEntity instanceof Player || (pointedEntity instanceof Mob && getOptionB(I_USE_ON_MOBS))) {
                 // Then check if the player sees it & not in same team
-                if (!pointedEntity.isInvisibleToPlayer(Wrapper.MC.player) && Wrapper.canAttack((LivingEntity) pointedEntity)) {
+                if (!pointedEntity.isInvisibleTo(Wrapper.MC.player) && Wrapper.canAttack((LivingEntity) pointedEntity)) {
                     // attack
                     timeout.start();
                     Wrapper.click(166, true); // 6 cps max

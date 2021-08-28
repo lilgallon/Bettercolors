@@ -3,9 +3,9 @@ package dev.nero.bettercolors.core.modules;
 import dev.nero.bettercolors.core.wrapper.Wrapper;
 import dev.nero.bettercolors.engine.module.Module;
 import dev.nero.bettercolors.engine.option.Option;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.text.Color;
+import net.minecraft.network.chat.TextColor;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 
 import java.util.ArrayList;
 
@@ -31,15 +31,15 @@ public class TeamFilter extends Module {
      * @return true if the given entity is in the same team as the player.
      */
     public boolean isPlayerInSameTeamAs(Entity entity){
-        if(!(entity instanceof PlayerEntity))
+        if(!(entity instanceof Player))
             return false;
 
         if (entity.getTeam() != null && Wrapper.MC.player.getTeam() != null) {
-            if (entity.getTeam().isSameTeam(Wrapper.MC.player.getTeam())) return true;
+            if (entity.getTeam().isAlliedTo(Wrapper.MC.player.getTeam())) return true;
         }
 
-        Color playerColor = getColor(Wrapper.MC.player);
-        Color entityColor = getColor((PlayerEntity) entity);
+        TextColor playerColor = getColor(Wrapper.MC.player);
+        TextColor entityColor = getColor((Player) entity);
 
         if (playerColor != null && entityColor != null) {
             return playerColor.equals(entityColor);
@@ -52,7 +52,7 @@ public class TeamFilter extends Module {
      * @param e entity.
      * @return the color of the prefix of the entity name.
      */
-    private Color getColor(PlayerEntity e){
+    private TextColor getColor(Player e){
         if (!e.getDisplayName().getSiblings().isEmpty()) {
             return e.getDisplayName().getSiblings().get(0).getStyle().getColor();
         } else {

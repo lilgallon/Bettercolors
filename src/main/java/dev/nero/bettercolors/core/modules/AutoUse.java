@@ -5,7 +5,7 @@ import dev.nero.bettercolors.core.wrapper.Wrapper;
 import dev.nero.bettercolors.engine.module.Module;
 import dev.nero.bettercolors.engine.option.Option;
 import dev.nero.bettercolors.engine.utils.TimeHelper;
-import net.minecraft.item.SwordItem;
+import net.minecraft.world.item.SwordItem;
 
 import java.util.ArrayList;
 
@@ -31,11 +31,11 @@ public class AutoUse extends Module {
         if (Wrapper.isInGui()) return;
 
         if (code == EventType.CLIENT_TICK) {
-            int currSlot = Wrapper.MC.player.inventory.currentItem;
+            int currSlot = Wrapper.MC.player.getInventory().selected;
 
             if (!usingTimer.isStopped()) {
                 if (usingTimer.isDelayComplete(100)) {
-                    Wrapper.MC.player.inventory.currentItem = this.swordSlot;
+                    Wrapper.MC.player.getInventory().selected = this.swordSlot;
                     usingTimer.stop();
                 }
             } else {
@@ -75,7 +75,7 @@ public class AutoUse extends Module {
      */
     private boolean isSword(int slot) {
         if (slot < 0 || slot > 9) return false;
-        return Wrapper.MC.player.inventory.mainInventory.get(slot).getItem() instanceof SwordItem;
+        return Wrapper.MC.player.inventoryMenu.slots.get(slot).getItem().getItem() instanceof SwordItem;
     }
 
     /**

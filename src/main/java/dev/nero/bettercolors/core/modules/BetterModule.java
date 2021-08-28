@@ -52,8 +52,8 @@ public class BetterModule extends Module {
     @Override
     public void event(int code, Object details) {
         if (code == EventType.MOUSE_INPUT) {
-            if (this.ignoringNextLeftClick == 0) attack = Wrapper.MC.gameSettings.keyBindAttack.isKeyDown();
-            if (this.ignoringNextRightClick == 0) use = Wrapper.MC.gameSettings.keyBindUseItem.isKeyDown();
+            if (this.ignoringNextLeftClick == 0) attack = Wrapper.MC.options.keyAttack.isDown();
+            if (this.ignoringNextRightClick == 0) use = Wrapper.MC.options.keyUse.isDown();
 
             InputEvent.MouseInputEvent event = (InputEvent.MouseInputEvent ) details;
             if (event.getButton() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {

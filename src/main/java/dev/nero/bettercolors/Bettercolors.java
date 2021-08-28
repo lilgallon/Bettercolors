@@ -17,24 +17,24 @@
 package dev.nero.bettercolors;
 
 import dev.nero.bettercolors.core.events.EventType;
+import dev.nero.bettercolors.core.hijacks.GameRendererHijack;
+import dev.nero.bettercolors.core.modules.*;
 import dev.nero.bettercolors.core.wrapper.Wrapper;
 import dev.nero.bettercolors.engine.BettercolorsEngine;
 import dev.nero.bettercolors.engine.module.Module;
 import dev.nero.bettercolors.engine.view.Window;
-import dev.nero.bettercolors.core.hijacks.GameRendererHijack;
-import dev.nero.bettercolors.core.modules.*;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.world.ClientWorld;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.EntityLeaveWorldEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import org.lwjgl.glfw.GLFW;
 
 import java.lang.reflect.Field;
@@ -100,7 +100,7 @@ public class Bettercolors {
 
     @SubscribeEvent
     public void worldLoadEvent(WorldEvent.Load event) {
-        if (event.getWorld() instanceof ClientWorld) {
+        if (event.getWorld() instanceof ClientLevel) {
             if (!(Wrapper.MC.gameRenderer instanceof GameRendererHijack)) {
                 // gameRenderer is final, but we want to update it ;( we will use reflection to do so
 

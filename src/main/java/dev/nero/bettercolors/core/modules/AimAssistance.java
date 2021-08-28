@@ -1,16 +1,16 @@
 package dev.nero.bettercolors.core.modules;
 
 import dev.nero.bettercolors.core.events.EventType;
+import dev.nero.bettercolors.core.wrapper.Wrapper;
 import dev.nero.bettercolors.engine.option.Option;
 import dev.nero.bettercolors.engine.option.ToggleOption;
 import dev.nero.bettercolors.engine.option.ValueFloatOption;
 import dev.nero.bettercolors.engine.option.ValueOption;
 import dev.nero.bettercolors.engine.utils.TimeHelper;
-import dev.nero.bettercolors.core.wrapper.Wrapper;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.HitResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -147,7 +147,7 @@ public class AimAssistance extends BetterModule {
     private void analyseEnvironment() {
         // Settings
         final int RANGE = ((ValueOption) this.options.get(I_RANGE)).getVal();
-        final Class<? extends Entity> ENTITY_TYPE = (this.getOptionB(I_USE_ON_MOBS) ? LivingEntity.class : PlayerEntity.class);
+        final Class<? extends Entity> ENTITY_TYPE = (this.getOptionB(I_USE_ON_MOBS) ? LivingEntity.class : Player.class);
 
         // Get all entities around the player
         List<Entity> entities = Wrapper.getEntitiesAroundPlayer(RANGE, ENTITY_TYPE);
@@ -216,8 +216,8 @@ public class AimAssistance extends BetterModule {
         // Assist the player by taking into account this.target, only if it's valid
         if (this.target != null && this.assist) {
             boolean isAimingEntity = false;
-            if(Wrapper.MC.objectMouseOver != null) {
-                isAimingEntity = Wrapper.MC.objectMouseOver.getType() == RayTraceResult.Type.ENTITY;
+            if(Wrapper.MC.hitResult != null) {
+                isAimingEntity = Wrapper.MC.hitResult.getType() == HitResult.Type.ENTITY;
             }
 
             // Settings

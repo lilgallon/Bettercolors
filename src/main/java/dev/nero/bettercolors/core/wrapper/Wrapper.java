@@ -24,18 +24,17 @@ import dev.nero.bettercolors.engine.utils.Friends;
 import dev.nero.bettercolors.engine.utils.TimeHelper;
 import dev.nero.bettercolors.engine.view.Window;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceContext;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.client.gui.screens.inventory.ContainerScreen;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 
-import java.awt.Robot;
-import java.awt.AWTException;
+import java.awt.*;
 import java.awt.event.InputEvent;
 import java.util.List;
 
@@ -69,9 +68,9 @@ public class Wrapper {
         if(Wrapper.MC.player == null) return true;
 
         return Wrapper.MC.player.isSleeping() ||
-                !MC.isGameFocused() ||
-                MC.isGamePaused() ||
-                (Wrapper.MC.currentScreen instanceof ContainerScreen);
+                !MC.isWindowActive() ||
+                MC.isPaused() ||
+                (Wrapper.MC.screen instanceof ContainerScreen);
     }
 
     /**
@@ -116,27 +115,27 @@ public class Wrapper {
      * @param range range to perform ray tracing
      * @return result of ray tracing from the player's view within the range
      */
-    private static BlockRayTraceResult rayTrace(double range) {
+    private static BlockHitResult rayTrace(double range) {
         if (Wrapper.MC.player == null) return null;
 
-        float f = Wrapper.MC.player.rotationPitch;
-        float f1 = Wrapper.MC.player.rotationYaw;
-        Vector3d vector3d = Wrapper.MC.player.getEyePosition(1.0F);
-        float f2 =  MathHelper.cos(-f1 * ((float)Math.PI / 180F) - (float)Math.PI);
-        float f3 =  MathHelper.sin(-f1 * ((float)Math.PI / 180F) - (float)Math.PI);
-        float f4 = -MathHelper.cos(-f  * ((float)Math.PI / 180F));
-        float f5 =  MathHelper.sin(-f  * ((float)Math.PI / 180F));
+        float f = Wrapper.MC.player.getRotationVector().x; // pitch
+        float f1 = Wrapper.MC.player.getRotationVector().y; // yaw
+        Vec3 vector3d = Wrapper.MC.player.getEyePosition(1.0F);
+        float f2 =  Mth.cos(-f1 * ((float)Math.PI / 180F) - (float)Math.PI);
+        float f3 =  Mth.sin(-f1 * ((float)Math.PI / 180F) - (float)Math.PI);
+        float f4 = -Mth.cos(-f  * ((float)Math.PI / 180F));
+        float f5 =  Mth.sin(-f  * ((float)Math.PI / 180F));
         float f6 = f3 * f4;
         float f7 = f2 * f4;
         double d0 = range;
-        Vector3d vector3d1 = vector3d.add((double)f6 * d0, (double)f5 * d0, (double)f7 * d0);
+        Vec3 vector3d1 = vector3d.add((double)f6 * d0, (double)f5 * d0, (double)f7 * d0);
 
-        return Wrapper.MC.world.rayTraceBlocks(
-                new RayTraceContext(
+        return Wrapper.MC.level.clip(
+                new ClipContext(
                         vector3d,
                         vector3d1,
-                        RayTraceContext.BlockMode.OUTLINE,
-                        RayTraceContext.FluidMode.ANY,
+                        ClipContext.Block.OUTLINE,
+                        ClipContext.Fluid.ANY,
                         Wrapper.MC.player
                 )
         );
@@ -147,17 +146,17 @@ public class Wrapper {
      * @param entityClass the entity type to look for (Check the Entity class: MobEntity.class for mobs for example)
      * @return all the entities that are within the given range from the player
      */
-    public static List<Entity> getEntitiesAroundPlayer(float range, Class<? extends Entity> entityClass) {
-        AxisAlignedBB area = new AxisAlignedBB(
-                Wrapper.MC.player.getPosX() - range,
-                Wrapper.MC.player.getPosY() - range,
-                Wrapper.MC.player.getPosZ() - range,
-                Wrapper.MC.player.getPosX() + range,
-                Wrapper.MC.player.getPosY() + range,
-                Wrapper.MC.player.getPosZ() + range
+    public static <T extends Entity> List<Entity> getEntitiesAroundPlayer(float range, Class<T> entityClass) {
+        AABB area = new AABB(
+                Wrapper.MC.player.getX() - range,
+                Wrapper.MC.player.getY() - range,
+                Wrapper.MC.player.getZ() - range,
+                Wrapper.MC.player.getX() + range,
+                Wrapper.MC.player.getY() + range,
+                Wrapper.MC.player.getZ() + range
         );
 
-        return Wrapper.MC.world.getEntitiesWithinAABB(entityClass, area);
+        return Wrapper.MC.level.getEntitiesOfClass((Class<Entity>) entityClass, area);
     }
 
     /**
@@ -179,9 +178,9 @@ public class Wrapper {
             );
 
             // Compute the distance from the player's crosshair
-            float distYaw = MathHelper.abs(MathHelper.wrapDegrees(yawPitch[0] - Wrapper.MC.player.rotationYaw));
-            float distPitch = MathHelper.abs(MathHelper.wrapDegrees(yawPitch[1] - Wrapper.MC.player.rotationPitch));
-            float dist = MathHelper.sqrt(distYaw*distYaw + distPitch*distPitch);
+            float distYaw = Mth.abs(Mth.wrapDegrees(yawPitch[0] - Wrapper.MC.player.getRotationVector().y));
+            float distPitch = Mth.abs(Mth.wrapDegrees(yawPitch[1] - Wrapper.MC.player.getRotationVector().x));
+            float dist = Mth.sqrt(distYaw*distYaw + distPitch*distPitch);
 
             // Get the closest entity
             if(dist < minDist) {
@@ -198,20 +197,20 @@ public class Wrapper {
      * @param target the target of the source entity
      */
     public static float[] getYawPitchBetween(Entity source, Entity target) {
-        // getPosY returns the ground position
-        // getPosY + EyeHeight return the eye's position
-        // getPosY + EyeHeight/1.5 returns the upper body position
+        // getY returns the ground position
+        // getY + EyeHeight return the eye's position
+        // getY + EyeHeight/1.5 returns the upper body position
         final float SHIFT_FACTOR = 1.5f;
 
         return Wrapper.getYawPitchBetween(
                 // source
-                source.getPosX(),
-                source.getPosY() + source.getEyeHeight(),
-                source.getPosZ(),
+                source.getX(),
+                source.getY() + source.getEyeHeight(),
+                source.getZ(),
                 // target
-                target.getPosX(),
-                target.getPosY() + (target.getEyeHeight() / SHIFT_FACTOR),
-                target.getPosZ()
+                target.getX(),
+                target.getY() + (target.getEyeHeight() / SHIFT_FACTOR),
+                target.getZ()
         );
     }
 
@@ -232,7 +231,7 @@ public class Wrapper {
         double diffY = targetY - sourceY;
         double diffZ = targetZ - sourceZ;
 
-        double dist = MathHelper.sqrt(diffX * diffX + diffZ * diffZ);
+        double dist = Mth.sqrt((float) (diffX * diffX + diffZ * diffZ));
 
         float yaw = (float) ((Math.atan2(diffZ, diffX) * 180.0D / Math.PI) - 90.0F );
         float pitch = (float) - (Math.atan2(diffY, dist) * 180.0D / Math.PI);
@@ -249,8 +248,8 @@ public class Wrapper {
         float[] yawPitch = getYawPitchBetween(Wrapper.MC.player, entity);
 
         // We make sure that it's absolute, because the sign may change if we invert entity and MC.player
-        //float yaw = MathHelper.abs(yawPitch[0]);
-        //float pitch = MathHelper.abs(yawPitch[1]);
+        //float yaw = Mth.abs(yawPitch[0]);
+        //float pitch = Mth.abs(yawPitch[1]);
         float yaw = yawPitch[0];
         float pitch = yawPitch[1];
 
@@ -258,8 +257,8 @@ public class Wrapper {
         // yaw and pitch are absolute, not relative to anything. We fix that by calling wrapDegrees and subtracting
         // the yaw & pitch to the player's rotation. Now, the yaw, and the pitch are relative to the player's view
         // So we can compare that with the given fov: radiusX, and radiusY (which are both in degrees)
-        boolean inFovX = MathHelper.abs(MathHelper.wrapDegrees(yaw - MC.player.rotationYaw)) <= fovX;
-        boolean inFovY = MathHelper.abs(MathHelper.wrapDegrees(pitch - MC.player.rotationPitch)) <= fovY;
+        boolean inFovX = Mth.abs(Mth.wrapDegrees(yaw - MC.player.getRotationVector().y)) <= fovX;
+        boolean inFovY = Mth.abs(Mth.wrapDegrees(pitch - MC.player.getRotationVector().x)) <= fovY;
 
         // If the targeted entity is within the fov, then, we will compute the step in yaw / pitch of the player's view
         // to get closer to the targeted entity. We will use the given stepX and stepY to compute that. Dividing by 100
@@ -267,12 +266,12 @@ public class Wrapper {
         // user-friendly. That way, instead of showing 0.05, we show 5.
         if(inFovX && inFovY) {
             float yawFinal, pitchFinal;
-            yawFinal = ((MathHelper.wrapDegrees(yaw - MC.player.rotationYaw)) * stepX) / 100;
-            pitchFinal = ((MathHelper.wrapDegrees(pitch - MC.player.rotationPitch)) * stepY) / 100;
+            yawFinal = ((Mth.wrapDegrees(yaw - MC.player.getRotationVector().y)) * stepX) / 100;
+            pitchFinal = ((Mth.wrapDegrees(pitch - MC.player.getRotationVector().x)) * stepY) / 100;
 
-            return new float[] { MC.player.rotationYaw + yawFinal, MC.player.rotationPitch + pitchFinal};
+            return new float[] { MC.player.getRotationVector().y + yawFinal, MC.player.getRotationVector().x + pitchFinal};
         } else {
-            return new float[] { MC.player.rotationYaw, MC.player.rotationPitch};
+            return new float[] { MC.player.getRotationVector().y, MC.player.getRotationVector().x};
         }
     }
 
@@ -282,8 +281,8 @@ public class Wrapper {
      * @param pitch vertical pos (degrees)
      */
     public static void setRotations(float yaw, float pitch) {
-        Wrapper.MC.player.rotationYaw = yaw;
-        Wrapper.MC.player.rotationPitch = pitch;
+        Wrapper.MC.player.setYRot(yaw);
+        Wrapper.MC.player.setXRot(pitch);
     }
 
     /**
@@ -291,7 +290,7 @@ public class Wrapper {
      * @return true if the player can attack the given entity
      */
     public static boolean canAttack(LivingEntity entity) {
-        if (entity instanceof PlayerEntity) {
+        if (entity instanceof Player) {
             // Check friend
             if (Friends.isFriend(entity.getDisplayName().getString())) return false;
 

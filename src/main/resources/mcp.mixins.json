@@ -13,7 +13,7 @@
       "MinecraftClientMixin",
       "MinecraftServerMixin",
       "MouseMixin",
-    "ServerChunkManagerMixin"
+      "ServerChunkManagerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

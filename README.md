@@ -1,7 +1,7 @@
 ## Bettercolors
 
 **Information:**
-- Build status: ![build](https://img.shields.io/github/workflow/status/N3ROO/Bettercolors/Build%20MC1.17.1_fabric)
+- Build status: ![build](https://img.shields.io/github/workflow/status/lilgallon/Bettercolors/Build%20MC1.17.1_fabric)
 - Minecraft version: `1.17.1`
 - Bettercolors version: `7.4.0`
 - Fabric: 
@@ -11,4 +11,4 @@
 - Changelog: [here](CHANGELOG.MD)
 
 
-All the mods details are shown in the main readme that you can acess [here](https://github.com/N3ROO/Bettercolors).
+All the mods details are shown in the main readme that you can acess [here](https://github.com/lilgallon/Bettercolors).

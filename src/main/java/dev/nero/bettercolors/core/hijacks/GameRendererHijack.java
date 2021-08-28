@@ -1,19 +1,18 @@
 package dev.nero.bettercolors.core.hijacks;
 
-import dev.nero.bettercolors.engine.BettercolorsEngine;
-import dev.nero.bettercolors.engine.module.Module;
 import dev.nero.bettercolors.core.modules.Reach;
+import dev.nero.bettercolors.engine.BettercolorsEngine;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.RenderTypeBuffers;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.item.ItemFrameEntity;
-import net.minecraft.entity.projectile.ProjectileHelper;
-import net.minecraft.resources.IResourceManager;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.*;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.client.renderer.RenderBuffers;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.decoration.ItemFrame;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.phys.*;
 
 /**
  * Used to bypass Minecraft code that flags extended reach when playing online
@@ -24,7 +23,7 @@ public class GameRendererHijack extends GameRenderer {
         return new GameRendererHijack(
                 Minecraft.getInstance(),
                 Minecraft.getInstance().getResourceManager(),
-                Minecraft.getInstance().getRenderTypeBuffers()
+                Minecraft.getInstance().renderBuffers()
         );
     }
 
@@ -32,8 +31,8 @@ public class GameRendererHijack extends GameRenderer {
     private Minecraft mc;
     private Reach reach;
 
-    public GameRendererHijack(Minecraft mcIn, IResourceManager resourceManagerIn, RenderTypeBuffers renderTypeBuffersIn) {
-        super(mcIn, resourceManagerIn, renderTypeBuffersIn);
+    public GameRendererHijack(Minecraft mcIn, ResourceManager resourceManagerIn, RenderBuffers renderBuffersIn) {
+        super(mcIn, resourceManagerIn, renderBuffersIn);
         this.mc = mcIn;
         this.reach = (Reach) BettercolorsEngine.getInstance().getModule("Reach");
     }
@@ -55,22 +54,22 @@ public class GameRendererHijack extends GameRenderer {
     }
 
     @Override
-    public void getMouseOver(float partialTicks) {
+    public void pick(float partialTicks) {
         // Code copied from EntityRenderer#getMouseOver
-        Entity entity = this.mc.getRenderViewEntity();
+        Entity entity = this.mc.getCameraEntity();
         if (entity != null) {
-            if (this.mc.world != null) {
-                this.mc.getProfiler().startSection("pick");
-                this.mc.pointedEntity = null;
+            if (this.mc.level != null) {
+                this.mc.getProfiler().push("pick");
+                this.mc.crosshairPickEntity = null;
 
-                double d0 = (double) this.mc.playerController.getBlockReachDistance() + this.getBlockReachInc();
-                this.mc.objectMouseOver = entity.pick(d0, partialTicks, false);
+                double d0 = (double) this.mc.gameMode.getPickRange() + this.getBlockReachInc();
+                this.mc.hitResult = entity.pick(d0, partialTicks, false);
 
-                Vector3d vector3d = entity.getEyePosition(partialTicks);
+                Vec3 vector3d = entity.getEyePosition(partialTicks);
                 boolean flag = false;
 
                 double d1 = d0;
-                if (this.mc.playerController.extendedReach()) {
+                if (this.mc.gameMode.hasFarPickRange()) {
                     d1 = 6.0D;
                     d0 = d1;
                 } else {
@@ -81,43 +80,43 @@ public class GameRendererHijack extends GameRenderer {
                 }
 
                 d1 = d1 * d1;
-                if (this.mc.objectMouseOver != null) {
+                if (this.mc.hitResult != null) {
                     // d1: distance to object from the player's view
                     if (this.reach.isActivated()) {
-                        RayTraceResult result = entity.pick(
+                        HitResult result = entity.pick(
                                 this.reach.getCombatReachIncrement() + 3.0f, partialTicks, false
                         );
-                        d1 = result.getHitVec().squareDistanceTo(vector3d);
+                        d1 = result.getLocation().distanceToSqr(vector3d);
                     } else {
-                        d1 = this.mc.objectMouseOver.getHitVec().squareDistanceTo(vector3d);
+                        d1 = this.mc.hitResult.getLocation().distanceToSqr(vector3d);
                     }
                 }
 
-                Vector3d vector3d1 = entity.getLook(1.0F);
-                Vector3d vector3d2 = vector3d.add(vector3d1.x * d0, vector3d1.y * d0, vector3d1.z * d0);
-                AxisAlignedBB axisalignedbb = entity.getBoundingBox().expand(vector3d1.scale(d0)).grow(1.0D, 1.0D, 1.0D);
-                EntityRayTraceResult entityraytraceresult = ProjectileHelper.rayTraceEntities(entity, vector3d, vector3d2, axisalignedbb, (p_215312_0_) -> {
-                    return !p_215312_0_.isSpectator() && p_215312_0_.canBeCollidedWith();
+                Vec3 vector3d1 = entity.getViewVector(1.0F);
+                Vec3 vector3d2 = vector3d.add(vector3d1.x * d0, vector3d1.y * d0, vector3d1.z * d0);
+                AABB axisalignedbb = entity.getBoundingBox().expandTowards(vector3d1.scale(d0)).inflate(1.0D, 1.0D, 1.0D);
+                EntityHitResult entityraytraceresult = ProjectileUtil.getEntityHitResult(entity, vector3d, vector3d2, axisalignedbb, (p_215312_0_) -> {
+                    return !p_215312_0_.isSpectator() && p_215312_0_.isPickable();
                 }, d1);
                 if (entityraytraceresult != null) {
                     Entity entity1 = entityraytraceresult.getEntity();
-                    Vector3d vector3d3 = entityraytraceresult.getHitVec();
-                    double d2 = vector3d.squareDistanceTo(vector3d3);
+                    Vec3 vector3d3 = entityraytraceresult.getLocation();
+                    double d2 = vector3d.distanceToSqr(vector3d3);
 
                     // Yeah, it took me some time, but as you can see they use squareDistance everywhere. So the default
                     // reach of 3.0D is actually 9.0D (3.0D*3.0D). So the reach increment needs to be multiplied by itself
 
                     if (flag && d2 > 9.0D + reach.getCombatReachIncrement() * reach.getCombatReachIncrement()) {
-                        this.mc.objectMouseOver = BlockRayTraceResult.createMiss(vector3d3, Direction.getFacingFromVector(vector3d1.x, vector3d1.y, vector3d1.z), new BlockPos(vector3d3));
-                    } else if (d2 < d1 || this.mc.objectMouseOver == null) {
-                        this.mc.objectMouseOver = entityraytraceresult;
-                        if (entity1 instanceof LivingEntity || entity1 instanceof ItemFrameEntity) {
-                            this.mc.pointedEntity = entity1;
+                        this.mc.hitResult = BlockHitResult.miss(vector3d3, Direction.getNearest(vector3d1.x, vector3d1.y, vector3d1.z), new BlockPos(vector3d3));
+                    } else if (d2 < d1 || this.mc.hitResult == null) {
+                        this.mc.hitResult = entityraytraceresult;
+                        if (entity1 instanceof LivingEntity || entity1 instanceof ItemFrame) {
+                            this.mc.crosshairPickEntity = entity1;
                         }
                     }
                 }
 
-                this.mc.getProfiler().endSection();
+                this.mc.getProfiler().pop();
             }
         }
     }

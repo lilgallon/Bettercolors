@@ -5,7 +5,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
     }
 }
 apply plugin: 'net.minecraftforge.gradle'
@@ -14,16 +14,17 @@ version = "7.4.1-MC1.16.4"
 group= "dev.nero.bettercolors.main" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "bettercolors"
 
-// Important ! The code uses lambda expressions & diamond operators
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+// Mojang ships Java 16 to end users in 1.17+ instead of Java 8 in 1.16 or lower, so your mod should target Java 16.
+java.toolchain.languageVersion = JavaLanguageVersion.of(16)
 
+println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 minecraft {
     // The mappings can be changed at any time, and must be in the following format.
     // snapshot_YYYYMMDD   Snapshot are built nightly.
     // stable_#            Stables are built at the discretion of the MCP team.
     // Use non-default mappings at your own risk. they may not always work.
     // Simply re-run your setup task after changing the mappings to update your workspace.
-    mappings channel: 'snapshot', version: '20201028-1.16.3'
+    mappings channel: 'official', version: '1.17.1'
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
 
     // accessTransformer = file('build/resources/main/META-INF/accesstransformer.cfg')
@@ -35,7 +36,7 @@ minecraft {
             workingDirectory project.file('run')
 
             // Recommended logging data for a userdev environment
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.markers', 'REGISTRIES'
 
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
@@ -49,19 +50,20 @@ minecraft {
     }
 }
 
+configurations.implementation.setCanBeResolved(true)
 configurations {
     inJar
-    compile.extendsFrom inJar
+    implementation.extendsFrom inJar
 }
 
 dependencies {
     // Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed
     // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
-    minecraft 'net.minecraftforge:forge:1.16.4-35.1.0'
+    minecraft 'net.minecraftforge:forge:1.17.1-37.0.45'
 
     // Tests
-    testImplementation('org.junit.jupiter:junit-jupiter:5.6.2')
+    // testImplementation('org.junit.jupiter:junit-jupiter:5.6.2')
 
     // Theme
     inJar 'dev.nero:bettercolors-engine:1.1.1'
@@ -74,6 +76,7 @@ test {
     }
 }
 
+jar.finalizedBy('reobfJar')
 jar {
     from {
         configurations.inJar.collect {

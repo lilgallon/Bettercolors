@@ -63,7 +63,7 @@ dependencies {
     minecraft 'net.minecraftforge:forge:1.17.1-37.0.45'
 
     // Tests
-    // testImplementation('org.junit.jupiter:junit-jupiter:5.6.2')
+    testImplementation('org.junit.jupiter:junit-jupiter:5.6.2')
 
     // Theme
     inJar 'dev.nero:bettercolors-engine:1.1.1'
@@ -78,9 +78,12 @@ test {
 
 jar.finalizedBy('reobfJar')
 jar {
+    setDuplicatesStrategy(DuplicatesStrategy.INCLUDE)
+
     from {
         configurations.inJar.collect {
             it.isDirectory() ? it : zipTree(it)
         }
     }
+
 }

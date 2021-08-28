@@ -1,3 +1,7 @@
+**V7.4.1 MC_1.17.1**
+
+- Same as **V7.4.1 MC_1.16.4**
+
 **V7.4.1 MC_1.16.4**
 
 - Fixed loading crash for some users

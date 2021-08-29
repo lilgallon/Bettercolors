@@ -150,7 +150,7 @@ public class AimAssistance extends BetterModule {
         final Class<? extends Entity> ENTITY_TYPE = (this.getOptionB(I_USE_ON_MOBS) ? LivingEntity.class : PlayerEntity.class);
 
         // Get all entities around the player
-        List<Entity> entities = Wrapper.getEntitiesAroundPlayer(RANGE, ENTITY_TYPE);
+        List<? extends Entity> entities = Wrapper.getEntitiesAroundPlayer(RANGE, ENTITY_TYPE);
 
         // Get the closest one to the crosshair
         Entity closest = Wrapper.getClosestEntityToCrosshair(entities, true);

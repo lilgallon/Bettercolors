@@ -1,3 +1,8 @@
+**V7.4.1 MC_1.17.1**
+
+- Fixed version checker
+- Fixed aim assistance crash (#93) thanks @GithubThrowaway69
+
 **V7.4.0 MC_1.17.1**
 
 - Same as **V7.4.0 MC_1.16.5**

@@ -1,7 +1,7 @@
 /*
  * Copyright 2018-2020
- * - Bettercolors Contributors (https://github.com/N3ROO/Bettercolors) and
- * - Bettercolors Engine Contributors (https://github.com/N3ROO/BettercolorsEngine)
+ * - Bettercolors Contributors (https://github.com/lilgallon/Bettercolors) and
+ * - Bettercolors Engine Contributors (https://github.com/lilgallon/BettercolorsEngine)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,9 @@ import dev.nero.bettercolors.engine.view.Window;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.passive.SheepEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.TypeFilter;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 
@@ -34,6 +36,7 @@ import java.awt.Robot;
 import java.awt.AWTException;
 import java.awt.event.InputEvent;
 import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * Wrapper for Minecraft 1.16
@@ -110,7 +113,7 @@ public class Wrapper {
      * @param entityClass the entity type to look for (Check the Entity class: MobEntity.class for mobs for example)
      * @return all the entities that are within the given range from the player
      */
-    public static <T extends Entity> List<Entity> getEntitiesAroundPlayer(float range, Class<T> entityClass) {
+    public static List<? extends Entity> getEntitiesAroundPlayer(float range, Class<? extends Entity> entityClass) {
 
         Box area = new Box(
                 Wrapper.MC.player.getX() - range,
@@ -121,7 +124,7 @@ public class Wrapper {
                 Wrapper.MC.player.getZ() + range
         );
 
-        return Wrapper.MC.world.getEntitiesByClass((Class<Entity>) entityClass, area, null);
+        return Wrapper.MC.world.getEntitiesByClass(entityClass, area, entity -> (true));
     }
 
     /**
@@ -129,7 +132,7 @@ public class Wrapper {
      * @param canAttackFilter if true, will remove entities not attackable by the player
      * @return the closest entity from the list from the player's crosshair
      */
-    public static Entity getClosestEntityToCrosshair(List<Entity> entities, boolean canAttackFilter) {
+    public static Entity getClosestEntityToCrosshair(List<? extends Entity> entities, boolean canAttackFilter) {
         float minDist = Float.MAX_VALUE;
         Entity closest = null;
 

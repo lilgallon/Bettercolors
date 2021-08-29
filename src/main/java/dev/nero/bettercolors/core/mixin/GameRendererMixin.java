@@ -46,7 +46,7 @@ public class GameRendererMixin {
     }
 
     /**
-     * @author N3ROO
+     * @author lilgallon
      * @reason reach increase
      */
     @Overwrite

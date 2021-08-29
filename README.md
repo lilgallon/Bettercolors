@@ -3,7 +3,7 @@
 **Information:**
 - Build status: ![build](https://img.shields.io/github/workflow/status/lilgallon/Bettercolors/Build%20MC1.17.1_fabric)
 - Minecraft version: `1.17.1`
-- Bettercolors version: `7.4.0`
+- Bettercolors version: `7.4.1`
 - Fabric: 
     - Loader: `0.10.8` (compatible >=0.9.0)
 - Bettercolors Engine version: `1.1.0`

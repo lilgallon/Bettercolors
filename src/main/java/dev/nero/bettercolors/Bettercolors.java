@@ -52,9 +52,9 @@ public class Bettercolors implements ModInitializer {
                     Reference.MOD_VERSION,
                     Reference.MOD_VERSION_SUFFIX,
                     Reference.MC_VERSION,
-                    "https://api.github.com/repos/n3roo/bettercolors/releases",
-                    "https://github.com/n3roo/bettercolors/releases",
-                    "https://github.com/N3ROO/Bettercolors/issues",
+                    "https://api.github.com/repos/lilgallon/bettercolors/releases",
+                    "https://github.com/lilgallon/bettercolors/releases",
+                    "https://github.com/lilgallon/Bettercolors/issues",
                     modules,
                     GLFW.GLFW_KEY_INSERT,
                     code -> GLFW.glfwGetKeyName(code, GLFW.glfwGetKeyScancode(code))

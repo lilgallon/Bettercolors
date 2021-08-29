@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2020 Bettercolors Contributors (https://github.com/N3ROO/Bettercolors)
+ * Copyright 2018-2020 Bettercolors Contributors (https://github.com/lilgallon/Bettercolors)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ package dev.nero.bettercolors;
 
 public class Reference {
 	public static final String MC_VERSION = "1.17.1";
-	public static final String MOD_VERSION = "7.4.0";
+	public static final String MOD_VERSION = "7.4.1";
 	public static final String MOD_VERSION_SUFFIX = "fa";
 	public static final String MOD_ID = "mcp";
 }

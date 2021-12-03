@@ -2,11 +2,9 @@ package dev.gallon.bettercolors;
 
 import dev.gallon.bettercolors.core.events.*;
 import dev.gallon.bettercolors.core.modules.*;
-import dev.nero.bettercolors.core.events.*;
 import dev.nero.bettercolors.engine.BettercolorsEngine;
 import dev.nero.bettercolors.engine.module.Module;
 import dev.nero.bettercolors.engine.view.Window;
-import dev.nero.bettercolors.core.modules.*;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.InputUtil;

@@ -1,3 +1,7 @@
+**V7.4.1 MC_1.18.0**
+
+- Same as V7.4.1 MC_1.17.1 but for MC 1.18.1
+
 **V7.4.1 MC_1.17.1**
 
 - Fixed version checker

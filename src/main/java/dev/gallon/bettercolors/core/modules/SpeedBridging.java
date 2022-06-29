@@ -111,9 +111,9 @@ public class SpeedBridging extends Module {
         }
 
         if (this.forceSneak) {
-            Wrapper.MC.options.keySneak.setPressed(true);
+            Wrapper.MC.options.sneakKey.setPressed(true);
         } else {
-            Wrapper.MC.options.keySneak.setPressed(false);
+            Wrapper.MC.options.sneakKey.setPressed(false);
         }
     }
 

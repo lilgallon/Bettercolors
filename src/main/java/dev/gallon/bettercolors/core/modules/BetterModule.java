@@ -52,8 +52,8 @@ public class BetterModule extends Module {
     @Override
     public void event(int code, Object details) {
         if (code == EventType.MOUSE_INPUT) {
-            if (this.ignoringNextLeftClick == 0) attack = Wrapper.MC.options.keyAttack.isPressed();
-            if (this.ignoringNextRightClick == 0) use = Wrapper.MC.options.keyUse.isPressed();
+            if (this.ignoringNextLeftClick == 0) attack = Wrapper.MC.options.attackKey.isPressed();
+            if (this.ignoringNextRightClick == 0) use = Wrapper.MC.options.useKey.isPressed();
 
             MouseInput event = (MouseInput) details;
             if (event.getButton() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {

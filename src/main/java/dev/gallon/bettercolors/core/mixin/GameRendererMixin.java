@@ -91,7 +91,7 @@ public class GameRendererMixin {
                 Vec3d vec3d3 = vec3d.add(vec3d2.x * d, vec3d2.y * d, vec3d2.z * d);
                 float f = 1.0F;
                 Box box = entity.getBoundingBox().stretch(vec3d2.multiply(d)).expand(1.0D, 1.0D, 1.0D);
-                EntityHitResult entityHitResult = ProjectileUtil.raycast(entity, vec3d, vec3d3, box, (entityx) -> !entityx.isSpectator() && entityx.collides(), e);
+                EntityHitResult entityHitResult = ProjectileUtil.raycast(entity, vec3d, vec3d3, box, (entityx) -> !entityx.isSpectator() && entityx.canHit(), e);
                 if (entityHitResult != null) {
                     Entity entity2 = entityHitResult.getEntity();
                     Vec3d vec3d4 = entityHitResult.getPos();
@@ -101,7 +101,7 @@ public class GameRendererMixin {
                     // reach of 3.0D is actually 9.0D (3.0D*3.0D). So the reach increment needs to be multiplied by itthis
 
                     if (bl && g > 9.0D + reach.getCombatReachIncrement() * reach.getCombatReachIncrement()) {
-                        this.client.crosshairTarget = BlockHitResult.createMissed(vec3d4, Direction.getFacing(vec3d2.x, vec3d2.y, vec3d2.z), new BlockPos(vec3d4));
+                        this.client.crosshairTarget = BlockHitResult.createMissed(vec3d4, Direction.getFacing(vec3d2.x, vec3d2.y, vec3d2.z), BlockPos.ofFloored(vec3d4));
                     } else if (g < e || this.client.crosshairTarget == null) {
                         this.client.crosshairTarget = entityHitResult;
                         if (entity2 instanceof LivingEntity || entity2 instanceof ItemFrameEntity) {

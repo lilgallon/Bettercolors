@@ -18,7 +18,7 @@
 
 **Currently maintained:**
 
-- [![build](https://img.shields.io/github/workflow/status/lilgallon/Bettercolors/Build%20MC1.19.x_fabric?label=Bettercolors%207.4.1%20for%20MC1.19.x%20(fabric))](https://github.com/lilgallon/Bettercolors/tree/MC_1.19.x_fabric) [![downloads](https://img.shields.io/github/downloads/lilgallon/Bettercolors/7.4.1-MC1.19.4fa/total)](https://github.com/lilgallon/Bettercolors/releases/tag/7.4.1-MC1.19.4fa)
+- [![build](https://img.shields.io/github/action/workflow/status/lilgallon/Bettercolors/gradle.yml?branch=MC_1.19.x_fabric](https://github.com/lilgallon/Bettercolors/tree/MC_1.19.x_fabric) [![downloads](https://img.shields.io/github/downloads/lilgallon/Bettercolors/7.4.1-MC1.19.4fa/total)](https://github.com/lilgallon/Bettercolors/releases/tag/7.4.1-MC1.19.4fa)
 
 **Versions that may interest you:**
 

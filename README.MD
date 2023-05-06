@@ -9,6 +9,10 @@
   An assistance mod built with forge and fabric. More than 1000 commits, and exists since September 2017. Designed to be lightweight and easy to update. Powered by <a href="https://github.com/lilgallon/BettercolorsEngine">BettercolorsEngine</a>.
 </p>
 
+<p align="center" style="color:orange;">
+  <b>Update - May, 6th 2023:</b> No new features will be added. I decided to stop working on this project. It was a fun way to learn programing. However, I will keep updating the mod to the latest minecraft versions. Feel free to fork the repo if you want to keep adding / fixing new stuff :)
+</p>
+
 <h3 align="center">
   <img src=".github/illustration.gif">
 </h3>

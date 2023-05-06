@@ -18,27 +18,34 @@
 
 **Currently maintained:**
 
-- [![build](https://img.shields.io/github/action/workflow/status/lilgallon/Bettercolors/gradle.yml?branch=MC_1.19.x_fabric](https://github.com/lilgallon/Bettercolors/tree/MC_1.19.x_fabric) [![downloads](https://img.shields.io/github/downloads/lilgallon/Bettercolors/7.4.1-MC1.19.4fa/total)](https://github.com/lilgallon/Bettercolors/releases/tag/7.4.1-MC1.19.4fa)
+- Name: Latest Minecraft version
+- MC Version: 1.19.4
+- Modloader: Fabric
+- Mod version: 7.4.1
+- Branch: MC_1.19.x_fabric
+- Build: [![build](https://img.shields.io/github/actions/workflow/status/lilgallon/Bettercolors/gradle.yml?branch=MC_1.19.x_fabric)](https://github.com/lilgallon/Bettercolors/tree/MC_1.19.x_fabric)
+- Downloads: [![downloads](https://img.shields.io/github/downloads/lilgallon/Bettercolors/7.4.1-MC1.19.4fa/total)](https://github.com/lilgallon/Bettercolors/releases/tag/7.4.1-MC1.19.4fa)
+- Go there to download: https://github.com/lilgallon/Bettercolors/releases/tag/7.4.1-MC1.19.4fa
 
-**Versions that may interest you:**
+**Not maintained anymore, but may interest you:**
 
-- [![build](https://img.shields.io/github/workflow/status/lilgallon/Bettercolors/Build%20MC1.8.9?label=Bettercolors%207.4.0%20for%20MC1.8.9%20(forge))](https://github.com/lilgallon/Bettercolors/tree/MC_1.8.9) [![downloads](https://img.shields.io/github/downloads/lilgallon/Bettercolors/7.4.0-MC1.8.9/total)](https://github.com/lilgallon/Bettercolors/releases/tag/7.4.0-MC1.8.9)
-- [![build](https://img.shields.io/github/workflow/status/lilgallon/Bettercolors/Build%20MC1.16.4?label=Bettercolors%207.4.0%20for%20MC1.16.4%20(forge))](https://github.com/lilgallon/Bettercolors/tree/MC_1.16.4) [![downloads](https://img.shields.io/github/downloads/lilgallon/Bettercolors/7.4.0-MC1.16.4/total)](https://github.com/lilgallon/Bettercolors/releases/tag/7.4.0-MC1.16.4)
+- [![downloads](https://img.shields.io/github/downloads/lilgallon/Bettercolors/7.4.0-MC1.8.9/total)](https://github.com/lilgallon/Bettercolors/releases/tag/7.4.0-MC1.8.9)
+- [![downloads](https://img.shields.io/github/downloads/lilgallon/Bettercolors/7.4.0-MC1.16.4/total)](https://github.com/lilgallon/Bettercolors/releases/tag/7.4.0-MC1.16.4)
 
 **Not maintained anymore:**
 
-- [![build](https://img.shields.io/github/workflow/status/lilgallon/Bettercolors/Build%20MC1.12.2?label=Bettercolors%206.1.0%20for%20MC1.12.2%20(forge))](https://github.com/lilgallon/Bettercolors/tree/MC_1.12.2) [![downloads](https://img.shields.io/github/downloads/lilgallon/Bettercolors/6.1.0-MC1.12.2/total)](https://github.com/lilgallon/Bettercolors/releases/tag/6.1.0-MC1.12.2)
-- [![build](https://img.shields.io/github/workflow/status/lilgallon/Bettercolors/Build%20MC1.13.2?label=Bettercolors%206.0.0%20for%20MC1.13.2%20(forge))](https://github.com/lilgallon/Bettercolors/tree/MC_1.13.2) [![downloads](https://img.shields.io/github/downloads/lilgallon/Bettercolors/6.0.0-MC1.13.2/total)](https://github.com/lilgallon/Bettercolors/releases/tag/6.0.0-MC1.13.2)
-- [![build](https://img.shields.io/github/workflow/status/lilgallon/Bettercolors/Build%20MC1.14.4?label=Bettercolors%206.1.0%20for%20MC1.14.4%20(forge))](https://github.com/lilgallon/Bettercolors/tree/MC_1.14.4) [![downloads](https://img.shields.io/github/downloads/lilgallon/Bettercolors/6.1.0-MC1.14.4/total)](https://github.com/lilgallon/Bettercolors/releases/tag/6.1.0-MC1.14.4)
-- [![build](https://img.shields.io/github/workflow/status/lilgallon/Bettercolors/Build%20MC1.15.2?label=Bettercolors%206.1.2%20for%20MC1.15.2%20(forge))](https://github.com/lilgallon/Bettercolors/tree/MC_1.15.2) [![downloads](https://img.shields.io/github/downloads/lilgallon/Bettercolors/6.1.2-MC1.15.2/total)](https://github.com/lilgallon/Bettercolors/releases/tag/6.1.2-MC1.15.2)
-- [![build](https://img.shields.io/github/workflow/status/lilgallon/Bettercolors/Build%20MC1.16.1?label=Bettercolors%207.2.0%20for%20MC1.16.1%20(forge))](https://github.com/lilgallon/Bettercolors/tree/MC_1.16.1) [![downloads](https://img.shields.io/github/downloads/lilgallon/Bettercolors/7.2.0-MC1.16.1/total)](https://github.com/lilgallon/Bettercolors/releases/tag/7.2.0-MC1.16.1)
-- [![build](https://img.shields.io/github/workflow/status/lilgallon/Bettercolors/Build%20MC1.16.2?label=Bettercolors%207.3.0%20for%20MC1.16.2%20(forge))](https://github.com/lilgallon/Bettercolors/tree/MC_1.16.2) [![downloads](https://img.shields.io/github/downloads/lilgallon/Bettercolors/7.3.0-MC1.16.2/total)](https://github.com/lilgallon/Bettercolors/releases/tag/7.3.0-MC1.16.2)
-- [![build](https://img.shields.io/github/workflow/status/lilgallon/Bettercolors/Build%20MC1.16.2_fabric?label=Bettercolors%207.3.0%20for%20MC1.16.2%20(fabric))](https://github.com/lilgallon/Bettercolors/tree/MC_1.16.2_fabric) [![downloads](https://img.shields.io/github/downloads/lilgallon/Bettercolors/7.3.0-MC1.16.2fa/total)](https://github.com/lilgallon/Bettercolors/releases/tag/7.3.0-MC1.16.2fa)
-- [![build](https://img.shields.io/github/workflow/status/lilgallon/Bettercolors/Build%20MC1.16.4_fabric?label=Bettercolors%207.4.0%20for%20MC1.16.4%20(fabric))](https://github.com/lilgallon/Bettercolors/tree/MC_1.16.4_fabric) [![downloads](https://img.shields.io/github/downloads/lilgallon/Bettercolors/7.4.0-MC1.16.4fa/total)](https://github.com/lilgallon/Bettercolors/releases/tag/7.4.0-MC1.16.4fa)
-- [![build](https://img.shields.io/github/workflow/status/lilgallon/Bettercolors/Build%20MC1.16.5_fabric?label=Bettercolors%207.4.0%20for%20MC1.16.5%20(fabric))](https://github.com/lilgallon/Bettercolors/tree/MC_1.16.5_fabric) [![downloads](https://img.shields.io/github/downloads/lilgallon/Bettercolors/7.4.0-MC1.16.5fa/total)](https://github.com/lilgallon/Bettercolors/releases/tag/7.4.0-MC1.16.5fa)
-- [![build](https://img.shields.io/github/workflow/status/lilgallon/Bettercolors/Build%20MC1.17.1_fabric?label=Bettercolors%207.4.0%20for%20MC1.17.1%20(fabric))](https://github.com/lilgallon/Bettercolors/tree/MC_1.17.1_fabric) [![downloads](https://img.shields.io/github/downloads/lilgallon/Bettercolors/7.4.0-MC1.17.1fa/total)](https://github.com/lilgallon/Bettercolors/releases/tag/7.4.0-MC1.17.1fa)
-- [![build](https://img.shields.io/github/workflow/status/lilgallon/Bettercolors/Build%20MC1.18.0_fabric?label=Bettercolors%207.4.1%20for%20MC1.18.0%20(fabric))](https://github.com/lilgallon/Bettercolors/tree/MC_1.18.0_fabric) [![downloads](https://img.shields.io/github/downloads/lilgallon/Bettercolors/7.4.1-MC1.18.0fa/total)](https://github.com/lilgallon/Bettercolors/releases/tag/7.4.1-MC1.18.0fa)
-- [![build](https://img.shields.io/github/workflow/status/lilgallon/Bettercolors/Build%20MC1.19.x_fabric?label=Bettercolors%207.4.1%20for%20MC1.19.x%20(fabric))](https://github.com/lilgallon/Bettercolors/tree/MC_1.19.x_fabric) [![downloads](https://img.shields.io/github/downloads/lilgallon/Bettercolors/7.4.1-MC1.19.0fa/total)](https://github.com/lilgallon/Bettercolors/releases/tag/7.4.1-MC1.19.0fa)
+- [![downloads](https://img.shields.io/github/downloads/lilgallon/Bettercolors/6.1.0-MC1.12.2/total)](https://github.com/lilgallon/Bettercolors/releases/tag/6.1.0-MC1.12.2)
+- [![downloads](https://img.shields.io/github/downloads/lilgallon/Bettercolors/6.0.0-MC1.13.2/total)](https://github.com/lilgallon/Bettercolors/releases/tag/6.0.0-MC1.13.2)
+- [![downloads](https://img.shields.io/github/downloads/lilgallon/Bettercolors/6.1.0-MC1.14.4/total)](https://github.com/lilgallon/Bettercolors/releases/tag/6.1.0-MC1.14.4)
+- [![downloads](https://img.shields.io/github/downloads/lilgallon/Bettercolors/6.1.2-MC1.15.2/total)](https://github.com/lilgallon/Bettercolors/releases/tag/6.1.2-MC1.15.2)
+- [![downloads](https://img.shields.io/github/downloads/lilgallon/Bettercolors/7.2.0-MC1.16.1/total)](https://github.com/lilgallon/Bettercolors/releases/tag/7.2.0-MC1.16.1)
+- [![downloads](https://img.shields.io/github/downloads/lilgallon/Bettercolors/7.3.0-MC1.16.2/total)](https://github.com/lilgallon/Bettercolors/releases/tag/7.3.0-MC1.16.2)
+- [![downloads](https://img.shields.io/github/downloads/lilgallon/Bettercolors/7.3.0-MC1.16.2fa/total)](https://github.com/lilgallon/Bettercolors/releases/tag/7.3.0-MC1.16.2fa)
+- [![downloads](https://img.shields.io/github/downloads/lilgallon/Bettercolors/7.4.0-MC1.16.4fa/total)](https://github.com/lilgallon/Bettercolors/releases/tag/7.4.0-MC1.16.4fa)
+- [![downloads](https://img.shields.io/github/downloads/lilgallon/Bettercolors/7.4.0-MC1.16.5fa/total)](https://github.com/lilgallon/Bettercolors/releases/tag/7.4.0-MC1.16.5fa)
+- [![downloads](https://img.shields.io/github/downloads/lilgallon/Bettercolors/7.4.0-MC1.17.1fa/total)](https://github.com/lilgallon/Bettercolors/releases/tag/7.4.0-MC1.17.1fa)
+- [![downloads](https://img.shields.io/github/downloads/lilgallon/Bettercolors/7.4.1-MC1.18.0fa/total)](https://github.com/lilgallon/Bettercolors/releases/tag/7.4.1-MC1.18.0fa)
+- [![downloads](https://img.shields.io/github/downloads/lilgallon/Bettercolors/7.4.1-MC1.19.0fa/total)](https://github.com/lilgallon/Bettercolors/releases/tag/7.4.1-MC1.19.0fa)
 
 ## Incoming changes
 
